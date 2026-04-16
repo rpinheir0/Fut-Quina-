@@ -54,7 +54,48 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
+import { supabase } from './lib/supabase';
+
+// --- Supabase Hooks ---
+function useSupabaseArraySync<T extends { id: string }>(
+  tableName: string,
+  groupId: string,
+  items: T[],
+  mapToDb: (item: T, groupId: string) => any,
+  isDataLoaded: boolean
+) {
+  const syncedIds = React.useRef<Set<string>>(new Set());
+
+  // Use a stringified version of the mapping function so we don't need to put it in deps if it changes ref
+  const mapToDbRef = React.useRef(mapToDb);
+  React.useEffect(() => {
+    mapToDbRef.current = mapToDb;
+  }, [mapToDb]);
+
+  React.useEffect(() => {
+    if (!isDataLoaded) {
+      syncedIds.current = new Set(items.map(i => i.id));
+      return;
+    }
+
+    const currentIds = new Set(items.map(i => i.id));
+    const deletedIds = [...syncedIds.current].filter(id => !currentIds.has(id));
+
+    if (deletedIds.length > 0) {
+      supabase.from(tableName).delete().in('id', deletedIds).then();
+    }
+
+    if (items.length > 0) {
+      const payload = items.map(item => mapToDbRef.current(item, groupId));
+      supabase.from(tableName).upsert(payload, { onConflict: 'id' }).then();
+    }
+
+    syncedIds.current = currentIds;
+  }, [items, isDataLoaded, groupId, tableName]);
+}
+
 import { 
+
   BarChart, 
   Bar, 
   XAxis, 
@@ -906,6 +947,127 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
   };
 
   // --- Persistence ---
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
+
+  useEffect(() => {
+    async function loadData() {
+      setIsDataLoaded(false);
+      try {
+        const [
+          { data: playersData },
+          { data: teamsData },
+          { data: paymentsData },
+          { data: matchHistoryData },
+          { data: matchStateData }
+        ] = await Promise.all([
+          supabase.from('players').select('*').eq('group_id', groupId),
+          supabase.from('teams').select('*').eq('group_id', groupId),
+          supabase.from('payments').select('*').eq('group_id', groupId),
+          supabase.from('match_history').select('*').eq('group_id', groupId),
+          supabase.from('match_state').select('*').eq('group_id', groupId).maybeSingle()
+        ]);
+
+        if (playersData && playersData.length > 0) {
+          setPlayers(playersData.map(p => ({
+            id: p.id,
+            name: p.name,
+            photo: p.photo || undefined,
+            isAvailable: p.is_available,
+            arrivedAt: p.arrived_at || undefined,
+            goals: 0,
+            assists: 0
+          })));
+        }
+        if (teamsData && teamsData.length > 0) {
+          setTeams(teamsData.map(t => ({
+            id: t.id,
+            name: t.name,
+            color: t.color || '#4ade80',
+            playerIds: t.player_ids || []
+          })));
+        }
+        if (paymentsData && paymentsData.length > 0) {
+          setPayments(paymentsData.map(p => ({
+            id: p.id,
+            playerId: p.player_id,
+            month: p.month,
+            year: p.year,
+            amount: p.amount,
+            paidAt: p.paid_at,
+            isHalf: p.is_half
+          })));
+        }
+        if (matchHistoryData && matchHistoryData.length > 0) {
+          setMatchHistory(matchHistoryData.map(h => ({
+            id: h.id,
+            teamAId: h.team_a_id || undefined,
+            teamBId: h.team_b_id || undefined,
+            teamAName: h.team_a_name,
+            teamBName: h.team_b_name,
+            scoreA: h.score_a,
+            scoreB: h.score_b,
+            winnerId: h.winner_id,
+            loserId: h.loser_id,
+            events: h.events || [],
+            playedAt: h.played_at
+          })));
+        }
+        if (matchStateData) {
+          setMatch({
+            scoreA: matchStateData.score_a,
+            scoreB: matchStateData.score_b,
+            teamAIndex: matchStateData.team_a_index,
+            teamBIndex: matchStateData.team_b_index,
+            timeRemaining: matchStateData.time_remaining,
+            isActive: matchStateData.is_active,
+            isPaused: matchStateData.is_paused,
+            hasEnded: matchStateData.has_ended,
+            events: matchStateData.events || [],
+            config: matchStateData.config || { duration: 15, playersPerTeam: 5, scoreLimit: 10 }
+          });
+        }
+      } catch (err) {
+        console.error("Error loading data from Supabase", err);
+      } finally {
+        setIsDataLoaded(true);
+      }
+    }
+    loadData();
+  }, [groupId]);
+
+  useSupabaseArraySync('players', groupId, players, (p: any, gid) => ({
+    id: p.id, group_id: gid, name: p.name, photo: p.photo || null, is_available: p.isAvailable, arrived_at: p.arrivedAt || null
+  }), isDataLoaded);
+
+  useSupabaseArraySync('teams', groupId, teams, (t: any, gid) => ({
+    id: t.id, group_id: gid, name: t.name, color: t.color, player_ids: t.playerIds
+  }), isDataLoaded);
+
+  useSupabaseArraySync('payments', groupId, payments, (p: any, gid) => ({
+    id: p.id, group_id: gid, player_id: p.playerId, month: p.month, year: p.year, amount: p.amount, paid_at: p.paidAt, is_half: p.isHalf
+  }), isDataLoaded);
+
+  useSupabaseArraySync('match_history', groupId, matchHistory, (m: any, gid) => ({
+    id: m.id, group_id: gid, team_a_id: m.teamAId || null, team_b_id: m.teamBId || null, team_a_name: m.teamAName, team_b_name: m.teamBName, score_a: m.scoreA, score_b: m.scoreB, winner_id: m.winnerId || null, loser_id: m.loserId || null, events: m.events, played_at: m.playedAt
+  }), isDataLoaded);
+
+  useEffect(() => {
+    if (!isDataLoaded) return;
+    supabase.from('match_state').upsert({
+      group_id: groupId,
+      score_a: match.scoreA,
+      score_b: match.scoreB,
+      team_a_index: match.teamAIndex,
+      team_b_index: match.teamBIndex,
+      time_remaining: match.timeRemaining,
+      is_active: match.isActive,
+      is_paused: match.isPaused,
+      has_ended: match.hasEnded,
+      events: match.events,
+      config: match.config
+    }).then();
+  }, [match, isDataLoaded, groupId]);
+
   useEffect(() => {
     if (players.length > 0 && players.every(p => !p.isAvailable)) {
       setTeams([]);
@@ -6101,6 +6263,21 @@ export default function App() {
     const saved = safeLocalStorage.getItem('futquina_groups');
     return saved ? JSON.parse(saved) : [];
   });
+  const [isGroupsLoaded, setIsGroupsLoaded] = useState(false);
+
+  useEffect(() => {
+    supabase.from('groups').select('*').then(({ data }) => {
+      if (data && data.length > 0) {
+        setGroups(data.map(g => ({ id: g.id, name: g.name, createdAt: g.created_at })));
+      }
+      setIsGroupsLoaded(true);
+    });
+  }, []);
+
+  useSupabaseArraySync('groups', '', groups, (g: any) => ({
+    id: g.id, name: g.name, created_at: g.createdAt
+  }), isGroupsLoaded);
+
   const [currentGroupId, setCurrentGroupId] = useState<string | null>(null);
   const [showNewGroupModal, setShowNewGroupModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
