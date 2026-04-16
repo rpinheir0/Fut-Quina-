@@ -1,0 +1,2001 @@
+2056:                  <div id="teams-list-section">
+2057-                    {teamsTab === 'chegada' ? (
+2058-                      <div className="space-y-6 bg-brand-card p-6 rounded-xl border border-white/5">
+2059-                        <div className="flex justify-between items-center">
+2060-                          <h3 className="text-sm font-black uppercase tracking-widest text-brand-primary">Ordem de Chegada</h3>
+2061-                          <span className="text-[10px] font-bold text-brand-text-secondary uppercase">{players.filter(p => p.isAvailable).length} Presentes</span>
+2062-                        </div>
+2063-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+2064-                          {players.map((p, idx) => (
+2065-                            <button 
+2066-                              key={`arrival-player-below-${p.id}-${idx}`}
+2067-                              onClick={() => {
+2068-                                const isNowAvailable = !p.isAvailable;
+2069-                                setPlayers(prev => prev.map(pl => pl.id === p.id ? { ...pl, isAvailable: isNowAvailable } : pl));
+2070-                                
+2071-                                if (isNowAvailable) {
+2072-                                  setTeams(prevTeams => {
+2073-                                    const newTeams = [...prevTeams];
+2074-                                    let added = false;
+2075-                                    for (let i = 0; i < newTeams.length; i++) {
+2076-                                      if (newTeams[i].playerIds.length < match.config.playersPerTeam) {
+2077-                                        newTeams[i] = { ...newTeams[i], playerIds: [...newTeams[i].playerIds, p.id] };
+2078-                                        added = true;
+2079-                                        break;
+2080-                                      }
+2081-                                    }
+2082-                                    if (!added) {
+2083-                                      const teamLetter = String.fromCharCode(65 + newTeams.length);
+2084-                                      newTeams.push({
+2085-                                        id: generateId(),
+2086-                                        name: `Time ${teamLetter}`,
+2087-                                        playerIds: [p.id],
+2088-                                        emoji: TEAM_EMOJIS[newTeams.length % TEAM_EMOJIS.length]
+2089-                                      });
+2090-                                    }
+2091-                                    return newTeams;
+2092-                                  });
+2093-                                } else {
+2094-                                  setTeams(prevTeams => prevTeams.map(team => ({
+2095-                                    ...team,
+2096-                                    playerIds: team.playerIds.filter(id => id !== p.id)
+2097-                                  })));
+2098-                                }
+2099-                              }}
+2100-                              className={`flex items-center gap-3 p-3 rounded-lg border transition-all ${
+2101-                                p.isAvailable 
+2102-                                  ? 'bg-brand-primary/10 border-brand-primary/50' 
+2103-                                  : 'bg-white/5 border-white/5 opacity-50'
+2104-                              }`}
+2105-                            >
+2106-                              <div className="w-8 h-8 rounded-full bg-brand-dark flex items-center justify-center overflow-hidden border border-white/10">
+2107-                                {p.photo ? (
+2108-                                  <img src={p.photo} alt="P" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+2109-                                ) : (
+2110-                                  <User size={14} className={p.isAvailable ? 'text-brand-primary' : 'text-white/20'} />
+2111-                                )}
+2112-                              </div>
+2113-                              <div className="flex-1 text-left">
+2114-                                <div className={`text-xs font-black uppercase tracking-tight ${p.isAvailable ? 'text-white' : 'text-white/40'}`}>{p.name}</div>
+2115-                                <div className="text-[8px] font-bold text-brand-text-secondary uppercase">{p.isAvailable ? 'Presente' : 'Ausente'}</div>
+2116-                              </div>
+2117-                              {p.isAvailable && <CheckCircle2 size={16} className="text-brand-primary" />}
+2118-                            </button>
+2119-                          ))}
+2120-                        </div>
+2121-                      </div>
+2122-                    ) : teamsTab === 'historico' ? (
+2123-                      <div className="space-y-6 bg-brand-card p-6 rounded-xl border border-white/5">
+2124-                        {match.teamAIndex === -1 || match.teamBIndex === -1 ? (
+2125-                          <div className="py-12 text-center border-2 border-dashed border-white/5 rounded-xl">
+2126-                            <p className="text-xs font-bold text-brand-text-secondary uppercase tracking-widest">Selecione os times para ver o confronto</p>
+2127-                          </div>
+2128-                        ) : (
+2129-                          <div className="space-y-8">
+2130-                            <div className="flex items-center justify-between gap-4 p-6 bg-black/20 rounded-2xl border border-white/5">
+2131-                              <div className="flex-1 flex flex-col items-center text-center space-y-2">
+2132-                                <button 
+2133-                                  onClick={() => {
+2134-                                    const colors = ['#3b82f6', '#ffffff', '#1a1a1a', '#ef4444', '#22c55e', '#a855f7', '#6b7280'];
+2135-                                    setMatchColorA(prev => colors[(colors.indexOf(prev) + 1) % colors.length] || colors[0]);
+2136-                                  }}
+2137-                                  className="w-16 h-16 transition-transform hover:scale-110 active:scale-95 drop-shadow-lg"
+2138-                                >
+2139-                                  <svg viewBox="0 0 24 24" fill={matchColorA} stroke={matchColorA === '#1a1a1a' ? '#ffffff40' : 'none'} strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
+2140-                                    <path d="M15.73 3H8.27L3 7l2.73 3 1.27-1.5V21h10V8.5L18.27 10 21 7l-5.27-4z" />
+2141-                                  </svg>
+2142-                                </button>
+2143-                                <div className="text-4xl font-black text-brand-primary">{match.scoreA}</div>
+2144-                              </div>
+2145-                              
+2146-                              <div className="flex flex-col items-center justify-center gap-4">
+2147-                                <FlipClock time={match.timeRemaining} size="xs" />
+2148-                                <div className="flex gap-2">
+2149-                                  <button 
+2150-                                    onClick={() => setMatch(prev => ({ ...prev, isPaused: !prev.isPaused, isActive: true }))} 
+2151-                                    className={`p-3 rounded-full transition-all ${match.isPaused ? 'bg-brand-primary text-black hover:bg-brand-primary/80' : 'bg-white/10 text-white hover:bg-white/20'}`}
+2152-                                  >
+2153-                                    {match.isPaused ? <Play size={20} fill="currentColor" /> : <Pause size={20} fill="currentColor" />}
+2154-                                  </button>
+2155-                                  <button 
+2156-                                    disabled={!match.isActive}
+2157-                                    onClick={finishMatch}
+2158-                                    className="p-3 rounded-full transition-all bg-red-500/10 text-red-400 hover:bg-red-500/20 disabled:opacity-20"
+2159-                                    title="Finalizar Partida"
+2160-                                  >
+2161-                                    <Square size={20} fill="currentColor" />
+2162-                                  </button>
+2163-                                </div>
+2164-                              </div>
+2165-
+2166-                              <div className="flex-1 flex flex-col items-center text-center space-y-2">
+2167-                                <button 
+2168-                                  onClick={() => {
+2169-                                    const colors = ['#3b82f6', '#ffffff', '#1a1a1a', '#ef4444', '#22c55e', '#a855f7', '#6b7280'];
+2170-                                    setMatchColorB(prev => colors[(colors.indexOf(prev) + 1) % colors.length] || colors[0]);
+2171-                                  }}
+2172-                                  className="w-16 h-16 transition-transform hover:scale-110 active:scale-95 drop-shadow-lg"
+2173-                                >
+2174-                                  <svg viewBox="0 0 24 24" fill={matchColorB} stroke={matchColorB === '#1a1a1a' ? '#ffffff40' : 'none'} strokeWidth="1" xmlns="http://www.w3.org/2000/svg">
+2175-                                    <path d="M15.73 3H8.27L3 7l2.73 3 1.27-1.5V21h10V8.5L18.27 10 21 7l-5.27-4z" />
+2176-                                  </svg>
+2177-                                </button>
+2178-                                <div className="text-4xl font-black text-brand-primary">{match.scoreB}</div>
+2179-                              </div>
+2180-                            </div>
+2181-                            
+2182-                            <div className="grid grid-cols-2 gap-4">
+2183-                              <div className="space-y-2">
+2184-                                <div className="text-[8px] font-black uppercase tracking-widest text-white/40 mb-2">Jogadores {teams[match.teamAIndex]?.name}</div>
+2185-                                {teams[match.teamAIndex]?.playerIds.map(pid => {
+2186-                                  const p = players.find(pl => pl.id === pid);
+2187-                                  return p && (
+2188-                                    <button 
+2189-                                      key={`partida-p-a-${pid}`} 
+2190-                                      onClick={() => setShowPlayerActionsModal({ teamIndex: match.teamAIndex, playerId: pid })}
+2191-                                      className="w-full flex items-center gap-2 p-2 bg-white/5 rounded border border-white/5 hover:bg-brand-primary/10 hover:border-brand-primary/50 transition-all active:scale-95 text-left"
+2192-                                    >
+2193-                                      <div className="w-5 h-5 rounded-full bg-brand-dark flex items-center justify-center overflow-hidden shrink-0">
+2194-                                        {p.photo ? <img src={p.photo} className="w-full h-full object-cover" referrerPolicy="no-referrer" /> : <User size={10} />}
+2195-                                      </div>
+2196-                                      <span className="text-[10px] font-bold uppercase text-white/80 truncate">{p.name}</span>
+2197-                                    </button>
+2198-                                  );
+2199-                                })}
+2200-                              </div>
+2201-                              <div className="space-y-2">
+2202-                                <div className="text-[8px] font-black uppercase tracking-widest text-white/40 mb-2">Jogadores {teams[match.teamBIndex]?.name}</div>
+2203-                                {teams[match.teamBIndex]?.playerIds.map(pid => {
+2204-                                  const p = players.find(pl => pl.id === pid);
+2205-                                  return p && (
+2206-                                    <button 
+2207-                                      key={`partida-p-b-${pid}`} 
+2208-                                      onClick={() => setShowPlayerActionsModal({ teamIndex: match.teamBIndex, playerId: pid })}
+2209-                                      className="w-full flex items-center gap-2 p-2 bg-white/5 rounded border border-white/5 hover:bg-brand-primary/10 hover:border-brand-primary/50 transition-all active:scale-95 text-left"
+2210-                                    >
+2211-                                      <div className="w-5 h-5 rounded-full bg-brand-dark flex items-center justify-center overflow-hidden shrink-0">
+2212-                                        {p.photo ? <img src={p.photo} className="w-full h-full object-cover" referrerPolicy="no-referrer" /> : <User size={10} />}
+2213-                                      </div>
+2214-                                      <span className="text-[10px] font-bold uppercase text-white/80 truncate">{p.name}</span>
+2215-                                    </button>
+2216-                                  );
+2217-                                })}
+2218-                              </div>
+2219-                            </div>
+2220-                          </div>
+2221-                        )}
+2222-                      </div>
+2223-                    ) : teamsTab === 'proximos' ? (
+2224-                      <div className="space-y-6 bg-brand-card p-6 rounded-xl border border-white/5">
+2225-                        <h3 className="text-sm font-black uppercase tracking-widest text-brand-primary">Próximos Times</h3>
+2226-                        <div className="space-y-4">
+2227-                          {teams.length < 2 ? (
+2228-                            <div className="py-12 text-center border-2 border-dashed border-white/5 rounded-xl">
+2229-                              <p className="text-xs font-bold text-brand-text-secondary uppercase tracking-widest">Crie mais times para ver a fila</p>
+2230-                            </div>
+2231-                          ) : (
+2232-                            <div className="space-y-3">
+2233-                              {teams.map((t, idx) => {
+2234-                                const isCurrent = idx === match.teamAIndex || idx === match.teamBIndex;
+2235-                                return (
+2236-                                  <div key={`next-teams-item-below-${t.id}-${idx}`} className={`p-4 rounded-xl border transition-all ${
+2237-                                    isCurrent ? 'bg-brand-primary/10 border-brand-primary/50' : 'bg-white/5 border-white/5'
+2238-                                  }`}>
+2239-                                    <div className="flex justify-between items-center">
+2240-                                      <div className="flex items-center gap-3">
+2241-                                        <div className="w-8 h-8 rounded-lg bg-black/40 flex items-center justify-center">
+2242-                                          <svg viewBox="0 0 24 24" fill={['#3b82f6', '#ffffff', '#1a1a1a', '#ef4444', '#22c55e', '#a855f7', '#6b7280'][idx % 7]} stroke={['#3b82f6', '#ffffff', '#1a1a1a', '#ef4444', '#22c55e', '#a855f7', '#6b7280'][idx % 7] === '#1a1a1a' ? '#ffffff40' : 'none'} strokeWidth="1" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
+2243-                                            <path d="M15.73 3H8.27L3 7l2.73 3 1.27-1.5V21h10V8.5L18.27 10 21 7l-5.27-4z" />
+2244-                                          </svg>
+2245-                                        </div>
+2246-                                        <div className="w-full">
+2247-                                          <div className="text-xs font-black uppercase tracking-tight mb-2">{t.name}</div>
+2248-                                          <div className="flex flex-wrap gap-2">
+2249-                                            {t.playerIds.map(pid => {
+2250-                                              const p = players.find(pl => pl.id === pid);
+2251-                                              if (!p) return null;
+2252-                                              return (
+2253-                                                <button
+2254-                                                  key={`queue-player-${pid}`}
+2255-                                                  onClick={() => {
+2256-                                                    if (swappingPlayerId) {
+2257-                                                      // Swap logic
+2258-                                                      setTeams(prev => {
+2259-                                                        const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+2260-                                                        let swapTeamIdx = -1;
+2261-                                                        let currentTeamIdx = idx;
+2262-                                                        
+2263-                                                        // Find team of swappingPlayerId
+2264-                                                        for (let i = 0; i < newTeams.length; i++) {
+2265-                                                          if (newTeams[i].playerIds.includes(swappingPlayerId)) {
+2266-                                                            swapTeamIdx = i;
+2267-                                                            break;
+2268-                                                          }
+2269-                                                        }
+2270-                                                        
+2271-                                                        if (swapTeamIdx !== -1) {
+2272-                                                          newTeams[swapTeamIdx].playerIds = newTeams[swapTeamIdx].playerIds.map(id => id === swappingPlayerId ? pid : id);
+2273-                                                          newTeams[currentTeamIdx].playerIds = newTeams[currentTeamIdx].playerIds.map(id => id === pid ? swappingPlayerId : id);
+2274-                                                        }
+2275-                                                        return newTeams;
+2276-                                                      });
+2277-                                                      setSwappingPlayerId(null);
+2278-                                                      setTeamsTab('historico');
+2279-                                                      setToast({ message: "Jogadores trocados com sucesso!", type: 'success' });
+2280-                                                    } else if (fillingVacancyForTeam !== null) {
+2281-                                                      // Move logic
+2282-                                                      setTeams(prev => {
+2283-                                                        const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+2284-                                                        newTeams[idx].playerIds = newTeams[idx].playerIds.filter(id => id !== pid);
+2285-                                                        newTeams[fillingVacancyForTeam].playerIds.push(pid);
+2286-                                                        return newTeams;
+2287-                                                      });
+2288-                                                      setFillingVacancyForTeam(null);
+2289-                                                      setTeamsTab('historico');
+2290-                                                      setToast({ message: "Jogador movido com sucesso!", type: 'success' });
+2291-                                                    } else {
+2292-                                                      setShowQueuePlayerModal({ teamIndex: idx, playerId: pid });
+2293-                                                    }
+2294-                                                  }}
+2295-                                                  className={`px-2 py-1 rounded text-[10px] font-bold uppercase transition-all ${
+2296-                                                    swappingPlayerId || fillingVacancyForTeam !== null
+2297-                                                      ? 'bg-brand-primary/20 text-brand-primary hover:bg-brand-primary hover:text-black animate-pulse'
+2298-                                                      : 'bg-white/5 text-white/80 hover:bg-white/10 border border-white/5'
+2299-                                                  }`}
+2300-                                                >
+2301-                                                  {p.name}
+2302-                                                </button>
+2303-                                              );
+2304-                                            })}
+2305-                                          </div>
+2306-                                        </div>
+2307-                                      </div>
+2308-                                      {isCurrent ? (
+2309-                                        <span className="px-2 py-1 rounded bg-brand-primary text-black text-[8px] font-black uppercase">Em Campo</span>
+2310-                                      ) : (
+2311-                                        <span className="text-[8px] font-black text-brand-text-secondary uppercase">Na Fila</span>
+2312-                                      )}
+2313-                                    </div>
+2314-                                  </div>
+2315-                                );
+2316-                              })}
+2317-                            </div>
+2318-                          )}
+2319-                        </div>
+2320-                      </div>
+2321-                    ) : (
+2322-                      <div className="grid grid-cols-2 gap-2 sm:gap-4">
+2323-                        {teams.map((team, tIndex) => (
+2324-                      <motion.div 
+2325-                        key={`scoreboard-team-${team.id}-${tIndex}`}
+2326-                        initial={{ opacity: 0, scale: 0.95 }}
+2327-                        animate={{ opacity: 1, scale: 1 }}
+2328-                        whileHover={{ y: -5 }}
+2329-                        className={`group p-3 sm:p-4 rounded-xl transition-all relative cursor-pointer flex flex-col border-2 ${
+2330-                          match.teamAIndex === tIndex || match.teamBIndex === tIndex
+2331-                            ? 'bg-[#004d1a] border-brand-primary shadow-[0_0_30px_rgba(198,255,0,0.1)]' 
+2332-                            : 'bg-transparent border-white/10 hover:border-brand-primary/50'
+2333-                        } ${flashingTeamIds.includes(team.id) ? 'animate-flash' : ''}`}
+2334-                        onClick={() => {
+2335-                          setFlashingTeamIds([]);
+2336-                          setMatch(prev => {
+2337-                            if (prev.teamAIndex === tIndex) return { ...prev, teamAIndex: -1 };
+2338-                            if (prev.teamBIndex === tIndex) return { ...prev, teamBIndex: -1 };
+2339-                            if (prev.teamAIndex === -1) return { ...prev, teamAIndex: tIndex };
+2340-                            if (prev.teamBIndex === -1) return { ...prev, teamBIndex: tIndex };
+2341-                            return { ...prev, teamBIndex: tIndex };
+2342-                          });
+2343-                        }}
+2344-                      >
+2345-                        {/* Selection Indicator */}
+2346-                        <div className="absolute top-6 right-6">
+2347-                          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-500 ${
+2348-                            match.teamAIndex === tIndex ? 'bg-brand-primary border-brand-primary' : 
+2349-                            match.teamBIndex === tIndex ? 'bg-brand-primary border-brand-primary' : 
+2350-                            'bg-transparent border-white/20'
+2351-                          }`}>
+2352-                            {(match.teamAIndex === tIndex || match.teamBIndex === tIndex) && (
+2353-                              <div className="w-2 h-2 rounded-full bg-black" />
+2354-                            )}
+2355-                          </div>
+2356-                        </div>
+2357-
+2358-                        <div className="mb-6">
+2359-                          <div className={`text-[10px] font-black uppercase tracking-[0.2em] mb-2 ${
+2360-                            (match.teamAIndex === tIndex || match.teamBIndex === tIndex)
+2361-                              ? 'text-white/60'
+2362-                              : 'text-brand-primary'
+2363-                          }`}>Club {tIndex + 1}</div>
+2364-                          <input 
+2365-                            value={team.name}
+2366-                            placeholder="NOME DO CLUB"
+2367-                            onClick={(e) => e.stopPropagation()}
+2368-                            onChange={(e) => {
+2369-                              if (match.isActive && !match.isPaused && (tIndex === match.teamAIndex || tIndex === match.teamBIndex)) {
+2370-                                setToast({ message: "Não é possível renomear times com o cronômetro rodando.", type: 'gray' });
+2371-                                setTimeout(() => setToast(null), 3000);
+2372-                                return;
+2373-                              }
+2374-                              const newTeams = [...teams];
+2375-                              newTeams[tIndex].name = e.target.value;
+2376-                              setTeams(newTeams);
+2377-                            }}
+2378-                            className={`bg-transparent font-black text-xl uppercase tracking-tight outline-none w-full placeholder:opacity-20 ${
+2379-                              (match.teamAIndex === tIndex || match.teamBIndex === tIndex)
+2380-                                ? 'text-white'
+2381-                                : 'text-white'
+2382-                            }`}
+2383-                          />
+2384-                        </div>
+2385-                        
+2386-                        <div className="flex-1 space-y-2 pr-1 custom-scrollbar">
+2387-                          {team.playerIds.map((pid, pIdx) => {
+2388-                            const p = players.find(pl => pl.id === pid);
+2389-                            return p ? (
+2390-                              <div 
+2391-                                key={`scoreboard-player-${team.id}-${pid}-${pIdx}`} 
+2392-                                onClick={() => setShowPlayerActionsModal({ teamIndex: tIndex, playerId: pid })}
+2393-                                className={`flex justify-between items-center py-2 px-3 rounded-lg border transition-all group/player cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
+2394-                                swappingPlayerId === pid 
+2395-                                  ? 'bg-brand-primary/20 border-brand-primary shadow-[0_0_15px_rgba(198,255,0,0.1)]' 
+2396-                                  : (match.teamAIndex === tIndex || match.teamBIndex === tIndex)
+2397-                                    ? 'bg-black/5 border-black/10'
+2398-                                    : 'bg-brand-surface-light border-white/5'
+2399-                              }`}>
+2400-                                <div className="flex items-center gap-2 overflow-hidden">
+2401-                                  <div className="w-6 h-6 rounded-full bg-brand-primary/10 flex items-center justify-center overflow-hidden border border-white/5 shrink-0">
+2402-                                    {p.photo ? (
+2403-                                      <img src={p.photo} alt={p.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+2404-                                    ) : (
+2405-                                      <User size={10} className="text-brand-primary/60" />
+2406-                                    )}
+2407-                                  </div>
+2408-                                  <span className={`text-[10px] sm:text-xs font-bold tracking-tight transition-colors truncate ${
+2409-                                    swappingPlayerId === pid 
+2410-                                      ? 'text-brand-primary' 
+2411-                                      : (match.teamAIndex === tIndex || match.teamBIndex === tIndex)
+2412-                                        ? 'text-white'
+2413-                                        : 'text-brand-text-primary'
+2414-                                  }`}>{p.name}</span>
+2415-                                </div>
+2416-                                <div className="flex items-center gap-1">
+2417-                                  {swappingPlayerId === pid && (
+2418-                                    <div className="px-2 py-1 text-black bg-brand-primary/20 border border-brand-primary/50 rounded-sm text-[8px] font-black uppercase">
+2419-                                      Selecionado
+2420-                                    </div>
+2421-                                  )}
+2422-                                  {swappingPlayerId && swappingPlayerId !== pid && (
+2423-                                    <div className="px-2 py-1 bg-brand-primary text-black rounded-sm text-[8px] font-black uppercase animate-pulse">
+2424-                                      Trocar
+2425-                                    </div>
+2426-                                  )}
+2427-                                </div>
+2428-                              </div>
+2429-                            ) : null;
+2430-                          })}
+2431-                          {team.playerIds.length === 0 && (
+2432-                            <div className="h-full flex flex-col items-center justify-center opacity-20 py-8">
+2433-                              <Users size={32} />
+2434-                              <span className="text-[10px] font-bold mt-2">SEM JOGADORES</span>
+2435-                            </div>
+2436-                          )}
+2437-                        </div>
+2438-                        
+2439-                        <div className="space-y-3 mt-6">
+2440-                          <div className="flex gap-3">
+2441-                            {teams.length > 2 && (
+2442-                              <button 
+2443-                                onClick={(e) => {
+2444-                                  e.stopPropagation();
+2445-                                  removeTeam(tIndex);
+2446-                                }} 
+2447-                                className="p-3 rounded-md text-red-500 hover:bg-red-500/10 transition-all flex items-center justify-center"
+2448-                                title="Excluir Time"
+2449-                              >
+2450-                                <Trash2 size={18} />
+2451-                              </button>
+2452-                            )}
+2453-                            <button 
+2454-                              onClick={(e) => {
+2455-                                e.stopPropagation();
+2456-                                if (match.isActive && (tIndex === match.teamAIndex || tIndex === match.teamBIndex)) {
+2457-                                  setToast({ message: "Não é possível adicionar jogadores a times em campo.", type: 'gray' });
+2458-                                  setTimeout(() => setToast(null), 3000);
+2459-                                  return;
+2460-                                }
+2461-                                setShowQuickAddPlayerModal(tIndex);
+2462-                              }}
+2463-                              className={`flex-[2] py-3 rounded-md text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${
+2464-                                (match.teamAIndex === tIndex || match.teamBIndex === tIndex)
+2465-                                  ? 'bg-black/10 text-black border border-black/20 hover:bg-black/20'
+2466-                                  : 'bg-black/5 text-brand-text-primary border border-black/10 hover:bg-black/10'
+2467-                              }`}
+2468-                            >
+2469-                              <Plus size={14} />
+2470-                            </button>
+2471-                          </div>
+2472-                        </div>
+2473-                      </motion.div>
+2474-                    ))}
+2475-                    <button 
+2476-                      onClick={addTeam}
+2477-                      className="p-6 rounded-xl border-2 border-dashed border-white/10 hover:border-brand-primary/50 hover:bg-brand-primary/5 transition-all flex flex-col items-center justify-center gap-3 group"
+2478-                    >
+2479-                      <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-brand-primary group-hover:text-black transition-all">
+2480-                        <Plus size={24} />
+2481-                      </div>
+2482-                    </button>
+2483-                  </div>
+2484-                )}
+2485-              </div>
+2486-            </div>
+2487-          </motion.div>
+2488-        )}
+2489-
+2490-          {currentScreen === 'match' && !isPrintMode && (
+2491-            <motion.div 
+2492-              key="match"
+2493-              initial={{ opacity: 0, scale: 0.95 }}
+2494-              animate={{ opacity: 1, scale: 1 }}
+2495-              exit={{ opacity: 0, scale: 0.95 }}
+2496-              className="p-6 flex flex-col h-full space-y-6"
+2497-            >
+2498-              {/* Match UI */}
+2499-              <>
+2500-                {/* Scoreboard */}
+2501-                <div className={`p-8 rounded-lg bg-brand-card shadow-2xl  flex flex-col items-center relative overflow-hidden`}>
+2502-                    <div className="absolute top-0 left-0 w-full h-1 bg-brand-primary/20">
+2503-                      <motion.div 
+2504-                        className="h-full bg-brand-primary"
+2505-                        initial={{ width: '100%' }}
+2506-                        animate={{ width: `${(match.timeRemaining / (match.config.duration * 60)) * 100}%` }}
+2507-                      />
+2508-                    </div>
+2509-
+2510-                    <div className="grid grid-cols-[1fr_auto_1fr] items-start w-full gap-2 mb-8">
+2511-                      {/* Team A */}
+2512-                      <div className="flex flex-col items-center">
+2513-                        <button 
+2514-                          onClick={() => (match.isActive && !match.isPaused) && setShowEventModal({ team: 'A' })}
+2515-                          className={`text-sm font-roboto font-bold uppercase tracking-tight text-center hover:text-brand-primary transition-colors ${(!match.isActive || match.isPaused) ? 'cursor-default opacity-50' : ''}`}
+2516-                        >
+2517-                          {teams[match.teamAIndex]?.name || 'Time A'}
+2518-                        </button>
+2519-                        <button 
+2520-                          onClick={() => (match.isActive && !match.isPaused) && setShowEventModal({ team: 'A' })}
+2521-                          className={`text-7xl font-black mt-2 tabular-nums hover:scale-110 transition-transform active:scale-95 text-brand-text-primary ${(!match.isActive || match.isPaused) ? 'cursor-default opacity-50' : ''}`}
+2522-                        >
+2523-                          {match.scoreA}
+2524-                        </button>
+2525-                        <div className={`mt-4 grid grid-cols-2 gap-1 w-full max-w-[140px] p-2 rounded-xl bg-black/5`}>
+2526-                          {(teams[match.teamAIndex]?.playerIds || []).map((pid, pIdx) => (
+2527-                            <button 
+2528-                              key={`match-player-a-${match.teamAIndex}-${pid}-${pIdx}`} 
+2529-                              onClick={() => {
+2530-                                if (match.isActive && !match.isPaused) {
+2531-                                  setShowPlayerActionsModal({ teamIndex: match.teamAIndex, playerId: pid });
+2532-                                }
+2533-                              }}
+2534-                              className={`text-[8px] uppercase font-roboto font-bold tracking-tight px-1.5 py-1.5 rounded-md text-center truncate transition-all active:scale-95 bg-black/5 text-brand-text-secondary border border-black/5 hover:bg-brand-primary/20 hover:text-black`}
+2535-                            >
+2536-                              {players.find(p => p.id === pid)?.name}
+2537-                            </button>
+2538-                          ))}
+2539-                        </div>
+2540-                      </div>
+2541-                      
+2542-                      {/* VS Divider */}
+2543-                      <div className="flex flex-col items-center pt-8 px-2">
+2544-                        <div className={`text-xl font-roboto font-bold text-brand-text-primary`}>VS</div>
+2545-                      </div>
+2546- 
+2547-                      {/* Team B */}
+2548-                      <div className="flex flex-col items-center">
+2549-                        <button 
+2550-                          onClick={() => (match.isActive && !match.isPaused) && setShowEventModal({ team: 'B' })}
+2551-                          className={`text-sm font-roboto font-bold uppercase tracking-tight text-center hover:text-brand-text-primary transition-colors ${(!match.isActive || match.isPaused) ? 'cursor-default opacity-50' : ''}`}
+2552-                        >
+2553-                          {teams[match.teamBIndex]?.name || 'Time B'}
+2554-                        </button>
+2555-                        <button 
+2556-                          onClick={() => (match.isActive && !match.isPaused) && setShowEventModal({ team: 'B' })}
+2557-                          className={`text-7xl font-black mt-2 tabular-nums hover:scale-110 transition-transform active:scale-95 text-brand-text-primary ${(!match.isActive || match.isPaused) ? 'cursor-default opacity-50' : ''}`}
+2558-                        >
+2559-                          {match.scoreB}
+2560-                        </button>
+2561-                        <div className={`mt-4 grid grid-cols-2 gap-1 w-full max-w-[140px] p-2 rounded-xl bg-black/5`}>
+2562-                          {(teams[match.teamBIndex]?.playerIds || []).map((pid, pIdx) => (
+2563-                            <button 
+2564-                              key={`match-player-b-${match.teamBIndex}-${pid}-${pIdx}`} 
+2565-                              onClick={() => {
+2566-                                if (match.isActive && !match.isPaused) {
+2567-                                  setShowPlayerActionsModal({ teamIndex: match.teamBIndex, playerId: pid });
+2568-                                }
+2569-                              }}
+2570-                              className={`text-[8px] uppercase font-roboto font-bold tracking-tight px-1.5 py-1.5 rounded-md text-center truncate transition-all active:scale-95 bg-black/5 text-brand-text-secondary border border-black/5 hover:bg-brand-primary/20 hover:text-black`}
+2571-                            >
+2572-                              {players.find(p => p.id === pid)?.name}
+2573-                            </button>
+2574-                          ))}
+2575-                        </div>
+2576-                      </div>
+2577-                    </div>
+2578-
+2579-                    <button 
+2580-                      onClick={() => setShowTimeEditModal(true)}
+2581-                      className="cursor-pointer hover:scale-105 transition-transform active:scale-95"
+2582-                    >
+2583-                      <FlipClock time={match.timeRemaining} size="small" />
+2584-                    </button>
+2585-
+2586-                    {(!match.isActive || (match.timeRemaining === 0) || (match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit)) && (
+2587-                      <div className="mt-6 px-4 py-1 bg-red-500/20 text-red-400 text-[10px] font-black uppercase tracking-widest rounded-full">
+2588-                        Partida Finalizada
+2589-                      </div>
+2590-                    )}
+2591-                  </div>
+2592-
+2593-                  {/* Controls */}
+2594-                  <div className="grid grid-cols-2 gap-3">
+2595-                    <button 
+2596-                      disabled={match.timeRemaining === 0 || match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit}
+2597-                      onClick={() => {
+2598-                        playWhistle();
+2599-                        setMatch(prev => ({ ...prev, isPaused: !prev.isPaused, isActive: true }));
+2600-                      }}
+2601-                      className={`p-4 rounded-md flex flex-col items-center justify-center gap-1 transition-all disabled:opacity-20 glass-3d ${match.isPaused ? 'bg-brand-card text-brand-primary border border-brand-primary/20' : 'bg-brand-card text-brand-text-secondary'}`}
+2602-                    >
+2603-                      {match.isPaused ? <Play size={24} fill="currentColor" /> : <Pause size={24} fill="currentColor" />}
+2604-                      <span className="text-[8px] font-black uppercase">{match.isPaused ? 'Iniciar' : 'Pausa'}</span>
+2605-                    </button>
+2606-                    <button 
+2607-                      disabled={match.hasEnded}
+2608-                      onClick={() => setMatch(prev => ({ ...prev, timeRemaining: prev.config.duration * 60, scoreA: 0, scoreB: 0, events: [], isPaused: true, isActive: true, hasEnded: false }))}
+2609-                      className="p-4 rounded-lg bg-brand-card text-brand-text-secondary flex flex-col items-center justify-center gap-1 transition-all disabled:opacity-20 glass-3d"
+2610-                    >
+2611-                      <RotateCcw size={24} />
+2612-                      <span className="text-[8px] font-bold uppercase">Reiniciar</span>
+2613-                    </button>
+2614-                    <button 
+2615-                      onClick={() => setCurrentScreen('teams')}
+2616-                      className="p-4 rounded-lg bg-brand-card text-brand-text-secondary flex flex-col items-center justify-center gap-1 transition-all glass-3d"
+2617-                    >
+2618-                      <Users size={24} />
+2619-                      <span className="text-[8px] font-bold uppercase">Nova partida</span>
+2620-                    </button>
+2621-                    <button 
+2622-                      disabled={!match.isActive}
+2623-                      onClick={finishMatch}
+2624-                      className="p-4 rounded-md bg-red-500/10 text-red-400 flex flex-col items-center justify-center gap-1 transition-all disabled:opacity-20 glass-3d"
+2625-                    >
+2626-                      <CheckCircle2 size={24} />
+2627-                      <span className="text-[8px] font-bold uppercase">Finalizar</span>
+2628-                    </button>
+2629-                  </div>
+2630-
+2631-                  {/* Match Info Box */}
+2632-                  <div className={`p-4 rounded-md bg-brand-card/30 border border-white/5 space-y-3`}>
+2633-                      <div className="flex items-center justify-between">
+2634-                      <span className="text-[9px] font-black uppercase tracking-widest opacity-40">Em Jogo</span>
+2635-                      <div className="flex items-center gap-2">
+2636-                        <span className="text-[10px] font-bold text-brand-primary">{teams[match.teamAIndex]?.name || 'Time A'}</span>
+2637-                        <span className="text-[8px] opacity-30">VS</span>
+2638-                        <span className="text-[10px] font-bold text-brand-card">{teams[match.teamBIndex]?.name || 'Time B'}</span>
+2639-                      </div>
+2640-                    </div>
+2641-                  </div>
+2642-
+2643-                  {/* Match Events */}
+2644-                  <div className="flex-1 space-y-4">
+2645-                    <h3 className="text-xs font-bold uppercase tracking-widest text-brand-text-secondary">Eventos da Partida</h3>
+2646-                    <div className="space-y-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
+2647-                      <AnimatePresence mode="wait">
+2648-                        {match.events.length === 0 ? (
+2649-                          <motion.div 
+2650-                            key="no-events"
+2651-                            initial={{ opacity: 0 }}
+2652-                            animate={{ opacity: 0.3 }}
+2653-                            exit={{ opacity: 0 }}
+2654-                            className="text-center py-4 text-sm"
+2655-                          >
+2656-                            Nenhum gol marcado ainda.
+2657-                          </motion.div>
+2658-                        ) : (
+2659-                          [...match.events].reverse().map((event, eIdx) => {
+2660-                            const player = players.find(p => p.id === event.playerId);
+2661-                            const assist = players.find(p => p.id === event.assistId);
+2662-                            return (
+2663-                              <motion.div 
+2664-                                key={`event-log-${event.id}-${eIdx}`}
+2665-                                layout
+2666-                                initial={{ opacity: 0, x: -20, scale: 0.95 }}
+2667-                                animate={{ opacity: 1, x: 0, scale: 1 }}
+2668-                                exit={{ opacity: 0, scale: 0.95 }}
+2669-                                className={`p-3 rounded-md flex items-center justify-between text-sm bg-brand-card/50 border border-white/5 shadow-lg`}
+2670-                              >
+2671-                                <div className="flex items-center gap-2">
+2672-                                  <div className={`w-2 h-2 rounded-full ${event.team === 'A' ? 'bg-brand-primary' : 'bg-brand-card'}`} />
+2673-                                  <span className="font-bold">{player?.name}</span>
+2674-                                  {assist && <span className="text-brand-text-secondary text-[10px] italic">(Ass: {assist.name})</span>}
+2675-                                </div>
+2676-                                <span className="text-brand-text-secondary font-mono text-[10px]">{formatTime(event.timestamp)}</span>
+2677-                              </motion.div>
+2678-                            );
+2679-                          })
+2680-                        )}
+2681-                      </AnimatePresence>
+2682-                    </div>
+2683-                  </div>
+2684-
+2685-                  {/* New Match Notification */}
+2686-                  <AnimatePresence>
+2687-                    {match.hasEnded && (
+2688-                      <motion.div
+2689-                        initial={{ opacity: 0, y: 20 }}
+2690-                        animate={{ opacity: 1, y: 0 }}
+2691-                        exit={{ opacity: 0, y: 10 }}
+2692-                        className="mt-6 p-4 rounded-lg bg-brand-gradient text-black shadow-2xl  flex flex-col items-center gap-3 glass-3d border border-white/20"
+2693-                      >
+2694-                        <div className="flex items-center gap-2">
+2695-                          <Trophy size={20} fill="currentColor" />
+2696-                          <span className="text-xs font-black uppercase tracking-widest">Partida Finalizada</span>
+2697-                        </div>
+2698-                        <button 
+2699-                          onClick={() => {
+2700-                            setCurrentScreen('teams');
+2701-                            setMatch(prev => ({ ...prev, hasEnded: false }));
+2702-                          }}
+2703-                          className="w-full py-3 bg-brand-primary text-black rounded-md font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95"
+2704-                        >
+2705-                          <Plus size={14} />
+2706-                          Iniciar nova partida
+2707-                        </button>
+2708-                      </motion.div>
+2709-                    )}
+2710-                  </AnimatePresence>
+2711-                </>
+2712-              </motion.div>
+2713-          )}
+2714-
+2715-          {currentScreen === 'ranking' && !isPrintMode && (
+2716-            <motion.div 
+2717-              key="ranking"
+2718-              initial={{ opacity: 0, y: 20 }}
+2719-              animate={{ opacity: 1, y: 0 }}
+2720-              exit={{ opacity: 0, y: -20 }}
+2721-              className="p-6 space-y-6 pb-24"
+2722-            >
+2723-              <h2 className="text-xs font-bold uppercase tracking-widest text-brand-text-secondary">Desempenho Geral</h2>
+2724-              
+2725-              {/* Animated Chart */}
+2726-              <div className={`p-4 rounded-md border backdrop-blur-xl bg-brand-card/30 border-white/10`}>
+2727-                <div className="h-64 w-full">
+2728-                  {players.length > 0 ? (
+2729-                    <ResponsiveContainer width="100%" height="100%">
+2730-                      <BarChart 
+2731-                        data={[...players]
+2732-                          .sort((a, b) => (b.goals + b.assists) - (a.goals + a.assists))
+2733-                          .slice(0, 5)
+2734-                          .map(p => ({
+2735-                            name: p.name.split(' ')[0],
+2736-                            gols: p.goals,
+2737-                            assists: p.assists
+2738-                          }))}
+2739-                        margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+2740-                      >
+2741-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={'var(--color-brand-surface-light)'} />
+2742-                        <XAxis 
+2743-                          dataKey="name" 
+2744-                          axisLine={false} 
+2745-                          tickLine={false} 
+2746-                          tick={{ fontSize: 10, fill: 'var(--color-brand-text-secondary)', fontWeight: 700 }}
+2747-                        />
+2748-                        <YAxis 
+2749-                          axisLine={false} 
+2750-                          tickLine={false} 
+2751-                          tick={{ fontSize: 10, fill: 'var(--color-brand-text-secondary)' }}
+2752-                        />
+2753-                        <Tooltip 
+2754-                          cursor={{ fill: 'var(--color-brand-surface)', radius: 8 }}
+2755-                          contentStyle={{ 
+2756-                            backgroundColor: 'var(--color-brand-card)', 
+2757-                            borderColor: 'rgba(255,255,255,0.1)',
+2758-                            borderRadius: '12px',
+2759-                            fontSize: '12px',
+2760-                            fontWeight: 'bold'
+2761-                          }}
+2762-                        />
+2763-                        <Legend 
+2764-                          iconType="circle" 
+2765-                          wrapperStyle={{ fontSize: '10px', fontWeight: 'bold', paddingTop: '10px' }}
+2766-                        />
+2767-                        <Bar 
+2768-                          dataKey="gols" 
+2769-                          fill="var(--color-brand-primary)" 
+2770-                          radius={[4, 4, 0, 0]} 
+2771-                          animationDuration={1500}
+2772-                          name="Gols"
+2773-                        />
+2774-                        <Bar 
+2775-                          dataKey="assists" 
+2776-                          fill="var(--color-brand-primary-hover)" 
+2777-                          radius={[4, 4, 0, 0]} 
+2778-                          animationDuration={1500}
+2779-                          animationBegin={300}
+2780-                          name="Assists"
+2781-                        />
+2782-                      </BarChart>
+2783-                    </ResponsiveContainer>
+2784-                  ) : (
+2785-                    <div className="h-full flex items-center justify-center text-brand-text-secondary text-sm">
+2786-                      Sem dados para o gráfico
+2787-                    </div>
+2788-                  )}
+2789-                </div>
+2790-              </div>
+2791-
+2792-              <div className="flex items-center justify-between">
+2793-                <h2 className="text-xs font-bold uppercase tracking-widest text-brand-text-secondary">Top 10 Jogadores</h2>
+2794-                <div className="flex gap-2">
+2795-                  <button 
+2796-                    onClick={() => setShowResetStatsConfirm(true)}
+2797-                    className="px-2 py-1 bg-red-500/10 border border-red-500/20 text-red-500 rounded-full text-[8px] font-black uppercase active:scale-95 transition-all flex items-center gap-1"
+2798-                  >
+2799-                    <RotateCcw size={10} />
+2800-                    Zerar
+2801-                  </button>
+2802-                  <button 
+2803-                    onClick={() => setIsPrintMode(true)}
+2804-                    className="px-2 py-1 bg-white/10 border border-white/20 text-white rounded-full text-[8px] font-black uppercase active:scale-95 transition-all flex items-center gap-1"
+2805-                  >
+2806-                    <Camera size={10} />
+2807-                    Print
+2808-                  </button>
+2809-                </div>
+2810-              </div>
+2811-              
+2812-              <div className={`rounded-md overflow-hidden border bg-brand-card/50 border-white/10`}>
+2813-                {[...players]
+2814-                  .sort((a, b) => (b.goals + b.assists) - (a.goals + a.assists))
+2815-                  .slice(0, 10)
+2816-                  .map((player, index) => (
+2817-                  <div 
+2818-                    key={`ranking-player-${player.id}-${index}`}
+2819-                    className={`flex items-center gap-4 p-4 ${index !== 0 ? `border-t border-white/5` : ''}`}
+2820-                  >
+2821-                    <div className={`w-7 h-7 rounded-sm flex items-center justify-center text-xs font-black border ${
+2822-                      index === 0 ? 'bg-brand-gradient text-white border-transparent' : 
+2823-                      index === 1 ? 'bg-zinc-300 text-zinc-800 border-zinc-400' : 
+2824-                      index === 2 ? 'bg-amber-700 text-white border-amber-800' : 
+2825-                      ('bg-brand-dark text-brand-text-secondary border-zinc-700')
+2826-                    }`}>
+2827-                      {index + 1}
+2828-                    </div>
+2829-                    <div className="flex-1">
+2830-                      <div className="text-xs font-bold leading-tight">{player.name}</div>
+2831-                      <div className="text-[8px] text-brand-text-secondary uppercase tracking-tighter">
+2832-                        {player.goals} Gols • {player.assists} Assistências
+2833-                      </div>
+2834-                    </div>
+2835-                    <div className="text-base font-black text-brand-primary">
+2836-                      {player.goals + player.assists}
+2837-                    </div>
+2838-                  </div>
+2839-                ))}
+2840-                {players.length === 0 && (
+2841-                  <div className="p-8 text-center text-brand-text-secondary text-sm">
+2842-                    Nenhum jogador registrado ainda.
+2843-                  </div>
+2844-                )}
+2845-              </div>
+2846-            </motion.div>
+2847-          )}
+2848-
+2849-          {currentScreen === 'finance' && (
+2850-            <motion.div 
+2851-              key="finance"
+2852-              initial={{ opacity: 0, x: 20 }}
+2853-              animate={{ opacity: 1, x: 0 }}
+2854-              exit={{ opacity: 0, x: -20 }}
+2855-              className={`space-y-4 ${isPrintMode ? 'space-y-0' : ''}`}
+2856-            >
+2857-              {!isPrintMode && financeSubScreen === 'menu' && (
+2858-                <div className="space-y-6">
+2859-                  <div className="flex justify-between items-center px-4 pt-4">
+2860-                    <h2 className="text-2xl font-black uppercase tracking-tighter">Financeiro</h2>
+2861-                  </div>
+2862-                  
+2863-                  <div className="grid grid-cols-1 gap-3 px-4">
+2864-                    <button 
+2865-                      onClick={() => setFinanceSubScreen('mensalidade')}
+2866-                      className="group p-6 rounded-md bg-brand-card border border-white/10 flex items-center gap-4 hover:bg-brand-primary/10 transition-all active:scale-95"
+2867-                    >
+2868-                      <div className="w-12 h-12 rounded-md bg-brand-gradient flex items-center justify-center shadow-lg  group-hover:scale-110 transition-transform">
+2869-                        <DollarSign size={24} className="text-black" />
+2870-                      </div>
+2871-                      <div className="text-left">
+2872-                        <h3 className="text-xl font-black uppercase tracking-tighter">Mensalidade</h3>
+2873-                        <p className="text-[10px] text-brand-text-secondary uppercase font-bold tracking-widest">Controle de pagamentos</p>
+2874-                      </div>
+2875-                      <ChevronRight className="ml-auto text-brand-text-secondary group-hover:text-brand-primary transition-colors" />
+2876-                    </button>
+2877-                    
+2878-                    <div className="p-6 rounded-md bg-black/5 border border-black/5 opacity-50 flex items-center gap-4 grayscale">
+2879-                      <div className="w-12 h-12 rounded-md bg-zinc-800 flex items-center justify-center">
+2880-                        <Zap size={24} className="text-zinc-600" />
+2881-                      </div>
+2882-                      <div className="text-left">
+2883-                        <h3 className="text-xl font-black uppercase tracking-tighter text-zinc-600">Outros</h3>
+2884-                        <p className="text-[10px] text-zinc-600 uppercase font-bold tracking-widest italic">Em breve...</p>
+2885-                      </div>
+2886-                    </div>
+2887-                  </div>
+2888-                </div>
+2889-              )}
+2890-
+2891-              {financeSubScreen === 'mensalidade' && (
+2892-                <>
+2893-                  {!isPrintMode && (
+2894-                    <div className="flex justify-between items-center px-4">
+2895-                      <div className="flex items-center gap-2">
+2896-                        <button 
+2897-                          onClick={() => setFinanceSubScreen('menu')}
+2898-                          className="p-1.5 glass-3d rounded-sm text-brand-text-secondary hover:text-brand-primary transition-colors"
+2899-                        >
+2900-                          <ChevronRight size={16} className="rotate-180" />
+2901-                        </button>
+2902-                        <h2 className="text-xl font-black uppercase tracking-tighter">Mensalidade</h2>
+2903-                      </div>
+2904-                      <div className="flex gap-1.5">
+2905-                        <button 
+2906-                          onClick={() => setIsPrintMode(true)}
+2907-                          className="px-2 py-1 bg-white/10 border border-white/20 text-white rounded-full text-[8px] font-black uppercase active:scale-95 transition-all flex items-center gap-1"
+2908-                        >
+2909-                          <Camera size={10} />
+2910-                          Print
+2911-                        </button>
+2912-                        <button 
+2913-                          onClick={() => setShowAddFinancePlayerModal(true)}
+2914-                          className="px-2 py-1 bg-brand-primary text-brand-dark rounded-full text-[8px] font-black uppercase shadow-lg  active:scale-95 transition-all"
+2915-                        >
+2916-                          Adicionar
+2917-                        </button>
+2918-                      </div>
+2919-                    </div>
+2920-                  )}
+2921-
+2922-                  {!isPrintMode && (
+2923-                    <div className="grid grid-cols-2 gap-2 px-4">
+2924-                      <div className="p-2 rounded-md bg-black/5 border border-black/10 flex items-center justify-between">
+2925-                        <div className="space-y-0.5">
+2926-                          <span className="text-[8px] font-bold text-brand-text-secondary uppercase tracking-widest">Mensalidade</span>
+2927-                          {isEditingFee ? (
+2928-                            <input 
+2929-                              autoFocus
+2930-                              type="number"
+2931-                              value={tempFee}
+2932-                              onChange={(e) => setTempFee(e.target.value)}
+2933-                              onBlur={() => {
+2934-                                const val = parseInt(tempFee);
+2935-                                if (!isNaN(val)) setMonthlyFee(val);
+2936-                                setIsEditingFee(false);
+2937-                              }}
+2938-                              onKeyDown={(e) => {
+2939-                                if (e.key === 'Enter') {
+2940-                                  const val = parseInt(tempFee);
+2941-                                  if (!isNaN(val)) setMonthlyFee(val);
+2942-                                  setIsEditingFee(false);
+2943-                                }
+2944-                              }}
+2945-                              className="w-16 bg-brand-dark border border-brand-primary/50 text-brand-primary font-black text-sm rounded px-1 outline-none"
+2946-                            />
+2947-                          ) : (
+2948-                            <div 
+2949-                              onClick={() => {
+2950-                                setTempFee(monthlyFee.toString());
+2951-                                setIsEditingFee(true);
+2952-                              }}
+2953-                              className="text-base font-black text-brand-primary cursor-pointer hover:opacity-80 transition-opacity"
+2954-                            >
+2955-                              R$ {monthlyFee},00
+2956-                            </div>
+2957-                          )}
+2958-                        </div>
+2959-                        <div className="flex flex-col gap-1">
+2960-                          <button onClick={() => setMonthlyFee(prev => prev + 1)} className="p-1 bg-white/5 rounded hover:bg-white/10"><Plus size={10} /></button>
+2961-                          <button onClick={() => setMonthlyFee(prev => Math.max(0, prev - 1))} className="p-1 bg-white/5 rounded hover:bg-white/10"><Minus size={10} /></button>
+2962-                        </div>
+2963-                      </div>
+2964-
+2965-                      <div className="p-2 rounded-md bg-white/5 border border-white/10 flex items-center justify-between">
+2966-                        <div className="space-y-0.5">
+2967-                          <span className="text-[8px] font-bold text-brand-text-secondary uppercase tracking-widest">Ano Selecionado</span>
+2968-                          <select 
+2969-                            value={selectedYear}
+2970-                            onChange={(e) => setSelectedYear(parseInt(e.target.value))}
+2971-                            className="bg-transparent text-base font-black text-brand-primary outline-none cursor-pointer"
+2972-                          >
+2973-                            {availableYears.map(y => (
+2974-                              <option key={y} value={y} className="bg-brand-card text-brand-text-primary">{y}</option>
+2975-                            ))}
+2976-                          </select>
+2977-                        </div>
+2978-                        <button 
+2979-                          onClick={addYear}
+2980-                          className="w-7 h-7 rounded-sm bg-brand-primary/20 text-brand-primary flex items-center justify-center hover:bg-brand-primary/30 transition-all active:scale-90"
+2981-                          title="Adicionar Novo Ano"
+2982-                        >
+2983-                          <Plus size={14} />
+2984-                        </button>
+2985-                      </div>
+2986-                    </div>
+2987-                  )}
+2988-
+2989-                  {isPrintMode && (
+2990-                    <div className="p-3 bg-emerald-600 text-white flex justify-between items-center">
+2991-                      <FutQuinaLogo size="sm" />
+2992-                      <span className="text-lg font-black uppercase tracking-tighter ml-2">- {selectedYear}</span>
+2993-                      <button 
+2994-                        onClick={() => setIsPrintMode(false)}
+2995-                        className="p-1.5 bg-white/20 rounded-sm"
+2996-                      >
+2997-                        <X size={16} />
+2998-                      </button>
+2999-                    </div>
+3000-                  )}
+3001-
+3002-                  <div className={`${isPrintMode ? 'overflow-visible' : 'overflow-x-auto -mx-4 px-4 pb-2 custom-scrollbar'}`}>
+3003-                    <div className={`${isPrintMode ? 'w-full' : 'min-w-[800px]'}`}>
+3004-                      <table className={`w-full border-collapse ${isPrintMode ? 'text-[10px]' : 'text-[9px]'}`}>
+3005-                        <thead>
+3006-                          <tr className={`${isPrintMode ? 'bg-zinc-100 text-zinc-900' : 'bg-emerald-200 text-emerald-900'} font-black uppercase tracking-tighter`}>
+3007-                            <th className={`p-1.5 text-left border ${isPrintMode ? 'border-zinc-300' : 'border-emerald-300 rounded-tl-xl sticky left-0 z-10 bg-emerald-200'}`}>Nome</th>
+3008-                            <th className={`p-1.5 text-center border ${isPrintMode ? 'border-zinc-300' : 'border-emerald-300'}`} colSpan={12}>{selectedYear} (R$ {monthlyFee},00)</th>
+3009-                            <th className={`p-1.5 text-center border ${isPrintMode ? 'border-zinc-300' : 'border-emerald-300'}`}>Dívida</th>
+3010-                            {!isPrintMode && <th className="p-1.5 text-center border border-emerald-300 rounded-tr-xl">Ações</th>}
+3011-                          </tr>
+3012-                          <tr className={`${isPrintMode ? 'bg-zinc-50 text-zinc-700' : 'bg-emerald-100 text-emerald-800'} font-bold uppercase tracking-tighter`}>
+3013-                            <th className={`border ${isPrintMode ? 'border-zinc-300' : 'border-emerald-300 sticky left-0 z-10 bg-emerald-100'}`}></th>
+3014-                            {MONTHS.map(month => (
+3015-                              <th key={month} className={`p-0.5 border ${isPrintMode ? 'border-zinc-300' : 'border-emerald-300'}`}>{month}</th>
+3016-                            ))}
+3017-                            <th className={`border ${isPrintMode ? 'border-zinc-300' : 'border-emerald-300'}`}></th>
+3018-                            {!isPrintMode && <th className="border border-emerald-300"></th>}
+3019-                          </tr>
+3020-                        </thead>
+3021-                        <tbody className={`${isPrintMode ? 'bg-white text-black' : 'bg-white text-zinc-800'}`}>
+3022-                          {financePlayers.map((player, idx) => {
+3023-                            const record = payments.find(p => p.playerId === player.id && p.year === selectedYear) || { playerId: player.id, year: selectedYear, months: {}, monthlyFee: monthlyFee };
+3024-                            
+3025-                            const totalDebt = 12 * monthlyFee;
+3026-                            const paidMonths = MONTHS.reduce((acc, month) => acc + (record.months[month] ? monthlyFee : 0), 0);
+3027-                            const remaining = totalDebt - paidMonths;
+3028-
+3029-                            return (
+3030-                              <tr key={`finance-row-${player.id}-${idx}`} className={`${idx % 2 === 0 ? (isPrintMode ? 'bg-zinc-50' : 'bg-zinc-50') : 'bg-white'} ${!isPrintMode ? 'hover:bg-emerald-50 transition-colors' : ''}`}>
+3031-                                <td className={`p-1 border ${isPrintMode ? 'border-zinc-200' : 'border-zinc-200 font-bold sticky left-0 z-10 bg-inherit'}`}>
+3032-                                  {isPrintMode ? (
+3033-                                    <span className="p-0.5 font-bold">{player.name}</span>
+3034-                                  ) : (
+3035-                                    <input 
+3036-                                      type="text" 
+3037-                                      value={player.name}
+3038-                                      onChange={(e) => {
+3039-                                        setFinancePlayers(prev => prev.map(p => p.id === player.id ? { ...p, name: e.target.value } : p));
+3040-                                      }}
+3041-                                      className="w-full bg-transparent border-none focus:ring-0 p-0.5 text-[9px] font-bold outline-none"
+3042-                                    />
+3043-                                  )}
+3044-                                </td>
+3045-                                {MONTHS.map(month => {
+3046-                                  const isPaid = (record.months[month] || 0) > 0;
+3047-                                  return (
+3048-                                    <td key={month} className={`p-0.5 border border-zinc-200 text-center`}>
+3049-                                      {isPrintMode ? (
+3050-                                        <span className={`font-bold ${isPaid ? 'text-emerald-600' : 'text-red-400 opacity-30'}`}>
+3051-                                          {isPaid ? 'OK' : '-'}
+3052-                                        </span>
+3053-                                      ) : (
+3054-                                        <button 
+3055-                                          onClick={() => togglePayment(player.id, month, monthlyFee)} 
+3056-                                          className={`w-full h-full py-0.5 rounded transition-all ${isPaid ? 'bg-emerald-500 text-white font-black' : 'text-zinc-400 font-bold'}`}
+3057-                                        >
+3058-                                          {isPaid ? 'PAGO' : `R$ ${monthlyFee}`}
+3059-                                        </button>
+3060-                                      )}
+3061-                                    </td>
+3062-                                  );
+3063-                                })}
+3064-                                <td className={`p-1 border border-zinc-200 text-center font-black ${remaining > 0 ? 'text-red-600' : 'text-emerald-700'}`}>
+3065-                                  R$ {remaining}
+3066-                                </td>
+3067-                                {!isPrintMode && (
+3068-                                  <td className="p-1 border border-zinc-200 text-center">
+3069-                                    <button 
+3070-                                      onClick={() => removeFinancePlayer(player.id)}
+3071-                                      className="p-1 bg-red-50 text-red-500 rounded-sm hover:bg-red-500 hover:text-white transition-all"
+3072-                                    >
+3073-                                      <Trash2 size={12} />
+3074-                                    </button>
+3075-                                  </td>
+3076-                                )}
+3077-                              </tr>
+3078-                            );
+3079-                          })}
+3080-                          {financePlayers.length === 0 && (
+3081-                            <tr>
+3082-                              <td colSpan={15} className="p-4 text-center text-zinc-400 italic">
+3083-                                Nenhum jogador cadastrado.
+3084-                              </td>
+3085-                            </tr>
+3086-                          )}
+3087-                        </tbody>
+3088-                      </table>
+3089-                    </div>
+3090-                  </div>
+3091-
+3092-                  {!isPrintMode && (
+3093-                    <div className="p-3 rounded-md bg-white/5 border border-white/10 space-y-1">
+3094-                      <div className="flex items-center gap-1.5 text-brand-primary">
+3095-                        <Info size={12} />
+3096-                        <span className="text-[8px] font-bold uppercase tracking-widest">Dica</span>
+3097-                      </div>
+3098-                      <p className="text-[8px] text-brand-text-secondary leading-relaxed">
+3099-                        Clique no valor da mensalidade para editar. Use o botão "+" para criar um novo ano de controle.
+3100-                      </p>
+3101-                    </div>
+3102-                  )}
+3103-                </>
+3104-              )}
+3105-            </motion.div>
+3106-          )}
+3107-
+3108-          {currentScreen === 'ranking' && isPrintMode && (
+3109-            <div className="p-8 bg-white min-h-screen text-black space-y-8">
+3110-              <div className="flex items-center justify-between border-b border-black/10 pb-3">
+3111-                <div className="flex items-center gap-2">
+3112-                  <Trophy size={16} className="text-black" />
+3113-                  <FutQuinaLogo size="sm" dark={true} />
+3114-                  <span className="text-sm font-black opacity-10">|</span>
+3115-                  <span className="text-sm font-black uppercase tracking-tighter">Ranking</span>
+3116-                </div>
+3117-                <button 
+3118-                  onClick={() => setIsPrintMode(false)}
+3119-                  className="print:hidden px-3 py-1.5 bg-brand-primary text-black rounded-sm text-[9px] font-bold uppercase hover:opacity-80 transition-colors"
+3120-                >
+3121-                  Sair do Print
+3122-                </button>
+3123-              </div>
+3124-
+3125-              <div className="space-y-4">
+3126-                <h2 className="text-base font-bold uppercase tracking-widest border-l-4 border-black pl-3">Top Jogadores</h2>
+3127-                <div className="border-2 border-black rounded-lg overflow-hidden">
+3128-                  <table className="w-full text-left border-collapse">
+3129-                    <thead>
+3130-                      <tr className="bg-brand-primary text-black">
+3131-                        <th className="p-2 text-[10px] font-black uppercase">Pos</th>
+3132-                        <th className="p-2 text-[10px] font-black uppercase">Jogador</th>
+3133-                        <th className="p-2 text-[10px] font-black uppercase text-center">Gols</th>
+3134-                        <th className="p-2 text-[10px] font-black uppercase text-center">Assists</th>
+3135-                        <th className="p-2 text-[10px] font-black uppercase text-center">Total</th>
+3136-                      </tr>
+3137-                    </thead>
+3138-                    <tbody>
+3139-                      {[...players]
+3140-                        .sort((a, b) => (b.goals + b.assists) - (a.goals + a.assists))
+3141-                        .slice(0, 15)
+3142-                        .map((player, index) => (
+3143-                        <tr key={`finance-row-print-${player.id}-${index}`} className="border-b border-black/10">
+3144-                          <td className="p-2 text-xs font-black">{index + 1}</td>
+3145-                          <td className="p-2 text-xs font-bold">{player.name}</td>
+3146-                          <td className="p-2 text-xs text-center">{player.goals}</td>
+3147-                          <td className="p-2 text-xs text-center">{player.assists}</td>
+3148-                          <td className="p-2 text-xs text-center font-black">{player.goals + player.assists}</td>
+3149-                        </tr>
+3150-                      ))}
+3151-                    </tbody>
+3152-                  </table>
+3153-                </div>
+3154-              </div>
+3155-              
+3156-              <div className="text-[8px] text-center opacity-50 uppercase font-bold">
+3157-                Gerado em {new Date().toLocaleDateString('pt-BR')} • Fut Quina App
+3158-              </div>
+3159-            </div>
+3160-          )}
+3161-        </AnimatePresence>
+3162-        {showEqualizerModal && equalizerData && (
+3163-          <motion.div 
+3164-            initial={{ opacity: 0 }}
+3165-            animate={{ opacity: 1 }}
+3166-            exit={{ opacity: 0 }}
+3167-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[80] flex items-center justify-center p-6"
+3168-          >
+3169-            <motion.div 
+3170-              initial={{ scale: 0.9, y: 20 }}
+3171-              animate={{ scale: 1, y: 0 }}
+3172-              className={`w-full max-w-md p-8 rounded-lg bg-brand-card space-y-6`}
+3173-            >
+3174-              <div className="flex justify-between items-center">
+3175-                <h3 className="text-2xl font-black uppercase tracking-tighter">Completar Times</h3>
+3176-                <button onClick={() => setShowEqualizerModal(false)} className="p-2 glass-3d rounded-md">
+3177-                  <Plus size={20} className="rotate-45" />
+3178-                </button>
+3179-              </div>
+3180-              
+3181-              <p className="text-xs text-brand-text-secondary uppercase font-bold tracking-widest leading-relaxed">
+3182-                A partida só pode iniciar com times equilibrados. Selecione jogadores de <span className="text-brand-primary">outros times</span> para completar o <span className="text-brand-primary">{teams[equalizerData.targetTeamIndex].name}</span>.
+3183-                <br />
+3184-                <span className="text-[10px] opacity-60 mt-1 block">
+3185-                  Faltam {equalizerData.requiredCount - teams[equalizerData.targetTeamIndex].playerIds.length} jogador(es) para igualar ao {teams[equalizerData.otherTeamIndex].name}.
+3186-                </span>
+3187-              </p>
+3188-
+3189-              <div className="max-h-60 overflow-y-auto pr-2 space-y-2 custom-scrollbar">
+3190-                {players
+3191-                  .filter(p => {
+3192-                    // Only show players who are NOT in the two selected teams AND are available
+3193-                    const isSelected = (match.teamAIndex !== -1 && teams[match.teamAIndex]?.playerIds?.includes(p.id)) || 
+3194-                                     (match.teamBIndex !== -1 && teams[match.teamBIndex]?.playerIds?.includes(p.id));
+3195-                    return !isSelected && p.isAvailable;
+3196-                  })
+3197-                  .map(player => {
+3198-                    const currentTeam = teams.find(t => t.playerIds.includes(player.id));
+3199-                    const isInOtherTeam = equalizerData.otherTeamIndex !== -1 && teams[equalizerData.otherTeamIndex]?.playerIds?.includes(player.id);
+3200-                    const isInAnyOtherTeam = teams.some((t, idx) => idx !== equalizerData.targetTeamIndex && t.playerIds?.includes(player.id));
+3201-                    
+3202-                    return (
+3203-                      <button 
+3204-                        key={`equalizer-player-choice-${player.id}`}
+3205-                        onClick={() => {
+3206-                          const newTeams = [...teams];
+3207-                          
+3208-                          // Remove from any other team first
+3209-                          newTeams.forEach(t => {
+3210-                            t.playerIds = t.playerIds.filter(id => id !== player.id);
+3211-                          });
+3212-                          
+3213-                          // Add to target team
+3214-                          newTeams[equalizerData.targetTeamIndex].playerIds.push(player.id);
+3215-                          setTeams(newTeams);
+3216-                        }}
+3217-                        className={`w-full p-4 rounded-lg text-left font-bold transition-all flex justify-between items-center glass-3d ${
+3218-                          isInOtherTeam ? 'bg-brand-primary/10 border border-brand-primary/20' : 
+3219-                          isInAnyOtherTeam ? 'bg-zinc-500/5 opacity-60' :
+3220-                          'bg-brand-dark hover:bg-brand-primary/20'
+3221-                        }`}
+3222-                      >
+3223-                        <div className="flex flex-col">
+3224-                          <span className={isInOtherTeam ? 'text-brand-primary' : ''}>{player.name}</span>
+3225-                          <span className="text-[8px] uppercase opacity-60">
+3226-                            {currentTeam ? `Time: ${currentTeam.name}` : 'Sem Time'}
+3227-                          </span>
+3228-                        </div>
+3229-                        {isInOtherTeam ? <Shuffle size={16} className="text-brand-primary" /> : <Plus size={16} className="text-brand-primary" />}
+3230-                      </button>
+3231-                    );
+3232-                  })}
+3233-                {players.filter(p => p.isAvailable && !(match.teamAIndex !== -1 && teams[match.teamAIndex]?.playerIds?.includes(p.id)) && !(match.teamBIndex !== -1 && teams[match.teamBIndex]?.playerIds?.includes(p.id))).length === 0 && (
+3234-                  <div className="text-center py-8 opacity-50 text-xs">
+3235-                    Não há jogadores disponíveis em outros times. <br/>
+3236-                    Crie novos jogadores para equilibrar a partida.
+3237-                  </div>
+3238-                )}
+3239-              </div>
+3240-
+3241-              <div className="flex flex-col gap-3">
+3242-                {teams[equalizerData.targetTeamIndex].playerIds.length === equalizerData.requiredCount ? (
+3243-                  <div className="w-full py-4" />
+3244-                ) : (
+3245-                  <button 
+3246-                    disabled
+3247-                    className="w-full py-4 bg-white/5 text-white/20 rounded-lg font-black uppercase tracking-tighter cursor-not-allowed border border-white/5 flex items-center justify-center gap-2"
+3248-                  >
+3249-                    Completar Times para Iniciar
+3250-                  </button>
+3251-                )}
+3252-
+3253-                <button 
+3254-                  onClick={() => setShowEqualizerModal(false)}
+3255-                  className="w-full py-3 text-brand-text-secondary text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors"
+3256-                >
+3257-                  Cancelar
+3258-                </button>
+3259-              </div>
+3260-            </motion.div>
+3261-          </motion.div>
+3262-        )}
+3263-
+3264-      </main>
+3265-
+3266-      {/* Bottom Navigation */}
+3267-      {!isPrintMode && (
+3268-        <nav className={`fixed bottom-0 left-0 right-0 h-20 border-t backdrop-blur-md z-50 flex items-center px-4 bg-brand-dark/60 border-white/10`}>
+3269-          <div className="flex justify-around w-full max-w-lg mx-auto relative">
+3270-            <NavItem screen="players" icon={Users} label="Jogadores" />
+3271-            <NavItem screen="teams" icon={Shield} label="Times" />
+3272-          </div>
+3273-        </nav>
+3274-      )}
+3275-
+3276-      {/* Modals */}
+3277-      <AnimatePresence>
+3278-        {isRandomizing && <RouletteOverlay />}
+3279-        {showPlayerActionsModal && (
+3280-          <motion.div 
+3281-            initial={{ opacity: 0 }}
+3282-            animate={{ opacity: 1 }}
+3283-            exit={{ opacity: 0 }}
+3284-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] flex items-center justify-center p-4"
+3285-            onClick={() => setShowPlayerActionsModal(null)}
+3286-          >
+3287-            <motion.div 
+3288-              initial={{ scale: 0.9, y: 20 }}
+3289-              animate={{ scale: 1, y: 0 }}
+3290-              className="w-full max-w-xs p-6 rounded-xl bg-brand-card border border-white/10 shadow-2xl"
+3291-              onClick={e => e.stopPropagation()}
+3292-            >
+3293-              <div className="flex flex-col items-center mb-6">
+3294-                <div className="w-16 h-16 rounded-full bg-brand-primary/20 flex items-center justify-center mb-3 border-2 border-brand-primary/30 overflow-hidden">
+3295-                  {players.find(p => p.id === showPlayerActionsModal.playerId)?.photo ? (
+3296-                    <img 
+3297-                      src={players.find(p => p.id === showPlayerActionsModal.playerId)?.photo} 
+3298-                      alt="Player" 
+3299-                      className="w-full h-full object-cover"
+3300-                      referrerPolicy="no-referrer"
+3301-                    />
+3302-                  ) : (
+3303-                    <User size={32} className="text-brand-primary" />
+3304-                  )}
+3305-                </div>
+3306-                <h3 className="text-lg font-black uppercase tracking-tight text-center">
+3307-                  {players.find(p => p.id === showPlayerActionsModal.playerId)?.name}
+3308-                </h3>
+3309-                <p className="text-[10px] text-brand-text-secondary uppercase font-bold tracking-widest mt-1">
+3310-                  {teams[showPlayerActionsModal.teamIndex]?.name}
+3311-                </p>
+3312-              </div>
+3313-
+3314-              <div className="grid grid-cols-1 gap-2">
+3315-                {/* Swap Confirmation */}
+3316-                {swappingPlayerId && swappingPlayerId !== showPlayerActionsModal.playerId && (
+3317-                  <button 
+3318-                    onClick={() => {
+3319-                      const playerAId = swappingPlayerId;
+3320-                      const playerBId = showPlayerActionsModal.playerId;
+3321-                      
+3322-                      setTeams(prev => {
+3323-                        const newTeams = prev.map(t => ({ ...t, playerIds: [...t.playerIds] }));
+3324-                        let teamAIdx = -1;
+3325-                        let teamBIdx = -1;
+3326-                        
+3327-                        newTeams.forEach((team, idx) => {
+3328-                          if (team.playerIds.includes(playerAId)) teamAIdx = idx;
+3329-                          if (team.playerIds.includes(playerBId)) teamBIdx = idx;
+3330-                        });
+3331-
+3332-                        if (teamAIdx !== -1 && teamBIdx !== -1) {
+3333-                          if (teamAIdx === teamBIdx) {
+3334-                            newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => {
+3335-                              if (id === playerAId) return playerBId;
+3336-                              if (id === playerBId) return playerAId;
+3337-                              return id;
+3338-                            });
+3339-                          } else {
+3340-                            newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => id === playerAId ? playerBId : id);
+3341-                            newTeams[teamBIdx].playerIds = newTeams[teamBIdx].playerIds.map(id => id === playerBId ? playerAId : id);
+3342-                          }
+3343-                        }
+3344-                        
+3345-                        return newTeams;
+3346-                      });
+3347-                      setSwappingPlayerId(null);
+3348-                      setShowPlayerActionsModal(null);
+3349-                    }}
+3350-                    className="w-full py-3 px-4 bg-brand-primary text-black rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-brand-primary/20"
+3351-                  >
+3352-                    <RefreshCw size={16} />
+3353-                    Confirmar Troca
+3354-                  </button>
+3355-                )}
+3356-
+3357-                {/* Goal Option - Only if team is in current match */}
+3358-                {!swappingPlayerId && (showPlayerActionsModal.teamIndex === match.teamAIndex || showPlayerActionsModal.teamIndex === match.teamBIndex) && (
+3359-                  <button 
+3360-                    onClick={() => {
+3361-                      setShowAssistSelection({ teamIndex: showPlayerActionsModal.teamIndex, scorerId: showPlayerActionsModal.playerId });
+3362-                      setShowPlayerActionsModal(null);
+3363-                    }}
+3364-                    className="w-full py-3 px-4 bg-brand-primary text-black rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95"
+3365-                  >
+3366-                    <Trophy size={16} />
+3367-                    Marcar Gol
+3368-                  </button>
+3369-                )}
+3370-
+3371-                {/* Cancel Swap */}
+3372-                {swappingPlayerId === showPlayerActionsModal.playerId && (
+3373-                  <button 
+3374-                    onClick={() => {
+3375-                      setSwappingPlayerId(null);
+3376-                      setShowPlayerActionsModal(null);
+3377-                    }}
+3378-                    className="w-full py-3 px-4 bg-red-500/10 text-red-400 rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 hover:bg-red-500/20 transition-all active:scale-95 border border-red-500/20"
+3379-                  >
+3380-                    <RefreshCw size={16} />
+3381-                    Cancelar Troca
+3382-                  </button>
+3383-                )}
+3384-
+3385-                {swappingPlayerId !== showPlayerActionsModal.playerId && (
+3386-                  <button 
+3387-                    onClick={() => {
+3388-                      setSwappingPlayerId(showPlayerActionsModal.playerId);
+3389-                      setTeamsTab('proximos');
+3390-                      setShowPlayerActionsModal(null);
+3391-                      setToast({ message: "Selecione um jogador na fila para trocar.", type: 'info' });
+3392-                    }}
+3393-                    className="w-full py-3 px-4 bg-white/5 text-white rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 hover:bg-white/10 transition-all active:scale-95 border border-white/5"
+3394-                  >
+3395-                    <RefreshCw size={16} />
+3396-                    Trocar Jogador
+3397-                  </button>
+3398-                )}
+3399-
+3400-                {!swappingPlayerId && (
+3401-                  <button 
+3402-                    onClick={() => {
+3403-                      removePlayerFromTeam(showPlayerActionsModal.teamIndex, showPlayerActionsModal.playerId, false);
+3404-                      setFillingVacancyForTeam(showPlayerActionsModal.teamIndex);
+3405-                      setTeamsTab('proximos');
+3406-                      setShowPlayerActionsModal(null);
+3407-                      setToast({ message: "Jogador removido. Selecione um substituto na fila.", type: 'info' });
+3408-                    }}
+3409-                    className="w-full py-3 px-4 bg-red-500/10 text-red-400 rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 hover:bg-red-500/20 transition-all active:scale-95 border border-red-500/20"
+3410-                  >
+3411-                    <Trash2 size={16} />
+3412-                    Remover do Time
+3413-                  </button>
+3414-                )}
+3415-
+3416-                <button 
+3417-                  onClick={() => setShowPlayerActionsModal(null)}
+3418-                  className="w-full py-3 text-brand-text-secondary text-[10px] font-bold uppercase mt-2"
+3419-                >
+3420-                  Fechar
+3421-                </button>
+3422-              </div>
+3423-            </motion.div>
+3424-          </motion.div>
+3425-        )}
+3426-
+3427-        {showQueuePlayerModal && (
+3428-          <motion.div 
+3429-            initial={{ opacity: 0 }}
+3430-            animate={{ opacity: 1 }}
+3431-            exit={{ opacity: 0 }}
+3432-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] flex items-center justify-center p-4"
+3433-          >
+3434-            <motion.div 
+3435-              initial={{ scale: 0.9, y: 20 }}
+3436-              animate={{ scale: 1, y: 0 }}
+3437-              className="w-full max-w-xs p-6 rounded-xl bg-brand-card border border-brand-primary/20 shadow-2xl"
+3438-            >
+3439-              <div className="text-center mb-6">
+3440-                <div className="w-16 h-16 mx-auto rounded-full bg-brand-dark flex items-center justify-center overflow-hidden border-2 border-brand-primary mb-4">
+3441-                  {players.find(p => p.id === showQueuePlayerModal.playerId)?.photo ? (
+3442-                    <img src={players.find(p => p.id === showQueuePlayerModal.playerId)?.photo} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+3443-                  ) : (
+3444-                    <User size={32} className="text-brand-primary" />
+3445-                  )}
+3446-                </div>
+3447-                <h3 className="text-xl font-black uppercase tracking-tighter text-white">
+3448-                  {players.find(p => p.id === showQueuePlayerModal.playerId)?.name}
+3449-                </h3>
+3450-                <p className="text-xs text-brand-text-secondary uppercase mt-1">Ações do Jogador</p>
+3451-              </div>
+3452-
+3453-              <div className="space-y-2">
+3454-                {!showQueuePlayerModal.showMoveOptions ? (
+3455-                  <>
+3456-                    <button 
+3457-                      onClick={() => {
+3458-                        setSwappingPlayerId(showQueuePlayerModal.playerId);
+3459-                        setTeamsTab('historico');
+3460-                        setShowQueuePlayerModal(null);
+3461-                        setToast({ message: "Selecione um jogador na partida para trocar.", type: 'info' });
+3462-                      }}
+3463-                      className="w-full py-3 px-4 bg-white/5 text-white rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 hover:bg-white/10 transition-all active:scale-95 border border-white/5"
+3464-                    >
+3465-                      <RefreshCw size={16} />
+3466-                      Substituí-lo
+3467-                    </button>
+3468-
+3469-                    <button 
+3470-                      onClick={() => setShowQueuePlayerModal({ ...showQueuePlayerModal, showMoveOptions: true })}
+3471-                      className="w-full py-3 px-4 bg-white/5 text-white rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 hover:bg-white/10 transition-all active:scale-95 border border-white/5"
+3472-                    >
+3473-                      Mover-lo
+3474-                    </button>
+3475-
+3476-                    <button 
+3477-                      onClick={() => {
+3478-                        setTeams(prev => {
+3479-                          const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+3480-                          newTeams[showQueuePlayerModal.teamIndex].playerIds = newTeams[showQueuePlayerModal.teamIndex].playerIds.filter(id => id !== showQueuePlayerModal.playerId);
+3481-                          return newTeams.filter(t => t.playerIds.length > 0);
+3482-                        });
+3483-                        setShowQueuePlayerModal(null);
+3484-                        setToast({ message: "Jogador apagado do time.", type: 'info' });
+3485-                      }}
+3486-                      className="w-full py-3 px-4 bg-red-500/10 text-red-400 rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 hover:bg-red-500/20 transition-all active:scale-95 border border-red-500/20"
+3487-                    >
+3488-                      <Trash2 size={16} />
+3489-                      Apagá-lo
+3490-                    </button>
+3491-                  </>
+3492-                ) : (
+3493-                  <div className="space-y-2">
+3494-                    <div className="text-[10px] font-bold text-brand-text-secondary uppercase px-2 py-1 text-center">Selecione o time de destino:</div>
+3495-                    <div className="max-h-40 overflow-y-auto custom-scrollbar space-y-1">
+3496-                      {teams.map((t, idx) => {
+3497-                        if (idx === showQueuePlayerModal.teamIndex) return null;
+3498-                        return (
+3499-                          <button
+3500-                            key={`move-to-${t.id}`}
+3501-                            onClick={() => {
+3502-                              setTeams(prev => {
+3503-                                const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+3504-                                newTeams[showQueuePlayerModal.teamIndex].playerIds = newTeams[showQueuePlayerModal.teamIndex].playerIds.filter(id => id !== showQueuePlayerModal.playerId);
+3505-                                newTeams[idx].playerIds.push(showQueuePlayerModal.playerId);
+3506-                                return newTeams.filter(team => team.playerIds.length > 0);
+3507-                              });
+3508-                              setShowQueuePlayerModal(null);
+3509-                              setToast({ message: "Jogador movido com sucesso!", type: 'success' });
+3510-                            }}
+3511-                            className="w-full text-left px-4 py-3 text-xs font-bold text-white bg-white/5 hover:bg-brand-primary/20 hover:text-brand-primary rounded-lg transition-colors border border-white/5"
+3512-                          >
+3513-                            {t.name}
+3514-                          </button>
+3515-                        );
+3516-                      })}
+3517-                    </div>
+3518-                    <button 
+3519-                      onClick={() => setShowQueuePlayerModal({ ...showQueuePlayerModal, showMoveOptions: false })}
+3520-                      className="w-full py-2 text-brand-text-secondary text-[10px] font-bold uppercase mt-2"
+3521-                    >
+3522-                      Voltar
+3523-                    </button>
+3524-                  </div>
+3525-                )}
+3526-
+3527-                <button 
+3528-                  onClick={() => setShowQueuePlayerModal(null)}
+3529-                  className="w-full py-3 text-brand-text-secondary text-[10px] font-bold uppercase mt-2"
+3530-                >
+3531-                  Fechar
+3532-                </button>
+3533-              </div>
+3534-            </motion.div>
+3535-          </motion.div>
+3536-        )}
+3537-
+3538-        {showAssistSelection && (
+3539-          <motion.div 
+3540-            initial={{ opacity: 0 }}
+3541-            animate={{ opacity: 1 }}
+3542-            exit={{ opacity: 0 }}
+3543-            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[160] flex items-center justify-center p-4"
+3544-          >
+3545-            <motion.div 
+3546-              initial={{ scale: 0.9, y: 20 }}
+3547-              animate={{ scale: 1, y: 0 }}
+3548-              className="w-full max-w-sm p-6 rounded-xl bg-brand-card border border-brand-primary/20 shadow-2xl"
+3549-            >
+3550-              <div className="text-center mb-6">
+3551-                <div className="inline-flex p-3 rounded-full bg-brand-primary/20 mb-4">
+3552-                  <Heart size={32} className="text-brand-primary" />
+3553-                </div>
+3554-                <h3 className="text-xl font-black uppercase tracking-tighter">Quem deu a assistência?</h3>
+3555-                <p className="text-xs text-brand-text-secondary mt-2">
+3556-                  Gol de <span className="text-white font-bold">{players.find(p => p.id === showAssistSelection.scorerId)?.name}</span>
+3557-                </p>
+3558-              </div>
+3559-
+3560-              <div className="grid grid-cols-1 gap-2 max-h-60 overflow-y-auto pr-2 custom-scrollbar mb-6">
+3561-                <button 
+3562-                  onClick={() => {
+3563-                    const team = showAssistSelection.teamIndex === match.teamAIndex ? 'A' : 'B';
+3564-                    registerGoal(team, showAssistSelection.scorerId);
+3565-                    setShowAssistSelection(null);
+3566-                  }}
+3567-                  className="w-full p-4 rounded-lg bg-white/5 border border-white/5 hover:border-brand-primary/50 hover:bg-brand-primary/5 transition-all text-left group"
+3568-                >
+3569-                  <div className="text-sm font-black uppercase text-brand-text-primary group-hover:text-brand-primary transition-colors">Sem Assistência</div>
+3570-                </button>
+3571-
+3572-                {teams[showAssistSelection.teamIndex].playerIds
+3573-                  .filter(pid => pid !== showAssistSelection.scorerId)
+3574-                  .map((pid, idx) => (
+3575-                    <button
+3576-                      key={`assist-choice-modal-${pid}-${idx}`}
+3577-                      onClick={() => {
+3578-                        const team = showAssistSelection.teamIndex === match.teamAIndex ? 'A' : 'B';
+3579-                        registerGoal(team, showAssistSelection.scorerId, pid);
+3580-                        setShowAssistSelection(null);
+3581-                      }}
+3582-                      className="w-full p-4 rounded-lg bg-white/5 border border-white/5 hover:border-brand-primary/50 hover:bg-brand-primary/5 transition-all text-left group flex items-center gap-3"
+3583-                    >
+3584-                      <div className="w-8 h-8 rounded-full bg-brand-primary/10 flex items-center justify-center overflow-hidden border border-white/5 shrink-0">
+3585-                        {players.find(p => p.id === pid)?.photo ? (
+3586-                          <img src={players.find(p => p.id === pid)?.photo} alt="P" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+3587-                        ) : (
+3588-                          <User size={14} className="text-brand-primary/60" />
+3589-                        )}
+3590-                      </div>
+3591-                      <div className="text-sm font-black uppercase text-brand-text-primary group-hover:text-brand-primary transition-colors">
+3592-                        {players.find(p => p.id === pid)?.name}
+3593-                      </div>
+3594-                    </button>
+3595-                  ))}
+3596-              </div>
+3597-
+3598-              <button 
+3599-                onClick={() => setShowAssistSelection(null)}
+3600-                className="w-full py-4 text-brand-text-secondary text-xs font-bold uppercase"
+3601-              >
+3602-                Cancelar Gol
+3603-              </button>
+3604-            </motion.div>
+3605-          </motion.div>
+3606-        )}
+3607-        {showCloseWarningModal && (
+3608-          <motion.div 
+3609-            initial={{ opacity: 0 }}
+3610-            animate={{ opacity: 1 }}
+3611-            exit={{ opacity: 0 }}
+3612-            className="fixed inset-0 bg-black/90 backdrop-blur-md z-[110] flex items-center justify-center p-6"
+3613-          >
+3614-            <motion.div 
+3615-              initial={{ scale: 0.9, y: 40 }}
+3616-              animate={{ scale: 1, y: 0 }}
+3617-              className="w-full max-w-md p-8 rounded-lg bg-brand-card border border-red-500/20 flex flex-col items-center text-center"
+3618-            >
+3619-              <div className="w-20 h-20 bg-red-500 rounded-md flex items-center justify-center mb-6 shadow-lg shadow-red-500/20">
+3620-                <AlertTriangle size={40} className="text-white" />
+3621-              </div>
+3622-              <h3 className="text-2xl font-black uppercase tracking-tighter mb-2 text-brand-primary">Atenção!</h3>
+3623-              <p className="text-sm text-brand-text-secondary mb-8">
+3624-                Se você fechar esta janela, todas as partidas terão que ser criadas novamente. Deseja continuar?
+3625-              </p>
+3626-              <button 
+3627-                onClick={() => {
+3628-                  setShowCloseWarningModal(false);
+3629-                  setCurrentScreen('teams');
+3630-                }}
+3631-                className="w-full py-4 bg-red-500 text-white rounded-md font-black uppercase tracking-tighter shadow-xl shadow-red-500/20 hover:bg-red-600 transition-all active:scale-95"
+3632-              >
+3633-                Continuar
+3634-              </button>
+3635-              <button 
+3636-                onClick={() => setShowCloseWarningModal(false)}
+3637-                className="w-full py-4 mt-2 text-brand-text-secondary text-xs font-bold uppercase"
+3638-              >
+3639-                Voltar
+3640-              </button>
+3641-            </motion.div>
+3642-          </motion.div>
+3643-        )}
+3644-
+3645-        {showPasteInstructions && (
+3646-          <motion.div 
+3647-            initial={{ opacity: 0 }}
+3648-            animate={{ opacity: 1 }}
+3649-            exit={{ opacity: 0 }}
+3650-            className="fixed inset-0 bg-black/90 backdrop-blur-md z-[200] flex items-center justify-center p-6"
+3651-          >
+3652-            <motion.div 
+3653-              initial={{ scale: 0.9, y: 40 }}
+3654-              animate={{ scale: 1, y: 0 }}
+3655-              className="w-full max-w-md p-8 rounded-lg bg-brand-card border border-brand-primary/20 flex flex-col items-center text-center"
+3656-            >
+3657-              <div className="w-20 h-20 bg-brand-gradient rounded-lg flex items-center justify-center mb-6 shadow-lg ">
+3658-                <Info size={40} className="text-white" />
+3659-              </div>
+3660-              <h3 className="text-lg font-black uppercase tracking-tighter mb-4 text-brand-primary">Instruções Importantes</h3>
+3661-              <div className="text-sm text-brand-text-secondary mb-8 space-y-4 text-left">
+3662-                <p className="leading-relaxed">
+3663-                  ✅ <span className="text-white font-bold">Jogadores adicionados!</span> Agora você precisa confirmar quem está presente.
+3664-                </p>
+3665-                <p className="leading-relaxed">
+3666-                  👉 <span className="text-white font-bold">Clique no nome</span> de cada jogador que já chegou para marcá-lo como disponível.
+3667-                </p>
+3668-                <p className="leading-relaxed bg-brand-primary/10 p-3 rounded-lg border border-brand-primary/20">
+3669-                  ⚠️ Somente os jogadores marcados como <span className="text-brand-primary font-bold">disponíveis</span> (com check verde) poderão ser escalados nos times.
+3670-                </p>
+3671-              </div>
+3672-              <button 
+3673-                onClick={() => {
+3674-                  setShowPasteInstructions(false);
+3675-                  setHighlightFirstPlayer(true);
+3676-                }}
+3677-                className="w-full py-4 bg-brand-gradient text-black rounded-lg font-black uppercase tracking-tighter shadow-xl  hover:opacity-90 transition-all active:scale-95 glass-3d"
+3678-              >
+3679-                Entendi
+3680-              </button>
+3681-            </motion.div>
+3682-          </motion.div>
+3683-        )}
+3684-
+3685-        {showMatchSettingsModal && (
+3686-          <motion.div 
+3687-            initial={{ opacity: 0 }}
+3688-            animate={{ opacity: 1 }}
+3689-            exit={{ opacity: 0 }}
+3690-            className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[70] flex items-center justify-center p-4"
+3691-          >
+3692-            <motion.div 
+3693-              initial={{ scale: 0.9, y: 20 }}
+3694-              animate={{ scale: 1, y: 0 }}
+3695-              className={`w-full max-w-md p-6 rounded-lg bg-brand-card max-h-[90vh] flex flex-col`}
+3696-            >
+3697-              <div className="flex justify-between items-center mb-6">
+3698-                <h3 className="text-2xl font-black uppercase tracking-tighter">Ajustes da Partida</h3>
+3699-                <button 
+3700-                  onClick={() => setShowMatchSettingsModal(false)}
+3701-                  className="p-2 glass-3d rounded-md"
+3702-                >
+3703-                  <Plus size={20} className="rotate-45" />
+3704-                </button>
+3705-              </div>
+3706-
+3707-              <div className="flex-1 overflow-y-auto space-y-8 pr-2 custom-scrollbar">
+3708-                {/* Team Selection */}
+3709-                <section className="space-y-4">
+3710-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-brand-text-secondary">Confronto Atual</h4>
+3711-                  <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-2">
+3712-                    {teams.map((t, idx) => (
+3713-                      <div key={`settings-team-select-${t.id}-${idx}`} className={`p-[1px] rounded-md ${(match.teamAIndex === idx || match.teamBIndex === idx) ? 'bg-team-gradient' : 'bg-transparent'}`}>
+3714-                        <motion.button 
+3715-                          animate={(match.teamAIndex === idx || match.teamBIndex === idx) ? { 
+3716-                            scale: [1, 1.03, 1],
+3717-                            y: [0, -2, 0],
+3718-                          } : {}}
+3719-                          onClick={() => {
+3720-                            if (match.teamAIndex === idx) {
+3721-                              setMatch(prev => ({ ...prev, teamAIndex: -1 }));
+3722-                            } else if (match.teamBIndex === idx) {
+3723-                              setMatch(prev => ({ ...prev, teamBIndex: -1 }));
+3724-                            } else if (match.teamAIndex === -1) {
+3725-                              setMatch(prev => ({ ...prev, teamAIndex: idx }));
+3726-                            } else if (match.teamBIndex === -1) {
+3727-                              setMatch(prev => ({ ...prev, teamBIndex: idx }));
+3728-                            } else {
+3729-                              setMatch(prev => ({ ...prev, teamBIndex: idx }));
+3730-                            }
+3731-                          }}
+3732-                          className={`w-full p-3 rounded-[15px] text-xs font-black transition-all flex flex-col items-center gap-1 relative ${
+3733-                            (match.teamAIndex === idx || match.teamBIndex === idx) ? 
+3734-                              'bg-[#0D0D0D] border border-brand-primary text-white shadow-xl' : 
+3735-                              'bg-[#0D0D0D] border border-white/5 text-white/60'
+3736-                          }`}
+3737-                        >
+3738-                          <div className="absolute top-2 left-2 z-10">
+3739-                            <div className={`w-3 h-3 rounded-full border flex items-center justify-center transition-all duration-500 ${
+3740-                              (match.teamAIndex === idx || match.teamBIndex === idx) ? 'bg-brand-primary border-[#0D0D0D]' : 'bg-black/5 border-black/20'
+3741-                            }`}>
+3742-                              <div className={`w-1.5 h-1.5 rounded-full ${
+3743-                                (match.teamAIndex === idx || match.teamBIndex === idx) ? 'bg-[#0D0D0D]' : 'bg-black/10'
+3744-                              }`} />
+3745-                            </div>
+3746-                          </div>
+3747-                          <span className="truncate w-full text-center">{t.name}</span>
+3748-                          <div className="flex flex-wrap justify-center gap-0.5 mt-1">
+3749-                            {t.playerIds.slice(0, 3).map((pid, pIdx) => (
+3750-                              <span key={`settings-team-player-badge-${t.id}-${pid}-${pIdx}`} className="text-[6px] opacity-60 bg-black/5 px-1 rounded-sm">
+3751-                                {players.find(p => p.id === pid)?.name.split(' ')[0]}
+3752-                              </span>
+3753-                            ))}
+3754-                          </div>
+3755-                        </motion.button>
+3756-                      </div>
+3757-                    ))}
+3758-                  </div>
+3759-                </section>
+3760-
+3761-                {/* Manage Teams & Players */}
+3762-                <section className="space-y-4">
+3763-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-brand-text-secondary">Gerenciar Times e Jogadores</h4>
+3764-                  <div className="grid grid-cols-2 gap-4">
+3765-                    <AnimatePresence mode="wait">
+3766-                      {teams.map((team, tIdx) => (
+3767-                        <motion.div 
+3768-                          key={`settings-team-manage-${team.id}-${tIdx}`} 
+3769-                          layout
+3770-                          initial={{ opacity: 0, y: 20 }}
+3771-                          animate={{ opacity: 1, y: 0 }}
+3772-                          exit={{ opacity: 0, scale: 0.95 }}
+3773-                          transition={{ type: "spring", stiffness: 300, damping: 30 }}
+3774-                          className={`p-4 rounded-lg border bg-brand-dark/50 transition-all duration-300 ${
+3775-                            (tIdx === match.teamAIndex || tIdx === match.teamBIndex) 
+3776-                              ? 'border-brand-primary shadow-[0_0_15px_rgba(198,255,0,0.15)]' 
+3777-                              : 'border-white/5'
+3778-                          }`}
+3779-                        >
+3780-                          <div className="flex items-center justify-between mb-3">
+3781-                            <div className="flex items-center gap-2">
+3782-                              <span className="text-sm font-black uppercase tracking-widest text-[#0D0D0D]">{team.name}</span>
+3783-                            </div>
+3784-                            <div className="flex items-center gap-2">
+3785-                              <div className="flex items-center gap-1 bg-white/5 p-1 rounded-sm border border-white/10">
+3786-                                <button 
+3787-                                  onClick={() => moveTeam(tIdx, 'up')}
+3788-                                  disabled={tIdx === 0}
+3789-                                  className="p-1.5 text-[#0D0D0D] hover:text-brand-primary disabled:opacity-20 transition-colors"
+3790-                                >
+3791-                                  <ChevronRight size={18} className="-rotate-90" strokeWidth={3} />
+3792-                                </button>
+3793-                                <div className="w-[1px] h-4 bg-black/10 mx-0.5" />
+3794-                                <button 
+3795-                                  onClick={() => moveTeam(tIdx, 'down')}
+3796-                                  disabled={tIdx === teams.length - 1}
+3797-                                  className="p-1.5 text-[#0D0D0D] hover:text-brand-primary disabled:opacity-20 transition-colors"
+3798-                                >
+3799-                                  <ChevronRight size={18} className="rotate-90" strokeWidth={3} />
+3800-                                </button>
+3801-                              </div>
+3802-                              <button 
+3803-                                onClick={() => setShowQuickAddPlayerModal(tIdx)}
+3804-                                className="flex items-center gap-1 px-2 py-1 bg-brand-primary/10 hover:bg-brand-primary/20 border border-brand-primary/30 rounded-lg transition-all group ml-2"
+3805-                              >
+3806-                                <UserPlus size={10} className="text-brand-primary group-hover:scale-110 transition-transform" />
+3807-                                <span className="text-[8px] font-black uppercase text-brand-primary tracking-widest">Adicionar ou Criar</span>
+3808-                              </button>
+3809-                            </div>
+3810-                          </div>
+3811-                          
+3812-                          <div className="space-y-2">
+3813-                            {team.playerIds.map((pid, pIdx) => {
+3814-                              const player = players.find(p => p.id === pid);
+3815-                              if (!player) return null;
+3816-                              return (
+3817-                                <div key={`settings-player-item-${team.id}-${pid}-${pIdx}`} className={`flex items-center justify-between p-2 rounded-md bg-brand-card/50`}>
+3818-                                  <div className="flex items-center gap-2 flex-1 min-w-0">
+3819-                                    {editingPlayerId === pid ? (
+3820-                                      <input 
+3821-                                        autoFocus
+3822-                                        defaultValue={player.name}
+3823-                                        className="bg-transparent border-b border-brand-primary outline-none text-xs font-bold py-0.5 w-full"
+3824-                                        onKeyDown={(e) => {
+3825-                                          if (e.key === 'Enter') updatePlayerName(pid, e.currentTarget.value);
+3826-                                          if (e.key === 'Escape') setEditingPlayerId(null);
+3827-                                        }}
+3828-                                        onBlur={(e) => updatePlayerName(pid, e.target.value)}
+3829-                                      />
+3830-                                    ) : (
+3831-                                      <span className="text-xs font-bold truncate text-[#0D0D0D]">{player.name}</span>
+3832-                                    )}
+3833-                                  </div>
+3834-                                  <div className="flex items-center gap-1">
+3835-                                    {swappingPlayerId === pid ? (
+3836-                                      <div className="flex items-center gap-1 bg-brand-primary/20 p-1 rounded-sm border border-brand-primary/30">
+3837-                                        <button 
+3838-                                          onClick={() => setSwappingPlayerId(null)}
+3839-                                          className="p-1 text-xs font-bold text-[#0D0D0D] hover:text-brand-primary"
+3840-                                        >
+3841-                                          Cancelar
+3842-                                        </button>
+3843-                                      </div>
+3844-                                    ) : (
+3845-                                      <button 
+3846-                                        onClick={() => setSwappingPlayerId(pid)}
+3847-                                        className="p-1.5 text-brand-text-secondary hover:text-brand-primary flex items-center gap-1"
+3848-                                      >
+3849-                                        <RefreshCw size={12} className={swappingPlayerId ? 'animate-spin' : ''} />
+3850-                                        <span className="text-[8px] font-black uppercase">Sub</span>
+3851-                                      </button>
+3852-                                    )}
+3853-                                    
+3854-                                    {swappingPlayerId && swappingPlayerId !== pid && (
+3855-                                      <button 
+3856-                                        onClick={() => {
+3857-                                          const playerAId = swappingPlayerId;
+3858-                                          const playerBId = pid;
+3859-                                          
+3860-                                          setTeams(prev => {
+3861-                                            const newTeams = prev.map(t => ({ ...t, playerIds: [...t.playerIds] }));
+3862-                                            let teamAIdx = -1;
+3863-                                            let teamBIdx = -1;
+3864-                                            
+3865-                                            newTeams.forEach((team, idx) => {
+3866-                                              if (team.playerIds.includes(playerAId)) teamAIdx = idx;
+3867-                                              if (team.playerIds.includes(playerBId)) teamBIdx = idx;
+3868-                                            });
+3869-
+3870-                                            if (teamAIdx !== -1 && teamBIdx !== -1) {
+3871-                                              if (teamAIdx === teamBIdx) {
+3872-                                                newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => {
+3873-                                                  if (id === playerAId) return playerBId;
+3874-                                                  if (id === playerBId) return playerAId;
+3875-                                                  return id;
+3876-                                                });
+3877-                                              } else {
+3878-                                                newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => id === playerAId ? playerBId : id);
+3879-                                                newTeams[teamBIdx].playerIds = newTeams[teamBIdx].playerIds.map(id => id === playerBId ? playerAId : id);
+3880-                                              }
+3881-                                            }
+3882-                                            
+3883-                                            return newTeams;
+3884-                                          });
+3885-                                          setSwappingPlayerId(null);
+3886-                                        }}
+3887-                                        className="p-1.5 bg-brand-primary text-[#0D0D0D] rounded-sm text-[8px] font-black uppercase animate-pulse"
+3888-                                      >
+3889-                                        Trocar
+3890-                                      </button>
+3891-                                    )}
+3892-
+3893-
+3894-                                    <button 
+3895-                                      onClick={() => {
+3896-                                        setTeams(prev => {
+3897-                                          const newTeams = prev.map(t => ({ ...t, playerIds: [...t.playerIds] }));
+3898-                                          newTeams[tIdx].playerIds = newTeams[tIdx].playerIds.filter(id => id !== pid);
+3899-                                          return newTeams;
+3900-                                        });
+3901-                                      }}
+3902-                                      className="p-1.5 text-brand-text-secondary hover:text-red-400"
+3903-                                    >
+3904-                                      <Trash2 size={12} />
+3905-                                    </button>
+3906-                                  </div>
+3907-                                </div>
+3908-                              );
+3909-                            })}
+3910-                          </div>
+3911-                        </motion.div>
+3912-                      ))}
+3913-                    </AnimatePresence>
+3914-                  </div>
+3915-                </section>
+3916-
+3917-                {/* Bench Players */}
+3918-                <section className="space-y-4">
+3919-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-brand-text-secondary">Banco de Reservas</h4>
+3920-                  <div className="grid grid-cols-1 gap-2">
+3921-                    {players.filter(p => p.isAvailable && !teams.some(t => t.playerIds.includes(p.id))).length === 0 ? (
+3922-                      <p className="text-[10px] text-brand-text-secondary italic opacity-50">Nenhum reserva disponível</p>
+3923-                    ) : (
+3924-                      players.filter(p => p.isAvailable && !teams.some(t => t.playerIds.includes(p.id))).map((player, index) => (
+3925-                        <div key={`quick-add-player-${player.id}-${index}`} className="flex items-center justify-between p-2 rounded-md bg-brand-dark/30 border border-white/5">
+3926-                          <span className="text-xs font-bold truncate text-[#0D0D0D]">{player.name}</span>
+3927-                          <div className="flex items-center gap-1">
+3928-                            {swappingPlayerId && (
+3929-                              <button 
+3930-                                onClick={() => {
+3931-                                  const playerInTeamId = swappingPlayerId;
+3932-                                  const playerFromBenchId = player.id;
+3933-                                  
+3934-                                  setTeams(prev => {
+3935-                                    const newTeams = prev.map(t => ({ ...t, playerIds: [...t.playerIds] }));
+3936-                                    const teamIdx = newTeams.findIndex(t => t.playerIds.includes(playerInTeamId));
+3937-                                    
+3938-                                    if (teamIdx !== -1) {
+3939-                                      newTeams[teamIdx].playerIds = newTeams[teamIdx].playerIds.map(id => 
+3940-                                        id === playerInTeamId ? playerFromBenchId : id
+3941-                                      );
+3942-                                    }
+3943-                                    return newTeams;
+3944-                                  });
+3945-                                  setSwappingPlayerId(null);
+3946-                                }}
+3947-                                className="px-3 py-1 bg-brand-primary text-[#0D0D0D] rounded-sm text-[8px] font-black uppercase animate-pulse"
+3948-                              >
+3949-                                Entrar
+3950-                              </button>
+3951-                            )}
+3952-                          </div>
+3953-                        </div>
+3954-                      ))
+3955-                    )}
+3956-                  </div>
+3957-                </section>
+3958-              </div>
+3959-
+3960-              <button 
+3961-                onClick={() => {
+3962-                  if (match.hasEnded || match.timeRemaining === 0 || match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit) {
+3963-                    setMatch(prev => ({
+3964-                      ...prev,
+3965-                      scoreA: 0,
+3966-                      scoreB: 0,
+3967-                      timeRemaining: prev.config.duration * 60,
+3968-                      events: [],
+3969-                      hasEnded: false,
+3970-                      isPaused: true,
+3971-                      isActive: true
+3972-                    }));
+3973-                  }
+3974-                  setShowMatchSettingsModal(false);
+3975-                }}
+3976-                className="w-full py-4 mt-6 bg-brand-gradient text-black rounded-lg font-black uppercase tracking-tighter shadow-xl  glass-3d"
+3977-              >
+3978-                salvar
+3979-              </button>
+3980-            </motion.div>
+3981-          </motion.div>
+3982-        )}
+3983-
+3984-        {showConfigMenu && (
+3985-          <motion.div 
+3986-            initial={{ opacity: 0 }}
+3987-            animate={{ opacity: 1 }}
+3988-            exit={{ opacity: 0 }}
+3989-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-6"
+3990-            onClick={() => setShowConfigMenu(false)}
+3991-          >
+3992-            <motion.div 
+3993-              initial={{ scale: 0.9, y: 20 }}
+3994-              animate={{ scale: 1, y: 0 }}
+3995-              className={`w-full max-w-sm p-6 rounded-lg bg-brand-card space-y-4`}
+3996-              onClick={e => e.stopPropagation()}
+3997-            >
+3998-              <h3 className="text-xl font-black uppercase tracking-tighter text-center">Configuração</h3>
+3999-              <div className="grid grid-cols-1 gap-3">
+4000-                <button 
+4001-                  onClick={() => {
+4002-                    setShowConfigMenu(false);
+4003-                    setShowTimeEditModal(true);
+4004-                  }}
+4005-                  className={`w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all bg-brand-dark hover:bg-brand-primary/20`}
+4006-                >
+4007-                  <Timer size={20} className="text-brand-primary" />
+4008-                  <span>Tempo da Partida</span>
+4009-                </button>
+4010-                <button 
+4011-                  onClick={() => {
+4012-                    setShowConfigMenu(false);
+4013-                    setShowMatchSettingsModal(true);
+4014-                  }}
+4015-                  className={`w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all bg-brand-dark hover:bg-brand-primary/20`}
+4016-                >
+4017-                  <Settings size={20} className="text-brand-primary" />
+4018-                  <span>Ajuste de Partida</span>
+4019-                </button>
+4020-              </div>
+4021-              <button 
+4022-                onClick={() => setShowConfigMenu(false)}
+4023-                className={`w-full py-4 rounded-2xl font-bold glass-3d bg-brand-dark text-brand-text-secondary`}
+4024-              >
+4025-                Fechar
+4026-              </button>
+4027-            </motion.div>
+4028-          </motion.div>
+4029-        )}
+4030-
+4031-        {showTimeEditModal && (
+4032-          <motion.div 
+4033-            initial={{ opacity: 0 }}
+4034-            animate={{ opacity: 1 }}
+4035-            exit={{ opacity: 0 }}
+4036-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[110] flex items-center justify-center p-6"
+4037-          >
+4038-            <motion.div 
+4039-              initial={{ scale: 0.9, y: 20 }}
+4040-              animate={{ scale: 1, y: 0 }}
+4041-              className={`w-full max-w-sm p-8 rounded-lg bg-brand-card space-y-6 relative`}
+4042-            >
+4043-              <button 
+4044-                onClick={() => setShowTimeEditModal(false)}
+4045-                className="absolute top-6 right-6 p-2 glass-3d rounded-xl text-brand-text-secondary hover:text-brand-primary transition-colors"
+4046-              >
+4047-                <Plus size={20} className="rotate-45" />
+4048-              </button>
+4049-
+4050-              <h3 className="text-2xl font-black uppercase tracking-tighter">Tempo da Partida</h3>
+4051-              <div className="space-y-4">
+4052-                <div className="space-y-2">
+4053-                  <label className="text-xs font-bold uppercase text-brand-text-secondary">Duração (Minutos)</label>
+4054-                  <input 
+4055-                    type="text" 
+4056-                    inputMode="numeric"

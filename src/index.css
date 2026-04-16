@@ -1,0 +1,156 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --color-brand-primary: #0DD940;
+  --color-brand-primary-hover: #0BC439;
+  --color-brand-dark: var(--brand-dark);
+  --color-brand-card: var(--brand-card);
+  --color-brand-surface-light: var(--brand-surface-light);
+  --color-brand-text-primary: var(--brand-text-primary);
+  --color-brand-text-secondary: var(--brand-text-secondary);
+  --color-brand-border: var(--brand-border);
+  --color-brand-glass: var(--brand-glass);
+  
+  --background-image-brand-gradient: linear-gradient(to right, #0DD940, #0BC439);
+  --background-image-team-gradient: linear-gradient(135deg, var(--brand-card), var(--brand-dark));
+  --background-image-glass-gradient: linear-gradient(135deg, var(--brand-glass), transparent);
+}
+
+:root {
+  --brand-dark: #0D0D0D;
+  --brand-card: #1A1A1A;
+  --brand-surface-light: #262626;
+  --brand-text-primary: #FFFFFF;
+  --brand-text-secondary: #A3A3A3;
+  --brand-border: rgba(255, 255, 255, 0.1);
+  --brand-glass: rgba(255, 255, 255, 0.05);
+}
+
+.light {
+  --brand-dark: #f8fafc;
+  --brand-card: #ffffff;
+  --brand-surface-light: #f1f5f9;
+  --brand-text-primary: #000000;
+  --brand-text-secondary: #64748b;
+  --brand-border: #e2e8f0;
+  --brand-glass: rgba(255, 255, 255, 0.8);
+}
+
+@layer utilities {
+  .glass-3d {
+    @apply backdrop-blur-xl bg-brand-glass border border-brand-border shadow-[inset_0_1px_1px_rgba(255,255,255,0.05),0_10px_20px_rgba(0,0,0,0.1)] transition-all duration-300 rounded-lg;
+  }
+  .glass-3d:hover {
+    @apply bg-brand-primary/5 border-brand-primary/20 shadow-[0_15px_30px_rgba(0,0,0,0.1)] -translate-y-0.5;
+  }
+  .glass-3d-active {
+    @apply bg-brand-primary/20 border-brand-primary/30 shadow-[inset_0_1px_1px_rgba(0,0,0,0.05),0_5px_15px_rgba(13,217,64,0.2)];
+  }
+  .glass-icon-container {
+    @apply relative flex items-center justify-center w-12 h-12 rounded-xl backdrop-blur-xl bg-brand-glass border border-brand-border shadow-[0_10px_20px_rgba(0,0,0,0.05)] transition-all duration-300;
+  }
+  
+  @keyframes flash {
+    0%, 100% { opacity: 1; transform: scale(1); filter: brightness(1); }
+    50% { opacity: 0.7; transform: scale(1.02); filter: brightness(1.8) drop-shadow(0 0 20px rgba(13, 217, 64, 1)); }
+  }
+  .animate-flash {
+    animation: flash 0.4s ease-in-out infinite;
+    border-color: #0DD940 !important;
+    box-shadow: 0 0 30px rgba(13, 217, 64, 0.5) !important;
+  }
+  
+  .field-container {
+    @apply flex items-center justify-center relative w-full max-w-sm aspect-video mx-auto my-8;
+  }
+
+  .field-3d {
+    @apply w-full h-full relative rounded-xl border border-brand-border bg-brand-card/50;
+    background-image: 
+      linear-gradient(var(--brand-border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--brand-border) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+
+  .field-circle {
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full border border-brand-border;
+  }
+
+  .field-midline {
+    @apply absolute left-1/2 top-0 w-px h-full bg-brand-border;
+  }
+
+  .field-goal-left { @apply absolute left-0 top-1/4 w-12 h-1/2 border border-l-0 border-brand-border; }
+  .field-goal-right { @apply absolute right-0 top-1/4 w-12 h-1/2 border border-r-0 border-brand-border; }
+  .field-box-left { @apply absolute left-0 top-3/8 w-4 h-1/4 border border-l-0 border-brand-border; }
+  .field-box-right { @apply absolute right-0 top-3/8 w-4 h-1/4 border border-r-0 border-brand-border; }
+
+  .custom-scrollbar::-webkit-scrollbar { width: 5px; }
+  .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+  .custom-scrollbar::-webkit-scrollbar-thumb { @apply bg-brand-border rounded-full; }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover { @apply bg-brand-text-secondary/40; }
+
+  .player-pitch-card {
+    @apply flex flex-col items-center gap-1 w-16 transition-transform hover:scale-105;
+  }
+
+  .player-name-box {
+    @apply bg-brand-card text-brand-text-primary px-2 py-1 text-[10px] font-bold uppercase rounded border border-brand-border w-full text-center truncate shadow-sm;
+  }
+
+  .player-number-box {
+    @apply bg-brand-dark text-brand-text-secondary px-2 py-0.5 text-[8px] font-black rounded-b border border-brand-border border-t-0 w-full text-center;
+  }
+
+  .logo-text {
+    @apply font-black uppercase tracking-tighter text-brand-text-primary;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+  }
+
+  .pitch-bg {
+    @apply bg-emerald-900/10 relative border-2 border-brand-border rounded-lg overflow-hidden;
+    background-image: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 30px,
+      rgba(0, 0, 0, 0.03) 30px,
+      rgba(0, 0, 0, 0.03) 60px
+    );
+  }
+
+  .pitch-line { @apply absolute border border-brand-border/50 pointer-events-none; }
+  .pitch-center-circle { @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 border border-brand-border/50 rounded-full; }
+  .pitch-center-line { @apply absolute top-1/2 left-0 w-full h-px bg-brand-border/50; }
+  .pitch-penalty-area { @apply absolute left-1/2 -translate-x-1/2 w-3/4 h-16 border border-brand-border/50; }
+  .pitch-penalty-area-top { @apply top-0 border-t-0; }
+  .pitch-penalty-area-bottom { @apply bottom-0 border-b-0; }
+
+  .bg-noise {
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+
+  .bg-pattern-dots {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 10px 10px;
+  }
+
+  .bg-pattern-diagonal {
+    background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(255, 255, 255, 0.02) 10px, rgba(255, 255, 255, 0.02) 20px);
+  }
+}
+
+@layer base {
+  body {
+    @apply bg-brand-dark text-brand-text-primary antialiased selection:bg-brand-primary/30;
+  }
+  
+  input, select, textarea {
+    @apply bg-brand-card border border-brand-border rounded-md px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-brand-primary/50 transition-all;
+  }
+
+  button {
+    @apply transition-all active:scale-[0.98];
+  }
+}
