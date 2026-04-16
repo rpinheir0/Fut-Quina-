@@ -3113,8 +3113,6 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                       </div>
                     ) : teamsTab === 'proximos' ? (
                       <div className={`space-y-6 relative overflow-hidden ${theme === 'light' ? 'bg-zinc-100 p-6 rounded-xl border border-zinc-200' : 'bg-brand-card p-6 rounded-xl border border-white/5'}`}>
-                        {/* Tab Background Texture */}
-                        <div className={`absolute inset-0 pointer-events-none opacity-[0.02] bg-noise ${theme === 'light' ? 'mix-blend-multiply' : 'mix-blend-overlay'}`}></div>
                         
                         <div className="flex justify-between items-center relative z-10">
                           <button 
@@ -3140,7 +3138,6 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                               disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
                               className="px-4 py-2 bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest text-[10px] rounded-full shadow-lg hover:opacity-90 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 relative overflow-hidden"
                             >
-                              <div className="absolute inset-0 pointer-events-none opacity-[0.1] bg-noise"></div>
                               <Shuffle size={12} className="relative z-10" />
                               <span className="relative z-10">Sortear</span>
                             </button>
@@ -3157,7 +3154,6 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                  teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)))}
                               className="px-4 py-2 bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest text-[10px] rounded-full shadow-lg hover:opacity-90 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 relative overflow-hidden"
                             >
-                              <div className="absolute inset-0 pointer-events-none opacity-[0.1] bg-noise"></div>
                               <Play size={12} fill="currentColor" className="relative z-10" />
                               <span className="relative z-10">Iniciar</span>
                             </button>
@@ -3291,9 +3287,6 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                           : 'bg-brand-glass border-brand-border hover:border-brand-primary/30'
                                     } ${isFlashing || (movingPlayer && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-brand-primary/30 border-brand-primary' : ''}`}
                                   >
-                                    {/* Texture Overlays */}
-                                    <div className={`absolute inset-0 pointer-events-none opacity-[0.03] bg-noise ${theme === 'light' ? 'mix-blend-multiply' : 'mix-blend-overlay'}`}></div>
-                                    <div className={`absolute inset-0 pointer-events-none bg-pattern-diagonal ${theme === 'light' ? 'opacity-[0.02]' : 'opacity-[0.05]'}`}></div>
                                     
                                     {/* Jersey Icon Top Left */}
                                     <div className={`absolute top-3 left-3 w-8 h-8 rounded-xl border flex items-center justify-center transition-all ${theme === 'light' ? 'bg-white border-zinc-200' : 'bg-black/20 border-white/10'}`}>
@@ -3464,8 +3457,6 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                                         : 'bg-brand-glass text-brand-text-primary hover:bg-brand-primary/10 border border-brand-border'
                                                 }`}
                                               >
-                                              {/* Button Texture */}
-                                              <div className="absolute inset-0 pointer-events-none opacity-[0.05] bg-noise"></div>
                                               
                                               <div className={`w-5 h-5 sm:w-4 sm:h-4 rounded-full relative z-10 ${theme === 'light' ? 'bg-zinc-300' : 'bg-black/40'} flex items-center justify-center shrink-0 border ${theme === 'light' ? 'border-zinc-400' : 'border-white/10'}`}>
                                                 {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <User size={10} className={theme === 'light' ? 'text-black' : ''} />}
