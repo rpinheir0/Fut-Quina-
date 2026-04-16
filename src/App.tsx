@@ -2246,19 +2246,10 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
           {currentScreen === 'players' && !isPrintMode && (
             <motion.div 
               key="players"
-              initial={{ opacity: 0, x: swipeDirection > 0 ? -50 : 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: swipeDirection > 0 ? 50 : -50 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              onDragEnd={(_, info) => {
-                if (info.offset.x < -100) {
-                  setSwipeDirection(-1);
-                  setCurrentScreen('teams');
-                  setTeamsTab('proximos');
-                }
-              }}
               className="p-6 space-y-6"
             >
               <div className="max-w-3xl mx-auto space-y-6">
@@ -2433,31 +2424,10 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
           {currentScreen === 'teams' && !isPrintMode && (
             <motion.div 
               key={`teams-${teamsTab}`}
-              initial={{ opacity: 0, x: swipeDirection < 0 ? 50 : -50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: swipeDirection < 0 ? -50 : 50 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              onDragEnd={(_, info) => {
-                const tabs = ['configuracao', 'chegada', 'historico', 'proximos'];
-                const currentIndex = tabs.indexOf(teamsTab as any);
-                if (info.offset.x > 100) {
-                  if (currentIndex > 0) {
-                    navigateTeamsTab(tabs[currentIndex - 1] as any);
-                  } else {
-                    setSwipeDirection(1);
-                    setCurrentScreen('players');
-                  }
-                } else if (info.offset.x < -100) {
-                  if (currentIndex < tabs.length - 1) {
-                    navigateTeamsTab(tabs[currentIndex + 1] as any);
-                  } else {
-                    setSwipeDirection(-1);
-                    setCurrentScreen('match');
-                  }
-                }
-              }}
               className="px-6 pb-6 pt-4 space-y-4 min-h-full bg-brand-dark flex flex-col"
             >
                   <div id="teams-list-section" className="max-w-5xl mx-auto w-full space-y-4">
@@ -3730,22 +3700,10 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
           {currentScreen === 'match' && !isPrintMode && (
             <motion.div 
               key="match"
-              initial={{ opacity: 0, x: swipeDirection > 0 ? -50 : 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: swipeDirection > 0 ? 50 : -50 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              onDragEnd={(_, info) => {
-                if (info.offset.x > 100) {
-                  setSwipeDirection(1);
-                  setCurrentScreen('teams');
-                  setTeamsTab('proximos');
-                } else if (info.offset.x < -100) {
-                  setSwipeDirection(-1);
-                  setCurrentScreen('ranking');
-                }
-              }}
               className="p-6 flex flex-col h-full space-y-6"
             >
               {/* Match UI */}
@@ -4028,21 +3986,10 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
           {currentScreen === 'ranking' && !isPrintMode && (
             <motion.div 
               key="ranking"
-              initial={{ opacity: 0, x: swipeDirection > 0 ? -50 : 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: swipeDirection > 0 ? 50 : -50 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              onDragEnd={(_, info) => {
-                if (info.offset.x > 100) {
-                  setSwipeDirection(1);
-                  setCurrentScreen('match');
-                } else if (info.offset.x < -100) {
-                  setSwipeDirection(-1);
-                  setCurrentScreen('finance');
-                }
-              }}
               className="p-6 space-y-6 pb-24"
             >
               <div className="flex items-center justify-between">
@@ -4128,18 +4075,10 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
           {currentScreen === 'finance' && (
             <motion.div 
               key="finance"
-              initial={{ opacity: 0, x: swipeDirection > 0 ? -50 : 50 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: swipeDirection > 0 ? 50 : -50 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              onDragEnd={(_, info) => {
-                if (info.offset.x > 100) {
-                  setSwipeDirection(1);
-                  setCurrentScreen('ranking');
-                }
-              }}
               className={`space-y-4 ${isPrintMode ? 'space-y-0' : ''}`}
             >
               {!isPrintMode && financeSubScreen === 'menu' && (
