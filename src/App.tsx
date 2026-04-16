@@ -2244,6 +2244,15 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.1}
+              onDragEnd={(_, info) => {
+                if (info.offset.x < -100) {
+                  setCurrentScreen('teams');
+                  setTeamsTab('proximos');
+                }
+              }}
               className="p-6 space-y-6"
             >
               <div className="max-w-3xl mx-auto space-y-6">
@@ -2422,6 +2431,26 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.1}
+              onDragEnd={(_, info) => {
+                const tabs = ['configuracao', 'chegada', 'historico', 'proximos'];
+                const currentIndex = tabs.indexOf(teamsTab as any);
+                if (info.offset.x > 100) {
+                  if (currentIndex > 0) {
+                    navigateTeamsTab(tabs[currentIndex - 1] as any);
+                  } else {
+                    setCurrentScreen('players');
+                  }
+                } else if (info.offset.x < -100) {
+                  if (currentIndex < tabs.length - 1) {
+                    navigateTeamsTab(tabs[currentIndex + 1] as any);
+                  } else {
+                    setCurrentScreen('match');
+                  }
+                }
+              }}
               className="px-6 pb-6 pt-4 space-y-4 min-h-full bg-brand-dark flex flex-col"
             >
                   <div id="teams-list-section" className="max-w-5xl mx-auto w-full space-y-4">
@@ -3689,6 +3718,17 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.1}
+              onDragEnd={(_, info) => {
+                if (info.offset.x > 100) {
+                  setCurrentScreen('teams');
+                  setTeamsTab('proximos');
+                } else if (info.offset.x < -100) {
+                  setCurrentScreen('ranking');
+                }
+              }}
               className="p-6 flex flex-col h-full space-y-6"
             >
               {/* Match UI */}
@@ -3975,6 +4015,16 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.1}
+              onDragEnd={(_, info) => {
+                if (info.offset.x > 100) {
+                  setCurrentScreen('match');
+                } else if (info.offset.x < -100) {
+                  setCurrentScreen('finance');
+                }
+              }}
               className="p-6 space-y-6 pb-24"
             >
               <div className="flex items-center justify-between">
@@ -4064,6 +4114,14 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.1}
+              onDragEnd={(_, info) => {
+                if (info.offset.x > 100) {
+                  setCurrentScreen('ranking');
+                }
+              }}
               className={`space-y-4 ${isPrintMode ? 'space-y-0' : ''}`}
             >
               {!isPrintMode && financeSubScreen === 'menu' && (
