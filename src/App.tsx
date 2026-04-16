@@ -2179,13 +2179,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
         )}
       </AnimatePresence>
 
-      <motion.div 
-        animate={{ 
-          scale: showSidebar ? 0.96 : 1,
-          opacity: showSidebar ? 0.6 : 1,
-          filter: showSidebar ? 'blur(4px)' : 'blur(0px)'
-        }}
-        transition={{ type: 'spring', damping: 20, stiffness: 100 }}
+      <div 
         className="h-full flex flex-col overflow-hidden"
       >
         {/* Sticky Header and Tabs Container */}
@@ -4481,7 +4475,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
           </nav>
         </div>
       )}
-    </motion.div>
+    </div>
 
     {/* Modals */}
       <AnimatePresence>
@@ -5877,18 +5871,11 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
 
         {/* Sidebar */}
         {showSidebar && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex justify-end"
+          <div
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex justify-end transition-opacity duration-200"
             onClick={() => setShowSidebar(false)}
           >
-            <motion.div
-              initial={{ x: '100%' }}
-              animate={{ x: 0 }}
-              exit={{ x: '100%' }}
-              transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            <div
               className="w-64 h-full bg-brand-dark border-l border-white/10 p-6 flex flex-col shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
@@ -6021,8 +6008,8 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                   Resetar Partida
                 </button>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         )}
         {/* Reset App Confirm Modal */}
         {playerManagementModal && (
