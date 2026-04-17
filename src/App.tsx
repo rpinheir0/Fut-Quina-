@@ -3451,7 +3451,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                                     }
                                                   }
                                                 }}
-                                                className={`flex items-center gap-2 p-2 sm:p-1.5 rounded-xl transition-all relative overflow-hidden z-20 shadow-md bg-gradient-to-r from-brand-surface to-brand-surface/30 ${
+                                                className={`flex items-center gap-2 p-2 sm:p-1.5 rounded-xl transition-all relative overflow-hidden z-20 bg-gradient-to-r from-brand-surface to-brand-surface/30 ${
                                                   (swappingPlayerId && swappingPlayerId !== pid) || 
                                                   fillingVacancyForTeam !== null || 
                                                   (movingPlayer && movingPlayer.playerId === pid) ||
@@ -3591,7 +3591,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                 }}
                                 className={`flex justify-between items-center py-2 px-3 rounded-lg border transition-all group/player cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
                                 swappingPlayerId === pid 
-                                  ? 'bg-brand-primary/20 border-brand-primary shadow-[0_0_15px_rgba(198,255,0,0.1)]' 
+                                  ? 'bg-brand-primary/20 border-brand-primary' 
                                   : (swappingPlayerId && swappingPlayerId !== pid)
                                     ? 'bg-brand-primary/10 border-brand-primary/50 animate-pulse'
                                     : (match.teamAIndex === tIndex || match.teamBIndex === tIndex)
