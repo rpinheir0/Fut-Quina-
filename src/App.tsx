@@ -5868,7 +5868,7 @@ function AuthScreen({ theme, setTheme }: { theme: 'light' | 'dark', setTheme: (t
   useEffect(() => {
     const handleMessage = async (event: MessageEvent) => {
       // Allow messages from same origin and Supabase
-      if (!event.origin.endsWith('.run.app') && !event.origin.includes('localhost') && !event.origin.includes('supabase.co')) {
+      if (!event.origin.endsWith('.run.app') && !event.origin.includes('localhost') && !event.origin.includes('supabase.co') && event.origin !== window.location.origin) {
         return;
       }
       if (event.data?.type === 'OAUTH_AUTH_SUCCESS') {
