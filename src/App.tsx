@@ -461,7 +461,7 @@ const formatPlayerName = (name: string) => {
   return `${firstName} ${lastInitial}.`;
 };
 
-const SpinningBall = ({ size = "md", className = "", theme = "dark" }: { size?: 'sm' | 'md' | 'lg', className?: string, theme?: string }) => {
+const SpinningBall = ({ size = "md", className = "", theme = "dark", spin = true }: { size?: 'sm' | 'md' | 'lg', className?: string, theme?: string, spin?: boolean }) => {
   const sizeClasses = {
     sm: "w-6 h-6",
     md: "w-8 h-8",
@@ -470,14 +470,12 @@ const SpinningBall = ({ size = "md", className = "", theme = "dark" }: { size?: 
 
   return (
     <motion.div 
-      animate={{ 
-        rotate: 360
-      }}
-      transition={{ 
+      animate={spin ? { rotate: 360 } : {}}
+      transition={spin ? { 
         repeat: Infinity, 
         duration: 2, 
         ease: "linear" 
-      }}
+      } : {}}
       className={`${sizeClasses[size]} rounded-full bg-brand-primary ${theme === 'light' ? '' : 'shadow-[0_0_20px_rgba(198,255,0,0.4)]'} relative flex items-center justify-center z-10 ${className}`}
     >
       {/* Ball pattern */}
@@ -2163,7 +2161,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
         {/* Header */}
         <header className="px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <SpinningBall size="sm" theme={theme} />
+            <SpinningBall size="sm" theme={theme} spin={false} />
             <FutQuinaLogo size="md" />
           </div>
           <button 
