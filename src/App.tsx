@@ -408,7 +408,7 @@ interface PaymentRecord {
   monthlyFee: number;
 }
 
-type Screen = 'players' | 'teams' | 'match' | 'ranking' | 'finance';
+type Screen = 'players' | 'teams' | 'ranking' | 'finance';
 
 // --- Utils ---
 
@@ -899,7 +899,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
   const [swappingPlayerId, setSwappingPlayerId] = useState<string | null>(null);
   const [fillingVacancyForTeam, setFillingVacancyForTeam] = useState<number | null>(null);
   const [playersTab, setPlayersTab] = useState<'jogadores' | 'configuracao'>('jogadores');
-  const [teamsTab, setTeamsTab] = useState<'configuracao' | 'partida' | 'chegada' | 'historico' | 'proximos'>('historico');
+  const [teamsTab, setTeamsTab] = useState<'configuracao' | 'chegada' | 'historico' | 'proximos'>('historico');
   const [swipeDirection, setSwipeDirection] = useState(0);
 
   const navigateTeamsTab = (target: 'configuracao' | 'chegada' | 'historico' | 'proximos') => {
@@ -915,8 +915,6 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
   const [rankingTab, setRankingTab] = useState<'geral' | 'artilharia' | 'assistencias'>('geral');
   const [showNotEnoughPlayersModal, setShowNotEnoughPlayersModal] = useState(false);
   const [showLogoAnimation, setShowLogoAnimation] = useState(false);
-  const [showMiniScoreboard, setShowMiniScoreboard] = useState(false);
-  const [miniScoreboardAnim, setMiniScoreboardAnim] = useState<'none' | 'leaving' | 'entering'>('none');
   const [isInitializing, setIsInitializing] = useState(true);
   const [showCloseWarningModal, setShowCloseWarningModal] = useState(false);
   const [flashingTeamIds, setFlashingTeamIds] = useState<string[]>([]);
@@ -1128,29 +1126,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
     }
   }, [currentScreen]);
 
-  useEffect(() => {
-    if (match.isActive && !match.hasEnded && !match.isPaused) {
-      const isMatchScreen = currentScreen === 'teams' && teamsTab === 'partida';
-      if (!isMatchScreen && !showMiniScoreboard && miniScoreboardAnim === 'none') {
-        setMiniScoreboardAnim('leaving');
-        const timer = setTimeout(() => {
-          setMiniScoreboardAnim('none');
-          setShowMiniScoreboard(true);
-        }, 2000);
-        return () => clearTimeout(timer);
-      } else if (isMatchScreen && (showMiniScoreboard || miniScoreboardAnim === 'leaving')) {
-        setMiniScoreboardAnim('entering');
-        setShowMiniScoreboard(false);
-        const timer = setTimeout(() => {
-          setMiniScoreboardAnim('none');
-        }, 3000);
-        return () => clearTimeout(timer);
-      }
-    } else {
-      setShowMiniScoreboard(false);
-      setMiniScoreboardAnim('none');
-    }
-  }, [currentScreen, teamsTab, match.isActive, match.hasEnded, match.isPaused, showMiniScoreboard, miniScoreboardAnim]);
+
 
   useEffect(() => {
     if (toast) {
@@ -2010,7 +1986,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
 
   const NavItem = ({ screen, icon: Icon, label }: { screen: Screen, icon: any, label: string }) => {
     const isActive = currentScreen === screen;
-    const screens: Screen[] = ['players', 'teams', 'match', 'ranking', 'finance'];
+    const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
     return (
               <button 
                 onClick={() => {
@@ -2447,7 +2423,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                   if (currentIndex < tabs.length - 1) {
                     navigateTeamsTab(tabs[currentIndex + 1] as any);
                   } else {
-                    setCurrentScreen('match');
+                    setCurrentScreen('ranking');
                   }
                 }
               }}
@@ -2817,7 +2793,12 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                       <path d="M 9.5 3.5 C 10 4.5 14 4.5 14.5 3.5" fill="none" stroke={(teams[match.teamAIndex]?.color || TEAM_COLORS[0]) === '#1a1a1a' ? '#ffffff40' : 'white'} strokeWidth="0.8" strokeLinecap="round" opacity="0.6" />
                                     </svg>
                                   </button>
-                                <div className={`text-4xl font-black ${theme === 'light' ? 'text-black [text-shadow:_0_0_2px_#fff,_0_0_2px_#fff,_0_0_2px_#fff,_0_0_2px_#fff]' : 'text-brand-primary'}`}>{match.scoreA}</div>
+                                <button 
+                                  onClick={() => (match.isActive && !match.isPaused) && setShowEventModal({ team: 'A' })}
+                                  className={`text-4xl font-black transition-transform hover:scale-110 active:scale-95 ${theme === 'light' ? 'text-black [text-shadow:_0_0_2px_#fff,_0_0_2px_#fff,_0_0_2px_#fff,_0_0_2px_#fff]' : 'text-brand-primary'} ${(!match.isActive || match.isPaused) ? 'cursor-default opacity-50' : ''}`}
+                                >
+                                  {match.scoreA}
+                                </button>
                               </div>
                               
                               <div className="flex flex-col items-center justify-center gap-4">
@@ -2899,7 +2880,12 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                       <path d="M 9.5 3.5 C 10 4.5 14 4.5 14.5 3.5" fill="none" stroke={(teams[match.teamBIndex]?.color || TEAM_COLORS[1]) === '#1a1a1a' ? '#ffffff40' : 'white'} strokeWidth="0.8" strokeLinecap="round" opacity="0.6" />
                                     </svg>
                                   </button>
-                                <div className={`text-4xl font-black ${theme === 'light' ? 'text-black [text-shadow:_0_0_2px_#fff,_0_0_2px_#fff,_0_0_2px_#fff,_0_0_2px_#fff]' : 'text-brand-primary'}`}>{match.scoreB}</div>
+                                <button 
+                                  onClick={() => (match.isActive && !match.isPaused) && setShowEventModal({ team: 'B' })}
+                                  className={`text-4xl font-black transition-transform hover:scale-110 active:scale-95 ${theme === 'light' ? 'text-black [text-shadow:_0_0_2px_#fff,_0_0_2px_#fff,_0_0_2px_#fff,_0_0_2px_#fff]' : 'text-brand-primary'} ${(!match.isActive || match.isPaused) ? 'cursor-default opacity-50' : ''}`}
+                                >
+                                  {match.scoreB}
+                                </button>
                               </div>
                             </div>
                             
@@ -3711,302 +3697,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
             </motion.div>
         )}
 
-          {currentScreen === 'match' && !isPrintMode && (
-            <motion.div 
-              key="match"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.1}
-              onDragEnd={(_, info) => {
-                if (info.offset.x > 100) {
-                  setCurrentScreen('teams');
-                  setTeamsTab('proximos');
-                } else if (info.offset.x < -100) {
-                  setCurrentScreen('ranking');
-                }
-              }}
-              className="p-6 flex flex-col h-full space-y-6"
-            >
-              {/* Match UI */}
-              <>
-                {/* Scoreboard */}
-                <div className={`p-8 rounded-lg ${theme === 'light' ? 'bg-zinc-100 shadow-lg border border-zinc-200' : 'bg-brand-card shadow-2xl border border-white/5'} flex flex-col items-center relative overflow-hidden`}>
-                    <div className={`absolute top-0 left-0 w-full h-1 ${theme === 'light' ? 'bg-zinc-200' : 'bg-brand-primary/20'}`}>
-                      <motion.div 
-                        className={`h-full ${theme === 'light' ? 'bg-zinc-900' : 'bg-brand-primary'}`}
-                        initial={{ width: '100%' }}
-                        animate={{ width: `${(match.timeRemaining / (match.config.duration * 60)) * 100}%` }}
-                      />
-                    </div>
 
-                    <div className="grid grid-cols-[1fr_auto_1fr] items-start w-full gap-2 mb-8">
-                      {/* Team A */}
-                      <div className="flex flex-col items-center">
-                        <div className="mb-2 w-12 h-12 flex items-center justify-center">
-                          <svg viewBox="0 0 24 24" stroke={(teams[match.teamAIndex]?.color || TEAM_COLORS[0]) === '#1a1a1a' ? '#ffffff40' : 'none'} strokeWidth="0.5" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-lg">
-                            <defs>
-                              <linearGradient id="jersey-grad-A-match" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor={teams[match.teamAIndex]?.color || TEAM_COLORS[0]} />
-                                <stop offset="100%" stopColor={teams[match.teamAIndex]?.color || TEAM_COLORS[0]} stopOpacity="0.85" />
-                              </linearGradient>
-                            </defs>
-                            <path 
-                              fill="url(#jersey-grad-A-match)"
-                              d="M 12 4.5 C 10.5 4.5 9 3.5 8 2 L 5 4 L 1.5 8.5 C 1 9 1 10 1.5 10.5 L 3.5 12.5 C 4 13 5 13 5.5 12.5 L 6.5 11.5 V 21.5 C 6.5 22.5 7.5 23.5 8.5 23.5 H 15.5 C 16.5 23.5 17.5 22.5 17.5 21.5 V 11.5 L 18.5 12.5 C 19 13 20 13 20.5 12.5 L 22.5 10.5 C 23 10 23 9 22.5 8.5 L 19 4 L 16 2 C 15 3.5 13.5 4.5 12 4.5 Z" 
-                            />
-                            <path 
-                              d="M 12 4.5 C 10.5 4.5 9 3.5 8 2 L 5 4 L 1.5 8.5 C 1 9 1 10 1.5 10.5 L 3.5 12.5 C 4 13 5 13 5.5 12.5 L 6.5 11.5 V 21.5 C 6.5 22.5 7.5 23.5 8.5 23.5 H 15.5 C 16.5 23.5 17.5 22.5 17.5 21.5 V 11.5 L 18.5 12.5 C 19 13 20 13 20.5 12.5 L 22.5 10.5 C 23 10 23 9 22.5 8.5 L 19 4 L 16 2 C 15 3.5 13.5 4.5 12 4.5 Z" 
-                              fill="white" opacity="0.05"
-                            />
-                            <path d="M 9.5 3.5 C 10 4.5 14 4.5 14.5 3.5" fill="none" stroke={(teams[match.teamAIndex]?.color || TEAM_COLORS[0]) === '#1a1a1a' ? '#ffffff40' : 'white'} strokeWidth="0.8" strokeLinecap="round" opacity="0.6" />
-                          </svg>
-                        </div>
-                        <button 
-                          onClick={() => (match.isActive && !match.isPaused) && setShowEventModal({ team: 'A' })}
-                          className={`text-sm font-roboto font-bold uppercase tracking-tight text-center transition-colors ${theme === 'light' ? 'text-zinc-900 hover:text-zinc-600' : 'text-brand-text-primary hover:text-brand-primary'} ${(!match.isActive || match.isPaused) ? 'cursor-default opacity-50' : ''}`}
-                        >
-                          {teams[match.teamAIndex]?.name || 'Time A'}
-                        </button>
-                        <button 
-                          onClick={() => (match.isActive && !match.isPaused) && setShowEventModal({ team: 'A' })}
-                          className={`text-7xl font-black mt-2 tabular-nums hover:scale-110 transition-transform active:scale-95 ${theme === 'light' ? 'text-zinc-900' : 'text-brand-text-primary'} ${(!match.isActive || match.isPaused) ? 'cursor-default opacity-50' : ''}`}
-                        >
-                          {match.scoreA}
-                        </button>
-                        <div className={`mt-4 grid grid-cols-2 gap-1 w-full max-w-[140px] p-2 rounded-xl ${theme === 'light' ? 'bg-zinc-200/50' : 'bg-black/5'}`}>
-                          {(teams[match.teamAIndex]?.playerIds || []).map((pid, pIdx) => {
-                            const player = players.find(p => p.id === pid);
-                            return (
-                              <button 
-                                key={`match-player-a-${match.teamAIndex}-${pid}-${pIdx}`} 
-                                onClick={() => {
-                                  if (match.isActive && !match.isPaused) {
-                                    setShowPlayerActionsModal({ teamIndex: match.teamAIndex, playerId: pid });
-                                  }
-                                }}
-                                className={`text-[8px] uppercase font-roboto font-bold tracking-tight px-2 py-2 rounded-md transition-all active:scale-95 flex items-center justify-between gap-1.5 ${theme === 'light' ? 'bg-white text-zinc-600 border border-zinc-200 hover:bg-zinc-900 hover:text-white' : 'bg-black/5 text-brand-text-secondary border border-black/5 hover:bg-brand-primary/20 hover:text-black'}`}
-                              >
-                                <span className="truncate text-left flex-1 pr-1">{player?.name}</span>
-                                {((player?.goals || 0) > 0 || (player?.assists || 0) > 0) && (
-                                  <div className="flex items-center gap-1 shrink-0 ml-auto">
-                                    {(player?.goals || 0) > 0 && (
-                                      <span className="flex items-center gap-0.5 text-brand-primary" title={`${player?.goals} Gols`}>
-                                        <CircleDot size={8} /> {player?.goals}
-                                      </span>
-                                    )}
-                                    {(player?.assists || 0) > 0 && (
-                                      <span className="flex items-center gap-0.5 text-brand-primary" title={`${player?.assists} Assistências`}>
-                                        <Footprints size={8} /> {player?.assists}
-                                      </span>
-                                    )}
-                                  </div>
-                                )}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                      
-                      {/* VS Divider */}
-                      <div className="flex flex-col items-center pt-8 px-2">
-                        <div className={`text-xl font-roboto font-bold ${theme === 'light' ? 'text-zinc-900' : 'text-brand-text-primary'}`}>VS</div>
-                      </div>
- 
-                      {/* Team B */}
-                      <div className="flex flex-col items-center">
-                        <div className="mb-2 w-12 h-12 flex items-center justify-center">
-                          <svg viewBox="0 0 24 24" stroke={(teams[match.teamBIndex]?.color || TEAM_COLORS[1]) === '#1a1a1a' ? '#ffffff40' : 'none'} strokeWidth="0.5" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-lg">
-                            <defs>
-                              <linearGradient id="jersey-grad-B-match" x1="0%" y1="0%" x2="0%" y2="100%">
-                                <stop offset="0%" stopColor={teams[match.teamBIndex]?.color || TEAM_COLORS[1]} />
-                                <stop offset="100%" stopColor={teams[match.teamBIndex]?.color || TEAM_COLORS[1]} stopOpacity="0.85" />
-                              </linearGradient>
-                            </defs>
-                            <path 
-                              fill="url(#jersey-grad-B-match)"
-                              d="M 12 4.5 C 10.5 4.5 9 3.5 8 2 L 5 4 L 1.5 8.5 C 1 9 1 10 1.5 10.5 L 3.5 12.5 C 4 13 5 13 5.5 12.5 L 6.5 11.5 V 21.5 C 6.5 22.5 7.5 23.5 8.5 23.5 H 15.5 C 16.5 23.5 17.5 22.5 17.5 21.5 V 11.5 L 18.5 12.5 C 19 13 20 13 20.5 12.5 L 22.5 10.5 C 23 10 23 9 22.5 8.5 L 19 4 L 16 2 C 15 3.5 13.5 4.5 12 4.5 Z" 
-                            />
-                            <path 
-                              d="M 12 4.5 C 10.5 4.5 9 3.5 8 2 L 5 4 L 1.5 8.5 C 1 9 1 10 1.5 10.5 L 3.5 12.5 C 4 13 5 13 5.5 12.5 L 6.5 11.5 V 21.5 C 6.5 22.5 7.5 23.5 8.5 23.5 H 15.5 C 16.5 23.5 17.5 22.5 17.5 21.5 V 11.5 L 18.5 12.5 C 19 13 20 13 20.5 12.5 L 22.5 10.5 C 23 10 23 9 22.5 8.5 L 19 4 L 16 2 C 15 3.5 13.5 4.5 12 4.5 Z" 
-                              fill="white" opacity="0.05"
-                            />
-                            <path d="M 9.5 3.5 C 10 4.5 14 4.5 14.5 3.5" fill="none" stroke={(teams[match.teamBIndex]?.color || TEAM_COLORS[1]) === '#1a1a1a' ? '#ffffff40' : 'white'} strokeWidth="0.8" strokeLinecap="round" opacity="0.6" />
-                          </svg>
-                        </div>
-                        <button 
-                          onClick={() => (match.isActive && !match.isPaused) && setShowEventModal({ team: 'B' })}
-                          className={`text-sm font-roboto font-bold uppercase tracking-tight text-center transition-colors ${theme === 'light' ? 'text-zinc-900 hover:text-zinc-600' : 'text-brand-text-primary hover:text-brand-primary'} ${(!match.isActive || match.isPaused) ? 'cursor-default opacity-50' : ''}`}
-                        >
-                          {teams[match.teamBIndex]?.name || 'Time B'}
-                        </button>
-                        <button 
-                          onClick={() => (match.isActive && !match.isPaused) && setShowEventModal({ team: 'B' })}
-                          className={`text-7xl font-black mt-2 tabular-nums hover:scale-110 transition-transform active:scale-95 ${theme === 'light' ? 'text-zinc-900' : 'text-brand-text-primary'} ${(!match.isActive || match.isPaused) ? 'cursor-default opacity-50' : ''}`}
-                        >
-                          {match.scoreB}
-                        </button>
-                        <div className={`mt-4 grid grid-cols-2 gap-1 w-full max-w-[140px] p-2 rounded-xl ${theme === 'light' ? 'bg-zinc-200/50' : 'bg-black/5'}`}>
-                          {(teams[match.teamBIndex]?.playerIds || []).map((pid, pIdx) => {
-                            const player = players.find(p => p.id === pid);
-                            return (
-                              <button 
-                                key={`match-player-b-${match.teamBIndex}-${pid}-${pIdx}`} 
-                                onClick={() => {
-                                  if (match.isActive && !match.isPaused) {
-                                    setShowPlayerActionsModal({ teamIndex: match.teamBIndex, playerId: pid });
-                                  }
-                                }}
-                                className={`text-[8px] uppercase font-roboto font-bold tracking-tight px-1.5 py-1.5 rounded-md text-center transition-all active:scale-95 flex flex-col items-center justify-center gap-0.5 ${theme === 'light' ? 'bg-white text-zinc-600 border border-zinc-200 hover:bg-zinc-900 hover:text-white' : 'bg-black/5 text-brand-text-secondary border border-black/5 hover:bg-brand-primary/20 hover:text-black'}`}
-                              >
-                                <span className="truncate w-full">{player?.name}</span>
-                                {((player?.goals || 0) > 0 || (player?.assists || 0) > 0) && (
-                                  <div className="flex items-center justify-center gap-1.5 w-full">
-                                    {(player?.goals || 0) > 0 && (
-                                      <span className="flex items-center gap-0.5 text-brand-primary" title={`${player?.goals} Gols`}>
-                                        <CircleDot size={8} /> {player?.goals}
-                                      </span>
-                                    )}
-                                    {(player?.assists || 0) > 0 && (
-                                      <span className="flex items-center gap-0.5 text-brand-primary" title={`${player?.assists} Assistências`}>
-                                        <Footprints size={8} /> {player?.assists}
-                                      </span>
-                                    )}
-                                  </div>
-                                )}
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    </div>
-
-                    <button 
-                      onClick={() => setShowTimeEditModal(true)}
-                      className="cursor-pointer hover:scale-105 transition-transform active:scale-95"
-                    >
-                      <FlipClock time={match.timeRemaining} size="small" />
-                    </button>
-
-                    {(!match.isActive || (match.timeRemaining === 0) || (match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit)) && (
-                      <div className="mt-6 px-4 py-1 bg-red-500/20 text-red-400 text-[10px] font-black uppercase tracking-widest rounded-full">
-                        Partida Finalizada
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Controls */}
-                  <div className="grid grid-cols-2 gap-3">
-                    <button 
-                      disabled={match.timeRemaining === 0 || match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit}
-                      onClick={() => {
-                        playWhistle();
-                        setMatch(prev => ({ ...prev, isPaused: !prev.isPaused, isActive: true }));
-                      }}
-                      className={`p-4 rounded-md flex flex-col items-center justify-center gap-1 transition-all disabled:opacity-20 glass-3d ${match.isPaused ? 'bg-brand-card text-brand-primary border border-brand-primary/20' : 'bg-brand-card text-brand-text-secondary'}`}
-                    >
-                      {match.isPaused ? <Play size={24} fill="currentColor" /> : <Pause size={24} fill="currentColor" />}
-                      <span className="text-[8px] font-black uppercase">{match.isPaused ? 'Iniciar' : 'Pausa'}</span>
-                    </button>
-                    <button 
-                      disabled={match.hasEnded}
-                      onClick={() => setMatch(prev => ({ ...prev, timeRemaining: prev.config.duration * 60, scoreA: 0, scoreB: 0, events: [], isPaused: true, isActive: true, hasEnded: false }))}
-                      className="p-4 rounded-lg bg-brand-card text-brand-text-secondary flex flex-col items-center justify-center gap-1 transition-all disabled:opacity-20 glass-3d"
-                    >
-                      <RotateCcw size={24} />
-                      <span className="text-[8px] font-bold uppercase">Reiniciar</span>
-                    </button>
-                    <button 
-                      onClick={() => setCurrentScreen('teams')}
-                      className="p-4 rounded-lg bg-brand-card text-brand-text-secondary flex flex-col items-center justify-center gap-1 transition-all glass-3d"
-                    >
-                      <Users size={24} />
-                      <span className="text-[8px] font-bold uppercase">Nova partida</span>
-                    </button>
-                    <button 
-                      disabled={!match.isActive}
-                      onClick={finishMatch}
-                      className="p-4 rounded-md bg-red-500/10 text-red-400 flex flex-col items-center justify-center gap-1 transition-all disabled:opacity-20 glass-3d"
-                    >
-                      <CheckCircle2 size={24} />
-                      <span className="text-[8px] font-bold uppercase">Finalizar</span>
-                    </button>
-                  </div>
-
-                  {/* Match Events */}
-                  <div className="flex-1 space-y-4 mt-6">
-                    <h3 className="text-xs font-bold uppercase tracking-widest text-brand-text-secondary">Eventos da Partida</h3>
-                    <div className="space-y-2 max-h-40 overflow-y-auto pr-2 custom-scrollbar">
-                      <AnimatePresence mode="wait">
-                        {match.events.length === 0 ? (
-                          <motion.div 
-                            key="no-events"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 0.3 }}
-                            exit={{ opacity: 0 }}
-                            className="text-center py-4 text-sm"
-                          >
-                            Nenhum gol marcado ainda.
-                          </motion.div>
-                        ) : (
-                          [...match.events].reverse().map((event, eIdx) => {
-                            const player = players.find(p => p.id === event.playerId);
-                            const assist = players.find(p => p.id === event.assistId);
-                            return (
-                              <motion.div 
-                                key={`event-log-${event.id}-${eIdx}`}
-                                layout
-                                initial={{ opacity: 0, x: -20, scale: 0.95 }}
-                                animate={{ opacity: 1, x: 0, scale: 1 }}
-                                exit={{ opacity: 0, scale: 0.95 }}
-                                className={`p-3 rounded-md flex items-center justify-between text-sm bg-brand-card/50 border border-white/5 shadow-lg`}
-                              >
-                                <div className="flex items-center gap-2">
-                                  <div className={`w-2 h-2 rounded-full ${event.team === 'A' ? 'bg-brand-primary' : 'bg-brand-card'}`} />
-                                  <span className="font-bold">{player?.name}</span>
-                                  {assist && <span className="text-brand-text-secondary text-[10px] italic">(Ass: {assist.name})</span>}
-                                </div>
-                                <span className="text-brand-text-secondary font-mono text-[10px]">{formatTime(event.timestamp)}</span>
-                              </motion.div>
-                            );
-                          })
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  </div>
-
-                  {/* New Match Notification */}
-                  <AnimatePresence>
-                    {match.hasEnded && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: 10 }}
-                        className="mt-6 p-4 rounded-lg bg-brand-gradient text-black shadow-2xl  flex flex-col items-center gap-3 glass-3d border border-white/20"
-                      >
-                        <div className="flex items-center gap-2">
-                          <Trophy size={20} fill="currentColor" />
-                          <span className="text-xs font-black uppercase tracking-widest">Partida Finalizada</span>
-                        </div>
-                        <button 
-                          onClick={() => {
-                            setCurrentScreen('teams');
-                            setMatch(prev => ({ ...prev, hasEnded: false }));
-                          }}
-                          className="w-full py-3 bg-brand-primary text-black rounded-md font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95"
-                        >
-                          <Plus size={14} />
-                          Iniciar nova partida
-                        </button>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </>
-              </motion.div>
-          )}
 
           {currentScreen === 'ranking' && !isPrintMode && (
             <motion.div 
@@ -4020,9 +3711,8 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
               dragElastic={0.1}
               onDragEnd={(_, info) => {
                 if (info.offset.x > 100) {
-                  setCurrentScreen('match');
-                } else if (info.offset.x < -100) {
-                  setCurrentScreen('finance');
+                  setCurrentScreen('teams');
+                  setTeamsTab('proximos');
                 }
               }}
               className="p-6 space-y-6 pb-24"
@@ -4499,34 +4189,8 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
             <div className="flex justify-between w-full relative items-center">
               <NavItem screen="players" icon={Users} label="Gerenciar" />
               
-              {/* Center Area for Animations and Mini Scoreboard */}
-              <div className="flex-1 flex justify-center items-center relative h-full">
-                <AnimatePresence mode="wait">
-                  {showMiniScoreboard && (
-                    <motion.div
-                      key="mini-scoreboard"
-                      initial={{ y: 20, opacity: 0 }}
-                      animate={{ y: 0, opacity: 1 }}
-                      exit={{ y: 20, opacity: 0 }}
-                      onClick={() => {
-                        setCurrentScreen('teams');
-                        setTeamsTab('partida');
-                      }}
-                      className={`absolute cursor-pointer backdrop-blur-md rounded-full px-4 py-1 flex items-center gap-3 transition-transform hover:scale-105 ${
-                        theme === 'light'
-                          ? 'bg-white/10 shadow-sm'
-                          : 'bg-white/10 shadow-sm'
-                      }`}
-                    >
-                      <div className={`text-[9px] font-black ${theme === 'light' ? 'text-white' : 'text-white'}`}>{match.scoreA}</div>
-                      <div className={`text-[9px] font-mono font-bold tracking-widest ${theme === 'light' ? 'text-white' : 'text-white'}`}>
-                        {formatTime(match.timeRemaining)}
-                      </div>
-                      <div className={`text-[9px] font-black ${theme === 'light' ? 'text-white' : 'text-white'}`}>{match.scoreB}</div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+              {/* Center Area for Animations */}
+              <div className="flex-1 flex justify-center items-center relative h-full"></div>
 
               <NavItem screen="teams" icon={Swords} label="Partidas" />
             </div>
@@ -6002,7 +5666,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                    animate={{ x: 0, opacity: 1 }}
                    transition={{ delay: 0.4 }}
                   onClick={() => {
-                    const screens: Screen[] = ['players', 'teams', 'match', 'ranking', 'finance'];
+                    const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
                     const targetIndex = screens.indexOf('ranking');
                     const currentIndex = screens.indexOf(currentScreen);
                     setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
@@ -6022,7 +5686,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                    animate={{ x: 0, opacity: 1 }}
                    transition={{ delay: 0.5 }}
                   onClick={() => {
-                    const screens: Screen[] = ['players', 'teams', 'match', 'ranking', 'finance'];
+                    const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
                     const targetIndex = screens.indexOf('finance');
                     const currentIndex = screens.indexOf(currentScreen);
                     setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
