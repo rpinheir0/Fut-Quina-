@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Autenticando...</title>
+</head>
+<body>
+  <script>
+    if (window.opener) {
+      window.opener.postMessage({ 
+        type: 'OAUTH_AUTH_SUCCESS', 
+        hash: window.location.hash || '', 
+        search: window.location.search || '' 
+      }, '*');
+      window.close();
+    } else {
+      window.location.href = '/';
+    }
+  </script>
+  <p>Autenticação concluída. Esta janela fechará automaticamente.</p>
+</body>
+</html>
