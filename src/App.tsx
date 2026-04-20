@@ -38,6 +38,7 @@ import {
   RefreshCw,
   DollarSign,
   Camera,
+  Printer,
   Minus,
   X,
   AlertCircle,
@@ -55,6 +56,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
 import { supabase } from './lib/supabase';
+import { sounds } from './lib/sounds';
 
 // --- Supabase Hooks ---
 function useSupabaseArraySync<T extends { id: string }>(
@@ -141,7 +143,8 @@ const getNextTeamColor = (existingTeams: Team[]) => {
   return availableColors.length > 0 ? availableColors[0] : TEAM_COLORS[existingTeams.length % TEAM_COLORS.length];
 };
 
-const FlipDigit = ({ value, size = 'normal', theme = 'dark' }: { value: string, size?: 'normal' | 'small' | 'xs', theme?: string }) => {
+const FlipDigit = ({ value, size = 'normal', clockId = '', digitId = '' }: { value: string, size?: 'normal' | 'small' | 'xs', clockId?: string, digitId?: string }) => {
+  const theme = 'light';
   const dimensions = {
     normal: 'w-10 h-14',
     small: 'w-7 h-10',
@@ -155,39 +158,39 @@ const FlipDigit = ({ value, size = 'normal', theme = 'dark' }: { value: string, 
   };
 
   return (
-    <div className={`relative ${dimensions[size]} bg-brand-card rounded-lg flex items-center justify-center overflow-hidden ${size === 'xs' ? 'border' : 'border-2'} border-brand-border shadow-xl`}>
+    <div className={`relative ${dimensions[size]} flex items-center justify-center overflow-hidden`}>
       <AnimatePresence mode="wait">
         <motion.span
-          key={value}
+          key={`flip-${clockId}-${digitId}-${value}`}
           initial={{ y: 25, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -25, opacity: 0 }}
           transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-          className={`${textSizes[size]} font-black ${theme === 'light' ? 'text-black' : 'text-brand-primary'} tracking-tighter`}
+          className={`${textSizes[size]} font-black text-black tracking-tighter`}
         >
           {value}
         </motion.span>
       </AnimatePresence>
-      <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/20 via-transparent to-black/20" />
-      <div className="absolute top-1/2 left-0 w-full h-[1px] bg-black/40" />
+      <div className="absolute inset-0 pointer-events-none bg-gradient-to-b from-black/5 via-transparent to-black/5" />
     </div>
   );
 };
 
-const FlipClock = ({ time, size = 'normal', theme = 'dark' }: { time: number, size?: 'normal' | 'small' | 'xs', theme?: string }) => {
+const FlipClock = ({ time, size = 'normal', clockId = 'default' }: { time: number, size?: 'normal' | 'small' | 'xs', clockId?: string }) => {
+  const theme = 'light';
   const minutes = Math.floor(time / 60).toString().padStart(2, '0');
   const seconds = (time % 60).toString().padStart(2, '0');
   
   return (
-    <div className={`flex items-center ${size === 'xs' ? 'gap-0.5 p-1 rounded-xl' : 'gap-1 p-2 rounded-[20px]'} bg-brand-glass border border-brand-border backdrop-blur-sm shadow-xl`}>
+    <div className={`flex items-center ${size === 'xs' ? 'gap-0.5 p-1' : 'gap-1 p-2'} rounded-full border border-black/10`}>
       <div className="flex gap-0.5">
-        <FlipDigit value={minutes[0]} size={size} theme={theme} />
-        <FlipDigit value={minutes[1]} size={size} theme={theme} />
+        <FlipDigit value={minutes[0]} size={size} clockId={clockId} digitId="min0" />
+        <FlipDigit value={minutes[1]} size={size} clockId={clockId} digitId="min1" />
       </div>
-      <span className={`${size === 'xs' ? 'text-sm' : size === 'small' ? 'text-lg' : 'text-2xl'} font-black ${theme === 'light' ? 'text-black' : 'text-brand-primary'} animate-pulse mx-0.5`}>:</span>
+      <span className={`${size === 'xs' ? 'text-sm' : size === 'small' ? 'text-lg' : 'text-2xl'} font-black text-black animate-pulse mx-0.5`}>:</span>
       <div className="flex gap-0.5">
-        <FlipDigit value={seconds[0]} size={size} theme={theme} />
-        <FlipDigit value={seconds[1]} size={size} theme={theme} />
+        <FlipDigit value={seconds[0]} size={size} clockId={clockId} digitId="sec0" />
+        <FlipDigit value={seconds[1]} size={size} clockId={clockId} digitId="sec1" />
       </div>
     </div>
   );
@@ -198,16 +201,15 @@ const AssistModal = ({
   onSelect, 
   teamPlayers, 
   goalPlayerId,
-  players,
-  theme = 'dark'
+  players
 }: { 
   isOpen: boolean, 
   onSelect: (id: string | null) => void, 
   teamPlayers: string[], 
   goalPlayerId: string,
-  players: any[],
-  theme?: 'light' | 'dark'
+  players: any[]
 }) => {
+  const theme = 'light';
   if (!isOpen) return null;
 
   return (
@@ -215,7 +217,7 @@ const AssistModal = ({
       <motion.div 
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className={`w-full max-w-xs rounded-[24px] p-6 shadow-2xl border ${
+        className={`w-full max-w-xs rounded-[24px] p-6 shadow-md border ${
           theme === 'light' 
             ? 'bg-zinc-100 border-zinc-200' 
             : 'bg-brand-card border-white/10'
@@ -225,8 +227,8 @@ const AssistModal = ({
           <div className="w-12 h-12 bg-brand-primary/20 rounded-full flex items-center justify-center mx-auto mb-3">
             <Medal className="text-brand-primary" size={24} />
           </div>
-          <h3 className={`text-lg font-black uppercase tracking-tight ${theme === 'light' ? 'text-zinc-900' : 'text-brand-text-primary'}`}>Quem deu a assistência?</h3>
-          <p className={`${theme === 'light' ? 'text-zinc-500' : 'text-brand-text-secondary'} text-xs mt-1 font-bold uppercase tracking-widest`}>Selecione o jogador que ajudou no gol</p>
+          <h3 className={`text-lg font-black uppercase tracking-tight text-zinc-900`}>Quem deu a assistência?</h3>
+          <p className={`text-zinc-500 text-xs mt-1 font-bold uppercase tracking-widest`}>Selecione o jogador que ajudou no gol</p>
         </div>
 
         <div className="grid grid-cols-2 gap-2 mb-4">
@@ -257,7 +259,7 @@ const AssistModal = ({
                 : 'bg-black/20 border-white/5 hover:bg-white/5'
             }`}
           >
-            <span className={`text-[10px] font-black uppercase tracking-widest ${theme === 'light' ? 'text-zinc-500' : 'text-brand-text-secondary'}`}>Sem assistência</span>
+            <span className={`text-[10px] font-black uppercase tracking-widest text-zinc-500`}>Sem assistência</span>
           </button>
         </div>
       </motion.div>
@@ -270,16 +272,15 @@ const ScorerModal = ({
   onSelect, 
   teamPlayers, 
   players,
-  teamName,
-  theme = 'dark'
+  teamName
 }: { 
   isOpen: boolean, 
   onSelect: (id: string) => void, 
   teamPlayers: string[], 
   players: any[],
-  teamName: string,
-  theme?: 'light' | 'dark'
+  teamName: string
 }) => {
+  const theme = 'light';
   if (!isOpen) return null;
 
   return (
@@ -287,7 +288,7 @@ const ScorerModal = ({
       <motion.div 
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
-        className={`w-full max-w-md rounded-[32px] p-8 shadow-2xl border ${
+        className={`w-full max-w-md rounded-[32px] p-8 shadow-md border ${
           theme === 'light' 
             ? 'bg-zinc-100 border-zinc-200' 
             : 'bg-brand-card border-white/10'
@@ -297,8 +298,8 @@ const ScorerModal = ({
           <div className="w-16 h-16 bg-brand-primary/20 rounded-full flex items-center justify-center mx-auto mb-4">
             <Medal className="text-brand-primary" size={32} />
           </div>
-          <h3 className={`text-2xl font-black uppercase tracking-tight ${theme === 'light' ? 'text-zinc-900' : 'text-brand-text-primary'}`}>Quem marcou o gol?</h3>
-          <p className={`${theme === 'light' ? 'text-zinc-500' : 'text-brand-text-secondary'} text-sm mt-2 font-bold uppercase tracking-widest`}>Selecione o jogador do {teamName}</p>
+          <h3 className="text-2xl font-black uppercase tracking-tight text-zinc-900">Quem marcou o gol?</h3>
+          <p className="text-zinc-500 text-sm mt-2 font-bold uppercase tracking-widest">Selecione o jogador do {teamName}</p>
         </div>
 
         <div className="grid grid-cols-2 gap-3 mb-6">
@@ -313,9 +314,7 @@ const ScorerModal = ({
               }`}
             >
               <div className="text-[10px] font-black uppercase tracking-widest text-brand-primary mb-1 opacity-60">Jogador</div>
-              <div className={`text-sm font-black uppercase transition-colors ${
-                theme === 'light' ? 'text-zinc-900 group-hover:text-brand-primary' : 'text-brand-text-primary group-hover:text-brand-primary'
-              }`}>
+              <div className={`text-sm font-black uppercase transition-colors text-zinc-900 group-hover:text-brand-primary`}>
                 {players.find(p => p.id === pid)?.name}
               </div>
             </button>
@@ -326,7 +325,8 @@ const ScorerModal = ({
   );
 };
 
-const GoalCelebration = ({ isOpen, scorerName, teamName, theme = 'dark' }: { isOpen: boolean, scorerName: string, teamName: string, theme?: string }) => {
+const GoalCelebration = ({ isOpen, scorerName, teamName }: { isOpen: boolean, scorerName: string, teamName: string }) => {
+  const theme = 'light';
   if (!isOpen) return null;
 
   return (
@@ -361,16 +361,141 @@ const GoalCelebration = ({ isOpen, scorerName, teamName, theme = 'dark' }: { isO
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="bg-brand-gradient p-1 rounded-2xl shadow-2xl"
+          className="bg-brand-gradient p-1 rounded-2xl shadow-md"
         >
-          <div className={`px-8 py-4 rounded-[14px] ${theme === 'light' ? 'bg-white' : 'bg-brand-dark'}`}>
+          <div className="px-8 py-4 rounded-[14px] bg-white">
             <div className="text-brand-primary text-xs font-black uppercase tracking-[0.3em] mb-1">Marcador</div>
-            <div className={`text-3xl font-black uppercase tracking-tight ${theme === 'light' ? 'text-black' : 'text-brand-text-primary'}`}>{scorerName}</div>
-            <div className={`text-[10px] font-bold uppercase tracking-widest mt-1 ${theme === 'light' ? 'text-zinc-500' : 'text-brand-text-secondary'}`}>{teamName}</div>
+            <div className={`text-3xl font-black uppercase tracking-tight text-black`}>{scorerName}</div>
+            <div className={`text-[10px] font-bold uppercase tracking-widest mt-1 text-zinc-500`}>{teamName}</div>
           </div>
         </motion.div>
       </motion.div>
     </motion.div>
+  );
+};
+
+const PlayerManagementModalComponent = ({ 
+  player, 
+  isOpen, 
+  onClose, 
+  onUpdateName, 
+  onUpdatePhoto,
+  onRemove
+}: { 
+  player: Player | null, 
+  isOpen: boolean, 
+  onClose: () => void, 
+  onUpdateName: (id: string, name: string) => void,
+  onUpdatePhoto: (id: string, photo: string) => void,
+  onRemove?: (id: string) => void
+}) => {
+  const theme = 'light';
+  if (!isOpen || !player) return null;
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        onUpdatePhoto(player.id, reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={onClose}>
+      <motion.div 
+        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        className="w-full max-w-sm rounded-3xl p-8 shadow-[2px_2px_0_0_rgba(0,0,0,1)] border-2 relative bg-zinc-100 border-black"
+        onClick={e => e.stopPropagation()}
+      >
+        <button 
+          onClick={onClose}
+          className="absolute top-6 right-6 p-2 bg-brand-glass border border-brand-border rounded-xl text-zinc-500 hover:text-brand-primary active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shadow-[1px_1px_0_0_var(--brand-border)]"
+        >
+          <Plus size={20} className="rotate-45" />
+        </button>
+
+        <div className="flex flex-col items-center gap-6">
+          <div className="relative group">
+            <div className="w-32 h-32 rounded-3xl overflow-hidden border-2 flex items-center justify-center relative bg-zinc-200 border-black">
+              {player.photo ? (
+                <img src={player.photo} alt={player.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+              ) : (
+                <div className="flex flex-col items-center justify-center text-brand-text-secondary opacity-40">
+                  <User size={48} />
+                  <span className="text-[10px] font-black uppercase mt-1 tracking-widest">Sem Foto</span>
+                </div>
+              )}
+            </div>
+            
+            <label className="absolute -bottom-2 -right-2 w-12 h-12 bg-white text-black rounded-2xl flex items-center justify-center cursor-pointer shadow-[1px_1px_0_0_rgba(0,0,0,1)] hover:scale-105 active:translate-x-[0.5px] active:translate-y-[0.5px] active:shadow-none transition-all border-2 border-black">
+              <Camera size={20} />
+              <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+            </label>
+          </div>
+
+          <div className="w-full space-y-4">
+            <div className="text-center group relative">
+              <input 
+                type="text" 
+                defaultValue={player.name}
+                onBlur={(e) => onUpdateName(player.id, e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    onUpdateName(player.id, e.currentTarget.value);
+                    e.currentTarget.blur();
+                  }
+                }}
+                className={`w-full bg-transparent text-2xl font-black uppercase tracking-tighter text-center outline-none border-b-4 border-transparent focus:border-brand-primary pb-1 transition-all ${
+                  theme === 'light' ? 'text-black' : 'text-white'
+                }`}
+              />
+              <p className="text-[8px] font-black uppercase tracking-[0.3em] text-brand-primary mt-1">Nome do Jogador</p>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className={`p-4 rounded-2xl flex flex-col items-center justify-center border-2 border-brand-border shadow-[4px_4px_0_0_var(--brand-border)] ${
+                theme === 'light' ? 'bg-white' : 'bg-black/40'
+              }`}>
+                <div className="text-3xl font-black text-brand-primary leading-none mb-1">{player.goals}</div>
+                <div className="text-[8px] font-black uppercase tracking-widest text-brand-text-secondary">Gols</div>
+              </div>
+              <div className={`p-4 rounded-2xl flex flex-col items-center justify-center border-2 border-brand-border shadow-[4px_4px_0_0_var(--brand-border)] ${
+                theme === 'light' ? 'bg-white' : 'bg-black/40'
+              }`}>
+                <div className="text-3xl font-black text-brand-primary leading-none mb-1">{player.assists}</div>
+                <div className="text-[8px] font-black uppercase tracking-widest text-brand-text-secondary">Assis.</div>
+              </div>
+            </div>
+
+            <div className="pt-4 flex flex-col gap-2">
+              <button 
+                onClick={onClose}
+                className="w-full py-4 bg-brand-gradient text-black rounded-2xl font-black uppercase tracking-widest shadow-[1.5px_1.5px_0_0_rgba(0,0,0,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all text-xs glass-3d border border-black"
+              >
+                Confirmar
+              </button>
+
+              {onRemove && (
+                <button 
+                  onClick={() => {
+                    onRemove(player.id);
+                    onClose();
+                  }}
+                  className="w-full py-3 flex items-center justify-center gap-2 text-orange-600 bg-orange-900/10 hover:bg-orange-900/20 rounded-2xl font-black uppercase tracking-widest text-[9px] transition-all border-2 border-orange-600/30 active:scale-95"
+                >
+                  <Trash2 size={12} />
+                  Remover Jogador
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      </motion.div>
+    </div>
   );
 };
 
@@ -461,7 +586,8 @@ const formatPlayerName = (name: string) => {
   return `${firstName} ${lastInitial}.`;
 };
 
-const SpinningBall = ({ size = "md", className = "", theme = "dark", spin = true }: { size?: 'sm' | 'md' | 'lg', className?: string, theme?: string, spin?: boolean }) => {
+const SpinningBall = ({ size = "md", className = "", spin = true }: { size?: 'sm' | 'md' | 'lg', className?: string, spin?: boolean }) => {
+  const theme = 'light';
   const sizeClasses = {
     sm: "w-6 h-6",
     md: "w-8 h-8",
@@ -476,7 +602,7 @@ const SpinningBall = ({ size = "md", className = "", theme = "dark", spin = true
         duration: 2, 
         ease: "linear" 
       } : {}}
-      className={`${sizeClasses[size]} rounded-full bg-brand-primary ${theme === 'light' ? '' : 'shadow-[0_0_20px_rgba(198,255,0,0.4)]'} relative flex items-center justify-center z-10 ${className}`}
+      className={`${sizeClasses[size]} rounded-full bg-[#39FF14] relative flex items-center justify-center z-10 ${className}`}
     >
       {/* Ball pattern */}
       <div className="absolute inset-0 rounded-full border-2 border-black/20 overflow-hidden">
@@ -488,21 +614,26 @@ const SpinningBall = ({ size = "md", className = "", theme = "dark", spin = true
   );
 };
 
-const FutQuinaLogo = ({ className = "", size = "md", dark = false }: { className?: string, size?: 'sm' | 'md' | 'lg', dark?: boolean }) => {
+const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, style }: { className?: string, size?: 'sm' | 'md' | 'lg', colorClass?: string, style?: React.CSSProperties }) => {
+  const theme = 'light';
   const sizeClasses = {
     sm: "text-lg",
     md: "text-xl",
     lg: "text-4xl"
   };
 
+  const colorClass = overrideColor || 'text-zinc-500 font-bold';
+  const shadowClass = '';
+
   return (
-    <span className={`${sizeClasses[size]} font-black uppercase tracking-tighter ${dark ? 'text-black' : 'text-brand-text-primary'} ${className}`}>
+    <span className={`${sizeClasses[size]} uppercase tracking-tighter ${colorClass} ${shadowClass} ${className}`} style={style}>
       Fut Quina
     </span>
   );
 };
 
-const RouletteOverlay = ({ theme = "dark" }: { theme?: string }) => {
+const RouletteOverlay = () => {
+  const theme = 'light';
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -546,7 +677,7 @@ const RouletteOverlay = ({ theme = "dark" }: { theme?: string }) => {
               scale: { duration: 1, repeat: Infinity, ease: "easeInOut" }
             }}
           >
-            <SpinningBall size="lg" theme={theme} />
+            <SpinningBall size="lg" />
           </motion.div>
           <motion.p 
             initial={{ opacity: 0, y: 10 }}
@@ -581,10 +712,11 @@ const RouletteOverlay = ({ theme = "dark" }: { theme?: string }) => {
 
 // --- App Component ---
 
-function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string, onBackToHome: () => void, theme: 'light' | 'dark', setTheme: (t: 'light' | 'dark') => void }) {
+function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: () => void }) {
+  const theme = 'light';
+  const setTheme = (t: string) => {}; // No-op if needed elsewhere
   // --- State ---
   const [currentScreen, setCurrentScreen] = useState<Screen>('players');
-  const [showSidebar, setShowSidebar] = useState(false);
   const [isInitialSetupFlow, setIsInitialSetupFlow] = useState(false);
   const [firstSetupDone, setFirstSetupDone] = useState(() => {
     const saved = safeLocalStorage.getItem(`futquina_first_setup_done_${groupId}`);
@@ -621,8 +753,33 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
   const [isEditingFee, setIsEditingFee] = useState(false);
   const [tempFee, setTempFee] = useState('');
   const [isPrintMode, setIsPrintMode] = useState(false);
+  const [isPrintPaymentsOnly, setIsPrintPaymentsOnly] = useState(false);
   const [isRandomizing, setIsRandomizing] = useState(false);
-  const [financeSubScreen, setFinanceSubScreen] = useState<'mensalidade' | 'menu'>('menu');
+  const [financeSubScreen, setFinanceSubScreen] = useState<'mensalidade' | 'balanco' | 'menu'>('menu');
+  const [manualAdjustment, setManualAdjustment] = useState<number>(() => {
+    const saved = safeLocalStorage.getItem(`futquina_manual_adjustment_${groupId}`);
+    return saved ? Number(saved) : 0;
+  });
+  const [isEditingTotal, setIsEditingTotal] = useState(false);
+  const [totalInput, setTotalInput] = useState("");
+
+  useEffect(() => {
+    safeLocalStorage.setItem(`futquina_manual_adjustment_${groupId}`, manualAdjustment.toString());
+  }, [manualAdjustment, groupId]);
+  const [expenses, setExpenses] = useState<{ id: string, name: string, amount: number, date: number }[]>(() => {
+    const saved = safeLocalStorage.getItem(`futquina_expenses_${groupId}`);
+    try {
+      return saved ? JSON.parse(saved) || [] : [];
+    } catch (e) {
+      return [];
+    }
+  });
+  const [showExpenseModal, setShowExpenseModal] = useState(false);
+  const [newExpense, setNewExpense] = useState({ name: '', amount: '' });
+
+  useEffect(() => {
+    safeLocalStorage.setItem(`futquina_expenses_${groupId}`, JSON.stringify(expenses));
+  }, [expenses]);
   const [players, setPlayers] = useState<Player[]>(() => {
     const saved = safeLocalStorage.getItem(`futquina_players_${groupId}`);
     if (saved) {
@@ -857,20 +1014,25 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
   };
   const [showFormationChoiceModal, setShowFormationChoiceModal] = useState(false);
   const [lastMatchResult, setLastMatchResult] = useState<{
-    teamAName: string;
-    teamBName: string;
-    scoreA: number;
-    scoreB: number;
+    id: string;
     teamAIndex: number;
     teamBIndex: number;
-    winnerId?: string | null;
-    loserId?: string | null;
+    scoreA: number;
+    scoreB: number;
+    events: MatchEvent[];
+    timestamp: number;
+    teamAName?: string;
+    teamBName?: string;
   } | null>(() => {
     const saved = safeLocalStorage.getItem(`futquina_last_result_${groupId}`);
     if (saved) {
       try {
         const parsed = JSON.parse(saved);
-        if (parsed && typeof parsed === 'object') return parsed;
+        if (parsed && typeof parsed === 'object') {
+          // Migration for older data without events
+          if (!parsed.events) parsed.events = [];
+          return parsed;
+        }
       } catch (e) {
         console.error("Error parsing last result from localStorage", e);
       }
@@ -926,8 +1088,8 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
   const [playerManagementModal, setPlayerManagementModal] = useState<Player | null>(null);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [showResetStatsConfirm, setShowResetStatsConfirm] = useState(false);
-  const [showResetAppConfirm, setShowResetAppConfirm] = useState(false);
   const [showGoalAnimation, setShowGoalAnimation] = useState<{ scorerName: string, teamName: string } | null>(null);
+  const [showSetupGuide, setShowSetupGuide] = useState(false);
   const [highlightFirstPlayer, setHighlightFirstPlayer] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
   const teamRects = useRef<DOMRect[]>([]);
@@ -944,7 +1106,6 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
 
   // --- Persistence ---
   const [isDataLoaded, setIsDataLoaded] = useState(false);
-
   useEffect(() => {
     async function loadData() {
       setIsDataLoaded(false);
@@ -1077,8 +1238,8 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
   useEffect(() => {
     safeLocalStorage.setItem(`futquina_teams_${groupId}`, JSON.stringify(teams));
     // Automatically remove empty teams
-    if (teams.some(t => t.playerIds.length === 0)) {
-      setTeams(prev => prev.filter(t => t.playerIds.length > 0));
+    if (teams.some(t => (t.playerIds?.length || 0) === 0)) {
+      setTeams(prev => prev.filter(t => (t.playerIds?.length || 0) > 0));
     }
   }, [teams]);
 
@@ -1127,12 +1288,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
 
 
   useEffect(() => {
-    if (toast) {
-      const timer = setTimeout(() => {
-        setToast(null);
-      }, 3000);
-      return () => clearTimeout(timer);
-    }
+    // Auto-hide disabled, requires manual confirmation via OK button
   }, [toast]);
 
   // --- Initialization ---
@@ -1466,6 +1622,10 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
     setEditingPlayerId(null);
   };
 
+  const updatePlayerPhoto = (id: string, photo: string) => {
+    setPlayers(prev => prev.map(p => p.id === id ? { ...p, photo } : p));
+  };
+
   const addAvailablePlayersToTeams = () => {
     const availablePlayers = players.filter(p => !teams.some(t => t.playerIds.includes(p.id)));
     if (availablePlayers.length === 0) {
@@ -1672,6 +1832,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
     const teamName = team === 'A' ? teams[match.teamAIndex]?.name : teams[match.teamBIndex]?.name;
     
     if (scorer) {
+      sounds.playGoal();
       setShowGoalAnimation({ 
         scorerName: scorer.name, 
         teamName: teamName || (team === 'A' ? 'Time A' : 'Time B') 
@@ -1706,6 +1867,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
   };
 
   function finishMatch() {
+    sounds.playFinishMatch();
     const scoreA = match.scoreA;
     const scoreB = match.scoreB;
     const teamAIndex = match.teamAIndex;
@@ -2002,8 +2164,8 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                   transition={{ type: 'spring', stiffness: 400, damping: 25 }}
                   className={`relative flex items-center justify-center w-8 h-8 rounded-full transition-all duration-300 ${
                     isActive 
-                      ? theme === 'light' ? 'text-white' : 'text-white' 
-                      : theme === 'light' ? 'text-white/60 hover:text-white' : 'text-white/40 hover:text-white'
+                      ? 'text-white' 
+                      : 'text-white/60 hover:text-white'
                   }`}
                 >
                   <Icon size={18} strokeWidth={isActive ? 2.5 : 2} />
@@ -2011,8 +2173,8 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                 <div className="flex justify-center w-full">
                   <span className={`text-[7px] uppercase tracking-[0.2em] mt-1 font-black transition-all duration-300 relative z-10 text-center ${
                     isActive 
-                      ? theme === 'light' ? 'text-white opacity-100' : 'text-white opacity-100' 
-                      : theme === 'light' ? 'text-white opacity-60 group-hover:opacity-100' : 'text-white opacity-60 group-hover:opacity-100'
+                      ? 'text-white opacity-100' 
+                      : 'text-white opacity-60 group-hover:opacity-100'
                   }`}>
                     {label}
                   </span>
@@ -2031,11 +2193,11 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className={`fixed inset-0 z-[2000] ${theme === 'light' ? 'bg-white' : 'bg-brand-dark'} flex flex-col items-center justify-center p-6`}
+            className={`fixed inset-0 z-[2000] bg-white flex flex-col items-center justify-center p-6`}
           >
-            <SpinningBall size="lg" theme={theme} />
+            <SpinningBall size="lg" />
             <div className="mt-8 text-center flex flex-col items-center">
-              <h1 className={`text-4xl font-black uppercase tracking-tighter mb-2 ${theme === 'light' ? 'text-zinc-500' : 'text-white'}`}>Sorteando</h1>
+              <h1 className={`text-4xl font-black uppercase tracking-tighter mb-2 text-zinc-500`}>Sorteando</h1>
             </div>
           </motion.div>
         )}
@@ -2043,12 +2205,75 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
 
       {/* Splash Screen */}
       <AnimatePresence>
-        {showGoalAnimation && (
+        {/* Expense Modal */}
+      <AnimatePresence>
+        {showExpenseModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-zinc-100 rounded-[32px] p-6 w-full max-w-sm border border-zinc-200 shadow-xl"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900">Nova Despesa</h3>
+                <button onClick={() => setShowExpenseModal(false)} className="p-2 hover:bg-zinc-200 rounded-full transition-colors"><X size={20} /></button>
+              </div>
+              
+              <div className="space-y-4">
+                <div>
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-1.5 block">Nome da Despesa</label>
+                  <input 
+                    autoFocus
+                    value={newExpense.name}
+                    onChange={(e) => setNewExpense(prev => ({ ...prev, name: e.target.value }))}
+                    placeholder="Ex: Aluguel da quadra"
+                    className="w-full p-4 bg-zinc-200 rounded-2xl outline-none focus:ring-2 ring-[#1E3D2F]/20 font-bold text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-1.5 block">Valor (R$)</label>
+                  <input 
+                    type="number"
+                    value={newExpense.amount}
+                    onChange={(e) => setNewExpense(prev => ({ ...prev, amount: e.target.value }))}
+                    placeholder="00"
+                    className="w-full p-4 bg-zinc-200 rounded-2xl outline-none focus:ring-2 ring-[#1E3D2F]/20 font-black text-xl"
+                  />
+                </div>
+                
+                <button 
+                  onClick={() => {
+                    if (!newExpense.name || !newExpense.amount) return;
+                    setExpenses(prev => [...prev, {
+                      id: generateId(),
+                      name: newExpense.name,
+                      amount: parseInt(newExpense.amount),
+                      date: Date.now()
+                    }]);
+                    setNewExpense({ name: '', amount: '' });
+                    setShowExpenseModal(false);
+                  }}
+                  className="w-full py-4 bg-[#1E3D2F] text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg hover:opacity-90 transition-all active:scale-95"
+                >
+                  Confirmar Despesa
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {showGoalAnimation && (
           <GoalCelebration 
             isOpen={!!showGoalAnimation} 
             scorerName={showGoalAnimation.scorerName} 
             teamName={showGoalAnimation.teamName} 
-            theme={theme}
           />
         )}
       </AnimatePresence>
@@ -2058,11 +2283,11 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
           <motion.div 
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[1000] bg-gradient-to-br from-zinc-800 to-zinc-900 flex flex-col items-center justify-center p-6"
+            className="fixed inset-0 z-[1000] bg-gradient-to-br from-zinc-700 via-zinc-800 to-zinc-900 flex flex-col items-center justify-center p-6"
           >
-            <SpinningBall size="lg" theme={theme} />
+            <SpinningBall size="lg" />
             <div className="mt-8 text-center flex flex-col items-center">
-              <h1 className="text-4xl font-black uppercase tracking-tighter text-white mb-2">Fut Quina</h1>
+              <FutQuinaLogo size="lg" className="mb-2" colorClass="text-white font-black" />
               <p className="text-sm font-bold uppercase tracking-widest text-zinc-300">Gestão de peladas</p>
             </div>
           </motion.div>
@@ -2083,7 +2308,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
               animate={{ scale: 1, y: 0 }}
               className="w-full max-w-md p-8 rounded-lg bg-brand-card border border-brand-primary/20 flex flex-col items-center text-center"
             >
-              <div className="w-20 h-20 bg-brand-gradient rounded-lg flex items-center justify-center mb-6 shadow-lg">
+              <div className="w-20 h-20 bg-brand-gradient rounded-lg flex items-center justify-center mb-6 shadow shadow-black/20">
                 <Users size={40} className="text-black" />
               </div>
               <h3 className="text-lg font-black uppercase tracking-tighter mb-4 text-brand-primary">Jogadores Insuficientes</h3>
@@ -2106,7 +2331,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                     setShowNotEnoughPlayersModal(false);
                     setCurrentScreen('players');
                   }}
-                  className="flex-1 py-4 bg-brand-gradient text-black font-black uppercase tracking-widest text-xs rounded-md shadow-lg hover:opacity-90 transition-all active:scale-95"
+                  className="flex-1 py-4 bg-brand-gradient text-black font-black uppercase tracking-widest text-xs rounded-md shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95"
                 >
                   Criar mais jogadores
                 </button>
@@ -2120,35 +2345,30 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
       <AnimatePresence>
         {toast && (
           <motion.div 
-            initial={{ opacity: 0, y: 50, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="fixed bottom-24 left-6 right-6 z-[100] flex justify-center pointer-events-none"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
           >
-            <div className={`px-6 py-4 rounded-md shadow-2xl flex items-center gap-3 backdrop-blur-xl border ${
-              theme === 'light' ? 'bg-zinc-200 border-zinc-300 text-orange-700' :
-              toast.type === 'warning' ? 'bg-orange-500/90 border-orange-400/50 text-white' : 
-              toast.type === 'gray' ? 'bg-zinc-300/95 border-zinc-400/50 text-black' :
-              toast.type === 'success' ? 'bg-brand-card/90 border-brand-primary/30 text-brand-primary' :
-              'bg-brand-card/90 border-white/10 text-white'
-            }`}>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${
-                theme === 'light' ? 'bg-orange-100' :
-                toast.type === 'success' ? 'bg-brand-primary/20' :
-                toast.type === 'gray' ? 'bg-black/10' : 'bg-white/20'
-              }`}>
-                <Info size={18} className={
-                  theme === 'light' ? 'text-orange-700' : 
-                  toast.type === 'success' ? 'text-brand-primary' :
-                  toast.type === 'gray' ? 'text-black' : 'text-white'
-                } />
+            <motion.div
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="p-6 rounded-3xl shadow-md flex flex-col items-center gap-6 border w-full max-w-xs bg-zinc-100 border-zinc-300"
+            >
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 bg-brand-primary/20`}>
+                <Info size={24} className="text-brand-primary" />
               </div>
-              <p className={`text-xs font-black uppercase tracking-tight leading-tight ${
-                theme === 'light' ? 'text-orange-700' :
-                toast.type === 'success' ? 'text-brand-primary' :
-                toast.type === 'gray' ? 'text-black' : 'text-white'
-              }`}>{toast.message}</p>
-            </div>
+              <p className="text-sm font-black uppercase tracking-widest leading-tight text-center text-zinc-500">
+                {toast.message}
+              </p>
+              <button 
+                onClick={() => setToast(null)}
+                className="w-full py-3 bg-brand-gradient text-black rounded-2xl font-black uppercase tracking-widest text-xs shadow-sm hover:opacity-90 transition-all active:scale-95 text-center mt-2"
+              >
+                OK
+              </button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -2157,30 +2377,27 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
         className="h-full flex flex-col overflow-hidden"
       >
         {/* Sticky Header and Tabs Container */}
-        <div className={`sticky top-0 z-50 ${theme === 'light' ? 'bg-white/80' : 'bg-brand-dark/80'} backdrop-blur-md border-b border-white/5 ${isPrintMode ? 'hidden' : ''}`}>
+        <div className={`sticky top-0 z-50 bg-brand-dark border-b border-brand-border/10 ${isPrintMode ? 'hidden' : ''}`}>
         {/* Header */}
         <header className="px-6 py-4 flex justify-between items-center">
           <div className="flex items-center gap-3">
-            <SpinningBall size="sm" theme={theme} spin={false} />
-            <FutQuinaLogo size="md" />
+            <SpinningBall size="sm" spin={false} />
+            <FutQuinaLogo size="md" style={{ color: '#ffffff' }} colorClass="" />
           </div>
-          <button 
-            onClick={() => setShowSidebar(true)}
-            className="p-2 rounded-full bg-brand-glass hover:bg-brand-surface-light transition-colors"
-          >
-            <Menu size={24} className="text-brand-text-primary" />
-          </button>
+          <div className="flex items-center gap-2">
+            {/* Theme toggle removed */}
+          </div>
         </header>
 
         {/* Tabs */}
         {currentScreen === 'teams' && (
           <div className="px-6 pb-4">
-            <div className="flex bg-brand-glass p-1 rounded-md border border-brand-border">
+            <div className="flex bg-brand-dark p-1 rounded-md border border-brand-border">
               <button 
                 onClick={() => navigateTeamsTab('configuracao')}
-                className={`w-12 py-2 flex items-center justify-center rounded-sm transition-all ${teamsTab === 'configuracao' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
+                className={`w-12 py-2 flex items-center justify-center rounded-sm transition-all ${teamsTab === 'configuracao' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
               >
-                <Settings size={14} style={{ color: '#08cd24' }} />
+                <Settings size={14} className="text-zinc-500" />
               </button>
               <button 
                 onClick={() => navigateTeamsTab('chegada')}
@@ -2233,7 +2450,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                 <div className="space-y-6">
                     <section className="space-y-4">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <h2 className="text-sm font-bold uppercase tracking-widest text-brand-primary">Gerenciar jogadores</h2>
+                        <h2 className="text-sm font-bold uppercase tracking-widest text-[#2F5D50]">Gerenciar jogadores</h2>
                         <div className="flex gap-2 w-full sm:w-auto">
                           {players.length >= 2 && (
                             <button 
@@ -2244,7 +2461,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                   setIsInitialSetupFlow(true);
                                 }
                               }}
-                              className="flex-1 sm:flex-none px-4 py-2.5 bg-brand-gradient text-black text-[10px] font-black uppercase tracking-widest rounded-md shadow-lg shadow-black/20 hover:opacity-90 transition-all active:scale-95 glass-3d flex items-center justify-center gap-2"
+                              className="flex-1 sm:flex-none px-4 py-2.5 bg-brand-gradient text-black text-[10px] font-black uppercase tracking-widest rounded-2xl shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 glass-3d flex items-center justify-center gap-2"
                             >
                               Configurar Partida
                             </button>
@@ -2256,7 +2473,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                     <input 
                       type="text" 
                       placeholder="Nome do jogador..."
-                      className={`flex-1 px-4 py-2 rounded-md border-none outline-none transition-all bg-brand-card focus:ring-2 ring-brand-primary/50 text-sm`}
+                      className={`flex-1 px-4 py-2 rounded-2xl border-none outline-none transition-all bg-brand-card focus:ring-2 ring-brand-primary/50 text-sm`}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           addPlayer(e.currentTarget.value);
@@ -2270,7 +2487,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                         addPlayer(input.value);
                         input.value = '';
                       }}
-                      className="p-2 bg-brand-gradient text-black rounded-md shadow-lg  hover:opacity-90 transition-all active:scale-95 glass-3d flex items-center justify-center"
+                      className="p-2 bg-brand-gradient text-black rounded-2xl shadow  hover:opacity-90 transition-all active:scale-95 glass-3d flex items-center justify-center aspect-square"
                     >
                       <Plus size={18} />
                     </button>
@@ -2280,7 +2497,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                 <div className="relative">
                   <textarea 
                     placeholder="Cole aqui sua lista do WhatsApp (ex: 1. João, 2. Maria...)"
-                    className={`w-full h-24 px-4 py-3 rounded-lg border-none outline-none transition-all text-xs resize-none bg-brand-card/50 text-brand-text-secondary focus:ring-2 ring-brand-primary/30`}
+                    className={`w-full h-24 px-4 py-3 rounded-2xl border-none outline-none transition-all text-xs resize-none bg-brand-card/50 text-brand-text-secondary focus:ring-2 ring-brand-primary/30`}
                     onChange={(e) => {
                       if (e.target.value.includes('\n') || e.target.value.length > 10) {
                         addBulkPlayers(e.target.value);
@@ -2289,7 +2506,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                     }}
                   />
                   <div 
-                    className={`absolute right-3 bottom-3 text-brand-text-secondary cursor-pointer hover:text-brand-primary transition-colors flex items-center gap-1`}
+                    className={`absolute right-4 bottom-3 text-brand-text-secondary cursor-pointer hover:text-brand-primary transition-colors flex items-center gap-1`}
                     onClick={async () => {
                       try {
                         const text = await navigator.clipboard.readText();
@@ -2310,9 +2527,9 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                 </div>
               </section>
 
-              <section className="rounded-md overflow-hidden bg-brand-card/50 border border-brand-border">
+              <section className="rounded-2xl overflow-hidden bg-brand-card/50 border border-brand-border">
                 {players.length === 0 ? (
-                  <div className="text-center py-12 opacity-50 text-brand-text-secondary">Nenhum jogador adicionado ainda.</div>
+                  <div className="text-center py-12 opacity-50 text-brand-text-secondary text-xs">Nenhum jogador adicionado ainda.</div>
                 ) : (
                   <div className="divide-y divide-brand-border">
                     {players.map((player, index) => (
@@ -2329,8 +2546,12 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                         }}
                       >
                         <div className="flex items-center gap-3 flex-1">
-                          <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-brand-primary/20 text-brand-primary border border-brand-primary/30">
-                            <User size={16} />
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-[#2F5D50]/10 text-[#2F5D50] border border-[#2F5D50] overflow-hidden">
+                            {player.photo ? (
+                              <img src={player.photo} alt={player.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                            ) : (
+                              <User size={16} />
+                            )}
                           </div>
                           {editingPlayerId === player.id ? (
                             <input 
@@ -2346,7 +2567,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                             />
                           ) : (
                             <div className="flex flex-col flex-1">
-                              <span className="text-sm font-medium">{player.name}</span>
+                              <span className="text-xs font-medium">{player.name}</span>
                             </div>
                           )}
                         </div>
@@ -2366,9 +2587,9 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                   {!showClearConfirm ? (
                     <button 
                       onClick={() => setShowClearConfirm(true)}
-                      className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-red-500/10 text-red-400 rounded-md border border-red-500/20 hover:bg-red-500/20 transition-all active:scale-95 text-[10px] font-black uppercase tracking-widest glass-3d"
+                      className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-orange-900/20 text-orange-600 rounded-2xl border border-orange-600/30 hover:bg-orange-900/30 transition-all active:scale-95 text-[10px] font-black uppercase tracking-widest glass-3d"
                     >
-                      <Trash2 size={14} />
+                      <Trash2 size={14} className="text-orange-600" />
                       Apagar todos os jogadores
                     </button>
                   ) : (
@@ -2379,13 +2600,13 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                           setSessionPlayerIds([]);
                           setShowClearConfirm(false);
                         }}
-                        className="w-full sm:w-auto px-6 py-3 bg-red-500 text-white rounded-md font-black uppercase tracking-widest text-[10px] shadow-lg shadow-red-500/20 active:scale-95 transition-all"
+                        className="w-full sm:w-auto px-6 py-3 bg-red-500 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow shadow-red-500/20 active:scale-95 transition-all"
                       >
                         Confirmar Exclusão
                       </button>
                       <button 
                         onClick={() => setShowClearConfirm(false)}
-                        className="w-full sm:w-auto px-6 py-3 bg-black/10 text-brand-text-primary rounded-md font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all"
+                        className="w-full sm:w-auto px-6 py-3 bg-black/10 text-brand-text-primary rounded-2xl font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all"
                       >
                         Cancelar
                       </button>
@@ -2429,41 +2650,41 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
             >
                   <div id="teams-list-section" className="max-w-5xl mx-auto w-full space-y-4">
                     {teamsTab === 'configuracao' ? (
-                      <div className={`space-y-6 ${theme === 'light' ? 'bg-zinc-100 p-6 rounded-xl border border-zinc-200' : 'bg-brand-card p-6 rounded-xl border border-white/5'}`}>
+                      <div className="space-y-6 bg-zinc-100 p-6 rounded-3xl border border-zinc-200">
                         <div className="flex justify-between items-center">
-                          <h3 className={`text-sm font-black uppercase tracking-widest ${theme === 'light' ? 'text-zinc-900' : 'text-brand-primary'}`}>Configuração</h3>
+                          <h3 className="text-sm font-black uppercase tracking-widest text-zinc-900">Configuração</h3>
                         </div>
                         
                         <div className="space-y-6">
                           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                             <div className="space-y-2">
-                              <label className={`text-[10px] font-black uppercase tracking-widest ${theme === 'light' ? 'text-zinc-500' : 'text-brand-text-secondary'}`}>Tempo (Minutos)</label>
+                              <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Tempo (Minutos)</label>
                               <input 
                                 type="number" 
                                 defaultValue={match.config.duration}
                                 min={1}
                                 id="tab-match-duration"
-                                className={`w-full p-4 rounded-md outline-none font-bold ${theme === 'light' ? 'bg-white text-zinc-900 border border-zinc-200 focus:border-black' : 'bg-brand-dark text-brand-text-primary border border-brand-border focus:border-brand-primary'} transition-all text-sm`}
+                                className="w-full p-4 rounded-2xl outline-none font-bold bg-white text-zinc-900 border border-zinc-200 focus:border-black transition-all text-sm"
                               />
                             </div>
                             <div className="space-y-2">
-                              <label className={`text-[10px] font-black uppercase tracking-widest ${theme === 'light' ? 'text-zinc-500' : 'text-brand-text-secondary'}`}>Limite de Gols</label>
+                              <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Limite de Gols</label>
                               <input 
                                 type="number" 
                                 defaultValue={match.config.goalLimit}
                                 min={1}
                                 id="tab-match-goals"
-                                className={`w-full p-4 rounded-md outline-none font-bold ${theme === 'light' ? 'bg-white text-zinc-900 border border-zinc-200 focus:border-black' : 'bg-brand-dark text-brand-text-primary border border-brand-border focus:border-brand-primary'} transition-all text-sm`}
+                                className="w-full p-4 rounded-2xl outline-none font-bold bg-white text-zinc-900 border border-zinc-200 focus:border-black transition-all text-sm"
                               />
                             </div>
                             <div className="space-y-2">
-                              <label className={`text-[10px] font-black uppercase tracking-widest ${theme === 'light' ? 'text-zinc-500' : 'text-brand-text-secondary'}`}>Jogadores por Time</label>
+                              <label className="text-[10px] font-black uppercase tracking-widest text-zinc-500">Jogadores por Time</label>
                               <input 
                                 type="number" 
                                 defaultValue={match.config.playersPerTeam}
                                 min={1}
                                 id="tab-match-players"
-                                className={`w-full p-4 rounded-md outline-none font-bold ${theme === 'light' ? 'bg-white text-zinc-900 border border-zinc-200 focus:border-black' : 'bg-brand-dark text-brand-text-primary border border-brand-border focus:border-brand-primary'} transition-all text-sm`}
+                                className="w-full p-4 rounded-2xl outline-none font-bold bg-white text-zinc-900 border border-zinc-200 focus:border-black transition-all text-sm"
                               />
                             </div>
                           </div>
@@ -2495,6 +2716,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                   setIsInitialSetupFlow(false);
                                   setFirstSetupDone(true);
                                   safeLocalStorage.setItem(`futquina_first_setup_done_${groupId}`, 'true');
+                                  setShowSetupGuide(true);
                                 }
 
                                 // Reset teams and match if size changed
@@ -2530,16 +2752,16 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                               // Sync session players without resetting isAvailable
                               setSessionPlayerIds(players.map(p => p.id));
                             }}
-                            className="w-full py-4 bg-brand-gradient text-black font-black uppercase tracking-widest text-xs rounded-md shadow-lg hover:opacity-90 transition-all active:scale-95 glass-3d"
+                            className="w-full py-4 bg-brand-gradient text-black font-black uppercase tracking-widest text-xs rounded-2xl shadow hover:opacity-90 transition-all active:scale-95 glass-3d"
                           >
                             Aplicar Configurações
                           </button>
                         </div>
                       </div>
                     ) : teamsTab === 'chegada' ? (
-                      <div className={`space-y-6 ${theme === 'light' ? 'bg-zinc-100 p-6 rounded-xl border border-zinc-200' : 'bg-brand-card p-6 rounded-xl border border-white/5'}`}>
+                      <div className="space-y-6 bg-zinc-100 p-6 rounded-3xl border border-zinc-200">
                         <div className="flex justify-between items-center">
-                          <h3 className={`text-sm font-black uppercase tracking-widest ${theme === 'light' ? 'text-zinc-900' : 'text-brand-primary'}`}>Ordem de Chegada</h3>
+                          <h3 className="text-sm font-black uppercase tracking-widest text-zinc-900">Ordem de Chegada</h3>
                           <div className="flex items-center gap-3">
                             {players.filter(p => p.isAvailable).length >= match.config.playersPerTeam * 2 && (
                               <button
@@ -2585,7 +2807,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                   
                                   setTeamsTab('proximos');
                                 }}
-                                className="px-4 py-2 bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest text-[10px] rounded-full shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center gap-1.5"
+                                className="px-4 py-2 bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest text-[10px] rounded-full shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center gap-1.5"
                               >
                                 <CheckCircle2 size={12} />
                                 Pronto
@@ -2595,7 +2817,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {players.filter(p => sessionPlayerIds.includes(p.id)).length === 0 ? (
-                            <div className="col-span-full py-12 text-center border-2 border-dashed border-white/5 rounded-xl flex flex-col items-center gap-4">
+                            <div className="col-span-full py-12 text-center border border-dashed border-white/5 rounded-xl flex flex-col items-center gap-4">
                               <p className="text-xs font-bold text-brand-text-secondary uppercase tracking-widest">Nenhum jogador na sessão</p>
                               <button 
                                 onClick={() => {
@@ -2607,7 +2829,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                     setTeamsTab('configuracao');
                                   }
                                 }}
-                                className="px-6 py-3 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded shadow-lg hover:opacity-90 transition-all active:scale-95"
+                                className="px-6 py-3 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95"
                               >
                                 {players.length < 2 ? 'Criar Jogadores' : 'Configurar Partida'}
                               </button>
@@ -2673,31 +2895,31 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                 }}
                                 className={`flex items-center gap-3 p-3 rounded-xl border transition-all ${
                                   p.isAvailable 
-                                    ? 'bg-brand-primary/10 border-brand-primary/50' 
-                                    : (theme === 'light' ? 'bg-gray-100 border-gray-300 opacity-70' : 'bg-white/5 border-white/5 opacity-50')
+                                    ? 'bg-brand-primary border-brand-primary text-black' 
+                                    : 'bg-zinc-200 border-zinc-300 opacity-100'
                                 }`}
                               >
-                                <div className={`w-8 h-8 rounded-full ${theme === 'light' ? 'bg-white' : 'bg-brand-dark'} flex items-center justify-center overflow-hidden border ${theme === 'light' ? 'border-zinc-200' : 'border-white/10'}`}>
+                                <div className={`w-8 h-8 rounded-full ${p.isAvailable ? 'bg-black/10' : 'bg-zinc-300'} flex items-center justify-center overflow-hidden border ${p.isAvailable ? 'border-black/20' : 'border-zinc-400'}`}>
                                   {p.photo ? (
                                     <img src={p.photo} alt="P" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                                   ) : (
-                                    <User size={14} className={p.isAvailable ? 'text-brand-primary' : (theme === 'light' ? 'text-zinc-700' : 'text-white/20')} />
+                                    <User size={14} className={p.isAvailable ? 'text-black' : 'text-zinc-600'} />
                                   )}
                                 </div>
                                 <div className="flex-1 text-left">
-                                  <div className={`text-[11px] sm:text-xs font-black uppercase tracking-tight ${theme === 'light' ? 'text-zinc-800' : 'text-white'}`}>{p.name}</div>
-                                  <div className="text-[8px] font-bold text-zinc-500 uppercase">{p.isAvailable ? 'Presente' : 'Ausente'}</div>
+                                  <div className={`text-[11px] sm:text-xs font-black uppercase tracking-tight ${p.isAvailable ? 'text-black' : 'text-zinc-500'}`}>{p.name}</div>
+                                  <div className={`text-[8px] font-bold uppercase ${p.isAvailable ? 'text-black/60' : 'text-zinc-400'}`}>{p.isAvailable ? 'Presente' : 'Ausente'}</div>
                                 </div>
-                                {p.isAvailable && <CheckCircle2 size={16} className="text-brand-primary" />}
+                                {p.isAvailable && <CheckCircle2 size={16} className="text-black" />}
                               </button>
                             ))
                           )}
                         </div>
                       </div>
                     ) : teamsTab === 'historico' ? (
-                      <div className={`space-y-6 ${theme === 'light' ? 'bg-zinc-100 p-6 rounded-xl border border-zinc-200' : 'bg-brand-card p-6 rounded-xl border border-white/5'}`}>
+                      <div className="space-y-6 bg-zinc-100 p-6 rounded-3xl border border-zinc-200">
                         {!match.isActive ? (
-                          <div className="py-12 text-center border-2 border-dashed border-white/5 rounded-xl flex flex-col items-center gap-4">
+                          <div className="py-12 text-center border border-dashed border-white/5 rounded-3xl flex flex-col items-center gap-4">
                             {players.filter(p => p.isAvailable).length === 0 ? (
                               <>
                                 <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">
@@ -2715,7 +2937,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                       }
                                     }
                                   }}
-                                  className="px-4 py-2 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded shadow-lg hover:opacity-90 transition-all active:scale-95"
+                                  className="px-4 py-2 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
                                 >
                                   {players.length < 2 ? 'Criar Jogadores' : 'Configurar Partida'}
                                 </button>
@@ -2727,16 +2949,90 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                 </p>
                                 <button
                                   onClick={() => setTeamsTab('chegada')}
-                                  className="px-4 py-2 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded shadow-lg hover:opacity-90 transition-all active:scale-95"
+                                  className="px-4 py-2 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
                                 >
                                   Confirmar Chegada
                                 </button>
                               </>
                             ) : (
                               <>
-                                <p className="text-xs font-bold text-brand-primary uppercase tracking-widest">
-                                  Agora você está pronto para iniciar uma partida
-                                </p>
+                                {lastMatchResult ? (
+                                  <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto mb-2 space-y-4 bg-zinc-200/50 p-6 rounded-[32px] border border-zinc-300">
+                                    <p className="text-[10px] font-black text-brand-text-secondary uppercase tracking-[0.2em]">Última Partida</p>
+                                    <div className="flex items-center justify-between gap-4 px-2 py-2 w-full">
+                                      <div className="flex-1 flex flex-col items-center text-center space-y-1">
+                                        <div className="w-10 h-10 flex items-center justify-center shrink-0">
+                                          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                                            <defs>
+                                              <linearGradient id="jersey-grad-A-last" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" stopColor={teams[lastMatchResult.teamAIndex]?.color || TEAM_COLORS[0]} />
+                                                <stop offset="100%" stopColor={teams[lastMatchResult.teamAIndex]?.color || TEAM_COLORS[0]} stopOpacity="0.85" />
+                                              </linearGradient>
+                                            </defs>
+                                            <path fill="url(#jersey-grad-A-last)" d="M 9 2 L 5 4 L 1 10 L 4 13 L 6 11 L 6 22 L 18 22 L 18 11 L 20 13 L 23 10 L 19 4 L 15 2 L 13 4 L 11 4 Z" stroke="none" shapeRendering="crispEdges" />
+                                            <path d="M 9 2 L 5 4 L 1 10 L 4 13 L 6 11 L 6 22 L 18 22 L 18 11 L 20 13 L 23 10 L 19 4 L 15 2 L 13 4 L 11 4 Z" fill="white" opacity="0.1" />
+                                            <rect x="11" y="4" width="2" height="2" fill={(teams[lastMatchResult.teamAIndex]?.color || TEAM_COLORS[0]) === '#1a1a1a' ? '#ffffff' : '#000000'} opacity="0.8" shapeRendering="crispEdges" />
+                                          </svg>
+                                        </div>
+                                        <div className="text-4xl font-black text-black tabular-nums tracking-tighter leading-none mt-2">
+                                          {lastMatchResult.scoreA}
+                                        </div>
+                                      </div>
+                                      
+                                      <div className="text-sm font-black text-brand-text-secondary opacity-50 uppercase tracking-widest italic">vs</div>
+                                      
+                                      <div className="flex-1 flex flex-col items-center text-center space-y-1">
+                                        <div className="w-10 h-10 flex items-center justify-center shrink-0">
+                                          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                                            <defs>
+                                              <linearGradient id="jersey-grad-B-last" x1="0%" y1="0%" x2="0%" y2="100%">
+                                                <stop offset="0%" stopColor={teams[lastMatchResult.teamBIndex]?.color || TEAM_COLORS[1]} />
+                                                <stop offset="100%" stopColor={teams[lastMatchResult.teamBIndex]?.color || TEAM_COLORS[1]} stopOpacity="0.85" />
+                                              </linearGradient>
+                                            </defs>
+                                            <path fill="url(#jersey-grad-B-last)" d="M 9 2 L 5 4 L 1 10 L 4 13 L 6 11 L 6 22 L 18 22 L 18 11 L 20 13 L 23 10 L 19 4 L 15 2 L 13 4 L 11 4 Z" stroke="none" shapeRendering="crispEdges" />
+                                            <path d="M 9 2 L 5 4 L 1 10 L 4 13 L 6 11 L 6 22 L 18 22 L 18 11 L 20 13 L 23 10 L 19 4 L 15 2 L 13 4 L 11 4 Z" fill="white" opacity="0.1" />
+                                            <rect x="11" y="4" width="2" height="2" fill={(teams[lastMatchResult.teamBIndex]?.color || TEAM_COLORS[1]) === '#1a1a1a' ? '#ffffff' : '#000000'} opacity="0.8" shapeRendering="crispEdges" />
+                                          </svg>
+                                        </div>
+                                        <div className="text-4xl font-black text-black tabular-nums tracking-tighter leading-none mt-2">
+                                          {lastMatchResult.scoreB}
+                                        </div>
+                                      </div>
+                                    </div>
+
+                                    {/* Scorers display */}
+                                    <div className="w-full space-y-2 mt-2 pt-4 border-t border-zinc-300">
+                                      {(lastMatchResult.events || []).map((event, eIdx) => {
+                                        const p = players.find(pl => pl.id === event.playerId);
+                                        const a = event.assistId ? players.find(pl => pl.id === event.assistId) : null;
+                                        if (!p) return null;
+                                        return (
+                                          <div key={`last-game-event-${event.id || eIdx}-${eIdx}`} className="flex items-center justify-between gap-2 p-1.5 rounded-lg bg-zinc-300/50 border border-zinc-400/30">
+                                            <div className="flex items-center gap-1.5 overflow-hidden">
+                                              <div className="w-4 h-4 rounded-full bg-zinc-400 flex items-center justify-center shrink-0 border border-zinc-500">
+                                                {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <User size={8} className="text-black" />}
+                                              </div>
+                                              <span className="text-[9px] font-black uppercase truncate text-zinc-800">{p.name}</span>
+                                            </div>
+                                            <div className="flex items-center gap-2 shrink-0">
+                                              {a && (
+                                                <div className="flex items-center gap-1 text-[8px] font-bold text-emerald-800" title={`Assistência: ${a.name}`}>
+                                                  <Footprints size={8} /> <span>{a.name.split(' ')[0]}</span>
+                                                </div>
+                                              )}
+                                              <div className="px-1.5 py-0.5 rounded-sm bg-black text-white text-[8px] font-black uppercase tracking-widest">GOL</div>
+                                            </div>
+                                          </div>
+                                        );
+                                      })}
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <p className="text-xs font-bold text-brand-primary uppercase tracking-widest">
+                                    Agora você está pronto para iniciar uma partida
+                                  </p>
+                                )}
                                 <button
                                   onClick={() => {
                                     // Select first two teams if available
@@ -2745,7 +3041,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                     }
                                     setTeamsTab('proximos');
                                   }}
-                                  className="px-4 py-2 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded shadow-lg hover:opacity-90 transition-all active:scale-95"
+                                  className="px-4 py-2 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
                                 >
                                   Ir para Próximos
                                 </button>
@@ -2757,61 +3053,76 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                             {match.hasEnded && (
                               <div className="absolute inset-0 z-40 bg-black/10 backdrop-blur-[1px] rounded-2xl pointer-events-auto cursor-default" />
                             )}
-                            <div className="flex items-center justify-between gap-4 p-6 bg-black/20 rounded-2xl border border-white/5">
-                              <div className="flex-1 flex flex-col items-center text-center space-y-2">
+                            <div className="flex flex-row items-center justify-between gap-2 sm:gap-6 px-4 py-8 bg-zinc-200/50 rounded-[40px] border border-zinc-300 shadow-sm w-full max-w-2xl mx-auto relative overflow-hidden">
+                              <div className="flex-1 flex flex-col items-center text-center space-y-2 sm:space-y-4">
                                   <button 
+                                    className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm"
                                     disabled={match.hasEnded}
                                     onClick={() => {
                                       if (match.teamAIndex === -1) return;
                                       setTeams(prev => {
                                         const newTeams = [...prev];
                                         const currentTeam = newTeams[match.teamAIndex];
+                                        if (!currentTeam) return prev;
                                         currentTeam.color = TEAM_COLORS[(TEAM_COLORS.indexOf(currentTeam.color || TEAM_COLORS[0]) + 1) % TEAM_COLORS.length];
                                         return newTeams;
                                       });
                                     }}
-                                    className="w-16 h-16 transition-transform hover:scale-110 active:scale-95 drop-shadow-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                                   >
-                                    <svg viewBox="0 0 24 24" stroke={(teams[match.teamAIndex]?.color || TEAM_COLORS[0]) === '#1a1a1a' ? '#ffffff40' : 'none'} strokeWidth="0.5" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
                                       <defs>
                                         <linearGradient id="jersey-grad-A-main" x1="0%" y1="0%" x2="0%" y2="100%">
                                           <stop offset="0%" stopColor={teams[match.teamAIndex]?.color || TEAM_COLORS[0]} />
                                           <stop offset="100%" stopColor={teams[match.teamAIndex]?.color || TEAM_COLORS[0]} stopOpacity="0.85" />
                                         </linearGradient>
                                       </defs>
-                                      {/* Jersey Body with realistic athletic cut */}
+                                      {/* Blocky Retro Jersey */}
                                       <path 
                                         fill="url(#jersey-grad-A-main)"
-                                        d="M 12 4.5 C 10.5 4.5 9 3.5 8 2 L 5 4 L 1.5 8.5 C 1 9 1 10 1.5 10.5 L 3.5 12.5 C 4 13 5 13 5.5 12.5 L 6.5 11.5 V 21.5 C 6.5 22.5 7.5 23.5 8.5 23.5 H 15.5 C 16.5 23.5 17.5 22.5 17.5 21.5 V 11.5 L 18.5 12.5 C 19 13 20 13 20.5 12.5 L 22.5 10.5 C 23 10 23 9 22.5 8.5 L 19 4 L 16 2 C 15 3.5 13.5 4.5 12 4.5 Z" 
+                                        d="M 9 2 L 5 4 L 1 10 L 4 13 L 6 11 L 6 22 L 18 22 L 18 11 L 20 13 L 23 10 L 19 4 L 15 2 L 13 4 L 11 4 Z"
+                                        stroke="none"
+                                        shapeRendering="crispEdges"
                                       />
                                       <path 
-                                        d="M 12 4.5 C 10.5 4.5 9 3.5 8 2 L 5 4 L 1.5 8.5 C 1 9 1 10 1.5 10.5 L 3.5 12.5 C 4 13 5 13 5.5 12.5 L 6.5 11.5 V 21.5 C 6.5 22.5 7.5 23.5 8.5 23.5 H 15.5 C 16.5 23.5 17.5 22.5 17.5 21.5 V 11.5 L 18.5 12.5 C 19 13 20 13 20.5 12.5 L 22.5 10.5 C 23 10 23 9 22.5 8.5 L 19 4 L 16 2 C 15 3.5 13.5 4.5 12 4.5 Z" 
-                                        fill="white" opacity="0.05"
+                                        d="M 9 2 L 5 4 L 1 10 L 4 13 L 6 11 L 6 22 L 18 22 L 18 11 L 20 13 L 23 10 L 19 4 L 15 2 L 13 4 L 11 4 Z"
+                                        fill="white" opacity="0.1"
                                       />
-                                      <path d="M 9.5 3.5 C 10 4.5 14 4.5 14.5 3.5" fill="none" stroke={(teams[match.teamAIndex]?.color || TEAM_COLORS[0]) === '#1a1a1a' ? '#ffffff40' : 'white'} strokeWidth="0.8" strokeLinecap="round" opacity="0.6" />
+                                      {/* Collar pixel detail */}
+                                      <rect x="11" y="4" width="2" height="2" fill={(teams[match.teamAIndex]?.color || TEAM_COLORS[0]) === '#1a1a1a' ? '#ffffff' : '#000000'} opacity="0.8" shapeRendering="crispEdges" />
                                     </svg>
                                   </button>
-                                <button 
-                                  onClick={() => (match.isActive && !match.isPaused) && setShowEventModal({ team: 'A' })}
-                                  className={`text-4xl font-black transition-transform hover:scale-110 active:scale-95 ${theme === 'light' ? 'text-black [text-shadow:_0_0_2px_#fff,_0_0_2px_#fff,_0_0_2px_#fff,_0_0_2px_#fff]' : 'text-brand-primary'} ${(!match.isActive || match.isPaused) ? 'cursor-default opacity-50' : ''}`}
-                                >
-                                  {match.scoreA}
-                                </button>
+                                  <button 
+                                    onClick={() => (match.isActive && !match.isPaused) && setShowEventModal({ team: 'A' })}
+                                    className={`text-4xl sm:text-7xl font-black transition-all hover:scale-110 active:scale-95 origin-center cursor-pointer text-black ${(!match.isActive || match.isPaused) ? 'cursor-default opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-[20px] bg-white border-b-4 border-zinc-300 shadow-sm`}
+                                  >
+                                    {match.scoreA}
+                                  </button>
+                                  <span className="text-[7px] sm:text-[9px] font-black uppercase tracking-widest text-[#1E3D2F] opacity-60 truncate max-w-[80px] sm:max-w-[120px] px-1 text-center">{teams[match.teamAIndex]?.name}</span>
                               </div>
                               
-                              <div className="flex flex-col items-center justify-center gap-4">
-                                <FlipClock time={match.timeRemaining} size="xs" theme={theme} />
+                              <div className="flex flex-col items-center justify-center gap-2 sm:gap-6 min-w-[70px] sm:min-w-[140px]">
+                                <FlipClock clockId="scoreboard-primary" time={match.timeRemaining} size="xs" />
                                 <div className="flex flex-col gap-2">
-                                  <div className="flex gap-2">
+                                  <div className="flex gap-2 sm:gap-3">
                                     <button 
                                       disabled={!((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
                                         teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
                                         teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) || 
                                         (match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit)}
-                                      onClick={() => setMatch(prev => ({ ...prev, isPaused: !prev.isPaused, isActive: true }))} 
-                                      className={`p-3 rounded-full transition-all ${match.isPaused ? 'bg-brand-primary text-black hover:bg-brand-primary/80' : 'bg-white/10 text-white hover:bg-white/20'} disabled:opacity-20 disabled:cursor-not-allowed`}
+                                      onClick={() => {
+                                        setMatch(prev => {
+                                          const nextIsPaused = !prev.isPaused;
+                                          if (nextIsPaused) {
+                                            sounds.playPause();
+                                          } else {
+                                            sounds.playStartMatch();
+                                          }
+                                          return { ...prev, isPaused: nextIsPaused, isActive: true };
+                                        });
+                                      }}
+                                      className={`w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center rounded-full transition-all shadow-md ${match.isPaused ? 'bg-[#1E3D2F] text-white hover:opacity-90' : 'bg-zinc-300 text-zinc-600 hover:bg-zinc-400'} disabled:opacity-20 disabled:cursor-not-allowed`}
                                     >
-                                      {match.isPaused ? <Play size={20} fill="currentColor" /> : <Pause size={20} fill="currentColor" />}
+                                      {match.isPaused ? <Play size={16} className="sm:w-5 sm:h-5" fill="currentColor" /> : <Pause size={16} className="sm:w-5 sm:h-5" fill="currentColor" />}
                                     </button>
                                     <AnimatePresence>
                                       {match.isActive && (
@@ -2827,7 +3138,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                           className="p-3 rounded-full transition-all bg-red-500/10 text-red-400 hover:bg-red-500/20 disabled:opacity-20 disabled:cursor-not-allowed"
                                           title="Finalizar Partida"
                                         >
-                                          <Square size={20} fill="currentColor" />
+                                          <Square size={16} className="sm:w-5 sm:h-5" fill="currentColor" />
                                         </motion.button>
                                       )}
                                     </AnimatePresence>
@@ -2838,15 +3149,16 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                       teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) || 
                                       (match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit)}
                                     onClick={finishMatch}
-                                    className="px-4 py-1.5 rounded-full bg-red-500/20 text-red-400 text-[8px] font-black uppercase tracking-widest hover:bg-red-500/30 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+                                    className="px-2 sm:px-4 py-1 rounded-full bg-red-500/10 text-red-600 text-[6px] sm:text-[8px] font-black uppercase tracking-widest hover:bg-red-500/20 transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-red-500/10"
                                   >
-                                    Finalizar
+                                    Encerrar
                                   </button>
                                 </div>
                               </div>
 
-                              <div className="flex-1 flex flex-col items-center text-center space-y-2">
+                              <div className="flex-1 flex flex-col items-center text-center space-y-2 sm:space-y-4">
                                   <button 
+                                    className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm"
                                     disabled={match.hasEnded}
                                     onClick={() => {
                                       if (match.teamBIndex === -1) return;
@@ -2857,33 +3169,36 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                         return newTeams;
                                       });
                                     }}
-                                    className="w-16 h-16 transition-transform hover:scale-110 active:scale-95 drop-shadow-lg flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed"
                                   >
-                                    <svg viewBox="0 0 24 24" stroke={(teams[match.teamBIndex]?.color || TEAM_COLORS[1]) === '#1a1a1a' ? '#ffffff40' : 'none'} strokeWidth="0.5" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
                                       <defs>
                                         <linearGradient id="jersey-grad-B-main" x1="0%" y1="0%" x2="0%" y2="100%">
                                           <stop offset="0%" stopColor={teams[match.teamBIndex]?.color || TEAM_COLORS[1]} />
                                           <stop offset="100%" stopColor={teams[match.teamBIndex]?.color || TEAM_COLORS[1]} stopOpacity="0.85" />
                                         </linearGradient>
                                       </defs>
-                                      {/* Jersey Body with realistic athletic cut */}
+                                      {/* Blocky Retro Jersey */}
                                       <path 
                                         fill="url(#jersey-grad-B-main)"
-                                        d="M 12 4.5 C 10.5 4.5 9 3.5 8 2 L 5 4 L 1.5 8.5 C 1 9 1 10 1.5 10.5 L 3.5 12.5 C 4 13 5 13 5.5 12.5 L 6.5 11.5 V 21.5 C 6.5 22.5 7.5 23.5 8.5 23.5 H 15.5 C 16.5 23.5 17.5 22.5 17.5 21.5 V 11.5 L 18.5 12.5 C 19 13 20 13 20.5 12.5 L 22.5 10.5 C 23 10 23 9 22.5 8.5 L 19 4 L 16 2 C 15 3.5 13.5 4.5 12 4.5 Z" 
+                                        d="M 9 2 L 5 4 L 1 10 L 4 13 L 6 11 L 6 22 L 18 22 L 18 11 L 20 13 L 23 10 L 19 4 L 15 2 L 13 4 L 11 4 Z"
+                                        stroke="none"
+                                        shapeRendering="crispEdges"
                                       />
                                       <path 
-                                        d="M 12 4.5 C 10.5 4.5 9 3.5 8 2 L 5 4 L 1.5 8.5 C 1 9 1 10 1.5 10.5 L 3.5 12.5 C 4 13 5 13 5.5 12.5 L 6.5 11.5 V 21.5 C 6.5 22.5 7.5 23.5 8.5 23.5 H 15.5 C 16.5 23.5 17.5 22.5 17.5 21.5 V 11.5 L 18.5 12.5 C 19 13 20 13 20.5 12.5 L 22.5 10.5 C 23 10 23 9 22.5 8.5 L 19 4 L 16 2 C 15 3.5 13.5 4.5 12 4.5 Z" 
-                                        fill="white" opacity="0.05"
+                                        d="M 9 2 L 5 4 L 1 10 L 4 13 L 6 11 L 6 22 L 18 22 L 18 11 L 20 13 L 23 10 L 19 4 L 15 2 L 13 4 L 11 4 Z"
+                                        fill="white" opacity="0.1"
                                       />
-                                      <path d="M 9.5 3.5 C 10 4.5 14 4.5 14.5 3.5" fill="none" stroke={(teams[match.teamBIndex]?.color || TEAM_COLORS[1]) === '#1a1a1a' ? '#ffffff40' : 'white'} strokeWidth="0.8" strokeLinecap="round" opacity="0.6" />
+                                      {/* Collar pixel detail */}
+                                      <rect x="11" y="4" width="2" height="2" fill={(teams[match.teamBIndex]?.color || TEAM_COLORS[1]) === '#1a1a1a' ? '#ffffff' : '#000000'} opacity="0.8" shapeRendering="crispEdges" />
                                     </svg>
                                   </button>
-                                <button 
-                                  onClick={() => (match.isActive && !match.isPaused) && setShowEventModal({ team: 'B' })}
-                                  className={`text-4xl font-black transition-transform hover:scale-110 active:scale-95 ${theme === 'light' ? 'text-black [text-shadow:_0_0_2px_#fff,_0_0_2px_#fff,_0_0_2px_#fff,_0_0_2px_#fff]' : 'text-brand-primary'} ${(!match.isActive || match.isPaused) ? 'cursor-default opacity-50' : ''}`}
-                                >
-                                  {match.scoreB}
-                                </button>
+                                  <button 
+                                    onClick={() => (match.isActive && !match.isPaused) && setShowEventModal({ team: 'B' })}
+                                    className={`text-4xl sm:text-7xl font-black transition-all hover:scale-110 active:scale-95 origin-center cursor-pointer text-black ${(!match.isActive || match.isPaused) ? 'cursor-default opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-[20px] bg-white border-b-4 border-zinc-300 shadow-sm`}
+                                  >
+                                    {match.scoreB}
+                                  </button>
+                                  <span className="text-[7px] sm:text-[9px] font-black uppercase tracking-widest text-[#1E3D2F] opacity-60 truncate max-w-full px-1">{teams[match.teamBIndex]?.name}</span>
                               </div>
                             </div>
                             
@@ -2960,9 +3275,9 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                         )}
                                       </div>
                                       <div className="flex items-center gap-2 ml-auto overflow-hidden">
-                                        <span className={`text-[11px] sm:text-[10px] font-bold uppercase truncate ${theme === 'light' ? 'text-black' : ''}`}>{p.name}</span>
-                                        <div className={`w-5 h-5 sm:w-4 sm:h-4 rounded-full ${theme === 'light' ? 'bg-zinc-300' : 'bg-black/40'} flex items-center justify-center shrink-0 border ${theme === 'light' ? 'border-zinc-400' : 'border-white/10'}`}>
-                                          {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <User size={10} className={theme === 'light' ? 'text-black' : ''} />}
+                                        <span className="text-[11px] sm:text-[10px] font-bold uppercase truncate text-black">{p.name}</span>
+                                        <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-300 flex items-center justify-center shrink-0 border border-zinc-400">
+                                          {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <User size={10} className="text-black" />}
                                         </div>
                                       </div>
                                     </button>
@@ -3061,10 +3376,10 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                             : 'bg-brand-glass text-brand-text-primary hover:bg-brand-primary/10 border border-brand-border'
                                         }`}
                                       >
-                                      <div className={`w-5 h-5 sm:w-4 sm:h-4 rounded-full ${theme === 'light' ? 'bg-zinc-300' : 'bg-black/40'} flex items-center justify-center shrink-0 border ${theme === 'light' ? 'border-zinc-400' : 'border-white/10'}`}>
-                                        {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <User size={10} className={theme === 'light' ? 'text-black' : ''} />}
+                                      <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-300 flex items-center justify-center shrink-0 border border-zinc-400">
+                                        {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <User size={10} className="text-black" />}
                                       </div>
-                                      <span className={`text-[11px] sm:text-[10px] font-bold uppercase truncate ${theme === 'light' ? 'text-black' : ''}`}>{p.name}</span>
+                                      <span className="text-[11px] sm:text-[10px] font-bold uppercase truncate text-black">{p.name}</span>
                                       <div className="flex items-center gap-1 ml-auto">
                                         {matchGoals > 0 && (
                                           <div className={`flex items-center gap-0.5 text-[10px] font-bold ${theme === 'light' ? 'text-green-800' : 'text-brand-primary'}`}>
@@ -3119,12 +3434,12 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                         )}
                       </div>
                     ) : teamsTab === 'proximos' ? (
-                      <div className={`space-y-6 relative overflow-hidden ${theme === 'light' ? 'bg-zinc-100 p-6 rounded-xl border border-zinc-200' : 'bg-brand-card p-6 rounded-xl border border-white/5'}`}>
+                      <div className="space-y-6 relative overflow-hidden bg-zinc-100 p-6 rounded-xl border border-zinc-200">
                         
                         <div className="flex justify-between items-center relative z-10">
                           <button 
                             onClick={() => setTeamsTab('configuracao')}
-                            className={`p-2 rounded-lg transition-all active:scale-90 ${theme === 'light' ? 'hover:bg-zinc-200' : 'hover:bg-white/5'}`}
+                            className="p-2 rounded-lg transition-all active:scale-90 hover:bg-zinc-200"
                             title="Configurações"
                           >
                             <Settings size={20} className="text-zinc-400" />
@@ -3137,8 +3452,9 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                 
                                 setShowLogoAnimation(true);
                                 setTimeout(() => {
-                                  randomizeTeams(match.config.playersPerTeam);
+                                randomizeTeams(match.config.playersPerTeam);
                                   setShowLogoAnimation(false);
+                                  sounds.playDrawFinished();
                                   setToast({ message: "Times sorteados com sucesso!", type: 'success' });
                                 }, 3000);
                               }}
@@ -3168,8 +3484,8 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                         </div>
                         <div className="space-y-4">
                           {teams.length < 2 ? (
-                            <div className={`py-12 text-center border-2 border-dashed ${theme === 'light' ? 'border-zinc-200' : 'border-white/5'} rounded-xl flex flex-col items-center gap-4`}>
-                              <p className={`text-xs font-bold ${theme === 'light' ? 'text-zinc-500' : 'text-brand-text-secondary'} uppercase tracking-widest`}>Crie mais times para ver a fila</p>
+                            <div className="py-12 text-center border border-dashed border-zinc-200 rounded-xl flex flex-col items-center gap-4">
+                              <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Crie mais times para ver a fila</p>
                               <button
                                 onClick={() => {
                                   if (players.filter(p => sessionPlayerIds.includes(p.id)).length > 0) {
@@ -3296,12 +3612,12 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                   >
                                     
                                     {/* Jersey Icon Top Left */}
-                                    <div className={`absolute top-3 left-3 w-8 h-8 rounded-xl border flex items-center justify-center transition-all ${theme === 'light' ? 'bg-white border-zinc-200' : 'bg-black/20 border-white/10'}`}>
+                                    <div className="absolute top-3 left-3 w-8 h-8 rounded-xl border flex items-center justify-center transition-all bg-white border-zinc-200">
                                       {(() => {
                                         const teamColor = t.color || TEAM_COLORS[0];
                                         const strokeColor = teamColor === '#1a1a1a' ? '#ffffff40' : (teamColor === '#ffffff' ? '#e4e4e7' : 'white');
                                         return (
-                                          <svg viewBox="0 0 24 24" stroke={strokeColor} strokeWidth="0.5" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 drop-shadow-lg">
+                                          <svg viewBox="0 0 24 24" stroke={strokeColor} strokeWidth="0.5" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
                                             <defs>
                                               <linearGradient id={`jersey-grad-${tIdx}`} x1="0%" y1="0%" x2="0%" y2="100%">
                                                 <stop offset="0%" stopColor={teamColor} />
@@ -3315,56 +3631,47 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                                 <feComposite in="diffuse" in2="SourceGraphic" operator="in" />
                                               </filter>
                                             </defs>
-                                            {/* Jersey Body with realistic athletic cut */}
+                                            {/* Blocky Retro Jersey */}
                                             <path 
                                               fill={`url(#jersey-grad-${tIdx})`}
-                                              d="M 12 4.5 C 10.5 4.5 9 3.5 8 2 L 5 4 L 1.5 8.5 C 1 9 1 10 1.5 10.5 L 3.5 12.5 C 4 13 5 13 5.5 12.5 L 6.5 11.5 V 21.5 C 6.5 22.5 7.5 23.5 8.5 23.5 H 15.5 C 16.5 23.5 17.5 22.5 17.5 21.5 V 11.5 L 18.5 12.5 C 19 13 20 13 20.5 12.5 L 22.5 10.5 C 23 10 23 9 22.5 8.5 L 19 4 L 16 2 C 15 3.5 13.5 4.5 12 4.5 Z" 
+                                              d="M 9 2 L 5 4 L 1 10 L 4 13 L 6 11 L 6 22 L 18 22 L 18 11 L 20 13 L 23 10 L 19 4 L 15 2 L 13 4 L 11 4 Z"
+                                              stroke={strokeColor === '#ffffff40' ? '#ffffff' : (strokeColor === '#e4e4e7' ? '#000000' : strokeColor)}
+                                              strokeWidth="1.5"
+                                              strokeLinejoin="miter"
+                                              shapeRendering="crispEdges"
                                             />
+                                            {/* Collar pixel detail */}
+                                            <rect x="11" y="4" width="2" height="2" fill={strokeColor === '#ffffff40' ? '#ffffff' : (strokeColor === '#e4e4e7' ? '#000000' : strokeColor)} opacity="0.8" shapeRendering="crispEdges" />
                                             {/* Subtle texture overlay */}
                                             <path 
-                                              d="M 12 4.5 C 10.5 4.5 9 3.5 8 2 L 5 4 L 1.5 8.5 C 1 9 1 10 1.5 10.5 L 3.5 12.5 C 4 13 5 13 5.5 12.5 L 6.5 11.5 V 21.5 C 6.5 22.5 7.5 23.5 8.5 23.5 H 15.5 C 16.5 23.5 17.5 22.5 17.5 21.5 V 11.5 L 18.5 12.5 C 19 13 20 13 20.5 12.5 L 22.5 10.5 C 23 10 23 9 22.5 8.5 L 19 4 L 16 2 C 15 3.5 13.5 4.5 12 4.5 Z" 
+                                              d="M 9 2 L 5 4 L 1 10 L 4 13 L 6 11 L 6 22 L 18 22 L 18 11 L 20 13 L 23 10 L 19 4 L 15 2 L 13 4 L 11 4 Z"
                                               fill="white" opacity="0.05"
                                             />
-                                            {/* V-Neck Detail */}
-                                            <path d="M 9.5 3.5 C 10 4.5 14 4.5 14.5 3.5" fill="none" stroke={strokeColor} strokeWidth="0.8" strokeLinecap="round" opacity="0.6" />
-                                            {/* Side panels for realism */}
-                                            <path d="M 7.5 11.5 V 21.5" fill="none" stroke="black" strokeWidth="0.3" opacity="0.1" />
-                                            <path d="M 16.5 11.5 V 21.5" fill="none" stroke="black" strokeWidth="0.3" opacity="0.1" />
+
                                           </svg>
                                         );
                                       })()}
                                     </div>
 
-                                    {/* Status Top Right */}
+                                    {/* Status Top Right removed */}
                                     <div className="absolute top-2 right-2">
-                                      {isCurrent ? (
-                                        match.hasEnded ? (
-                                          match.scoreA === match.scoreB ? (
-                                            <span className="px-2 py-0.5 rounded bg-yellow-500 text-black text-[9px] sm:text-[7px] font-black uppercase">Empate</span>
-                                          ) : tIdx === match.teamBIndex ? (
-                                            <span className="px-2 py-0.5 rounded bg-blue-500 text-white text-[9px] sm:text-[7px] font-black uppercase animate-pulse">Próximo</span>
-                                          ) : (
-                                            <span className="px-2 py-0.5 rounded bg-green-500 text-black text-[9px] sm:text-[7px] font-black uppercase">Vencedor</span>
-                                          )
-                                        ) : (
-                                          <span className="px-2 py-0.5 rounded bg-brand-primary text-black text-[9px] sm:text-[7px] font-black uppercase">Em Campo</span>
-                                        )
-                                      ) : (
-                                        lastMatchResult && t.id === lastMatchResult.winnerId ? (
-                                          <span className="px-2 py-0.5 rounded bg-green-500/20 text-green-500 text-[9px] sm:text-[7px] font-black uppercase border border-green-500/30">Vencedor</span>
-                                        ) : lastMatchResult && t.id === lastMatchResult.loserId ? (
-                                          <span className="px-2 py-0.5 rounded bg-red-500/20 text-red-500 text-[9px] sm:text-[7px] font-black uppercase border border-red-500/30 animate-pulse">Cede Vaga</span>
-                                        ) : (
-                                          <span className="text-[9px] sm:text-[7px] font-black text-brand-text-secondary uppercase">Na Fila</span>
-                                        )
-                                      )}
                                     </div>
 
                                     {isCurrent && t.playerIds.length < match.config.playersPerTeam && (
-                                      <div className="absolute top-12 inset-x-0 bottom-0 z-30 flex items-center justify-center p-4 text-center bg-black/40 backdrop-blur-[2px]">
-                                        <p className="text-xl font-black uppercase tracking-tighter text-white animate-pulse">
-                                          Time incompleto! Clique em um jogador de outro time para movê-lo e completar o time.
-                                        </p>
+                                      <div className="absolute top-12 inset-x-0 bottom-0 z-30 flex items-center justify-center p-4">
+                                        <div className="bg-red-600/90 backdrop-blur-md border border-white/20 p-5 shadow-2xl relative overflow-hidden group max-w-sm rounded-[32px] text-center">
+                                          <div className="flex flex-col items-center gap-2 relative z-10">
+                                            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center animate-bounce">
+                                              <Info className="text-white" size={20} />
+                                            </div>
+                                            <h3 className="text-xl font-black text-white uppercase tracking-tighter italic">Time Incompleto!</h3>
+                                            <p className="text-[10px] font-bold uppercase tracking-widest text-white/90 leading-tight px-4">
+                                              Times devem estar equilibrados.<br/>
+                                              <span className="text-yellow-300">Toque em um jogador</span> de outro time para completar esta vaga.
+                                            </p>
+                                          </div>
+                                          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none" />
+                                        </div>
                                       </div>
                                     )}
 
@@ -3378,98 +3685,99 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                           const p = players.find(pl => pl.id === pid);
                                           if (!p) return null;
                                           return (
-                                              <button
-                                                key={`queue-player-${pid}-${pIdx}`}
-                                                onClick={(e) => {
-                                                  e.stopPropagation();
-                                                  if (swappingPlayerId) {
-                                                    if (swappingPlayerId === pid) {
-                                                      setSwappingPlayerId(null);
-                                                      setToast({ message: "Troca cancelada.", type: 'info' });
-                                                      return;
-                                                    }
-                                                    // Swap logic
-                                                    setTeams(prev => {
-                                                      const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
-                                                      let swapTeamIdx = -1;
-                                                      let currentTeamIdx = -1;
-                                                      
-                                                      // Find teams of both players
-                                                      for (let i = 0; i < newTeams.length; i++) {
-                                                        if (newTeams[i].playerIds.includes(swappingPlayerId)) swapTeamIdx = i;
-                                                        if (newTeams[i].playerIds.includes(pid)) currentTeamIdx = i;
+                                                <button
+                                                  key={`queue-player-${t.id}-${pid}-${pIdx}`}
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    if (swappingPlayerId) {
+                                                      if (swappingPlayerId === pid) {
+                                                        setSwappingPlayerId(null);
+                                                        setToast({ message: "Troca cancelada.", type: 'info' });
+                                                        return;
                                                       }
-                                                      
-                                                      if (swapTeamIdx !== -1 && currentTeamIdx !== -1) {
-                                                        const pAId = swappingPlayerId;
-                                                        const pBId = pid;
+                                                      // Swap logic
+                                                      setTeams(prev => {
+                                                        const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+                                                        let swapTeamIdx = -1;
+                                                        let currentTeamIdx = -1;
                                                         
-                                                        if (swapTeamIdx === currentTeamIdx) {
-                                                          newTeams[swapTeamIdx].playerIds = newTeams[swapTeamIdx].playerIds.map(id => {
-                                                            if (id === pAId) return pBId;
-                                                            if (id === pBId) return pAId;
-                                                            return id;
-                                                          });
-                                                        } else {
-                                                          newTeams[swapTeamIdx].playerIds = newTeams[swapTeamIdx].playerIds.map(id => id === pAId ? pBId : id);
-                                                          newTeams[currentTeamIdx].playerIds = newTeams[currentTeamIdx].playerIds.map(id => id === pBId ? pAId : id);
+                                                        // Find teams of both players
+                                                        for (let i = 0; i < newTeams.length; i++) {
+                                                          if (newTeams[i].playerIds.includes(swappingPlayerId)) swapTeamIdx = i;
+                                                          if (newTeams[i].playerIds.includes(pid)) currentTeamIdx = i;
                                                         }
-                                                      }
-                                                      return newTeams;
-                                                    });
-                                                    setSwappingPlayerId(null);
-                                                    setToast({ message: "Jogadores trocados com sucesso!", type: 'success' });
-                                                  } else if (fillingVacancyForTeam !== null) {
-                                                    // Move logic
-                                                    setTeams(prev => {
-                                                      const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
-                                                      newTeams[tIdx].playerIds = newTeams[tIdx].playerIds.filter(id => id !== pid);
-                                                      newTeams[fillingVacancyForTeam].playerIds.push(pid);
-                                                      return newTeams;
-                                                    });
-                                                    setFillingVacancyForTeam(null);
-                                                    setToast({ message: "Jogador movido com sucesso!", type: 'success' });
-                                                  } else {
-                                                    // Check if there's an incomplete selected team
-                                                    const incompleteSelectedTeamIdx = [match.teamAIndex, match.teamBIndex].find(teamIdx => 
-                                                      teamIdx !== -1 && 
-                                                      teamIdx !== tIdx && // Not the current team
-                                                      (teams[teamIdx]?.playerIds?.length || 0) < match.config.playersPerTeam
-                                                    );
-
-                                                    if (incompleteSelectedTeamIdx !== undefined) {
-                                                      // Move player to the incomplete selected team
+                                                        
+                                                        if (swapTeamIdx !== -1 && currentTeamIdx !== -1) {
+                                                          const pAId = swappingPlayerId;
+                                                          const pBId = pid;
+                                                          
+                                                          if (swapTeamIdx === currentTeamIdx) {
+                                                            newTeams[swapTeamIdx].playerIds = newTeams[swapTeamIdx].playerIds.map(id => {
+                                                              if (id === pAId) return pBId;
+                                                              if (id === pBId) return pAId;
+                                                              return id;
+                                                            });
+                                                          } else {
+                                                            newTeams[swapTeamIdx].playerIds = newTeams[swapTeamIdx].playerIds.map(id => id === pAId ? pBId : id);
+                                                            newTeams[currentTeamIdx].playerIds = newTeams[currentTeamIdx].playerIds.map(id => id === pBId ? pAId : id);
+                                                          }
+                                                        }
+                                                        return newTeams;
+                                                      });
+                                                      setSwappingPlayerId(null);
+                                                      setToast({ message: "Jogadores trocados com sucesso!", type: 'success' });
+                                                    } else if (fillingVacancyForTeam !== null) {
+                                                      // Move logic
                                                       setTeams(prev => {
                                                         const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
                                                         newTeams[tIdx].playerIds = newTeams[tIdx].playerIds.filter(id => id !== pid);
-                                                        newTeams[incompleteSelectedTeamIdx].playerIds.push(pid);
-                                                        return newTeams.filter(team => team.playerIds.length > 0);
+                                                        newTeams[fillingVacancyForTeam].playerIds.push(pid);
+                                                        return newTeams;
                                                       });
-                                                      setToast({ message: `Jogador movido para o ${teams[incompleteSelectedTeamIdx].name}`, type: 'success' });
+                                                      setFillingVacancyForTeam(null);
+                                                      setToast({ message: "Jogador movido com sucesso!", type: 'success' });
                                                     } else {
-                                                      setShowQueuePlayerModal({ teamIndex: tIdx, playerId: pid });
+                                                      // Check if there's an incomplete selected team
+                                                      const incompleteSelectedTeamIdx = [match.teamAIndex, match.teamBIndex].find(teamIdx => 
+                                                        teamIdx !== -1 && 
+                                                        teamIdx !== tIdx && // Not the current team
+                                                        (teams[teamIdx]?.playerIds?.length || 0) < match.config.playersPerTeam
+                                                      );
+
+                                                      if (incompleteSelectedTeamIdx !== undefined) {
+                                                        // Move player to the incomplete selected team
+                                                        setTeams(prev => {
+                                                          const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+                                                          newTeams[tIdx].playerIds = newTeams[tIdx].playerIds.filter(id => id !== pid);
+                                                          newTeams[incompleteSelectedTeamIdx].playerIds.push(pid);
+                                                          return newTeams.filter(team => team.playerIds.length > 0);
+                                                        });
+                                                        setToast({ message: `Jogador movido para o ${teams[incompleteSelectedTeamIdx].name}`, type: 'success' });
+                                                      } else {
+                                                        setShowQueuePlayerModal({ teamIndex: tIdx, playerId: pid });
+                                                      }
                                                     }
-                                                  }
-                                                }}
-                                                className={`flex items-center gap-2 p-2 sm:p-1.5 rounded-xl transition-all relative overflow-hidden z-20 bg-gradient-to-r from-brand-surface to-brand-surface/30 ${
-                                                  (swappingPlayerId && swappingPlayerId !== pid) || 
-                                                  fillingVacancyForTeam !== null || 
-                                                  (movingPlayer && movingPlayer.playerId === pid) ||
-                                                  ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < match.config.playersPerTeam))
-                                                    ? 'bg-brand-primary/20 text-brand-primary hover:bg-brand-primary hover:text-black animate-pulse'
-                                                    : swappingPlayerId === pid
-                                                      ? 'bg-brand-primary/40 text-black border-brand-primary'
-                                                      : theme === 'light'
-                                                        ? 'bg-gradient-to-b from-zinc-200 to-zinc-300 text-black hover:from-zinc-300 hover:to-zinc-400 border border-zinc-300'
-                                                        : 'bg-brand-glass text-brand-text-primary hover:bg-brand-primary/10 border border-brand-border'
-                                                }`}
-                                              >
-                                              
-                                              <div className={`w-5 h-5 sm:w-4 sm:h-4 rounded-full relative z-10 ${theme === 'light' ? 'bg-zinc-300' : 'bg-black/40'} flex items-center justify-center shrink-0 border ${theme === 'light' ? 'border-zinc-400' : 'border-white/10'}`}>
-                                                {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <User size={10} className={theme === 'light' ? 'text-black' : ''} />}
-                                              </div>
-                                              <span className={`text-[11px] sm:text-[10px] font-bold uppercase truncate relative z-10 ${theme === 'light' ? 'text-black' : ''}`}>{p.name}</span>
-                                              </button>
+                                                  }}
+                                                  className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                                    (swappingPlayerId && swappingPlayerId !== pid) || 
+                                                    fillingVacancyForTeam !== null || 
+                                                    (movingPlayer && movingPlayer.playerId === pid) ||
+                                                    ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < match.config.playersPerTeam))
+                                                      ? 'bg-brand-primary/20 text-brand-primary animate-pulse'
+                                                      : swappingPlayerId === pid
+                                                        ? 'bg-brand-primary/40 text-black border border-brand-primary'
+                                                        : theme === 'light'
+                                                          ? 'bg-gradient-to-b from-zinc-200 to-zinc-300 text-black border border-zinc-300'
+                                                          : 'bg-brand-glass text-brand-text-primary border border-brand-border'
+                                                  }`}
+                                                >
+                                                <div className="flex items-center gap-2 ml-auto overflow-hidden">
+                                                  <span className="text-[11px] sm:text-[10px] font-bold uppercase truncate text-black">{p.name}</span>
+                                                  <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-300 flex items-center justify-center shrink-0 border border-zinc-400">
+                                                    {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <User size={10} className="text-black" />}
+                                                  </div>
+                                                </div>
+                                                </button>
                                           );
                                         })}
                                       </div>
@@ -3489,7 +3797,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                         initial={{ opacity: 0, scale: 0.95 }}
                         animate={{ opacity: 1, scale: 1 }}
                         whileHover={{ y: -5 }}
-                        className={`group p-3 sm:p-4 rounded-xl transition-all relative cursor-pointer flex flex-col border-2 ${
+                        className={`group p-3 sm:p-4 rounded-xl transition-all relative cursor-pointer flex flex-col border ${
                           match.teamAIndex === tIndex || match.teamBIndex === tIndex
                             ? 'bg-[#004d1a] border-brand-primary shadow-[0_0_30px_rgba(198,255,0,0.1)]' 
                             : 'bg-transparent border-white/10 hover:border-brand-primary/50'
@@ -3508,7 +3816,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                       >
                         {/* Selection Indicator */}
                         <div className="absolute top-6 right-6">
-                          <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center transition-all duration-500 ${
+                          <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-500 ${
                             match.teamAIndex === tIndex ? 'bg-brand-primary border-brand-primary' : 
                             match.teamBIndex === tIndex ? 'bg-brand-primary border-brand-primary' : 
                             'bg-transparent border-white/20'
@@ -3589,40 +3897,28 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                     setShowPlayerActionsModal({ teamIndex: tIndex, playerId: pid });
                                   }
                                 }}
-                                className={`flex justify-between items-center py-2 px-3 rounded-lg border transition-all group/player cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
+                                className={`flex justify-between items-center py-2 px-1 transition-all group/player cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
                                 swappingPlayerId === pid 
-                                  ? 'bg-brand-primary/20 border-brand-primary' 
+                                  ? 'bg-brand-primary/20 rounded-lg' 
                                   : (swappingPlayerId && swappingPlayerId !== pid)
-                                    ? 'bg-brand-primary/10 border-brand-primary/50 animate-pulse'
-                                    : (match.teamAIndex === tIndex || match.teamBIndex === tIndex)
-                                      ? 'bg-black/5 border-black/10'
-                                      : 'bg-brand-surface-light border-white/5'
+                                    ? 'bg-brand-primary/10 rounded-lg animate-pulse'
+                                    : 'bg-transparent border-transparent'
                               }`}>
                                 <div className="flex items-center gap-2 overflow-hidden">
-                                  <div className={`w-6 h-6 rounded-full ${theme === 'light' ? 'bg-zinc-300' : 'bg-brand-primary/10'} flex items-center justify-center overflow-hidden border ${theme === 'light' ? 'border-zinc-400' : 'border-white/5'} shrink-0`}>
+                                  <div className="w-6 h-6 rounded-full bg-zinc-300 flex items-center justify-center overflow-hidden border border-zinc-400 shrink-0">
                                     {p.photo ? (
                                       <img src={p.photo} alt={p.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                                     ) : (
-                                      <User size={10} className={theme === 'light' ? 'text-zinc-700' : 'text-brand-primary/60'} />
+                                      <User size={10} className="text-zinc-700" />
                                     )}
                                   </div>
                                   <span className={`text-[11px] sm:text-xs font-bold tracking-tight transition-colors truncate ${
                                     swappingPlayerId === pid 
                                       ? 'text-brand-primary' 
-                                      : (theme === 'light' ? 'text-zinc-800' : (match.teamAIndex === tIndex || match.teamBIndex === tIndex) ? 'text-white' : 'text-brand-text-primary')
+                                      : 'text-zinc-800'
                                   }`}>{p.name}</span>
                                 </div>
                                 <div className="flex items-center gap-1">
-                                  {p.goals > 0 && (
-                                    <div className="flex items-center gap-0.5 text-[10px] font-bold text-brand-primary" title={`${p.goals} Gols`}>
-                                      <CircleDot size={10} /> {p.goals}
-                                    </div>
-                                  )}
-                                  {p.assists > 0 && (
-                                    <div className="flex items-center gap-0.5 text-[10px] font-bold text-brand-primary" title={`${p.assists} Assistências`}>
-                                      <Footprints size={10} /> {p.assists}
-                                    </div>
-                                  )}
                                   {swappingPlayerId === pid && (
                                     <div className="px-2 py-1 text-black bg-brand-primary/20 border border-brand-primary/50 rounded-sm text-[8px] font-black uppercase">
                                       Selecionado
@@ -3671,8 +3967,8 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                               }}
                               className={`flex-[2] py-3 rounded-md text-[10px] font-black uppercase tracking-widest transition-all flex items-center justify-center gap-2 ${
                                 (match.teamAIndex === tIndex || match.teamBIndex === tIndex)
-                                  ? 'bg-black/10 text-black border border-black/20 hover:bg-black/20'
-                                  : 'bg-black/5 text-brand-text-primary border border-black/10 hover:bg-black/10'
+                                  ? 'bg-transparent text-black hover:bg-black/20'
+                                  : 'bg-transparent text-brand-text-primary hover:bg-black/10'
                               }`}
                             >
                               <Plus size={14} />
@@ -3683,7 +3979,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                     ))}
                     <button 
                       onClick={addTeam}
-                      className="p-6 rounded-xl border-2 border-dashed border-white/10 hover:border-brand-primary/50 hover:bg-brand-primary/5 transition-all flex flex-col items-center justify-center gap-3 group"
+                      className="p-6 rounded-xl border border-dashed border-white/10 hover:border-brand-primary/50 hover:bg-brand-primary/5 transition-all flex flex-col items-center justify-center gap-3 group"
                     >
                       <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-brand-primary group-hover:text-black transition-all">
                         <Plus size={24} />
@@ -3722,34 +4018,34 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                     onClick={() => setIsPrintMode(true)}
                     className="px-4 py-2 bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest text-[10px] rounded-full shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center gap-1.5"
                   >
-                    <Camera size={12} fill="currentColor" />
+                    <Printer size={12} fill="currentColor" />
                     Print
                   </button>
                 </div>
               </div>
 
-              <div className="flex bg-brand-glass p-1 rounded-md border border-brand-border">
+              <div className="flex bg-brand-dark p-1 rounded-2xl border border-brand-border mb-4">
                 <button
                   onClick={() => setRankingTab('geral')}
-                  className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-sm transition-all ${rankingTab === 'geral' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
+                  className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${rankingTab === 'geral' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
                 >
-                  Top 10
+                  Geral
                 </button>
                 <button
                   onClick={() => setRankingTab('artilharia')}
-                  className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-sm transition-all ${rankingTab === 'artilharia' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
+                  className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${rankingTab === 'artilharia' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
                 >
                   Artilharia
                 </button>
                 <button
                   onClick={() => setRankingTab('assistencias')}
-                  className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-sm transition-all ${rankingTab === 'assistencias' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
+                  className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${rankingTab === 'assistencias' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
                 >
                   Assistências
                 </button>
               </div>
               
-              <div className={`rounded-md overflow-hidden border bg-brand-card/50 border-brand-border`}>
+              <div className={`rounded-3xl overflow-hidden border bg-brand-card/50 border-brand-border`}>
                 {[...players]
                   .sort((a, b) => {
                     if (rankingTab === 'geral') return (b.goals + b.assists) - (a.goals + a.assists);
@@ -3757,7 +4053,6 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                     if (rankingTab === 'assistencias') return b.assists - a.assists;
                     return 0;
                   })
-                  .slice(0, 10)
                   .map((player, index) => (
                   <div 
                     key={`ranking-player-${player.id}-${index}`}
@@ -3779,7 +4074,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                         <span className="flex items-center gap-1"><Footprints size={10} /> {player.assists} Assistências</span>
                       </div>
                     </div>
-                    <div className="text-base font-black text-brand-primary">
+                    <div className="text-base font-black text-[#1E3D2F]">
                       {rankingTab === 'geral' && (player.goals + player.assists)}
                       {rankingTab === 'artilharia' && player.goals}
                       {rankingTab === 'assistencias' && player.assists}
@@ -3816,10 +4111,23 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                 <div className="space-y-6">
                   <div className="grid grid-cols-1 gap-3 px-4 pt-4">
                     <button 
+                      onClick={() => setFinanceSubScreen('balanco')}
+                      className="group p-6 rounded-md bg-brand-card border border-brand-border flex items-center gap-4 hover:bg-brand-primary/10 transition-all active:scale-95"
+                    >
+                      <div className="w-12 h-12 rounded-md bg-brand-surface-light flex items-center justify-center shadow group-hover:scale-110 transition-transform">
+                        <Activity size={24} className="text-zinc-500" />
+                      </div>
+                      <div className="text-left">
+                        <h3 className="text-xl font-black uppercase tracking-tighter text-zinc-500">Balanço</h3>
+                        <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Gerais e despesas</p>
+                      </div>
+                      <ChevronRight className="ml-auto text-zinc-500 group-hover:text-brand-primary transition-colors" />
+                    </button>
+                    <button 
                       onClick={() => setFinanceSubScreen('mensalidade')}
                       className="group p-6 rounded-md bg-brand-card border border-brand-border flex items-center gap-4 hover:bg-brand-primary/10 transition-all active:scale-95"
                     >
-                      <div className="w-12 h-12 rounded-md bg-brand-surface-light flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                      <div className="w-12 h-12 rounded-md bg-brand-surface-light flex items-center justify-center shadow group-hover:scale-110 transition-transform">
                         <Wallet size={24} className="text-zinc-500" />
                       </div>
                       <div className="text-left">
@@ -3832,6 +4140,277 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                 </div>
               )}
 
+              {financeSubScreen === 'balanco' && (() => {
+                const totalRevenue = (payments || []).reduce((acc: number, p: PaymentRecord) => acc + Object.values(p?.months || {}).reduce((mAcc: number, mVal) => mAcc + Number(mVal || 0), 0), 0) + manualAdjustment;
+                const totalExpenses = (expenses || []).reduce((acc: number, e) => acc + (e.amount || 0), 0);
+                const netBalance = totalRevenue - totalExpenses;
+
+                return (
+                  <div className={`space-y-6 ${isPrintMode ? 'bg-[#1E3D2F] min-h-screen text-white p-4 pb-12' : ''}`}>
+                    {!isPrintMode && (
+                      <div className="flex justify-between items-center px-4">
+                        <div className="flex items-center gap-2">
+                          <button onClick={() => setFinanceSubScreen('menu')} className="p-2 bg-zinc-100 rounded-full text-zinc-500 hover:bg-zinc-200 transition-colors"><ChevronRight className="rotate-180" size={18} /></button>
+                          <h2 className="text-xl font-black uppercase tracking-tighter">Balanço Financeiro</h2>
+                        </div>
+                        <button 
+                          onClick={() => setIsPrintMode(true)}
+                          className="w-10 h-10 bg-[#1E3D2F] text-white rounded-full shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center shrink-0"
+                          title="Gerar Print"
+                        >
+                          <Camera size={18} fill="currentColor" />
+                        </button>
+                      </div>
+                    )}
+
+                    {isPrintMode && (
+                      <div className="pt-8 pb-4 text-center border-b border-white/20 mb-6">
+                        <div className="flex justify-center mb-4">
+                          <FutQuinaLogo size="md" />
+                        </div>
+                        <h2 className="text-3xl font-black italic tracking-tighter uppercase mb-2">
+                          {isPrintPaymentsOnly ? 'Status de Pagamentos' : 'Relatório de Balanço'}
+                        </h2>
+                        <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Competência: {MONTHS[new Date().getMonth()]} / {new Date().getFullYear()}</p>
+                        <button 
+                          onClick={() => {
+                            setIsPrintMode(false);
+                            setIsPrintPaymentsOnly(false);
+                          }} 
+                          className="absolute top-4 right-4 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
+                        >
+                          <X size={20} />
+                        </button>
+                      </div>
+                    )}
+                    <div className={`px-4 space-y-6 ${isPrintMode ? 'max-w-xl mx-auto' : ''}`}>
+                      {/* Summary Cards */}
+                      {!isPrintPaymentsOnly && (
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        {/* Arrecadação Card */}
+                        <div className={`p-5 rounded-[32px] border transition-all ${isPrintMode ? 'bg-white/10 border-white/20' : 'bg-emerald-500/5 border-emerald-500/20'}`}>
+                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-white/60' : 'text-emerald-700/60'}`}>Arrecadação</p>
+                          <div className="flex items-baseline gap-2 mb-4">
+                            {isEditingTotal ? (
+                              <div className="flex items-center gap-1 w-full">
+                                <span className="text-sm font-bold opacity-60">R$</span>
+                                <input 
+                                  autoFocus
+                                  type="number"
+                                  value={totalInput}
+                                  onChange={(e) => setTotalInput(e.target.value)}
+                                  onBlur={() => {
+                                    setManualAdjustment(Number(totalInput));
+                                    setIsEditingTotal(false);
+                                  }}
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                      setManualAdjustment(Number(totalInput));
+                                      setIsEditingTotal(false);
+                                    }
+                                  }}
+                                  className={`w-full bg-transparent border-b-2 border-brand-primary outline-none text-2xl font-black ${isPrintMode ? 'text-white' : 'text-zinc-900'}`}
+                                />
+                              </div>
+                            ) : (
+                              <div className="flex flex-col">
+                                <p className={`text-3xl font-black ${isPrintMode ? 'text-white' : 'text-[#1E3D2F]'}`}>
+                                  R$ {totalRevenue},00
+                                </p>
+                                {!isPrintMode && (
+                                  <button 
+                                    onClick={() => {
+                                      setTotalInput(manualAdjustment.toString());
+                                      setIsEditingTotal(true);
+                                    }}
+                                    className="text-[8px] font-bold uppercase tracking-widest text-emerald-600 flex items-center gap-1 hover:underline w-fit mt-1"
+                                  >
+                                    Ajustar Manual (R$ {manualAdjustment})
+                                  </button>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                          <div className="space-y-1.5">
+                            <div className="h-2 w-full bg-zinc-200/50 rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-emerald-500 transition-all duration-1000" 
+                                style={{ width: `${Math.min(100, (totalRevenue / Math.max(1, (players.length * (monthlyFee || 30)))) * 100)}%` }}
+                              />
+                            </div>
+                            <div className="flex justify-between text-[8px] font-bold uppercase tracking-wider opacity-60">
+                              <span>Meta {players.length} jogs</span>
+                              <span>R$ {players.length * (monthlyFee || 30)},00</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Despesas Card */}
+                        <div className={`p-5 rounded-[32px] border transition-all ${isPrintMode ? 'bg-white/10 border-white/20' : 'bg-red-500/5 border-red-500/20'}`}>
+                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-white/60' : 'text-red-500/60'}`}>Despesas</p>
+                          <p className={`text-3xl font-black mb-4 ${isPrintMode ? 'text-white' : 'text-red-600'}`}>R$ {totalExpenses},00</p>
+                          <div className="space-y-1.5">
+                            <div className="h-2 w-full bg-zinc-200/50 rounded-full overflow-hidden">
+                              <div 
+                                className="h-full bg-red-500 transition-all duration-1000" 
+                                style={{ width: `${Math.min(100, (totalExpenses / Math.max(1, totalRevenue)) * 100)}%` }}
+                              />
+                            </div>
+                            <div className="flex justify-between text-[8px] font-bold uppercase tracking-wider opacity-60">
+                              <span>Gasto Total</span>
+                              <span>{totalRevenue > 0 ? Math.round((totalExpenses / totalRevenue) * 100) : 0}%</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Saldo Líquido Card */}
+                        <div className={`p-5 rounded-[32px] border transition-all ${
+                          netBalance >= 0
+                            ? isPrintMode ? 'bg-emerald-500/20 border-emerald-500/30' : 'bg-emerald-500/10 border-emerald-500/20'
+                            : isPrintMode ? 'bg-red-500/20 border-red-500/30' : 'bg-red-500/10 border-red-500/20'
+                        }`}>
+                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 opacity-60`}>Saldo Líquido</p>
+                          <p className={`text-3xl font-black mb-4 ${
+                            netBalance >= 0
+                              ? isPrintMode ? 'text-white' : 'text-emerald-700'
+                              : isPrintMode ? 'text-white' : 'text-red-700'
+                          }`}>R$ {netBalance},00</p>
+                          <div className="space-y-1.5">
+                            <div className="h-2 w-full bg-zinc-200/50 rounded-full overflow-hidden">
+                              <div 
+                                className={`h-full transition-all duration-1000 ${netBalance >= 0 ? 'bg-emerald-500' : 'bg-red-500'}`} 
+                                style={{ width: `${Math.min(100, (Math.abs(netBalance) / Math.max(1, totalRevenue)) * 100)}%` }}
+                              />
+                            </div>
+                            <div className="flex justify-between text-[8px] font-bold uppercase tracking-wider opacity-60">
+                              <span>{netBalance >= 0 ? 'Lucro' : 'Prejuízo'}</span>
+                              <span>{totalRevenue > 0 ? Math.round((Math.abs(netBalance) / totalRevenue) * 100) : 0}%</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      {/* Em Dia */}
+                      <div className={`p-5 rounded-[32px] border ${isPrintMode ? 'bg-white/10 border-white/20' : 'bg-emerald-50/50 border-emerald-100'}`}>
+                        <div className="flex justify-between items-center mb-4">
+                          <h3 className="text-[10px] font-black uppercase tracking-widest text-emerald-600 flex items-center gap-2">
+                            <CheckCircle2 size={14} /> Jogadores em Dia ({MONTHS[new Date().getMonth()]})
+                          </h3>
+                          {!isPrintMode && (
+                            <button 
+                              onClick={() => {
+                                setIsPrintMode(true);
+                                setIsPrintPaymentsOnly(true);
+                              }}
+                              className="p-1.5 text-emerald-600 hover:bg-emerald-100 rounded-full transition-colors"
+                              title="Gerar Print desta lista"
+                            >
+                              <Camera size={14} />
+                            </button>
+                          )}
+                        </div>
+                        <div className="space-y-1.5 max-h-48 overflow-y-auto custom-scrollbar pr-1">
+                          {(players.filter(p => {
+                            const currentMonth = MONTHS[new Date().getMonth()];
+                            const record = payments.find(pay => pay.playerId === p.id && pay.year === selectedYear);
+                            return record && (record.months[currentMonth] || 0) > 0;
+                          }) || []).map((p, pIdx) => (
+                            <div key={`em-dia-${p.id}-${pIdx}`} className="flex items-center justify-between p-3 rounded-2xl bg-white border border-emerald-100 shadow-sm">
+                              <span className="text-xs font-bold uppercase tracking-tight text-zinc-800">{p.name}</span>
+                              <Check size={14} className="text-emerald-500" />
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Em Débito */}
+                      <div className={`p-5 rounded-[32px] border ${isPrintMode ? 'bg-white/10 border-white/20' : 'bg-red-50/50 border-red-100'}`}>
+                        <div className="flex justify-between items-center mb-4">
+                          <h3 className="text-[10px] font-black uppercase tracking-widest text-red-500 flex items-center gap-2">
+                            <AlertCircle size={14} /> Pendentes ({MONTHS[new Date().getMonth()]})
+                          </h3>
+                          {!isPrintMode && (
+                            <button 
+                              onClick={() => {
+                                setIsPrintMode(true);
+                                setIsPrintPaymentsOnly(true);
+                              }}
+                              className="p-1.5 text-red-600 hover:bg-red-100 rounded-full transition-colors"
+                              title="Gerar Print desta lista"
+                            >
+                              <Camera size={14} />
+                            </button>
+                          )}
+                        </div>
+                        <div className="space-y-1.5 max-h-48 overflow-y-auto custom-scrollbar pr-1">
+                          {(players.filter(p => {
+                            const currentMonth = MONTHS[new Date().getMonth()];
+                            const record = payments.find(pay => pay.playerId === p.id && pay.year === selectedYear);
+                            return !record || (record.months[currentMonth] || 0) <= 0;
+                          }) || []).map((p, pIdx) => (
+                            <div key={`em-debito-${p.id}-${pIdx}`} className="flex items-center justify-between p-3 rounded-2xl bg-white border border-red-100 shadow-sm">
+                              <span className="text-xs font-bold uppercase tracking-tight text-zinc-800">{p.name}</span>
+                              <span className="text-[8px] font-black bg-red-500 text-white px-2 py-0.5 rounded-full uppercase tracking-tighter">Pendente</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Expenses List */}
+                    {!isPrintPaymentsOnly && (
+                      <div className={`rounded-3xl border overflow-hidden ${isPrintMode ? 'bg-white/10 border-white/20' : 'bg-white border-zinc-200 shadow-sm'}`}>
+                        <div className={`p-4 border-b flex justify-between items-center ${isPrintMode ? 'border-white/10 bg-white/5' : 'bg-zinc-50 border-zinc-200'}`}>
+                          <h3 className={`text-xs font-black uppercase tracking-widest flex items-center gap-2 ${isPrintMode ? 'text-white' : 'text-zinc-500'}`}>
+                            <ClipboardPaste size={14} /> Despesas Detalhadas
+                          </h3>
+                          {!isPrintMode && (
+                            <button 
+                              onClick={() => setShowExpenseModal(true)}
+                              className="p-1.5 bg-[#1E3D2F] text-white rounded-lg hover:opacity-90 transition-all active:scale-90"
+                            >
+                              <Plus size={16} />
+                            </button>
+                          )}
+                        </div>
+                        <div className={`divide-y ${isPrintMode ? 'divide-white/10' : 'divide-zinc-100'}`}>
+                          {(expenses || []).length === 0 ? (
+                            <div className="p-8 text-center text-zinc-400 italic text-xs uppercase tracking-widest">Nenhuma despesa registrada</div>
+                          ) : (
+                            [...(expenses || [])].sort((a, b) => b.date - a.date).map((expense, eIdx) => (
+                              <div key={`expense-${expense.id || eIdx}-${eIdx}`} className="p-4 flex items-center justify-between group">
+                                <div>
+                                  <p className={`text-sm font-black uppercase tracking-tight ${isPrintMode ? 'text-white' : 'text-zinc-800'}`}>{expense.name}</p>
+                                  <p className={`text-[8px] font-bold uppercase tracking-widest ${isPrintMode ? 'text-white/60' : 'text-zinc-400'}`}>{new Date(expense.date).toLocaleDateString('pt-BR')}</p>
+                                </div>
+                                <div className="flex items-center gap-4">
+                                  <p className={`text-md font-black ${isPrintMode ? 'text-white' : 'text-red-600'}`}>R$ {expense.amount},00</p>
+                                  {!isPrintMode && (
+                                    <button 
+                                      onClick={() => setExpenses(prev => prev.filter(e => e.id !== expense.id))}
+                                      className="p-1.5 text-zinc-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                    >
+                                      <Trash2 size={14} />
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+                            ))
+                          )}
+                        </div>
+                      </div>
+                    )}
+
+                    {isPrintMode && (
+                      <div className="pt-8 text-center opacity-40">
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em]">Gerado via App FutQuina • {new Date().toLocaleDateString('pt-BR')}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })()}
               {financeSubScreen === 'mensalidade' && (
                 <>
                   {!isPrintMode && (
@@ -3853,7 +4432,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
 
                   {!isPrintMode && (
                     <div className="grid grid-cols-2 gap-2 px-4">
-                      <div className="p-2 rounded-md bg-brand-glass border border-brand-border flex items-center justify-between">
+                      <div className="p-2 rounded-md bg-brand-dark border border-brand-border flex items-center justify-between">
                         <div className="space-y-0.5">
                           <span className="text-[8px] font-bold text-brand-text-secondary uppercase tracking-widest">Mensalidade</span>
                           {isEditingFee ? (
@@ -3882,7 +4461,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                 setTempFee(monthlyFee.toString());
                                 setIsEditingFee(true);
                               }}
-                              className="text-base font-black text-brand-primary cursor-pointer hover:opacity-80 transition-opacity"
+                              className="text-base font-black text-[#1E3D2F] cursor-pointer hover:opacity-80 transition-opacity"
                             >
                               R$ {monthlyFee},00
                             </div>
@@ -3894,13 +4473,13 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                         </div>
                       </div>
 
-                      <div className="p-2 rounded-md bg-brand-glass border border-brand-border flex items-center justify-between">
+                      <div className="p-2 rounded-md bg-brand-dark border border-brand-border flex items-center justify-between">
                         <div className="space-y-0.5">
                           <span className="text-[8px] font-bold text-brand-text-secondary uppercase tracking-widest">Ano Selecionado</span>
                           <select 
                             value={selectedYear}
                             onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                            className="bg-transparent text-base font-black text-brand-primary outline-none cursor-pointer"
+                            className="bg-transparent text-base font-black text-[#1E3D2F] outline-none cursor-pointer"
                           >
                             {availableYears.map(y => (
                               <option key={y} value={y} className="bg-brand-card text-brand-text-primary">{y}</option>
@@ -3909,7 +4488,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                         </div>
                         <button 
                           onClick={addYear}
-                          className="w-7 h-7 rounded-sm bg-brand-primary/20 text-brand-primary flex items-center justify-center hover:bg-brand-primary/30 transition-all active:scale-90"
+                          className="w-7 h-7 rounded-sm bg-[#1E3D2F]/20 text-[#1E3D2F] flex items-center justify-center hover:bg-[#1E3D2F]/30 transition-all active:scale-90"
                           title="Adicionar Novo Ano"
                         >
                           <Plus size={14} />
@@ -3952,7 +4531,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                             const record = payments.find(p => p.playerId === player.id && p.year === selectedYear) || { playerId: player.id, year: selectedYear, months: {}, monthlyFee: monthlyFee };
                             
                             const totalDebt = 12 * monthlyFee;
-                            const paidMonths = MONTHS.reduce((acc, month) => acc + (record.months[month] ? monthlyFee : 0), 0);
+                            const paidMonths = MONTHS.reduce((acc, month) => acc + (record?.months?.[month] ? monthlyFee : 0), 0);
                             const remaining = totalDebt - paidMonths;
 
                             return (
@@ -3961,9 +4540,9 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                                   <span className="p-0.5 font-bold">{player.name}</span>
                                 </td>
                                 {MONTHS.map(month => {
-                                  const isPaid = (record.months[month] || 0) > 0;
+                                  const isPaid = (record?.months?.[month] || 0) > 0;
                                   return (
-                                    <td key={month} className={`p-0.5 border border-zinc-200 text-center`}>
+                                    <td key={`month-cell-${player.id}-${month}`} className={`p-0.5 border border-zinc-200 text-center`}>
                                       {isPrintMode ? (
                                         <span className={`font-bold ${isPaid ? 'text-emerald-600' : 'text-red-400 opacity-30'}`}>
                                           {isPaid ? 'OK' : '-'}
@@ -4018,7 +4597,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
               <div className="flex items-center justify-between border-b border-black/10 pb-3">
                 <div className="flex items-center gap-2">
                   <Trophy size={16} className="text-black" />
-                  <FutQuinaLogo size="sm" dark={true} />
+                  <FutQuinaLogo size="sm" />
                   <span className="text-sm font-black opacity-10">|</span>
                   <span className="text-sm font-black tracking-tighter">Ranking</span>
                 </div>
@@ -4032,7 +4611,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
 
               <div className="space-y-4">
                 <h2 className="text-base font-bold uppercase tracking-widest border-l-4 border-black pl-3">Top Jogadores</h2>
-                <div className="border-2 border-black rounded-lg overflow-hidden">
+                <div className="border border-black rounded-lg overflow-hidden">
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="bg-brand-primary text-black">
@@ -4172,34 +4751,11 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
         )}
 
       </main>
-
-      {/* Bottom Navigation */}
-      {!isPrintMode && (
-        <div className="fixed bottom-6 left-0 right-0 z-50 flex justify-center px-6 pointer-events-none">
-          <nav className={`w-full max-w-[280px] h-16 backdrop-blur-xl rounded-full flex items-center px-2 pointer-events-auto relative overflow-hidden transition-all duration-300 ${
-            theme === 'light' 
-              ? 'bg-zinc-800/90 shadow-[0_20px_50px_rgba(0,0,0,0.3)]' 
-              : 'bg-brand-primary/30 shadow-[0_20px_50px_rgba(0,0,0,0.2),0_0_20px_rgba(13,217,64,0.1)]'
-          }`}>
-            {/* Subtle inner glow */}
-            <div className="absolute inset-0 bg-gradient-to-b from-white/10 to-transparent pointer-events-none" />
-            
-            <div className="flex justify-between w-full relative items-center">
-              <NavItem screen="players" icon={Users} label="Gerenciar" />
-              
-              {/* Center Area for Animations */}
-              <div className="flex-1 flex justify-center items-center relative h-full"></div>
-
-              <NavItem screen="teams" icon={Swords} label="Partidas" />
-            </div>
-          </nav>
-        </div>
-      )}
     </div>
 
     {/* Modals */}
       <AnimatePresence>
-        {isRandomizing && <RouletteOverlay theme={theme} />}
+        {isRandomizing && <RouletteOverlay />}
         {showPlayerActionsModal && (
           <motion.div 
             initial={{ opacity: 0 }}
@@ -4211,11 +4767,11 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
             <motion.div 
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
-              className="w-full max-w-xs p-6 rounded-xl bg-brand-card border border-white/10 shadow-2xl"
+              className="w-full max-w-xs p-6 rounded-xl bg-brand-card border border-white/10 shadow-md"
               onClick={e => e.stopPropagation()}
             >
               <div className="flex flex-col items-center mb-6">
-                <div className="w-16 h-16 rounded-full bg-brand-primary/20 flex items-center justify-center mb-3 border-2 border-brand-primary/30 overflow-hidden">
+                <div className="w-16 h-16 rounded-full bg-brand-primary/20 flex items-center justify-center mb-3 border border-brand-primary/30 overflow-hidden">
                   {players.find(p => p.id === showPlayerActionsModal.playerId)?.photo ? (
                     <img 
                       src={players.find(p => p.id === showPlayerActionsModal.playerId)?.photo} 
@@ -4227,7 +4783,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                     <User size={32} className="text-brand-primary" />
                   )}
                 </div>
-                <h3 className={`text-lg font-black uppercase tracking-tight text-center ${theme === 'light' ? 'text-black' : 'text-white'}`}>
+                <h3 className="text-lg font-black uppercase tracking-tight text-center text-black">
                   {players.find(p => p.id === showPlayerActionsModal.playerId)?.name}
                 </h3>
                 <p className="text-[10px] text-brand-text-secondary uppercase font-bold tracking-widest mt-1">
@@ -4271,7 +4827,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                       setSwappingPlayerId(null);
                       setShowPlayerActionsModal(null);
                     }}
-                    className="w-full py-3 px-4 bg-brand-primary text-black rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-brand-primary/20"
+                    className="w-full py-3 px-4 bg-brand-primary text-black rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow shadow-brand-primary/20"
                   >
                     <RefreshCw size={16} />
                     Confirmar Troca
@@ -4386,20 +4942,20 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
             <motion.div 
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
-              className="w-full max-w-xs p-6 rounded-xl bg-brand-card border border-brand-primary/20 shadow-2xl"
+              className="w-full max-w-xs p-6 rounded-xl bg-brand-card border border-brand-primary/20 shadow-md"
             >
               <div className="text-center mb-6">
-                <div className="w-16 h-16 mx-auto rounded-full bg-brand-dark flex items-center justify-center overflow-hidden border-2 border-brand-primary mb-4">
+                <div className="w-16 h-16 mx-auto rounded-full bg-brand-dark flex items-center justify-center overflow-hidden border border-brand-primary mb-4">
                   {players.find(p => p.id === showQueuePlayerModal.playerId)?.photo ? (
                     <img src={players.find(p => p.id === showQueuePlayerModal.playerId)?.photo} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                   ) : (
                     <User size={32} className="text-brand-primary" />
                   )}
                 </div>
-                <h3 className={`text-xl font-black uppercase tracking-tighter ${theme === 'light' ? 'text-black' : 'text-white'}`}>
+                <h3 className="text-xl font-black uppercase tracking-tighter text-black">
                   {players.find(p => p.id === showQueuePlayerModal.playerId)?.name}
                 </h3>
-                <p className={`text-xs uppercase mt-1 ${theme === 'light' ? 'text-zinc-800' : 'text-brand-text-secondary'}`}>Ações do Jogador</p>
+                <p className="text-xs uppercase mt-1 text-zinc-800">Ações do Jogador</p>
               </div>
 
               <div className="space-y-2">
@@ -4411,9 +4967,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                         setShowQueuePlayerModal(null);
                         setToast({ message: "Selecione outro jogador para trocar de posição.", type: 'info' });
                       }}
-                      className={`w-full py-3 px-4 rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 transition-all active:scale-95 border ${
-                        theme === 'light' ? 'bg-zinc-200 text-zinc-800 border-zinc-300 hover:bg-zinc-300' : 'bg-white/5 text-white border-white/5 hover:bg-white/10'
-                      }`}
+                      className={`w-full py-3 px-4 rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 transition-all active:scale-95 border bg-zinc-200 text-zinc-800 border-zinc-300 hover:bg-zinc-300`}
                     >
                       <ArrowLeftRight size={16} />
                       Substituir
@@ -4425,9 +4979,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                         setShowQueuePlayerModal(null);
                         setToast({ message: "Selecione o time de destino (apenas times incompletos).", type: 'info' });
                       }}
-                      className={`w-full py-3 px-4 rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 transition-all active:scale-95 border ${
-                        theme === 'light' ? 'bg-sky-100 text-sky-700 border-sky-200 hover:bg-sky-200' : 'bg-sky-500/10 text-sky-400 border-sky-500/20 hover:bg-sky-500/20'
-                      }`}
+                      className={`w-full py-3 px-4 rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 transition-all active:scale-95 border bg-sky-100 text-sky-700 border-sky-200 hover:bg-sky-200`}
                     >
                       <MoveRight size={16} />
                       Mover
@@ -4511,7 +5063,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
             <motion.div 
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
-              className={`w-full max-w-xs rounded-xl border shadow-2xl overflow-hidden ${theme === 'light' ? 'bg-zinc-100 border-zinc-200' : 'bg-brand-card border-brand-primary/20'}`}
+              className="w-full max-w-xs rounded-xl border shadow-md overflow-hidden bg-zinc-100 border-zinc-200"
             >
               <div className="bg-brand-primary p-6 text-center">
                 <div className="inline-flex p-2 rounded-full bg-black/10 mb-2">
@@ -4531,9 +5083,9 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                       registerGoal(team, showAssistSelection.scorerId);
                       setShowAssistSelection(null);
                     }}
-                    className={`w-full p-2.5 rounded-lg border transition-all text-left group ${theme === 'light' ? 'bg-white border-zinc-200 hover:border-brand-primary hover:bg-brand-primary/5' : 'bg-white/5 border-white/5 hover:border-brand-primary/50 hover:bg-brand-primary/5'}`}
+                    className="w-full p-2.5 rounded-lg border transition-all text-left group bg-white border-zinc-200 hover:border-brand-primary hover:bg-brand-primary/5"
                   >
-                    <div className={`text-xs font-black uppercase transition-colors ${theme === 'light' ? 'text-zinc-900 group-hover:text-brand-primary' : 'text-brand-text-primary group-hover:text-brand-primary'}`}>Sem Assistência</div>
+                    <div className="text-xs font-black uppercase transition-colors text-zinc-900 group-hover:text-brand-primary">Sem Assistência</div>
                   </button>
 
                   {teams[showAssistSelection.teamIndex].playerIds
@@ -4546,16 +5098,16 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                           registerGoal(team, showAssistSelection.scorerId, pid);
                           setShowAssistSelection(null);
                         }}
-                        className={`w-full p-2.5 rounded-lg border transition-all text-left group flex items-center gap-2 ${theme === 'light' ? 'bg-white border-zinc-200 hover:border-brand-primary hover:bg-brand-primary/5' : 'bg-white/5 border-white/5 hover:border-brand-primary/50 hover:bg-brand-primary/5'}`}
+                        className="w-full p-2.5 rounded-lg border transition-all text-left group flex items-center gap-2 bg-white border-zinc-200 hover:border-brand-primary hover:bg-brand-primary/5"
                       >
-                        <div className={`w-6 h-6 rounded-full flex items-center justify-center overflow-hidden border shrink-0 ${theme === 'light' ? 'bg-zinc-100 border-zinc-200' : 'bg-brand-primary/10 border-white/5'}`}>
+                        <div className="w-6 h-6 rounded-full flex items-center justify-center overflow-hidden border shrink-0 bg-zinc-100 border-zinc-200">
                           {players.find(p => p.id === pid)?.photo ? (
                             <img src={players.find(p => p.id === pid)?.photo} alt="P" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                           ) : (
-                            <User size={10} className={theme === 'light' ? 'text-zinc-400' : 'text-brand-primary/60'} />
+                            <User size={10} className="text-zinc-400" />
                           )}
                         </div>
-                        <div className={`text-xs font-black uppercase transition-colors ${theme === 'light' ? 'text-zinc-900 group-hover:text-brand-primary' : 'text-brand-text-primary group-hover:text-brand-primary'}`}>
+                        <div className={`text-xs font-black uppercase transition-colors text-zinc-900 group-hover:text-brand-primary`}>
                           {players.find(p => p.id === pid)?.name}
                         </div>
                       </button>
@@ -4564,7 +5116,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
 
                 <button 
                   onClick={() => setShowAssistSelection(null)}
-                  className={`w-full py-3 text-[10px] font-black uppercase tracking-widest border transition-all active:scale-95 rounded-lg ${theme === 'light' ? 'border-zinc-400 text-zinc-600 hover:bg-zinc-200' : 'border-white/10 text-brand-text-secondary hover:bg-white/5'}`}
+                  className="w-full py-3 text-[10px] font-black uppercase tracking-widest border transition-all active:scale-95 rounded-lg border-zinc-400 text-zinc-600 hover:bg-zinc-200"
                 >
                   Cancelar Gol
                 </button>
@@ -4584,7 +5136,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
               animate={{ scale: 1, y: 0 }}
               className="w-full max-w-md p-8 rounded-lg bg-brand-card border border-red-500/20 flex flex-col items-center text-center"
             >
-              <div className="w-20 h-20 bg-red-500 rounded-md flex items-center justify-center mb-6 shadow-lg shadow-red-500/20">
+              <div className="w-20 h-20 bg-red-500 rounded-md flex items-center justify-center mb-6 shadow shadow-red-500/20">
                 <AlertTriangle size={40} className="text-white" />
               </div>
               <h3 className="text-2xl font-black uppercase tracking-tighter mb-2 text-brand-primary">Atenção!</h3>
@@ -4596,7 +5148,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                   setShowCloseWarningModal(false);
                   setCurrentScreen('teams');
                 }}
-                className="w-full py-4 bg-red-500 text-white rounded-md font-black uppercase tracking-tighter shadow-xl shadow-red-500/20 hover:bg-red-600 transition-all active:scale-95"
+                className="w-full py-4 bg-red-500 text-white rounded-md font-black uppercase tracking-tighter shadow shadow-red-500/20 hover:bg-red-600 transition-all active:scale-95"
               >
                 Continuar
               </button>
@@ -4944,7 +5496,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
                   }}
                   className={`w-full py-4 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all bg-brand-dark hover:bg-brand-primary/20`}
                 >
-                  <Settings size={20} className="text-brand-primary" />
+                  <Settings size={20} className="text-zinc-500" />
                   <span>Ajuste de Partida</span>
                 </button>
               </div>
@@ -5325,7 +5877,7 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
               </div>
               <h3 className="text-xl font-black text-center uppercase tracking-tighter">Nome Duplicado</h3>
               <p className="text-center text-brand-text-secondary text-sm">
-                Já existe um jogador com o nome <strong className={`${theme === 'light' ? 'text-black' : 'text-white'}`}>"{duplicatePlayerName.name}"</strong>. 
+                Já existe um jogador com o nome <strong className="text-black">"{duplicatePlayerName.name}"</strong>. 
                 Por favor, altere o nome para continuar.
               </p>
               
@@ -5563,14 +6115,12 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
           </motion.div>
         )}
 
-        {/* Assist Selection Modal */}
         <AssistModal 
           isOpen={!!pendingAssist}
           onSelect={handleAssistSelection}
-          teamPlayers={pendingAssist ? (pendingAssist.team === 'A' ? (match.teamAIndex !== -1 ? teams[match.teamAIndex]?.playerIds : []) : (match.teamBIndex !== -1 ? teams[match.teamBIndex]?.playerIds : [])) : []}
+          teamPlayers={pendingAssist ? (pendingAssist.team === 'A' ? (match.teamAIndex !== -1 ? (teams[match.teamAIndex]?.playerIds || []) : []) : (match.teamBIndex !== -1 ? (teams[match.teamBIndex]?.playerIds || []) : [])) : []}
           goalPlayerId={pendingAssist?.goalPlayerId || ''}
           players={players}
-          theme={theme}
         />
 
         {/* Scorer Selection Modal */}
@@ -5583,232 +6133,101 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
               setScorerTeam(null);
             }
           }}
-          teamPlayers={scorerTeam ? (scorerTeam === 'A' ? (match.teamAIndex !== -1 ? teams[match.teamAIndex]?.playerIds : []) : (match.teamBIndex !== -1 ? teams[match.teamBIndex]?.playerIds : [])) : []}
+          teamPlayers={scorerTeam ? (scorerTeam === 'A' ? (match.teamAIndex !== -1 ? (teams[match.teamAIndex]?.playerIds || []) : []) : (match.teamBIndex !== -1 ? (teams[match.teamBIndex]?.playerIds || []) : [])) : []}
           players={players}
           teamName={scorerTeam ? (scorerTeam === 'A' ? (match.teamAIndex !== -1 ? teams[match.teamAIndex]?.name : 'Time A') : (match.teamBIndex !== -1 ? teams[match.teamBIndex]?.name : 'Time B')) : ''}
-          theme={theme}
         />
 
-        {/* Sidebar */}
-        {showSidebar && (
-          <div
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex justify-end transition-opacity duration-200"
-            onClick={() => setShowSidebar(false)}
-          >
-            <div
-              className="w-64 h-full bg-brand-dark border-l border-white/10 p-6 flex flex-col shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
+        <PlayerManagementModalComponent 
+          player={playerManagementModal}
+          isOpen={!!playerManagementModal}
+          onClose={() => setPlayerManagementModal(null)}
+          onUpdateName={updatePlayerName}
+          onUpdatePhoto={updatePlayerPhoto}
+          onRemove={removePlayer}
+        />
+
+        {/* Bottom Navigation */}
+        <nav className="bg-[#1E3D2F] z-50 rounded-t-3xl pt-1">
+          <div className="flex px-2 py-2 gap-2">
+            <button 
+              onClick={() => {
+                const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
+                const targetIndex = screens.indexOf('players');
+                const currentIndex = screens.indexOf(currentScreen);
+                setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
+                setCurrentScreen('players');
+              }}
+              className={`flex-1 flex flex-col items-center justify-center py-2 transition-none rounded-2xl ${
+                currentScreen === 'players' 
+                  ? 'bg-white/10 text-white' 
+                  : 'text-white/70 hover:text-white hover:bg-white/5'
+              }`}
             >
-              <div className="flex justify-between items-center mb-8">
-                <h2 className="text-xl font-normal uppercase tracking-tighter">Menu</h2>
-                <button onClick={() => setShowSidebar(false)} className="p-2 rounded-md bg-white/5 hover:bg-white/10 transition-colors">
-                  <X size={20} style={{ color: '#4e4e4e' }} />
-                </button>
-              </div>
-
-              <div className="flex flex-col gap-4 flex-1">
-                <motion.button 
-                   initial={{ x: 20, opacity: 0 }}
-                   animate={{ x: 0, opacity: 1 }}
-                   transition={{ delay: 0.1 }}
-                  onClick={() => {
-                    setShowSidebar(false);
-                    onBackToHome();
-                  }}
-                  className={`flex items-center gap-3 p-4 rounded-md transition-colors text-left shadow-sm hover:shadow-md ${
-                    theme === 'light' ? 'bg-zinc-200 hover:bg-zinc-300' : 'bg-brand-glass hover:bg-brand-surface-light border border-white/5'
-                  }`}
-                >
-                  <LayoutGrid size={20} style={{ color: '#0dd973' }} />
-                  <span className={`font-normal tracking-widest text-sm ${theme === 'light' ? 'text-zinc-500' : 'text-brand-text-primary'}`}>Peladas</span>
-                </motion.button>
-
-                <motion.button 
-                   initial={{ x: 20, opacity: 0 }}
-                   animate={{ x: 0, opacity: 1 }}
-                   transition={{ delay: 0.4 }}
-                  onClick={() => {
-                    const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
-                    const targetIndex = screens.indexOf('ranking');
-                    const currentIndex = screens.indexOf(currentScreen);
-                    setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
-                    setCurrentScreen('ranking');
-                    setShowSidebar(false);
-                  }}
-                  className={`flex items-center gap-3 p-4 rounded-md transition-colors text-left shadow-sm hover:shadow-md ${
-                    theme === 'light' ? 'bg-zinc-200 hover:bg-zinc-300' : 'bg-brand-glass hover:bg-brand-surface-light border border-white/5'
-                  }`}
-                >
-                  <Medal size={20} style={{ color: '#ac0dd9' }} />
-                  <span className={`font-normal tracking-widest text-sm ${theme === 'light' ? 'text-zinc-500' : 'text-brand-text-primary'}`}>Ranking</span>
-                </motion.button>
-
-                <motion.button 
-                   initial={{ x: 20, opacity: 0 }}
-                   animate={{ x: 0, opacity: 1 }}
-                   transition={{ delay: 0.5 }}
-                  onClick={() => {
-                    const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
-                    const targetIndex = screens.indexOf('finance');
-                    const currentIndex = screens.indexOf(currentScreen);
-                    setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
-                    setCurrentScreen('finance');
-                    setShowSidebar(false);
-                  }}
-                  className={`flex items-center gap-3 p-4 rounded-md transition-colors text-left shadow-sm hover:shadow-md ${
-                    theme === 'light' ? 'bg-zinc-200 hover:bg-zinc-300' : 'bg-brand-glass hover:bg-brand-surface-light border border-white/5'
-                  }`}
-                >
-                  <Wallet size={20} className="text-brand-primary" />
-                  <span className={`font-normal tracking-widest text-sm ${theme === 'light' ? 'text-zinc-500' : 'text-brand-text-primary'}`}>Financeiro</span>
-                </motion.button>
-              </div>
-
-              <div className="mt-auto pt-6 border-t border-white/10 flex flex-col gap-4">
-                <button 
-                  onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-                  className={`w-full py-3 rounded-full transition-all relative overflow-hidden flex items-center justify-center shadow-lg active:scale-95 ${
-                    theme === 'light' 
-                      ? 'bg-gradient-to-r from-zinc-100 to-zinc-200 text-zinc-800 border border-zinc-300' 
-                      : 'bg-gradient-to-r from-brand-surface-light to-brand-dark text-brand-text-primary border border-white/10'
-                  }`}
-                >
-                  <motion.div
-                    key={theme}
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    exit={{ y: -20, opacity: 0 }}
-                    className="flex items-center justify-center"
-                  >
-                    {theme === 'light' ? <SunMedium size={22} className="text-amber-500" /> : <Moon size={22} className="text-brand-primary" />}
-                  </motion.div>
-                </button>
-
-                <button 
-                  onClick={() => setShowResetAppConfirm(true)}
-                  className="w-max mx-auto flex items-center justify-center gap-2 px-6 py-2.5 rounded-full bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-colors font-black uppercase tracking-widest text-xs"
-                >
-                  <RotateCcw size={14} />
-                  Resetar Partida
-                </button>
-              </div>
-            </div>
+              <Users size={18} className="mb-1" />
+              <span className="text-[8px] font-black uppercase tracking-wider leading-none">Gerenciar</span>
+            </button>
+            <button 
+              onClick={() => {
+                const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
+                const targetIndex = screens.indexOf('teams');
+                const currentIndex = screens.indexOf(currentScreen);
+                setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
+                setCurrentScreen('teams');
+                setTeamsTab('configuracao');
+              }}
+              className={`flex-1 flex flex-col items-center justify-center py-2 transition-none rounded-2xl ${
+                currentScreen === 'teams' 
+                  ? 'bg-white/10 text-white' 
+                  : 'text-white/70 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <Swords size={18} className="mb-1" />
+              <span className="text-[8px] font-black uppercase tracking-wider leading-none">Partida</span>
+            </button>
+            <button 
+              onClick={() => {
+                const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
+                const targetIndex = screens.indexOf('ranking');
+                const currentIndex = screens.indexOf(currentScreen);
+                setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
+                setCurrentScreen('ranking');
+              }}
+              className={`flex-1 flex flex-col items-center justify-center py-2 transition-none rounded-2xl ${
+                currentScreen === 'ranking' 
+                  ? 'bg-white/10 text-white' 
+                  : 'text-white/70 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <Medal size={18} className="mb-1" />
+              <span className="text-[8px] font-black uppercase tracking-wider leading-none">Ranking</span>
+            </button>
+            <button 
+              onClick={() => {
+                const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
+                const targetIndex = screens.indexOf('finance');
+                const currentIndex = screens.indexOf(currentScreen);
+                setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
+                setCurrentScreen('finance');
+              }}
+              className={`flex-1 flex flex-col items-center justify-center py-2 transition-none rounded-2xl ${
+                currentScreen === 'finance' 
+                  ? 'bg-white/10 text-white' 
+                  : 'text-white/70 hover:text-white hover:bg-white/5'
+              }`}
+            >
+              <Wallet size={18} className="mb-1" />
+              <span className="text-[8px] font-black uppercase tracking-wider leading-none">Financeiro</span>
+            </button>
+            <button 
+              onClick={onBackToHome}
+              className={`flex-1 flex flex-col items-center justify-center py-2 transition-none rounded-2xl text-white/70 hover:text-white hover:bg-white/5`}
+            >
+              <LayoutGrid size={18} className="mb-1" />
+              <span className="text-[8px] font-black uppercase tracking-wider leading-none">Minhas Partidas</span>
+            </button>
           </div>
-        )}
-        {/* Reset App Confirm Modal */}
-        {playerManagementModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
-            onClick={() => setPlayerManagementModal(null)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-brand-card border border-white/10 rounded-lg p-6 max-w-sm w-full shadow-2xl"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="w-16 h-16 rounded-full bg-brand-primary/20 text-brand-primary flex items-center justify-center mx-auto mb-4">
-                <User size={32} />
-              </div>
-              <h2 className={`text-xl font-black text-center mb-6 uppercase tracking-tighter ${theme === 'light' ? 'text-black' : 'text-white'}`}>{playerManagementModal.name}</h2>
-              
-              <div className="grid grid-cols-2 gap-3">
-                <button 
-                  onClick={() => {
-                    setEditingPlayerId(playerManagementModal.id);
-                    setPlayerManagementModal(null);
-                  }}
-                  className={`flex items-center justify-center h-[48px] px-4 rounded-2xl font-mono font-bold uppercase tracking-widest text-[10px] leading-[9px] transition-all shadow-lg active:scale-95 border border-[#474646] bg-[#00e661] text-white shadow-emerald-500/20`}
-                >
-                  <PenLine size={16} className="mr-2" />
-                  Renomear
-                </button>
-                <button 
-                  onClick={() => {
-                    removePlayer(playerManagementModal.id);
-                    setPlayerManagementModal(null);
-                  }}
-                  className={`flex items-center justify-center h-[48px] px-4 rounded-2xl font-mono font-bold uppercase tracking-widest text-[10px] leading-[9px] transition-all shadow-lg active:scale-95 bg-gradient-to-br from-red-500 to-rose-700 text-white shadow-red-500/20`}
-                >
-                  <Trash2 size={16} className="mr-2" />
-                  Apagar
-                </button>
-              </div>
-              <button 
-                onClick={() => setPlayerManagementModal(null)}
-                className="w-full mt-6 py-3 text-brand-text-secondary text-[10px] font-mono font-bold uppercase tracking-widest hover:text-white transition-colors flex items-center justify-center"
-              >
-                Voltar
-              </button>
-            </motion.div>
-          </motion.div>
-        )}
-
-        {/* Reset App Confirm Modal */}
-        {showResetAppConfirm && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
-            onClick={() => setShowResetAppConfirm(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-brand-dark border border-red-500/30 rounded-lg p-6 max-w-sm w-full shadow-2xl shadow-red-500/20"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="w-16 h-16 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center mx-auto mb-4">
-                <RotateCcw size={32} />
-              </div>
-              <h2 className={`text-xl font-black text-center mb-2 uppercase tracking-tighter ${theme === 'light' ? 'text-black' : 'text-white'}`}>Resetar App?</h2>
-              <p className="text-center text-brand-text-secondary mb-6 text-sm">
-                Tem certeza que deseja apagar <strong className="text-red-400">TODAS</strong> as informações do app? Isso apagará jogadores, times, histórico e financeiro. Esta ação não pode ser desfeita.
-              </p>
-              
-              <div className="flex gap-3">
-                <button 
-                  onClick={() => setShowResetAppConfirm(false)}
-                  className={`flex-1 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition-colors ${
-                    theme === 'light' ? 'bg-zinc-200 text-black hover:bg-zinc-300' : 'bg-white/5 text-white hover:bg-white/10'
-                  }`}
-                >
-                  Cancelar
-                </button>
-                <button 
-                  onClick={() => {
-                    [
-    `futquina_finance_players_${groupId}`,
-    `futquina_monthly_fee_${groupId}`,
-    `futquina_selected_year_${groupId}`,
-    `futquina_available_years_${groupId}`,
-    `futquina_players_${groupId}`,
-    `futquina_session_player_ids_${groupId}`,
-    `futquina_payments_${groupId}`,
-    `futquina_teams_${groupId}`,
-    `futquina_match_${groupId}`,
-    `futquina_match_history_${groupId}`,
-    `futquina_has_randomized_${groupId}`,
-    `futquina_last_result_${groupId}`
-  ].forEach(k => safeLocalStorage.removeItem(k));
-  window.location.reload();
-                  }}
-                  className={`flex-1 py-3 rounded-xl font-black uppercase tracking-widest text-xs transition-colors shadow-lg ${
-                    theme === 'light' ? 'bg-red-500 text-black hover:bg-red-600' : 'bg-red-500 text-white hover:bg-red-600 shadow-red-500/20'
-                  }`}
-                >
-                  Resetar Tudo
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
+        </nav>
 
         {/* Reset Stats Confirm Modal */}
         {showResetStatsConfirm && (
@@ -5852,139 +6271,118 @@ function GroupApp({ groupId, onBackToHome, theme, setTheme }: { groupId: string,
           </motion.div>
         )}
 
+        {showSetupGuide && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/90 backdrop-blur-md z-[200] flex items-center justify-center p-6"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              className="w-full max-w-sm p-8 rounded-[40px] shadow-md border-2 bg-white border-black"
+            >
+              <div className="flex flex-col items-center text-center space-y-6">
+                <div className="w-16 h-16 bg-brand-primary/20 rounded-full flex items-center justify-center text-brand-primary shadow-sm">
+                  <Play size={32} fill="currentColor" />
+                </div>
+                
+                <div className="space-y-2">
+                  <h3 className="text-xl font-black uppercase tracking-tighter text-black">Tudo Pronto!</h3>
+                  <p className="text-xs font-medium leading-relaxed text-zinc-600">
+                    Agora você está na tela de <strong className="text-brand-primary">Ordem de Chegada</strong>. Siga estes passos para organizar sua partida:
+                  </p>
+                </div>
+
+                <div className="w-full space-y-3 text-left">
+                  <div className="flex gap-3">
+                    <div className="w-6 h-6 rounded-full bg-brand-primary text-black text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm">1</div>
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-700">Toque nos jogadores para marcar a ordem de chegada (Verde = Presente).</p>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="w-6 h-6 rounded-full bg-brand-primary text-black text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm">2</div>
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-700">Os times são formados AUTOMATICAMENTE conforme a ordem (Time A, Time B...).</p>
+                  </div>
+                  <div className="flex gap-3">
+                    <div className="w-6 h-6 rounded-full bg-brand-primary text-black text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm">3</div>
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-700">Finalize indo para a aba <strong className="text-brand-primary">Próximos</strong> para selecionar quem inicia o jogo.</p>
+                  </div>
+                </div>
+
+                <button 
+                  onClick={() => setShowSetupGuide(false)}
+                  className="w-full py-4 bg-brand-gradient text-black rounded-3xl font-black uppercase tracking-widest text-xs shadow active:scale-95 transition-all text-center border border-black"
+                >
+                  Entendi, vamos lá!
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
       </AnimatePresence>
     </div>
   );
 }
 
 
-function AuthScreen({ theme, setTheme }: { theme: 'light' | 'dark', setTheme: (t: 'light' | 'dark') => void }) {
+function AuthScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [isSignUp, setIsSignUp] = useState(false);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    const handleMessage = async (event: MessageEvent) => {
-      // Allow messages from same origin and Supabase
-      if (!event.origin.endsWith('.run.app') && !event.origin.includes('localhost') && !event.origin.includes('supabase.co') && event.origin !== window.location.origin) {
-        return;
-      }
-      if (event.data?.type === 'OAUTH_AUTH_SUCCESS') {
-        const hash = event.data.hash;
-        if (hash) {
-          const params = new URLSearchParams(hash.replace('#', '?'));
-          const access_token = params.get('access_token');
-          const refresh_token = params.get('refresh_token');
-          if (access_token && refresh_token) {
-            setLoading(true);
-            await supabase.auth.setSession({ access_token, refresh_token });
-            setLoading(false);
-          }
-        }
-      }
-    };
-    window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
-
-  const handleGoogleLogin = async () => {
-    try {
-      setLoading(true);
-      setError('');
-      
-      const { data, error } = await supabase.auth.signInWithOAuth({
-        provider: 'google',
-        options: {
-          redirectTo: `${window.location.origin}/oauth-callback.html`,
-          skipBrowserRedirect: true
-        }
-      });
-
-      if (error) {
-        setError(error.message);
-        setLoading(false);
-        return;
-      }
-
-      if (data?.url) {
-        const authWindow = window.open(
-          data.url,
-          'oauth_popup',
-          'width=600,height=700'
-        );
-        if (!authWindow) {
-          setError('Por favor, permita pop-ups para fazer login com o Google.');
-          setLoading(false);
-        }
-        // We stop loading here because the popup will handle the rest via postMessage
-      }
-    } catch (err: any) {
-      setError(err.message || 'Erro ao conectar com Google');
-      setLoading(false);
-    }
-  };
-
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
 
-    const { error } = isSignUp 
+    const { data, error } = isSignUp 
       ? await supabase.auth.signUp({ email, password })
       : await supabase.auth.signInWithPassword({ email, password });
 
     if (error) {
       setError(error.message);
+    } else if (isSignUp && !data?.session) {
+      setError('Cadastro realizado com sucesso! Se necessário, verifique sua caixa de entrada/spam para confirmar o e-mail antes de entrar.');
+      setIsSignUp(false);
     }
+    
     setLoading(false);
   };
 
   return (
-    <div className={`min-h-screen font-sans transition-colors duration-300 flex items-center justify-center p-6 ${theme === 'light' ? 'bg-zinc-100 text-zinc-900' : 'bg-[#0a0a0a] text-white'}`}>
+    <div className="min-h-screen font-sans transition-colors duration-300 flex items-center justify-center p-6 bg-zinc-100 text-zinc-900">
       <div className="w-full max-w-sm space-y-8">
         <div className="flex flex-col items-center justify-center gap-4 text-center relative">
-          <SpinningBall size="lg" theme={theme} />
+          <SpinningBall size="lg" />
           <div>
             <h1 className="text-3xl font-black tracking-tighter uppercase mb-2">Futquina</h1>
             <p className="text-sm font-medium tracking-widest uppercase opacity-50">Sua conta, suas peladas</p>
           </div>
-          <button 
-            onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-            className="absolute top-0 right-0 p-2 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 transition-colors"
-          >
-            {theme === 'light' ? <Moon size={16} /> : <Sun size={16} />}
-          </button>
         </div>
         
-        <form onSubmit={handleAuth} className={`p-8 rounded-2xl shadow-xl flex flex-col gap-4 ${theme === 'light' ? 'bg-white' : 'bg-[#1a1a1a] border border-white/5'}`}>
-          <h2 className="font-bold uppercase tracking-widest text-sm text-center mb-2">
-            {isSignUp ? 'Criar Nova Conta' : 'Acessar sua Conta'}
-          </h2>
-          
-          {error && <div className="p-3 rounded-lg bg-red-500/10 text-red-500 text-xs font-bold">{error}</div>}
-
-          <button 
-            type="button"
-            onClick={handleGoogleLogin}
-            disabled={loading}
-            className={`w-full py-4 rounded-[30px] font-black uppercase tracking-widest text-xs transition-colors flex items-center justify-center gap-2 border disabled:opacity-50 ${theme === 'light' ? 'bg-white border-zinc-200 text-black hover:bg-zinc-50' : 'bg-[#242424] border-white/10 text-white hover:bg-[#2a2a2a]'}`}
-          >
-            <svg viewBox="0 0 24 24" width="16" height="16" xmlns="http://www.w3.org/2000/svg">
-              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
-              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
-              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
-              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
-            </svg>
-            Google
-          </button>
-
-          <div className="flex items-center gap-2 opacity-50 my-2">
-            <div className="flex-1 h-px bg-current"></div>
-            <span className="text-[10px] font-black uppercase tracking-widest leading-none">ou</span>
-            <div className="flex-1 h-px bg-current"></div>
+        <form onSubmit={handleAuth} className="p-8 rounded-2xl shadow-md flex flex-col gap-4 bg-white">
+          <div className="flex p-1 bg-black/5 rounded-2xl mb-4">
+            <button
+              type="button"
+              onClick={() => setIsSignUp(false)}
+              className={`flex-1 py-2.5 text-[11px] font-black uppercase tracking-widest rounded-xl transition-all ${!isSignUp ? 'bg-white shadow-sm text-black' : 'text-zinc-500 hover:text-black'}`}
+            >
+              Entrar
+            </button>
+            <button
+              type="button"
+              onClick={() => setIsSignUp(true)}
+              className={`flex-1 py-2.5 text-[11px] font-black uppercase tracking-widest rounded-xl transition-all ${isSignUp ? 'bg-white shadow-sm text-black' : 'text-zinc-500 hover:text-black'}`}
+            >
+              Cadastrar
+            </button>
           </div>
+          
+          {error && <div className="p-3 rounded-2xl bg-red-500/10 text-red-500 text-xs font-bold text-center">{error}</div>}
 
           <div>
             <label className="text-[10px] font-black uppercase tracking-widest opacity-50 mb-1 block">Email</label>
@@ -5993,7 +6391,7 @@ function AuthScreen({ theme, setTheme }: { theme: 'light' | 'dark', setTheme: (t
               required
               value={email}
               onChange={e => setEmail(e.target.value)}
-              className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-primary transition-colors"
+              className="w-full bg-black/5 border border-black/10 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-brand-primary transition-colors"
               placeholder="seu@email.com"
             />
           </div>
@@ -6005,7 +6403,7 @@ function AuthScreen({ theme, setTheme }: { theme: 'light' | 'dark', setTheme: (t
               required
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-lg px-4 py-3 text-sm focus:outline-none focus:border-brand-primary transition-colors"
+              className="w-full bg-black/5 border border-black/10 rounded-2xl px-4 py-3 text-sm focus:outline-none focus:border-brand-primary transition-colors"
               placeholder="••••••••"
             />
           </div>
@@ -6013,17 +6411,9 @@ function AuthScreen({ theme, setTheme }: { theme: 'light' | 'dark', setTheme: (t
           <button 
             type="submit" 
             disabled={loading}
-            className="w-full py-4 mt-2 rounded-[30px] bg-brand-gradient text-black font-black uppercase tracking-widest text-xs hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="w-full py-4 mt-2 rounded-[30px] bg-brand-gradient text-black font-black uppercase tracking-widest text-xs hover:opacity-90 transition-opacity disabled:opacity-50 shadow shadow-brand-primary/20"
           >
-            {loading ? 'Aguarde...' : (isSignUp ? 'Cadastrar' : 'Entrar com Email')}
-          </button>
-
-          <button 
-            type="button"
-            onClick={() => setIsSignUp(!isSignUp)}
-            className="text-[10px] font-bold uppercase tracking-widest opacity-50 hover:opacity-100 transition-opacity mt-2"
-          >
-            {isSignUp ? 'Já tem uma conta? Entrar' : 'Não tem conta? Cadastrar-se com Email'}
+            {loading ? 'Aguarde...' : (isSignUp ? 'Criar Conta' : 'Acessar')}
           </button>
         </form>
       </div>
@@ -6035,43 +6425,13 @@ function AuthScreen({ theme, setTheme }: { theme: 'light' | 'dark', setTheme: (t
 export default function App() {
   const [session, setSession] = useState<any>(null);
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    return () => subscription.unsubscribe();
-  }, []);
-
   const [groups, setGroups] = useState<{ id: string, name: string, createdAt: number }[]>(() => {
-    const saved = safeLocalStorage.getItem('futquina_groups');
+    const saved = safeLocalStorage.getItem('futquina_groups_offline');
     return saved ? JSON.parse(saved) : [];
   });
-  const [isGroupsLoaded, setIsGroupsLoaded] = useState(false);
-
-  useEffect(() => {
-    if (!session?.user?.id) {
-      setIsGroupsLoaded(false);
-      return;
-    }
-    supabase.from('groups').select('*').eq('user_id', session.user.id).then(({ data }) => {
-      if (data && data.length > 0) {
-        setGroups(data.map(g => ({ id: g.id, name: g.name, createdAt: g.created_at })));
-      }
-      setIsGroupsLoaded(true);
-    });
-  }, [session]);
-
-  useSupabaseArraySync('groups', '', groups, (g: any) => ({
-    id: g.id, name: g.name, created_at: g.createdAt, user_id: session?.user?.id
-  }), isGroupsLoaded);
-
+  
+  // Clean all previous unused hooks required for syncing
+  
   const [currentGroupId, setCurrentGroupId] = useState<string | null>(null);
   const [showNewGroupModal, setShowNewGroupModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
@@ -6079,73 +6439,37 @@ export default function App() {
   const [groupToRename, setGroupToRename] = useState<{ id: string, name: string } | null>(null);
   const [groupToDelete, setGroupToDelete] = useState<{ id: string, name: string } | null>(null);
   const [renameValue, setRenameValue] = useState('');
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    const saved = safeLocalStorage.getItem('futquina_theme');
-    return (saved === 'light' || saved === 'dark') ? saved : 'dark';
-  });
+  // Remove theme state and use a constant for logic cleanup or just remove completely
+  const theme = 'light';
 
+  // Keep offline logic purely local
   useEffect(() => {
-    const root = window.document.documentElement;
-    if (theme === 'light') {
-      root.classList.add('light');
-    } else {
-      root.classList.remove('light');
-    }
-    safeLocalStorage.setItem('futquina_theme', theme);
-  }, [theme]);
-
-  useEffect(() => {
-    safeLocalStorage.setItem('futquina_groups', JSON.stringify(groups));
+    safeLocalStorage.setItem('futquina_groups_offline', JSON.stringify(groups));
   }, [groups]);
 
-  if (!session) {
-    return (
-      <AuthScreen theme={theme} setTheme={setTheme} />
-    );
-  }
-
   if (currentGroupId) {
-    return <GroupApp groupId={currentGroupId} onBackToHome={() => setCurrentGroupId(null)} theme={theme} setTheme={setTheme} />;
+    return <GroupApp groupId={currentGroupId} onBackToHome={() => setCurrentGroupId(null)} />;
   }
 
   return (
-    <div className={`min-h-screen font-sans transition-colors duration-300 ${theme === 'light' ? 'bg-zinc-100 text-zinc-900' : 'bg-[#0a0a0a] text-white'}`}>
+    <div className="min-h-screen font-sans transition-colors duration-300" style={{ backgroundColor: '#CFE5C3', color: '#1E3D2F' }}>
       <div className="max-w-md mx-auto p-6 space-y-8 pt-12">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <SpinningBall size="md" theme={theme} />
-            <h1 className="text-2xl font-black tracking-tighter uppercase">Futquina</h1>
+            <SpinningBall size="md" spin={false} />
+            <FutQuinaLogo size="md" colorClass="" style={{ color: '#ffffff', fontStyle: 'normal', fontFamily: 'system-ui' }} />
           </div>
           <div className="flex items-center gap-2">
-            <button 
-              onClick={() => supabase.auth.signOut()}
-              className="px-3 py-1.5 rounded-full bg-red-500/10 text-red-500 hover:bg-red-500/20 transition-colors text-[10px] font-black uppercase tracking-widest"
-            >
-              Sair
-            </button>
-            <button 
-              onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-              className="p-2 rounded-full bg-black/5 hover:bg-black/10 dark:bg-white/5 dark:hover:bg-white/10 transition-colors overflow-hidden relative"
-            >
-              <motion.div
-                key={theme}
-                initial={{ y: 15, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: -15, opacity: 0 }}
-                transition={{ duration: 0.2 }}
-              >
-                {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-              </motion.div>
-            </button>
+            {/* Theme toggle removed */}
           </div>
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-brand-text-secondary text-center">Suas Partidas</h2>
+          <h2 className="text-sm font-bold uppercase tracking-widest text-center" style={{ color: '#1E3D2F', opacity: 0.8, fontWeight: 'bold' }}>Suas Partidas</h2>
           
           {groups.length === 0 ? (
-            <div className="text-center py-12 px-4 rounded-2xl border border-dashed border-brand-border bg-brand-glass">
-              <p className="text-sm text-brand-text-secondary mb-4">Você ainda não tem nenhuma partida configurada.</p>
+            <div className="text-center py-12 px-4 rounded-2xl border border-dashed" style={{ borderColor: 'rgba(30, 61, 47, 0.2)' }}>
+              <p className="text-sm mb-4" style={{ color: '#1E3D2F', opacity: 0.7 }}>Você ainda não tem nenhuma partida configurada.</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -6153,10 +6477,11 @@ export default function App() {
                 <div key={group.id} className="flex items-center gap-2">
                   <button
                     onClick={() => setSelectedGroupOptions({ id: group.id, name: group.name })}
-                    className={`flex-1 p-4 rounded-[48px] border border-brand-border bg-brand-glass hover:border-brand-primary/50 transition-all flex items-center justify-center relative group ${theme === 'light' ? 'text-zinc-500' : 'text-white'}`}
+                    className="flex-1 p-4 rounded-[48px] transition-all flex items-center justify-center relative group"
+                    style={{ backgroundColor: '#e1e1e1', color: '#1E3D2F' }}
                   >
-                    <span className="font-normal text-xs leading-[14px] text-center w-full px-8">{group.name}</span>
-                    <ChevronRight size={20} className="absolute right-4 text-brand-text-secondary group-hover:text-brand-primary transition-colors" />
+                    <span className="text-xs leading-[14px] text-center w-full px-8" style={{ fontWeight: 'bold', fontFamily: 'system-ui' }}>{group.name}</span>
+                    <ChevronRight size={20} className="absolute right-4 transition-colors opacity-70 group-hover:opacity-100" />
                   </button>
                 </div>
               ))}
@@ -6165,7 +6490,8 @@ export default function App() {
 
           <button
             onClick={() => setShowNewGroupModal(true)}
-            className="w-full p-4 rounded-full bg-gradient-to-r from-[#0DD940] to-[#0bc439] text-white font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 hover:from-[#0BC439] hover:to-[#09a832] transition-all shadow-lg shadow-brand-primary/20 hover:scale-[1.02] active:scale-[0.98]"
+            className="w-full p-4 rounded-full font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 transition-all shadow-md hover:scale-[1.02] active:scale-[0.98]"
+            style={{ backgroundColor: '#A3D900', color: '#1E3D2F' }}
           >
             <Plus size={16} />
             Nova Partida
@@ -6176,7 +6502,7 @@ export default function App() {
       {/* Group Options Modal */}
       {selectedGroupOptions && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedGroupOptions(null)}>
-          <div className={`w-full max-w-sm p-6 rounded-2xl shadow-2xl ${theme === 'light' ? 'bg-white' : 'bg-[#1a1a1a] border border-white/10'}`} onClick={e => e.stopPropagation()}>
+          <div className="w-full max-w-sm p-6 rounded-2xl shadow-md bg-white" onClick={e => e.stopPropagation()}>
             <h3 className="text-[18px] font-bold font-[system-ui] uppercase tracking-tighter mb-6 text-center">{selectedGroupOptions.name}</h3>
             <div className="flex flex-col gap-3">
               <button
@@ -6195,7 +6521,7 @@ export default function App() {
                   setRenameValue(selectedGroupOptions.name);
                   setSelectedGroupOptions(null);
                 }}
-                className={`w-full flex items-center gap-3 p-4 rounded-[30px] font-normal font-[system-ui] uppercase tracking-widest text-xs transition-colors ${theme === 'light' ? 'bg-zinc-100 hover:bg-zinc-200 text-zinc-700' : 'bg-white/5 hover:bg-white/10 text-white'}`}
+                className="w-full flex items-center gap-3 p-4 rounded-[30px] font-normal font-[system-ui] uppercase tracking-widest text-xs transition-colors bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
               >
                 <Pencil size={16} />
                 Renomear
@@ -6218,15 +6544,15 @@ export default function App() {
       {/* Delete Confirmation Modal */}
       {groupToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className={`w-full max-w-sm p-6 rounded-2xl shadow-2xl ${theme === 'light' ? 'bg-white' : 'bg-[#1a1a1a] border border-white/10'}`}>
+          <div className="w-full max-w-sm p-6 rounded-2xl shadow-md bg-white">
             <h3 className="text-xl font-black uppercase tracking-tighter mb-2 text-red-500">Excluir Partida</h3>
-            <p className={`text-sm mb-6 ${theme === 'light' ? 'text-zinc-600' : 'text-brand-text-secondary'}`}>
-              Tem certeza que deseja excluir a partida <strong className={theme === 'light' ? 'text-black' : 'text-white'}>{groupToDelete.name}</strong>? Todos os dados serão perdidos e esta ação não pode ser desfeita.
+            <p className="text-sm mb-6 text-zinc-600">
+              Tem certeza que deseja excluir a partida <strong className="text-black">{groupToDelete.name}</strong>? Todos os dados serão perdidos e esta ação não pode ser desfeita.
             </p>
             <div className="flex gap-3">
               <button
                 onClick={() => setGroupToDelete(null)}
-                className={`flex-1 py-3 rounded-xl font-bold uppercase tracking-widest text-xs transition-colors ${theme === 'light' ? 'bg-zinc-200 text-black hover:bg-zinc-300' : 'bg-zinc-700 text-white hover:bg-zinc-600'}`}
+                className="flex-1 py-3 rounded-xl font-bold uppercase tracking-widest text-xs transition-colors bg-zinc-200 text-black hover:bg-zinc-300"
               >
                 Cancelar
               </button>
@@ -6261,14 +6587,14 @@ export default function App() {
       {/* Rename Modal */}
       {groupToRename && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className={`w-full max-w-sm p-6 rounded-2xl shadow-2xl ${theme === 'light' ? 'bg-white' : 'bg-[#1a1a1a] border border-white/10'}`}>
+          <div className="w-full max-w-sm p-6 rounded-2xl shadow-md bg-white">
             <h3 className="text-xl font-black uppercase tracking-tighter mb-4">Renomear Partida</h3>
             <input
               type="text"
               value={renameValue}
               onChange={e => setRenameValue(e.target.value)}
               placeholder="Novo nome"
-              className={`w-full p-4 rounded-xl mb-6 outline-none font-bold ${theme === 'light' ? 'bg-zinc-100' : 'bg-black/50 border border-white/5'}`}
+              className="w-full p-4 rounded-xl mb-6 outline-none font-bold bg-zinc-100"
               autoFocus
             />
             <div className="flex gap-3">
@@ -6277,7 +6603,7 @@ export default function App() {
                   setGroupToRename(null);
                   setRenameValue('');
                 }}
-                className={`flex-1 py-3 rounded-xl font-bold uppercase tracking-widest text-xs transition-colors ${theme === 'light' ? 'bg-zinc-200 text-black hover:bg-zinc-300' : 'bg-zinc-700 text-white hover:bg-zinc-600'}`}
+                className="flex-1 py-3 rounded-xl font-bold uppercase tracking-widest text-xs transition-colors bg-zinc-200 text-black hover:bg-zinc-300"
               >
                 Cancelar
               </button>
@@ -6302,14 +6628,14 @@ export default function App() {
       {/* New Group Modal */}
       {showNewGroupModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className={`w-full max-w-sm p-6 rounded-2xl shadow-2xl ${theme === 'light' ? 'bg-white' : 'bg-[#1a1a1a] border border-white/10'}`}>
+          <div className="w-full max-w-sm p-6 rounded-2xl shadow-md bg-white">
             <h3 className="text-xl font-black uppercase tracking-tighter mb-4">Nome da Partida</h3>
             <input
               type="text"
               value={newGroupName}
               onChange={e => setNewGroupName(e.target.value)}
               placeholder="Ex: Futebol de Quinta"
-              className={`w-full p-4 rounded-xl mb-6 outline-none font-bold ${theme === 'light' ? 'bg-zinc-100' : 'bg-black/50 border border-white/5'}`}
+              className="w-full p-4 rounded-xl mb-6 outline-none font-bold bg-zinc-100"
               autoFocus
             />
             <div className="flex gap-3">
@@ -6318,7 +6644,7 @@ export default function App() {
                   setShowNewGroupModal(false);
                   setNewGroupName('');
                 }}
-                className={`flex-1 py-3 rounded-xl font-bold uppercase tracking-widest text-xs transition-colors ${theme === 'light' ? 'bg-zinc-200 text-black hover:bg-zinc-300' : 'bg-zinc-700 text-white hover:bg-zinc-600'}`}
+                className="flex-1 py-3 rounded-xl font-bold uppercase tracking-widest text-xs transition-colors bg-zinc-200 text-black hover:bg-zinc-300"
               >
                 Cancelar
               </button>
@@ -6330,6 +6656,16 @@ export default function App() {
                       name: newGroupName.trim(),
                       createdAt: Date.now()
                     };
+                    
+                    if (session?.user?.id) {
+                      supabase.from('groups').insert({
+                        id: newGroup.id,
+                        name: newGroup.name,
+                        created_at: newGroup.createdAt,
+                        user_id: session.user.id
+                      }).then();
+                    }
+                    
                     setGroups(prev => [...prev, newGroup]);
                     setShowNewGroupModal(false);
                     setNewGroupName('');
