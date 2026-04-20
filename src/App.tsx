@@ -39,6 +39,7 @@ import {
   DollarSign,
   Camera,
   Printer,
+  PieChart,
   Minus,
   X,
   AlertCircle,
@@ -755,7 +756,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [isPrintMode, setIsPrintMode] = useState(false);
   const [isPrintPaymentsOnly, setIsPrintPaymentsOnly] = useState(false);
   const [isRandomizing, setIsRandomizing] = useState(false);
-  const [financeSubScreen, setFinanceSubScreen] = useState<'mensalidade' | 'balanco' | 'menu'>('menu');
+  const [financeSubScreen, setFinanceSubScreen] = useState<'mensalidade' | 'balanco' | 'menu'>('balanco');
   const [manualAdjustment, setManualAdjustment] = useState<number>(() => {
     const saved = safeLocalStorage.getItem(`futquina_manual_adjustment_${groupId}`);
     return saved ? Number(saved) : 0;
@@ -2203,9 +2204,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         )}
       </AnimatePresence>
 
-      {/* Splash Screen */}
-      <AnimatePresence>
-        {/* Expense Modal */}
+      {/* Expense Modal */}
       <AnimatePresence>
         {showExpenseModal && (
           <motion.div 
@@ -2269,7 +2268,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         )}
       </AnimatePresence>
 
-      {showGoalAnimation && (
+      <AnimatePresence>
+        {showGoalAnimation && (
           <GoalCelebration 
             isOpen={!!showGoalAnimation} 
             scorerName={showGoalAnimation.scorerName} 
@@ -2389,7 +2389,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           </div>
         </header>
 
-        {/* Tabs */}
+        {/* Tabs for Teams */}
         {currentScreen === 'teams' && (
           <div className="px-6 pb-4">
             <div className="flex bg-brand-dark p-1 rounded-md border border-brand-border">
@@ -2416,6 +2416,26 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 className={`flex-1 py-2 flex items-center justify-center rounded-sm transition-all ${teamsTab === 'proximos' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
               >
                 <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Próximos</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Tabs for Finance */}
+        {currentScreen === 'finance' && !isPrintMode && (
+          <div className="px-6 pb-4">
+            <div className="flex bg-brand-dark p-1 rounded-md border border-brand-border">
+              <button 
+                onClick={() => setFinanceSubScreen('balanco')} 
+                className={`flex-1 py-2 flex items-center justify-center rounded-sm transition-all ${financeSubScreen === 'balanco' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
+              >
+                <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Balanço G.</span>
+              </button>
+              <button 
+                onClick={() => setFinanceSubScreen('mensalidade')} 
+                className={`flex-1 py-2 flex items-center justify-center rounded-sm transition-all ${financeSubScreen === 'mensalidade' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
+              >
+                <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Mensalidade</span>
               </button>
             </div>
           </div>
@@ -3602,13 +3622,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                         setMatch(prev => ({ ...prev, scoreA: 0, scoreB: 0, timeRemaining: prev.config.duration * 60, isActive: false, isPaused: true, hasEnded: false, events: [] }));
                                       }
                                     }}
-                                    className={`p-4 rounded-xl border transition-all relative cursor-pointer min-h-[100px] flex flex-col justify-center overflow-hidden ${
+                                    className={`p-4 rounded-xl border-2 transition-all relative cursor-pointer min-h-[100px] flex flex-col justify-center overflow-hidden ${
                                       isCurrent 
-                                        ? `bg-brand-primary/10 ${theme === 'light' ? 'border-zinc-300' : 'border-white/20'}` 
+                                        ? `bg-emerald-500/10 border-emerald-500` 
                                         : theme === 'light'
-                                          ? 'bg-gradient-to-br from-zinc-100 to-zinc-200 border-zinc-300 hover:border-brand-primary/30'
-                                          : 'bg-brand-glass border-brand-border hover:border-brand-primary/30'
-                                    } ${isFlashing || (movingPlayer && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-brand-primary/30 border-brand-primary' : ''}`}
+                                          ? 'bg-gradient-to-br from-zinc-100 to-zinc-200 border-zinc-300 hover:border-emerald-500/50'
+                                          : 'bg-brand-glass border-brand-border hover:border-emerald-500/50'
+                                    } ${isFlashing || (movingPlayer && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-emerald-500/30 border-emerald-500' : ''}`}
                                   >
                                     
                                     {/* Jersey Icon Top Left */}
@@ -3658,19 +3678,16 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     </div>
 
                                     {isCurrent && t.playerIds.length < match.config.playersPerTeam && (
-                                      <div className="absolute top-12 inset-x-0 bottom-0 z-30 flex items-center justify-center p-4">
-                                        <div className="bg-red-600/90 backdrop-blur-md border border-white/20 p-5 shadow-2xl relative overflow-hidden group max-w-sm rounded-[32px] text-center">
-                                          <div className="flex flex-col items-center gap-2 relative z-10">
-                                            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center animate-bounce">
-                                              <Info className="text-white" size={20} />
-                                            </div>
-                                            <h3 className="text-xl font-black text-white uppercase tracking-tighter italic">Time Incompleto!</h3>
-                                            <p className="text-[10px] font-bold uppercase tracking-widest text-white/90 leading-tight px-4">
-                                              Times devem estar equilibrados.<br/>
-                                              <span className="text-yellow-300">Toque em um jogador</span> de outro time para completar esta vaga.
-                                            </p>
+                                      <div className="absolute inset-0 z-30 flex items-center justify-center p-4 bg-red-600/95 backdrop-blur-md">
+                                        <div className="flex flex-col items-center gap-2 relative z-10">
+                                          <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center animate-bounce">
+                                            <Info className="text-white" size={20} />
                                           </div>
-                                          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/5 to-transparent pointer-events-none" />
+                                          <h3 className="text-2xl font-black text-white uppercase tracking-tighter">Time Incompleto!</h3>
+                                          <p className="text-[10px] font-bold uppercase tracking-widest text-white/90 leading-tight px-4 text-center">
+                                            Times devem estar equilibrados.<br/>
+                                            <span className="text-yellow-300">Toque em um jogador de outro time</span> para completar esta vaga.
+                                          </p>
                                         </div>
                                       </div>
                                     )}
@@ -4107,52 +4124,15 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               }}
               className={`space-y-4 ${isPrintMode ? 'space-y-0' : ''}`}
             >
-              {!isPrintMode && financeSubScreen === 'menu' && (
-                <div className="space-y-6">
-                  <div className="grid grid-cols-1 gap-3 px-4 pt-4">
-                    <button 
-                      onClick={() => setFinanceSubScreen('balanco')}
-                      className="group p-6 rounded-md bg-brand-card border border-brand-border flex items-center gap-4 hover:bg-brand-primary/10 transition-all active:scale-95"
-                    >
-                      <div className="w-12 h-12 rounded-md bg-brand-surface-light flex items-center justify-center shadow group-hover:scale-110 transition-transform">
-                        <Activity size={24} className="text-zinc-500" />
-                      </div>
-                      <div className="text-left">
-                        <h3 className="text-xl font-black uppercase tracking-tighter text-zinc-500">Balanço</h3>
-                        <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Gerais e despesas</p>
-                      </div>
-                      <ChevronRight className="ml-auto text-zinc-500 group-hover:text-brand-primary transition-colors" />
-                    </button>
-                    <button 
-                      onClick={() => setFinanceSubScreen('mensalidade')}
-                      className="group p-6 rounded-md bg-brand-card border border-brand-border flex items-center gap-4 hover:bg-brand-primary/10 transition-all active:scale-95"
-                    >
-                      <div className="w-12 h-12 rounded-md bg-brand-surface-light flex items-center justify-center shadow group-hover:scale-110 transition-transform">
-                        <Wallet size={24} className="text-zinc-500" />
-                      </div>
-                      <div className="text-left">
-                        <h3 className="text-xl font-black uppercase tracking-tighter text-zinc-500">Mensalidade</h3>
-                        <p className="text-[10px] text-zinc-500 uppercase font-bold tracking-widest">Controle de pagamentos</p>
-                      </div>
-                      <ChevronRight className="ml-auto text-zinc-500 group-hover:text-brand-primary transition-colors" />
-                    </button>
-                  </div>
-                </div>
-              )}
-
               {financeSubScreen === 'balanco' && (() => {
                 const totalRevenue = (payments || []).reduce((acc: number, p: PaymentRecord) => acc + Object.values(p?.months || {}).reduce((mAcc: number, mVal) => mAcc + Number(mVal || 0), 0), 0) + manualAdjustment;
                 const totalExpenses = (expenses || []).reduce((acc: number, e) => acc + (e.amount || 0), 0);
                 const netBalance = totalRevenue - totalExpenses;
 
                 return (
-                  <div className={`space-y-6 ${isPrintMode ? 'bg-[#1E3D2F] min-h-screen text-white p-4 pb-12' : ''}`}>
+                  <div className={`space-y-6 ${isPrintMode ? 'bg-white min-h-screen text-black p-4 pb-12 font-mono' : ''}`}>
                     {!isPrintMode && (
-                      <div className="flex justify-between items-center px-4">
-                        <div className="flex items-center gap-2">
-                          <button onClick={() => setFinanceSubScreen('menu')} className="p-2 bg-zinc-100 rounded-full text-zinc-500 hover:bg-zinc-200 transition-colors"><ChevronRight className="rotate-180" size={18} /></button>
-                          <h2 className="text-xl font-black uppercase tracking-tighter">Balanço Financeiro</h2>
-                        </div>
+                      <div className="flex justify-end px-4">
                         <button 
                           onClick={() => setIsPrintMode(true)}
                           className="w-10 h-10 bg-[#1E3D2F] text-white rounded-full shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center shrink-0"
@@ -4164,32 +4144,33 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     )}
 
                     {isPrintMode && (
-                      <div className="pt-8 pb-4 text-center border-b border-white/20 mb-6">
-                        <div className="flex justify-center mb-4">
+                      <div className="pt-8 pb-4 text-center border-b border-zinc-300 mb-6">
+                        <div className="flex justify-center mb-4 opacity-20 invert">
                           <FutQuinaLogo size="md" />
                         </div>
-                        <h2 className="text-3xl font-black italic tracking-tighter uppercase mb-2">
-                          {isPrintPaymentsOnly ? 'Status de Pagamentos' : 'Relatório de Balanço'}
+                        <h2 className="text-2xl font-bold uppercase mb-1">
+                          {isPrintPaymentsOnly ? 'Planilha de Pagamentos' : 'Relatório Financeiro'}
                         </h2>
-                        <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Competência: {MONTHS[new Date().getMonth()]} / {new Date().getFullYear()}</p>
+                        <p className="text-xs uppercase opacity-60">Competência: {MONTHS[new Date().getMonth()]} / {new Date().getFullYear()}</p>
                         <button 
                           onClick={() => {
                             setIsPrintMode(false);
                             setIsPrintPaymentsOnly(false);
                           }} 
-                          className="absolute top-4 right-4 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
+                          className="absolute top-4 right-4 p-2 text-zinc-400 hover:bg-zinc-100 rounded-full transition-colors"
                         >
                           <X size={20} />
                         </button>
                       </div>
                     )}
-                    <div className={`px-4 space-y-6 ${isPrintMode ? 'max-w-xl mx-auto' : ''}`}>
+
+                    <div className={`px-4 space-y-6 ${isPrintMode ? 'max-w-4xl mx-auto' : ''}`}>
                       {/* Summary Cards */}
                       {!isPrintPaymentsOnly && (
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         {/* Arrecadação Card */}
-                        <div className={`p-5 rounded-[32px] border transition-all ${isPrintMode ? 'bg-white/10 border-white/20' : 'bg-emerald-500/5 border-emerald-500/20'}`}>
-                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-white/60' : 'text-emerald-700/60'}`}>Arrecadação</p>
+                        <div className={`p-5 transition-all ${isPrintMode ? 'bg-white border-zinc-300 border rounded-none' : 'rounded-2xl border bg-zinc-100 border-zinc-200'}`}>
+                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'text-zinc-500'}`}>Arrecadação</p>
                           <div className="flex items-baseline gap-2 mb-4">
                             {isEditingTotal ? (
                               <div className="flex items-center gap-1 w-full">
@@ -4209,12 +4190,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       setIsEditingTotal(false);
                                     }
                                   }}
-                                  className={`w-full bg-transparent border-b-2 border-brand-primary outline-none text-2xl font-black ${isPrintMode ? 'text-white' : 'text-zinc-900'}`}
+                                  className={`w-full bg-transparent border-b-2 border-brand-primary outline-none text-2xl font-black text-zinc-900`}
                                 />
                               </div>
                             ) : (
                               <div className="flex flex-col">
-                                <p className={`text-3xl font-black ${isPrintMode ? 'text-white' : 'text-[#1E3D2F]'}`}>
+                                <p className={`text-3xl font-black ${isPrintMode ? 'text-black' : 'text-[#1E3D2F]'}`}>
                                   R$ {totalRevenue},00
                                 </p>
                                 {!isPrintMode && (
@@ -4223,7 +4204,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       setTotalInput(manualAdjustment.toString());
                                       setIsEditingTotal(true);
                                     }}
-                                    className="text-[8px] font-bold uppercase tracking-widest text-emerald-600 flex items-center gap-1 hover:underline w-fit mt-1"
+                                    className="text-[8px] font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-1 hover:underline w-fit mt-1"
                                   >
                                     Ajustar Manual (R$ {manualAdjustment})
                                   </button>
@@ -4246,9 +4227,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
 
                         {/* Despesas Card */}
-                        <div className={`p-5 rounded-[32px] border transition-all ${isPrintMode ? 'bg-white/10 border-white/20' : 'bg-red-500/5 border-red-500/20'}`}>
-                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-white/60' : 'text-red-500/60'}`}>Despesas</p>
-                          <p className={`text-3xl font-black mb-4 ${isPrintMode ? 'text-white' : 'text-red-600'}`}>R$ {totalExpenses},00</p>
+                        <div className={`p-5 transition-all ${isPrintMode ? 'bg-white border-zinc-300 border rounded-none' : 'rounded-2xl border bg-zinc-100 border-zinc-200'}`}>
+                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'text-zinc-500'}`}>Despesas</p>
+                          <p className={`text-3xl font-black mb-4 ${isPrintMode ? 'text-black' : 'text-[#1E3D2F]'}`}>R$ {totalExpenses},00</p>
                           <div className="space-y-1.5">
                             <div className="h-2 w-full bg-zinc-200/50 rounded-full overflow-hidden">
                               <div 
@@ -4264,17 +4245,20 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
 
                         {/* Saldo Líquido Card */}
-                        <div className={`p-5 rounded-[32px] border transition-all ${
+                        <div className={`p-5 transition-all ${
+                          isPrintMode ? 'bg-white border-zinc-300 border rounded-none' :
                           netBalance >= 0
-                            ? isPrintMode ? 'bg-emerald-500/20 border-emerald-500/30' : 'bg-emerald-500/10 border-emerald-500/20'
-                            : isPrintMode ? 'bg-red-500/20 border-red-500/30' : 'bg-red-500/10 border-red-500/20'
+                            ? 'rounded-2xl border bg-emerald-500/10 border-emerald-500/20'
+                            : 'rounded-2xl border bg-red-500/10 border-red-500/20'
                         }`}>
-                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 opacity-60`}>Saldo Líquido</p>
+                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'opacity-60'}`}>Saldo em Caixa</p>
                           <p className={`text-3xl font-black mb-4 ${
+                            isPrintMode ? 'text-black' :
                             netBalance >= 0
-                              ? isPrintMode ? 'text-white' : 'text-emerald-700'
-                              : isPrintMode ? 'text-white' : 'text-red-700'
+                              ? 'text-emerald-700'
+                              : 'text-red-700'
                           }`}>R$ {netBalance},00</p>
+
                           <div className="space-y-1.5">
                             <div className="h-2 w-full bg-zinc-200/50 rounded-full overflow-hidden">
                               <div 
@@ -4292,10 +4276,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     )}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Em Dia */}
-                      <div className={`p-5 rounded-[32px] border ${isPrintMode ? 'bg-white/10 border-white/20' : 'bg-emerald-50/50 border-emerald-100'}`}>
-                        <div className="flex justify-between items-center mb-4">
-                          <h3 className="text-[10px] font-black uppercase tracking-widest text-emerald-600 flex items-center gap-2">
-                            <CheckCircle2 size={14} /> Jogadores em Dia ({MONTHS[new Date().getMonth()]})
+                      <div className={`transition-all overflow-hidden ${isPrintMode ? 'bg-white border border-zinc-300 rounded-none' : 'p-5 rounded-2xl border bg-emerald-50/50 border-emerald-100'}`}>
+                        <div className={`flex justify-between items-center ${isPrintMode ? 'border-b border-zinc-300 bg-zinc-100 p-2 text-zinc-900' : 'mb-4'}`}>
+                          <h3 className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${isPrintMode ? 'text-zinc-800' : 'text-emerald-600'}`}>
+                            {isPrintMode ? 'PAGOS' : <><CheckCircle2 size={14} /> Jogadores em Dia</>} ({MONTHS[new Date().getMonth()]})
                           </h3>
                           {!isPrintMode && (
                             <button 
@@ -4310,25 +4294,29 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             </button>
                           )}
                         </div>
-                        <div className="space-y-1.5 max-h-48 overflow-y-auto custom-scrollbar pr-1">
+                        <div className={`${isPrintMode ? 'divide-y divide-zinc-200' : 'space-y-1.5 max-h-48 overflow-y-auto custom-scrollbar pr-1'}`}>
                           {(players.filter(p => {
                             const currentMonth = MONTHS[new Date().getMonth()];
                             const record = payments.find(pay => pay.playerId === p.id && pay.year === selectedYear);
                             return record && (record.months[currentMonth] || 0) > 0;
                           }) || []).map((p, pIdx) => (
-                            <div key={`em-dia-${p.id}-${pIdx}`} className="flex items-center justify-between p-3 rounded-2xl bg-white border border-emerald-100 shadow-sm">
-                              <span className="text-xs font-bold uppercase tracking-tight text-zinc-800">{p.name}</span>
-                              <Check size={14} className="text-emerald-500" />
+                            <div key={`em-dia-${p.id}-${pIdx}`} className={`flex items-center justify-between ${isPrintMode ? 'p-2 bg-white' : 'p-3 rounded-2xl bg-white border border-emerald-100 shadow-sm'}`}>
+                              <span className={`text-xs uppercase tracking-tight ${isPrintMode ? 'font-mono text-zinc-800' : 'font-bold text-zinc-800'}`}>{p.name}</span>
+                              {isPrintMode ? (
+                                <span className="text-[10px] uppercase font-bold text-emerald-600 tracking-widest">Pago</span>
+                              ) : (
+                                <Check size={14} className="text-emerald-500" />
+                              )}
                             </div>
                           ))}
                         </div>
                       </div>
 
                       {/* Em Débito */}
-                      <div className={`p-5 rounded-[32px] border ${isPrintMode ? 'bg-white/10 border-white/20' : 'bg-red-50/50 border-red-100'}`}>
-                        <div className="flex justify-between items-center mb-4">
-                          <h3 className="text-[10px] font-black uppercase tracking-widest text-red-500 flex items-center gap-2">
-                            <AlertCircle size={14} /> Pendentes ({MONTHS[new Date().getMonth()]})
+                      <div className={`transition-all overflow-hidden ${isPrintMode ? 'bg-white border border-zinc-300 rounded-none' : 'p-5 rounded-2xl border bg-red-50/50 border-red-100'}`}>
+                        <div className={`flex justify-between items-center ${isPrintMode ? 'border-b border-zinc-300 bg-zinc-100 p-2 text-zinc-900' : 'mb-4'}`}>
+                          <h3 className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${isPrintMode ? 'text-zinc-800' : 'text-red-500'}`}>
+                            {isPrintMode ? 'DEVENDO' : <><AlertCircle size={14} /> Pendentes</>} ({MONTHS[new Date().getMonth()]})
                           </h3>
                           {!isPrintMode && (
                             <button 
@@ -4343,15 +4331,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             </button>
                           )}
                         </div>
-                        <div className="space-y-1.5 max-h-48 overflow-y-auto custom-scrollbar pr-1">
+                        <div className={`${isPrintMode ? 'divide-y divide-zinc-200' : 'space-y-1.5 max-h-48 overflow-y-auto custom-scrollbar pr-1'}`}>
                           {(players.filter(p => {
                             const currentMonth = MONTHS[new Date().getMonth()];
                             const record = payments.find(pay => pay.playerId === p.id && pay.year === selectedYear);
                             return !record || (record.months[currentMonth] || 0) <= 0;
                           }) || []).map((p, pIdx) => (
-                            <div key={`em-debito-${p.id}-${pIdx}`} className="flex items-center justify-between p-3 rounded-2xl bg-white border border-red-100 shadow-sm">
-                              <span className="text-xs font-bold uppercase tracking-tight text-zinc-800">{p.name}</span>
-                              <span className="text-[8px] font-black bg-red-500 text-white px-2 py-0.5 rounded-full uppercase tracking-tighter">Pendente</span>
+                            <div key={`em-debito-${p.id}-${pIdx}`} className={`flex items-center justify-between ${isPrintMode ? 'p-2 bg-white' : 'p-3 rounded-2xl bg-white border border-red-100 shadow-sm'}`}>
+                              <span className={`text-xs uppercase tracking-tight ${isPrintMode ? 'font-mono text-zinc-800' : 'font-bold text-zinc-800'}`}>{p.name}</span>
+                              {isPrintMode ? (
+                                <span className="text-[10px] uppercase font-bold text-red-600 tracking-widest">Pendente</span>
+                              ) : (
+                                <span className="text-[8px] font-black bg-red-500 text-white px-2 py-0.5 rounded-full uppercase tracking-tighter">Pendente</span>
+                              )}
                             </div>
                           ))}
                         </div>
@@ -4360,10 +4352,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                     {/* Expenses List */}
                     {!isPrintPaymentsOnly && (
-                      <div className={`rounded-3xl border overflow-hidden ${isPrintMode ? 'bg-white/10 border-white/20' : 'bg-white border-zinc-200 shadow-sm'}`}>
-                        <div className={`p-4 border-b flex justify-between items-center ${isPrintMode ? 'border-white/10 bg-white/5' : 'bg-zinc-50 border-zinc-200'}`}>
-                          <h3 className={`text-xs font-black uppercase tracking-widest flex items-center gap-2 ${isPrintMode ? 'text-white' : 'text-zinc-500'}`}>
-                            <ClipboardPaste size={14} /> Despesas Detalhadas
+                      <div className={`transition-all overflow-hidden ${isPrintMode ? 'bg-white border border-zinc-300 rounded-none' : 'rounded-3xl border bg-white border-zinc-200 shadow-sm'}`}>
+                        <div className={`flex justify-between items-center ${isPrintMode ? 'border-b border-zinc-300 bg-zinc-100 p-2' : 'p-4 border-b bg-zinc-50 border-zinc-200'}`}>
+                          <h3 className={`text-[10px] sm:text-xs font-black uppercase tracking-widest flex items-center gap-2 ${isPrintMode ? 'text-zinc-800' : 'text-zinc-500'}`}>
+                            {isPrintMode ? 'DESPESAS DETALHADAS' : <><ClipboardPaste size={14} /> Despesas Detalhadas</>}
                           </h3>
                           {!isPrintMode && (
                             <button 
@@ -4374,18 +4366,18 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             </button>
                           )}
                         </div>
-                        <div className={`divide-y ${isPrintMode ? 'divide-white/10' : 'divide-zinc-100'}`}>
+                        <div className={`divide-y ${isPrintMode ? 'divide-zinc-200' : 'divide-zinc-100'}`}>
                           {(expenses || []).length === 0 ? (
-                            <div className="p-8 text-center text-zinc-400 italic text-xs uppercase tracking-widest">Nenhuma despesa registrada</div>
+                            <div className={`text-center text-zinc-400 text-xs uppercase tracking-widest ${isPrintMode ? 'p-2' : 'p-8'}`}>Nenhuma despesa registrada</div>
                           ) : (
                             [...(expenses || [])].sort((a, b) => b.date - a.date).map((expense, eIdx) => (
-                              <div key={`expense-${expense.id || eIdx}-${eIdx}`} className="p-4 flex items-center justify-between group">
+                              <div key={`expense-${expense.id || eIdx}-${eIdx}`} className={`flex items-center justify-between group ${isPrintMode ? 'p-2 bg-white' : 'p-4'}`}>
                                 <div>
-                                  <p className={`text-sm font-black uppercase tracking-tight ${isPrintMode ? 'text-white' : 'text-zinc-800'}`}>{expense.name}</p>
-                                  <p className={`text-[8px] font-bold uppercase tracking-widest ${isPrintMode ? 'text-white/60' : 'text-zinc-400'}`}>{new Date(expense.date).toLocaleDateString('pt-BR')}</p>
+                                  <p className={`text-xs uppercase tracking-tight ${isPrintMode ? 'font-mono text-zinc-800' : 'text-sm font-black text-zinc-800'}`}>{expense.name}</p>
+                                  <p className={`text-[8px] font-bold uppercase tracking-widest ${isPrintMode ? 'text-zinc-500' : 'text-zinc-400'}`}>{new Date(expense.date).toLocaleDateString('pt-BR')}</p>
                                 </div>
                                 <div className="flex items-center gap-4">
-                                  <p className={`text-md font-black ${isPrintMode ? 'text-white' : 'text-red-600'}`}>R$ {expense.amount},00</p>
+                                  <p className={`text-xs font-bold ${isPrintMode ? 'text-zinc-900' : 'text-md font-black text-red-600'}`}>R$ {expense.amount},00</p>
                                   {!isPrintMode && (
                                     <button 
                                       onClick={() => setExpenses(prev => prev.filter(e => e.id !== expense.id))}
@@ -4414,10 +4406,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               {financeSubScreen === 'mensalidade' && (
                 <>
                   {!isPrintMode && (
-                    <div className="flex justify-between items-center px-4">
-                      <div className="flex items-center gap-2">
-                        <h2 className="text-xl font-black uppercase tracking-tighter">Mensalidade</h2>
-                      </div>
+                    <div className="flex justify-end px-4">
                       <div className="flex gap-1.5">
                         <button 
                           onClick={() => setIsPrintMode(true)}
@@ -4593,7 +4582,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           )}
 
           {currentScreen === 'ranking' && isPrintMode && (
-            <div className="p-8 bg-white min-h-screen text-black space-y-8">
+            <div key="ranking-print" className="p-8 bg-white min-h-screen text-black space-y-8">
               <div className="flex items-center justify-between border-b border-black/10 pb-3">
                 <div className="flex items-center gap-2">
                   <Trophy size={16} className="text-black" />
@@ -5244,7 +5233,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <section className="space-y-4">
                   <h4 className="text-[10px] font-black uppercase tracking-widest text-brand-text-secondary">Gerenciar Times e Jogadores</h4>
                   <div className="grid grid-cols-2 gap-4">
-                    <AnimatePresence mode="wait">
+                    <AnimatePresence mode="popLayout">
                       {teams.map((team, tIdx) => (
                         <motion.div 
                           key={`settings-team-manage-${team.id}-${tIdx}`} 
