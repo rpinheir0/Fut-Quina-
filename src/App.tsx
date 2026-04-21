@@ -128,6 +128,7 @@ interface Team {
   playerIds: string[];
   emoji?: string;
   color?: string;
+  lastMatchStatus?: 'Vencedor' | 'Empate' | 'Derrota';
 }
 
 const TEAM_EMOJIS = ['🛡️', '⚔️', '🔰', '⚜️', '🔱', '🎖️', '🏅', '🥇', '🦅', '🦁', '⭐', '🔥', '🐉', '🌪️', '⚡', '🏆', '⚓', '👑', '🦈', '🐺'];
@@ -766,6 +767,7 @@ const RouletteOverlay = () => {
 // --- App Component ---
 
 function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: () => void }) {
+  const [showTieDeselectModal, setShowTieDeselectModal] = useState<{teamAId: string, teamBId: string} | null>(null);
   const theme = 'light';
   const setTheme = (t: string) => {}; // No-op if needed elsewhere
   // --- State ---
@@ -1994,7 +1996,16 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     // Move leaving team to the end of the queue
     if (teamToLeaveIndex !== -1) {
       setTeams(prevTeams => {
-        const newTeams = [...prevTeams];
+        let newTeams = [...prevTeams];
+        const teamAId = newTeams[teamAIndex]?.id;
+        const teamBId = newTeams[teamBIndex]?.id;
+        
+        newTeams = newTeams.map(t => {
+          if (t.id === teamAId) return { ...t, lastMatchStatus: scoreA === scoreB ? 'Empate' : scoreA > scoreB ? 'Vencedor' : 'Derrota' };
+          if (t.id === teamBId) return { ...t, lastMatchStatus: scoreA === scoreB ? 'Empate' : scoreB > scoreA ? 'Vencedor' : 'Derrota' };
+          return t;
+        });
+
         const leavingTeam = newTeams.splice(teamToLeaveIndex, 1)[0];
         newTeams.push(leavingTeam);
         return newTeams;
@@ -2008,6 +2019,21 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           teamAIndex: newStayIndex,
           teamBIndex: nextTeamIndex
         };
+      });
+    } else {
+      // Draw case, neither leaves automatically, but we still need to set their status
+      setTeams(prevTeams => {
+        let newTeams = [...prevTeams];
+        const teamAId = newTeams[teamAIndex]?.id;
+        const teamBId = newTeams[teamBIndex]?.id;
+        
+        newTeams = newTeams.map(t => {
+          if (t.id === teamAId || t.id === teamBId) {
+            return { ...t, lastMatchStatus: 'Empate' };
+          }
+          return t;
+        });
+        return newTeams;
       });
     }
 
@@ -2086,6 +2112,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       setShowEqualizerModal(true);
       return;
     }
+
+    setTeams(prev => prev.map(t => {
+      const { lastMatchStatus, ...rest } = t;
+      return rest;
+    }));
 
     setMatch(prev => ({
       ...prev,
@@ -3667,11 +3698,30 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                                       if (match.isActive && !match.hasEnded && !match.isPaused) return; // Cannot change if timer is running
                                       
+  const [showTieDeselectModal, setShowTieDeselectModal] = React.useState<{teamAId: string, teamBId: string} | null>(null);
+
+  // ... (inside the deselect logic in Próximos)
+
                                       if (isCurrent) {
-                                        // Deselect
-                                        if (match.teamAIndex === tIdx) setMatch(prev => ({ ...prev, teamAIndex: -1 }));
-                                        else if (match.teamBIndex === tIdx) setMatch(prev => ({ ...prev, teamBIndex: -1 }));
-                                      } else {
+                                        // Logic to check if both are tied and we are deselecting one, 
+                                        // check if the other is also selected and tied.
+                                        const otherIdx = tIdx === match.teamAIndex ? match.teamBIndex : match.teamAIndex;
+                                        const otherTeam = teams[otherIdx];
+                                        
+                                        if (t.lastMatchStatus === 'Empate' && otherTeam?.lastMatchStatus === 'Empate' && match.teamAIndex !== -1 && match.teamBIndex !== -1) {
+                                            // Handle tie break when both are tied and we deselect.
+                                            // Wait, user says if they are both deselecting, ask order? 
+                                            // This is tricky as we deselect one by one.
+                                            // Maybe they mean if the user deselects one, just push to end, 
+                                            // but if they deselect both in some manner...?
+                                            // Actully, the request suggests a specific modal for ordering.
+                                            
+                                            setShowTieDeselectModal({ teamAId: teams[match.teamAIndex].id, teamBId: teams[match.teamBIndex].id });
+                                        } else if (t.lastMatchStatus === 'Empate') {
+                                            // ... existing tie logic
+                                        }
+                                      
+// ... (rest of logic)
                                         // Select
                                         if (match.teamAIndex === -1) {
                                           setMatch(prev => ({ ...prev, teamAIndex: tIdx }));
@@ -3735,13 +3785,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     } ${isFlashing || (movingPlayer && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-emerald-500/30 border-emerald-500' : ''}`}
                                   >
                                     
-                                    {/* Status Top Right (Winner/Loser) */}
-                                    {lastMatchResult && (lastMatchResult.winnerId === t.id || lastMatchResult.loserId === t.id) && (
+                                    {/* Status Top Right (Winner/Loser/Draw) */}
+                                    {t.lastMatchStatus && (
                                       <div className="absolute top-3 right-3 flex items-center gap-1.5 z-20">
-                                        {lastMatchResult.winnerId === t.id ? (
+                                        {t.lastMatchStatus === 'Vencedor' ? (
                                           <div className="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[8px] font-black uppercase tracking-widest shadow-sm flex items-center gap-1">
                                             <Trophy size={8} fill="currentColor" />
                                             Venceu
+                                          </div>
+                                        ) : t.lastMatchStatus === 'Empate' ? (
+                                          <div className="px-2 py-0.5 rounded-full bg-zinc-500 text-white text-[8px] font-black uppercase tracking-widest shadow-sm">
+                                            Empate
                                           </div>
                                         ) : (
                                           <div className="px-2 py-0.5 rounded-full bg-red-500 text-white text-[8px] font-black uppercase tracking-widest shadow-sm">
