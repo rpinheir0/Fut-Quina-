@@ -3291,14 +3291,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   const playerA = players.find(p => p.id === a);
                                   const playerB = players.find(p => p.id === b);
                                   return (playerA?.arrivedAt || 0) - (playerB?.arrivedAt || 0);
-                                }).map((pid) => {
+                                }).map((pid, idx) => {
                                   const p = players.find(pl => pl.id === pid);
                                   if (!p) return null;
                                   const matchGoals = match.events.filter(e => e.type === 'goal' && e.playerId === pid).length;
                                   const matchAssists = match.events.filter(e => e.type === 'goal' && e.assistId === pid).length;
                                   return (
                                       <button 
-                                        key={`partida-p-a-${pid}`} 
+                                        key={`partida-p-a-${pid}-${idx}`} 
                                         disabled={match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit}
                                         onClick={() => {
                                           if (swappingPlayerId) {
@@ -3410,14 +3410,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   const playerA = players.find(p => p.id === a);
                                   const playerB = players.find(p => p.id === b);
                                   return (playerA?.arrivedAt || 0) - (playerB?.arrivedAt || 0);
-                                }).map((pid) => {
+                                }).map((pid, idx) => {
                                   const p = players.find(pl => pl.id === pid);
                                   if (!p) return null;
                                   const matchGoals = match.events.filter(e => e.type === 'goal' && e.playerId === pid).length;
                                   const matchAssists = match.events.filter(e => e.type === 'goal' && e.assistId === pid).length;
                                   return (
                                       <button 
-                                        key={`partida-p-b-${pid}`} 
+                                        key={`partida-p-b-${pid}-${idx}`} 
                                         disabled={match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit}
                                         onClick={() => {
                                           if (swappingPlayerId) {
@@ -3776,12 +3776,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           const playerA = players.find(p => p.id === a);
                                           const playerB = players.find(p => p.id === b);
                                           return (playerA?.arrivedAt || 0) - (playerB?.arrivedAt || 0);
-                                        }).map((pid) => {
+                                        }).map((pid, idx) => {
                                           const p = players.find(pl => pl.id === pid);
                                           if (!p) return null;
                                           return (
                                                 <button
-                                                  key={`queue-player-${t.id}-${pid}`}
+                                                  key={`queue-player-${t.id}-${pid}-${idx}`}
                                                   onClick={(e) => {
                                                     e.stopPropagation();
                                                     if (swappingPlayerId) {
@@ -3958,11 +3958,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
                         
                         <div className="flex-1 space-y-2 pr-1 custom-scrollbar">
-                          {team.playerIds.map((pid) => {
+                          {team.playerIds.map((pid, idx) => {
                             const p = players.find(pl => pl.id === pid);
                             return p ? (
                               <div 
-                                key={`scoreboard-player-${team.id}-${pid}`} 
+                                key={`scoreboard-player-${team.id}-${pid}-${idx}`} 
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   if (swappingPlayerId && swappingPlayerId !== pid) {
@@ -5318,8 +5318,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           </div>
                           <span className="truncate w-full text-center">{t.name}</span>
                           <div className="flex flex-wrap justify-center gap-0.5 mt-1">
-                            {t.playerIds.slice(0, 3).map((pid) => (
-                              <span key={`settings-team-player-badge-${t.id}-${pid}`} className="text-[6px] opacity-60 bg-black/5 px-1 rounded-sm">
+                            {t.playerIds.slice(0, 3).map((pid, pidx) => (
+                              <span key={`settings-team-player-badge-${t.id}-${pid}-${pidx}`} className="text-[6px] opacity-60 bg-black/5 px-1 rounded-sm">
                                 {players.find(p => p.id === pid)?.name.split(' ')[0]}
                               </span>
                             ))}
@@ -5382,11 +5382,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           </div>
                           
                           <div className="space-y-2">
-                            {team.playerIds.map((pid) => {
+                            {team.playerIds.map((pid, idx) => {
                               const player = players.find(p => p.id === pid);
                               if (!player) return null;
                               return (
-                                <div key={`settings-player-item-${team.id}-${pid}`} className={`flex items-center justify-between p-2 rounded-md bg-brand-card/50`}>
+                                <div key={`settings-player-item-${team.id}-${pid}-${idx}`} className={`flex items-center justify-between p-2 rounded-md bg-brand-card/50`}>
                                   <div className="flex items-center gap-2 flex-1 min-w-0">
                                     {editingPlayerId === pid ? (
                                       <input 
@@ -6161,9 +6161,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   tIdx !== (replacingPlayer?.teamIndex ?? -1) && (
                     <div key={`summary-team-select-${t.id}-${tIdx}`} className="space-y-1">
                       <p className="text-[8px] font-black uppercase tracking-widest text-brand-text-secondary ml-2">{t.name}</p>
-                      {t.playerIds.map((pid) => (
+                      {t.playerIds.map((pid, idx) => (
                         <button
-                          key={`summary-player-replace-${t.id}-${pid}`}
+                          key={`summary-player-replace-${t.id}-${pid}-${idx}`}
                           onClick={() => {
                             setTeams(prev => {
                               const newTeams = prev.map(team => ({ ...team, playerIds: [...team.playerIds] }));
