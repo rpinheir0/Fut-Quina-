@@ -2850,7 +2850,38 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       <div className="space-y-6 bg-zinc-100 p-6 rounded-3xl border border-zinc-200">
                         <div className="flex justify-between items-center">
                           <h3 className="text-sm font-black uppercase tracking-widest text-zinc-900">Ordem de Chegada</h3>
-                          <div className="flex items-center gap-3">
+                          <div className="flex flex-col sm:flex-row items-center gap-3">
+                            {players.filter(p => p.isAvailable).length < match.config.playersPerTeam * 2 && (
+                                <button
+                                  onClick={() => {
+                                    const now = Date.now();
+                                    setPlayers(prev => prev.map((pl, idx) => ({ ...pl, isAvailable: true, arrivedAt: now + idx })));
+                                    
+                                    setTeams(prevTeams => {
+                                      // Gather all current session players in random or current string order, maybe just use all session players
+                                      const allPlayerIds = players.filter(p => sessionPlayerIds.includes(p.id)).map(p => p.id);
+                                      const newTeams: Team[] = [];
+                                      const playersPerTeam = match.config.playersPerTeam;
+                                      for (let i = 0; i < allPlayerIds.length; i += playersPerTeam) {
+                                        const teamPlayers = allPlayerIds.slice(i, i + playersPerTeam);
+                                        const teamIndex = Math.floor(i / playersPerTeam);
+                                        const teamLetter = String.fromCharCode(65 + teamIndex);
+                                        newTeams.push({
+                                          id: generateId(),
+                                          name: `Time ${teamLetter}`,
+                                          playerIds: teamPlayers,
+                                          emoji: TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length]
+                                        });
+                                      }
+                                      return newTeams;
+                                    });
+                                  }}
+                                  className="px-4 py-2 bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest text-[10px] rounded-full shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center gap-1.5"
+                                >
+                                  <CheckCircle2 size={12} />
+                                  Todos Presentes
+                                </button>
+                            )}
                             {players.filter(p => p.isAvailable).length >= match.config.playersPerTeam * 2 && (
                               <button
                                 onClick={() => {
@@ -4129,19 +4160,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               <div className="flex bg-brand-dark p-1 rounded-2xl border border-brand-border mb-4">
                 <button
                   onClick={() => setRankingTab('geral')}
-                  className={`flex-1 py-2 text-[10px] font-black tracking-widest rounded-xl transition-all ${rankingTab === 'geral' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
+                  className={`flex-1 py-2 text-[10px] uppercase font-black tracking-widest rounded-xl transition-all ${rankingTab === 'geral' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
                 >
                   Geral
                 </button>
                 <button
                   onClick={() => setRankingTab('artilharia')}
-                  className={`flex-1 py-2 text-[10px] font-black tracking-widest rounded-xl transition-all ${rankingTab === 'artilharia' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
+                  className={`flex-1 py-2 text-[10px] uppercase font-black tracking-widest rounded-xl transition-all ${rankingTab === 'artilharia' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
                 >
                   Artilharia
                 </button>
                 <button
                   onClick={() => setRankingTab('assistencias')}
-                  className={`flex-1 py-2 text-[10px] font-black tracking-widest rounded-xl transition-all ${rankingTab === 'assistencias' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
+                  className={`flex-1 py-2 text-[10px] uppercase font-black tracking-widest rounded-xl transition-all ${rankingTab === 'assistencias' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
                 >
                   Assistências
                 </button>
@@ -4160,7 +4191,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     key={`ranking-player-${player.id}`}
                     className={`flex items-center gap-4 p-4 ${index !== 0 ? `border-t border-brand-border` : ''}`}
                   >
-                    <div className={`w-7 h-7 rounded-sm flex items-center justify-center text-xs font-black border ${
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black border ${
                       index === 0 ? 'bg-brand-gradient text-white border-transparent' : 
                       index === 1 ? 'bg-zinc-300 text-zinc-800 border-zinc-400' : 
                       index === 2 ? 'bg-amber-700 text-white border-amber-800' : 
@@ -4268,7 +4299,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               setIsEditingTotal(true);
                             }
                           }}
-                          className={`p-5 transition-all ${isPrintMode ? 'bg-white border-zinc-300 border rounded-none' : 'rounded-2xl border bg-zinc-100 border-zinc-200 cursor-pointer hover:bg-zinc-200 shadow-sm'}`}>
+                          className={`p-5 transition-all ${isPrintMode ? 'bg-white border-zinc-300 border rounded-none' : 'rounded-lg border bg-zinc-100 border-zinc-200 cursor-pointer hover:bg-zinc-200 shadow-sm'}`}>
                           <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'text-zinc-500'}`}>Arrecadação</p>
                           <div className="flex items-baseline gap-2 mb-4">
                             {isEditingTotal ? (
@@ -4326,7 +4357,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
 
                         {/* Despesas Card */}
-                        <div className={`p-5 transition-all ${isPrintMode ? 'bg-white border-zinc-300 border rounded-none' : 'rounded-2xl border bg-red-50/50 border-red-100'}`}>
+                        <div className={`p-5 transition-all ${isPrintMode ? 'bg-white border-zinc-300 border rounded-none' : 'rounded-lg border bg-red-50/50 border-red-100'}`}>
                           <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'text-zinc-500'}`}>Despesas</p>
                           <p className={`text-3xl font-black mb-4 ${isPrintMode ? 'text-black' : 'text-red-700'}`}>R$ {totalExpenses},00</p>
                           <div className="space-y-1.5">
@@ -4347,8 +4378,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className={`p-5 transition-all ${
                           isPrintMode ? 'bg-white border-zinc-300 border rounded-none' :
                           netBalance >= 0
-                            ? 'rounded-2xl border bg-emerald-500/10 border-emerald-500/20'
-                            : 'rounded-2xl border bg-red-500/10 border-red-500/20'
+                            ? 'rounded-lg border bg-emerald-500/10 border-emerald-500/20'
+                            : 'rounded-lg border bg-red-500/10 border-red-500/20'
                         }`}>
                           <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'opacity-60'}`}>Saldo em Caixa</p>
                           <p className={`text-3xl font-black mb-4 ${
@@ -4376,7 +4407,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                     {/* Expenses List */}
                     {!isPrintPaymentsOnly && (
-                      <div className={`transition-all overflow-hidden ${isPrintMode ? 'bg-white border border-zinc-300 rounded-none' : 'rounded-3xl border bg-white border-zinc-200 shadow-sm'}`}>
+                      <div className={`transition-all overflow-hidden ${isPrintMode ? 'bg-white border border-zinc-300 rounded-none' : 'rounded-lg border bg-white border-zinc-200 shadow-sm'}`}>
                         <div className={`flex justify-between items-center ${isPrintMode ? 'border-b border-zinc-300 bg-zinc-100 p-2' : 'p-4 border-b bg-zinc-50 border-zinc-200'}`}>
                           <h3 className={`text-[10px] sm:text-xs font-black uppercase tracking-widest flex items-center gap-2 ${isPrintMode ? 'text-zinc-800' : 'text-zinc-500'}`}>
                             {isPrintMode ? 'DESPESAS DETALHADAS' : <><ClipboardPaste size={14} /> Despesas Detalhadas</>}
@@ -4420,7 +4451,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Em Dia */}
-                      <div className={`transition-all overflow-hidden ${isPrintMode ? 'bg-white border border-zinc-300 rounded-none' : 'p-5 rounded-2xl border bg-emerald-50/50 border-emerald-100'}`}>
+                      <div className={`transition-all overflow-hidden ${isPrintMode ? 'bg-white border border-zinc-300 rounded-none' : 'p-5 rounded-lg border bg-emerald-50/50 border-emerald-100'}`}>
                         <div className={`flex justify-between items-center ${isPrintMode ? 'border-b border-zinc-300 bg-zinc-100 p-2 text-zinc-900' : 'mb-4'}`}>
                           <h3 className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${isPrintMode ? 'text-zinc-800' : 'text-emerald-600'}`}>
                             {isPrintMode ? 'PAGOS' : <><CheckCircle2 size={14} /> Jogadores em Dia</>} ({MONTHS[new Date().getMonth()]})
@@ -4444,7 +4475,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             const record = payments.find(pay => pay.playerId === p.id && pay.year === selectedYear);
                             return record && (record.months[currentMonth] || 0) > 0;
                           }) || []).map((p) => (
-                            <div key={`em-dia-${p.id}`} className={`flex items-center justify-between ${isPrintMode ? 'p-2 bg-white' : 'p-3 rounded-2xl bg-white border border-emerald-100 shadow-sm'}`}>
+                            <div key={`em-dia-${p.id}`} className={`flex items-center justify-between ${isPrintMode ? 'p-2 bg-white' : 'p-3 rounded-md bg-white border border-emerald-100 shadow-sm'}`}>
                               <span className={`text-xs uppercase tracking-tight ${isPrintMode ? 'font-mono text-zinc-800' : 'font-bold text-zinc-800 font-mono'}`}>{p.name}</span>
                               {isPrintMode ? (
                                 <span className="text-[10px] uppercase font-bold text-emerald-600 tracking-widest">Pago</span>
@@ -4457,7 +4488,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </div>
 
                       {/* Em Débito */}
-                      <div className={`transition-all overflow-hidden ${isPrintMode ? 'bg-white border border-zinc-300 rounded-none' : 'p-5 rounded-2xl border bg-red-50/50 border-red-100'}`}>
+                      <div className={`transition-all overflow-hidden ${isPrintMode ? 'bg-white border border-zinc-300 rounded-none' : 'p-5 rounded-lg border bg-red-50/50 border-red-100'}`}>
                         <div className={`flex justify-between items-center ${isPrintMode ? 'border-b border-zinc-300 bg-zinc-100 p-2 text-zinc-900' : 'mb-4'}`}>
                           <h3 className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${isPrintMode ? 'text-zinc-800' : 'text-red-500'}`}>
                             {isPrintMode ? 'DEVENDO' : <><AlertCircle size={14} /> Pendentes</>} ({MONTHS[new Date().getMonth()]})
@@ -4481,7 +4512,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             const record = payments.find(pay => pay.playerId === p.id && pay.year === selectedYear);
                             return !record || (record.months[currentMonth] || 0) <= 0;
                           }) || []).map((p) => (
-                            <div key={`em-debito-${p.id}`} className={`flex items-center justify-between ${isPrintMode ? 'p-2 bg-white' : 'p-3 rounded-2xl bg-white border border-red-100 shadow-sm'}`}>
+                            <div key={`em-debito-${p.id}`} className={`flex items-center justify-between ${isPrintMode ? 'p-2 bg-white' : 'p-3 rounded-md bg-white border border-red-100 shadow-sm'}`}>
                               <span className={`text-xs uppercase tracking-tight ${isPrintMode ? 'font-mono text-zinc-800' : 'font-bold text-zinc-800 font-mono'}`}>{p.name}</span>
                               {isPrintMode ? (
                                 <span className="text-[10px] uppercase font-bold text-red-600 tracking-widest">Pendente</span>
@@ -6230,7 +6261,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         />
 
         <PlayerManagementModalComponent 
-          player={playerManagementModal}
+          player={playerManagementModal ? (players.find(p => p.id === playerManagementModal.id) || playerManagementModal) : null}
           isOpen={!!playerManagementModal}
           onClose={() => setPlayerManagementModal(null)}
           onUpdateName={updatePlayerName}
