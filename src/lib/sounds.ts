@@ -1,3 +1,9 @@
+import finalizarPartidaUrl from '../assets/sounds/finalizar-partida.mp3';
+import golsUrl from '../assets/sounds/gols.mp3';
+import iniciarPartidaUrl from '../assets/sounds/iniciar-partida.mp3';
+import pausarPartidaUrl from '../assets/sounds/pausar-partida.mp3';
+import sortearUrl from '../assets/sounds/sortear.mp3';
+
 export class SoundEngine {
   // Sound engine for FutQuina
   private createAudio(src: string) {
@@ -6,20 +12,14 @@ export class SoundEngine {
   }
 
   // Audio files have been moved to src/assets/sounds to use Vite's static bundler, avoiding path issues on Vercel
-  private audioFinalizar: HTMLAudioElement | null = null;
-  private audioGols: HTMLAudioElement | null = null;
-  private audioIniciar: HTMLAudioElement | null = null;
-  private audioPausar: HTMLAudioElement | null = null;
-  private audioSortear: HTMLAudioElement | null = null;
+  private audioFinalizar = typeof window !== 'undefined' ? this.createAudio(finalizarPartidaUrl) : null;
+  private audioGols = typeof window !== 'undefined' ? this.createAudio(golsUrl) : null;
+  private audioIniciar = typeof window !== 'undefined' ? this.createAudio(iniciarPartidaUrl) : null;
+  private audioPausar = typeof window !== 'undefined' ? this.createAudio(pausarPartidaUrl) : null;
+  private audioSortear = typeof window !== 'undefined' ? this.createAudio(sortearUrl) : null;
 
   constructor() {
-    if (typeof window !== 'undefined') {
-      import('../assets/sounds/finalizar-partida.mp3').then(m => { this.audioFinalizar = this.createAudio(m.default); }).catch(e => console.warn(e));
-      import('../assets/sounds/gols.mp3').then(m => { this.audioGols = this.createAudio(m.default); }).catch(e => console.warn(e));
-      import('../assets/sounds/iniciar-partida.mp3').then(m => { this.audioIniciar = this.createAudio(m.default); }).catch(e => console.warn(e));
-      import('../assets/sounds/pausar-partida.mp3').then(m => { this.audioPausar = this.createAudio(m.default); }).catch(e => console.warn(e));
-      import('../assets/sounds/sortear.mp3').then(m => { this.audioSortear = this.createAudio(m.default); }).catch(e => console.warn(e));
-    }
+    // The static imports above automatically handle asset linking natively in Vite during build.
   }
 
   private playSound(audio: HTMLAudioElement | null, volume: number = 0.8) {
