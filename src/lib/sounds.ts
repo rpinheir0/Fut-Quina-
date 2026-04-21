@@ -1,21 +1,26 @@
+import {
+  finalizarPartidaData,
+  golsData,
+  iniciarPartidaData,
+  pausarPartidaData,
+  sortearData
+} from './audioBase64';
+
 export class SoundEngine {
   // Sound engine for FutQuina
-  private createAudio(path: string) {
+  private createAudio(base64Data: string) {
     if (typeof window === 'undefined') return null;
-    // By using window.location.origin, we ensure Vite bundler completely ignores this URL
-    // during the NPM BUILD step, preventing any ENOENT Rollup errors on Vercel.
-    const fullUrl = `${window.location.origin}/sounds/${path}?t=${Date.now()}`;
-    return new Audio(fullUrl);
+    return new Audio(base64Data);
   }
 
-  private audioFinalizar = this.createAudio('finalizar-partida.mp3');
-  private audioGols = this.createAudio('gols.mp3');
-  private audioIniciar = this.createAudio('iniciar-partida.mp3');
-  private audioPausar = this.createAudio('pausar-partida.mp3');
-  private audioSortear = this.createAudio('sortear.mp3');
+  private audioFinalizar = this.createAudio(finalizarPartidaData);
+  private audioGols = this.createAudio(golsData);
+  private audioIniciar = this.createAudio(iniciarPartidaData);
+  private audioPausar = this.createAudio(pausarPartidaData);
+  private audioSortear = this.createAudio(sortearData);
 
   constructor() {
-    // Escaping static bundler
+    // Escaping static bundler and external HTTP requests by using Base64 data directly
   }
 
   private playSound(audio: HTMLAudioElement | null, volume: number = 0.8) {
