@@ -2540,7 +2540,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <div className="space-y-6">
                     <section className="space-y-4">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <h2 className="text-sm font-bold uppercase tracking-widest text-[#2F5D50]">Gerenciar jogadores</h2>
+                        <h2 className="text-sm font-bold uppercase tracking-widest text-[#464656]">Gerenciar jogadores</h2>
                         <div className="flex gap-2 w-full sm:w-auto">
                           {players.length >= 2 && (
                             <button 
@@ -4129,19 +4129,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               <div className="flex bg-brand-dark p-1 rounded-2xl border border-brand-border mb-4">
                 <button
                   onClick={() => setRankingTab('geral')}
-                  className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${rankingTab === 'geral' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
+                  className={`flex-1 py-2 text-[10px] font-black tracking-widest rounded-xl transition-all ${rankingTab === 'geral' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
                 >
                   Geral
                 </button>
                 <button
                   onClick={() => setRankingTab('artilharia')}
-                  className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${rankingTab === 'artilharia' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
+                  className={`flex-1 py-2 text-[10px] font-black tracking-widest rounded-xl transition-all ${rankingTab === 'artilharia' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
                 >
                   Artilharia
                 </button>
                 <button
                   onClick={() => setRankingTab('assistencias')}
-                  className={`flex-1 py-2 text-[10px] font-black uppercase tracking-widest rounded-xl transition-all ${rankingTab === 'assistencias' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
+                  className={`flex-1 py-2 text-[10px] font-black tracking-widest rounded-xl transition-all ${rankingTab === 'assistencias' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
                 >
                   Assistências
                 </button>
@@ -6383,8 +6383,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               <div className="text-orange-500 flex justify-center mb-4">
                 <LayoutGrid size={40} />
               </div>
-              <h2 className="text-xl font-black text-center mb-2 uppercase tracking-tighter text-[#2F5D50]">Sair da Partida?</h2>
-              <p className="text-center text-[#2F5D50] mb-6 text-sm opacity-90 !lowercase">
+              <h2 className="text-xl font-black text-center mb-2 uppercase tracking-tighter text-[#464656]">Sair da Partida?</h2>
+              <p className="text-center text-[#464656] mb-6 text-sm opacity-90 lowercase">
                 tem certeza que deseja sair desta partida e voltar para o menu principal?
               </p>
               
@@ -6641,14 +6641,14 @@ export default function App() {
       {selectedGroupOptions && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedGroupOptions(null)}>
           <div className="w-full max-w-sm p-6 rounded-2xl shadow-md bg-white" onClick={e => e.stopPropagation()}>
-            <h3 className="text-[18px] font-bold font-[system-ui] uppercase tracking-tighter mb-6 text-center">{selectedGroupOptions.name}</h3>
-            <div className="flex flex-col gap-3">
+            <h3 className="text-[18px] font-bold font-[system-ui] tracking-tighter mb-6 text-center text-[#464656]">{selectedGroupOptions.name}</h3>
+            <div className="flex flex-col gap-3 items-center">
               <button
-                                onClick={() => {
-                                  setCurrentGroupId(selectedGroupOptions.id);
-                                  setSelectedGroupOptions(null);
-                                }}
-                className="w-full flex items-center justify-center gap-3 p-4 rounded-[30px] bg-brand-gradient text-black font-normal font-[system-ui] uppercase tracking-widest text-xs hover:opacity-90 transition-opacity"
+                onClick={() => {
+                  setCurrentGroupId(selectedGroupOptions.id);
+                  setSelectedGroupOptions(null);
+                }}
+                className="w-full flex items-center justify-center gap-3 p-4 rounded-[30px] bg-brand-gradient text-black font-normal font-[system-ui] tracking-widest text-xs hover:opacity-90 transition-opacity"
               >
                 <Play size={16} />
                 Partida
@@ -6659,7 +6659,7 @@ export default function App() {
                   setRenameValue(selectedGroupOptions.name);
                   setSelectedGroupOptions(null);
                 }}
-                className="w-full flex items-center justify-center gap-3 p-4 rounded-[30px] font-normal font-[system-ui] uppercase tracking-widest text-xs transition-colors bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
+                className="w-full flex items-center justify-center gap-3 p-4 rounded-[30px] font-normal font-[system-ui] tracking-widest text-xs transition-colors bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
               >
                 <Pencil size={16} />
                 Renomear
@@ -6669,7 +6669,7 @@ export default function App() {
                   setGroupToDelete(selectedGroupOptions);
                   setSelectedGroupOptions(null);
                 }}
-                className="w-full flex items-center justify-center gap-3 p-4 rounded-[30px] bg-red-500/10 text-red-500 font-normal font-[system-ui] uppercase tracking-widest text-xs hover:bg-red-500/20 transition-colors"
+                className="w-full flex items-center justify-center gap-3 p-4 rounded-[30px] bg-red-500/10 text-red-500 font-normal font-[system-ui] tracking-widest text-xs hover:bg-red-500/20 transition-colors"
               >
                 <Trash2 size={16} />
                 Excluir
