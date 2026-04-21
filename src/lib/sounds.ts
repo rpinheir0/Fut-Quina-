@@ -1,25 +1,21 @@
-import finalizarPartidaUrl from '../assets/sounds/finalizar-partida.mp3';
-import golsUrl from '../assets/sounds/gols.mp3';
-import iniciarPartidaUrl from '../assets/sounds/iniciar-partida.mp3';
-import pausarPartidaUrl from '../assets/sounds/pausar-partida.mp3';
-import sortearUrl from '../assets/sounds/sortear.mp3';
-
 export class SoundEngine {
   // Sound engine for FutQuina
-  private createAudio(src: string) {
-    // Add cache buster query parameter to guarantee the browser downloads the newest file
-    return new Audio(src);
+  private createAudio(path: string) {
+    if (typeof window === 'undefined') return null;
+    // By using window.location.origin, we ensure Vite bundler completely ignores this URL
+    // during the NPM BUILD step, preventing any ENOENT Rollup errors on Vercel.
+    const fullUrl = `${window.location.origin}/sounds/${path}?t=${Date.now()}`;
+    return new Audio(fullUrl);
   }
 
-  // Audio files have been moved to src/assets/sounds to use Vite's static bundler, avoiding path issues on Vercel
-  private audioFinalizar = typeof window !== 'undefined' ? this.createAudio(finalizarPartidaUrl) : null;
-  private audioGols = typeof window !== 'undefined' ? this.createAudio(golsUrl) : null;
-  private audioIniciar = typeof window !== 'undefined' ? this.createAudio(iniciarPartidaUrl) : null;
-  private audioPausar = typeof window !== 'undefined' ? this.createAudio(pausarPartidaUrl) : null;
-  private audioSortear = typeof window !== 'undefined' ? this.createAudio(sortearUrl) : null;
+  private audioFinalizar = this.createAudio('finalizar-partida.mp3');
+  private audioGols = this.createAudio('gols.mp3');
+  private audioIniciar = this.createAudio('iniciar-partida.mp3');
+  private audioPausar = this.createAudio('pausar-partida.mp3');
+  private audioSortear = this.createAudio('sortear.mp3');
 
   constructor() {
-    // The static imports above automatically handle asset linking natively in Vite during build.
+    // Escaping static bundler
   }
 
   private playSound(audio: HTMLAudioElement | null, volume: number = 0.8) {
