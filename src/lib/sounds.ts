@@ -1,4 +1,5 @@
 export class SoundEngine {
+  // Sound engine for FutQuina
   private createAudio(src: string) {
     // Add cache buster query parameter to guarantee the browser downloads the newest file
     return new Audio(src + "?t=" + Date.now());
