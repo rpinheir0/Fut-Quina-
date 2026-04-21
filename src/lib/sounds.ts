@@ -10,14 +10,14 @@ export class SoundEngine {
     return new Audio(src + "?t=" + Date.now());
   }
 
-  private audioFinalizar = this.createAudio(finalizarMp3);
-  private audioGols = this.createAudio(golsMp3);
-  private audioIniciar = this.createAudio(iniciarMp3);
-  private audioPausar = this.createAudio(pausarMp3);
-  private audioSortear = this.createAudio(sortearMp3);
+  private audioFinalizar = typeof window !== 'undefined' ? this.createAudio(finalizarMp3) : null;
+  private audioGols = typeof window !== 'undefined' ? this.createAudio(golsMp3) : null;
+  private audioIniciar = typeof window !== 'undefined' ? this.createAudio(iniciarMp3) : null;
+  private audioPausar = typeof window !== 'undefined' ? this.createAudio(pausarMp3) : null;
+  private audioSortear = typeof window !== 'undefined' ? this.createAudio(sortearMp3) : null;
 
-  private playSound(audio: HTMLAudioElement, volume: number = 0.8) {
-    if (!audio) return;
+  private playSound(audio: HTMLAudioElement | null, volume: number = 0.8) {
+    if (!audio || typeof window === 'undefined') return;
     try {
       // Clona o elemento de áudio para permitir a reprodução de sons sobrepostos
       // ou reproduções rápidas sem cortar o áudio original.
