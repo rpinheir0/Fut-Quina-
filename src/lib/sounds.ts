@@ -1,8 +1,8 @@
-import finalizarMp3 from '../efeitos sonoros fut quina/Finalizar partida.mp3';
-import golsMp3 from '../efeitos sonoros fut quina/Gols.mp3';
-import iniciarMp3 from '../efeitos sonoros fut quina/Iniciar partida.mp3';
-import pausarMp3 from '../efeitos sonoros fut quina/Pausar partida.mp3';
-import sortearMp3 from '../efeitos sonoros fut quina/Sortear.mp3';
+import finalizarMp3 from '../sounds/finalizar-partida.mp3';
+import golsMp3 from '../sounds/gols.mp3';
+import iniciarMp3 from '../sounds/iniciar-partida.mp3';
+import pausarMp3 from '../sounds/pausar-partida.mp3';
+import sortearMp3 from '../sounds/sortear.mp3';
 
 export class SoundEngine {
   private createAudio(src: string) {
