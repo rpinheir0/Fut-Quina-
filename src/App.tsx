@@ -142,7 +142,14 @@ const TEAM_COLORS = [
 const getNextTeamColor = (existingTeams: Team[]) => {
   const usedColors = existingTeams.map(t => t.color).filter(Boolean);
   const availableColors = TEAM_COLORS.filter(c => !usedColors.includes(c));
-  return availableColors.length > 0 ? availableColors[0] : TEAM_COLORS[existingTeams.length % TEAM_COLORS.length];
+  
+  if (availableColors.length > 0) {
+    // Pick a random color from available colors to avoid predictable patterns
+    return availableColors[Math.floor(Math.random() * availableColors.length)];
+  }
+  
+  // If no colors are available, pick a random color from the entire set
+  return TEAM_COLORS[Math.floor(Math.random() * TEAM_COLORS.length)];
 };
 
 const FlipDigit = ({ value, size = 'normal', clockId = '', digitId = '' }: { value: string, size?: 'normal' | 'small' | 'xs', clockId?: string, digitId?: string }) => {
