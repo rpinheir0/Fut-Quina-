@@ -2536,7 +2536,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         {/* Sticky Header and Tabs Container */}
         <div className={`sticky top-0 z-50 bg-brand-dark border-b border-brand-border/10 ${isPrintMode ? 'hidden' : ''}`}>
         {/* Header */}
-        <header className="px-6 py-4 flex justify-center items-center">
+        <header className="px-6 py-4 flex justify-start items-center">
           <div className="flex items-center gap-3">
             <SpinningBall size="sm" spin={false} />
             <FutQuinaLogo size="md" style={{ color: '#ffffff' }} colorClass="" />
