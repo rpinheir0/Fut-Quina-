@@ -4240,7 +4240,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 </button>
               </div>
               
-              <div className={`rounded-2xl overflow-hidden border bg-brand-card/50 border-brand-border p-4`}>
+              <motion.div 
+                className={`rounded-2xl overflow-hidden border bg-brand-card/50 border-brand-border p-4`}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                onDragEnd={(event, info) => {
+                  if (Math.abs(info.offset.x) > 50) {
+                    const tabs = ['geral', 'artilharia', 'assistencias'];
+                    const currentIndex = tabs.indexOf(rankingTab);
+                    if (info.offset.x > 0 && currentIndex > 0) setRankingTab(tabs[currentIndex - 1]);
+                    else if (info.offset.x < 0 && currentIndex < tabs.length - 1) setRankingTab(tabs[currentIndex + 1]);
+                  }
+                }}
+              >
                 <div className="flex items-center justify-between pb-2 border-b border-dashed border-brand-border mb-4 px-2">
                   <button onClick={() => setIsPrintMode(true)} className="text-zinc-400 p-2 hover:bg-zinc-800 rounded-full transition-colors">
                     <Eye size={20} />
@@ -4297,7 +4309,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     Nenhum jogador registrado ainda.
                   </div>
                 )}
-              </div>
+              </motion.div>
             </motion.div>
           )}
 
@@ -4324,7 +4336,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 const netBalance = totalRevenue - totalExpenses;
 
                 return (
-                  <div className={`space-y-6 ${isPrintMode ? 'bg-white min-h-screen text-black p-4 pb-12 font-mono' : 'font-mono'}`}>
+                  <motion.div
+                    drag="x"
+                    dragConstraints={{ left: 0, right: 0 }}
+                    onDragEnd={(event, info) => {
+                      if (info.offset.x < -50) setFinanceSubScreen('mensalidade');
+                    }}
+                    className={`space-y-6 ${isPrintMode ? 'bg-white min-h-screen text-black p-4 pb-12 font-mono' : 'font-mono'}`}
+                  >
                     {!isPrintMode && (
                       <div className="flex justify-end px-4">
                         <button 
@@ -4602,11 +4621,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </div>
                     )}
                   </div>
-                </div>
+                </motion.div>
               );
             })()}
               {financeSubScreen === 'mensalidade' && (
-                <>
+                <motion.div
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  onDragEnd={(event, info) => {
+                    if (info.offset.x > 50) setFinanceSubScreen('balanco');
+                  }}
+                >
                   {!isPrintMode && (
                     <div className="flex justify-end px-4">
                       <div className="flex gap-1.5">
@@ -4777,7 +4802,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </p>
                     </div>
                   )}
-                </>
+                </motion.div>
               )}
             </motion.div>
           )}
