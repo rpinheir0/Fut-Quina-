@@ -147,6 +147,8 @@ const TEAM_COLORS = [
 
 const TutorialCarousel = () => {
   const [index, setIndex] = useState(0);
+
+  // Imagens carregadas da pasta src para os slides do tutorial
   const items = [
     { image: slide1, alt: "Crie Suas Partidas" },
     { image: slide2, alt: "Gerencie Jogadores" },
