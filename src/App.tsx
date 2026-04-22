@@ -767,7 +767,6 @@ const RouletteOverlay = () => {
 // --- App Component ---
 
 function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: () => void }) {
-  const [showTieDeselectModal, setShowTieDeselectModal] = useState<{teamAId: string, teamBId: string} | null>(null);
   const theme = 'light';
   const setTheme = (t: string) => {}; // No-op if needed elsewhere
   // --- State ---
@@ -2113,10 +2112,18 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       return;
     }
 
-    setTeams(prev => prev.map(t => {
-      const { lastMatchStatus, ...rest } = t;
-      return rest;
-    }));
+    setTeams(prev => {
+      const newTeams = [...prev];
+      if (newTeams[teamAIdx]) {
+        const { lastMatchStatus, ...restA } = newTeams[teamAIdx];
+        newTeams[teamAIdx] = restA;
+      }
+      if (newTeams[teamBIdx]) {
+        const { lastMatchStatus, ...restB } = newTeams[teamBIdx];
+        newTeams[teamBIdx] = restB;
+      }
+      return newTeams;
+    });
 
     setMatch(prev => ({
       ...prev,
@@ -2907,7 +2914,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       return newTeams;
                                     });
                                   }}
-                                  className="px-4 py-2 bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest text-[10px] rounded-full shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center gap-1.5"
+                                  className="px-3 py-1.5 text-[8px] sm:px-4 sm:py-2 sm:text-[10px] bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest rounded-full shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center gap-1.5"
                                 >
                                   <CheckCircle2 size={12} />
                                   Todos Presentes
@@ -3698,30 +3705,43 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                                       if (match.isActive && !match.hasEnded && !match.isPaused) return; // Cannot change if timer is running
                                       
-  const [showTieDeselectModal, setShowTieDeselectModal] = React.useState<{teamAId: string, teamBId: string} | null>(null);
-
-  // ... (inside the deselect logic in Próximos)
-
                                       if (isCurrent) {
-                                        // Logic to check if both are tied and we are deselecting one, 
-                                        // check if the other is also selected and tied.
-                                        const otherIdx = tIdx === match.teamAIndex ? match.teamBIndex : match.teamAIndex;
-                                        const otherTeam = teams[otherIdx];
-                                        
-                                        if (t.lastMatchStatus === 'Empate' && otherTeam?.lastMatchStatus === 'Empate' && match.teamAIndex !== -1 && match.teamBIndex !== -1) {
-                                            // Handle tie break when both are tied and we deselect.
-                                            // Wait, user says if they are both deselecting, ask order? 
-                                            // This is tricky as we deselect one by one.
-                                            // Maybe they mean if the user deselects one, just push to end, 
-                                            // but if they deselect both in some manner...?
-                                            // Actully, the request suggests a specific modal for ordering.
-                                            
-                                            setShowTieDeselectModal({ teamAId: teams[match.teamAIndex].id, teamBId: teams[match.teamBIndex].id });
-                                        } else if (t.lastMatchStatus === 'Empate') {
-                                            // ... existing tie logic
+                                        if (t.lastMatchStatus === 'Empate') {
+                                          setTeams(prevTeams => {
+                                              const newTeams = [...prevTeams];
+                                              const deselectedTeam = newTeams.splice(tIdx, 1)[0];
+                                              newTeams.push(deselectedTeam);
+                                              
+                                              setMatch(prevMatch => {
+                                                let newTeamAIndex = prevMatch.teamAIndex;
+                                                let newTeamBIndex = prevMatch.teamBIndex;
+                                                
+                                                if (prevMatch.teamAIndex === tIdx) {
+                                                  newTeamAIndex = -1;
+                                                } else if (prevMatch.teamAIndex > tIdx) {
+                                                  newTeamAIndex--;
+                                                }
+                                                
+                                                if (prevMatch.teamBIndex === tIdx) {
+                                                  newTeamBIndex = -1;
+                                                } else if (prevMatch.teamBIndex > tIdx) {
+                                                  newTeamBIndex--;
+                                                }
+                                                
+                                                return {
+                                                  ...prevMatch,
+                                                  teamAIndex: newTeamAIndex,
+                                                  teamBIndex: newTeamBIndex
+                                                };
+                                              });
+                                              return newTeams;
+                                          });
+                                        } else {
+                                          // Deselect normally
+                                          if (match.teamAIndex === tIdx) setMatch(prev => ({ ...prev, teamAIndex: -1 }));
+                                          else if (match.teamBIndex === tIdx) setMatch(prev => ({ ...prev, teamBIndex: -1 }));
                                         }
-                                      
-// ... (rest of logic)
+                                      } else {
                                         // Select
                                         if (match.teamAIndex === -1) {
                                           setMatch(prev => ({ ...prev, teamAIndex: tIdx }));
