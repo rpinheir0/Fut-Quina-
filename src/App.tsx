@@ -6383,7 +6383,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               }`}
             >
               <Users size={18} className="mb-1" />
-              <span className="text-[8px] font-black lowercase tracking-wider leading-none">gerenciar</span>
+              <span className="text-[10px] font-black lowercase first-letter:uppercase tracking-wider leading-none">Gerenciar</span>
             </button>
             <button 
               onClick={() => {
@@ -6402,7 +6402,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               }`}
             >
               <Swords size={18} className="mb-1" />
-              <span className="text-[8px] font-black lowercase tracking-wider leading-none">partida</span>
+              <span className="text-[10px] font-black lowercase first-letter:uppercase tracking-wider leading-none">Partida</span>
             </button>
             <button 
               onClick={() => {
@@ -6419,7 +6419,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               }`}
             >
               <Medal size={18} className="mb-1" />
-              <span className="text-[8px] font-black lowercase tracking-wider leading-none">ranking</span>
+              <span className="text-[10px] font-black lowercase first-letter:uppercase tracking-wider leading-none">Ranking</span>
             </button>
             <button 
               onClick={() => {
@@ -6437,14 +6437,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               }`}
             >
               <Wallet size={18} className="mb-1" />
-              <span className="text-[8px] font-black lowercase tracking-wider leading-none">financeiro</span>
+              <span className="text-[10px] font-black lowercase first-letter:uppercase tracking-wider leading-none">Financeiro</span>
             </button>
             <button 
               onClick={() => setShowBackToHomeConfirm(true)}
               className={`flex-1 flex flex-col items-center justify-center py-2 transition-none rounded-2xl text-white/70 hover:text-white hover:bg-white/5`}
             >
               <LogOut size={18} className="mb-1" />
-              <span className="text-[8px] font-black lowercase tracking-wider leading-none">sair</span>
+              <span className="text-[10px] font-black lowercase first-letter:uppercase tracking-wider leading-none">Sair</span>
             </button>
           </div>
         </nav>
