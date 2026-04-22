@@ -52,7 +52,8 @@ import {
   Wallet,
   ArrowLeftRight,
   MoveRight,
-  Home
+  Home,
+  Eye
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
@@ -4217,16 +4218,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               }}
               className="p-6 space-y-6 pb-24"
             >
-              <div className="flex items-center justify-between">
-                <h2 className="text-2xl font-black uppercase tracking-tighter text-brand-text-primary">Ranking</h2>
-                <div className="flex gap-2">
-                  <button 
-                    onClick={() => setIsPrintMode(true)}
-                    className="px-4 py-2 bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest text-[10px] rounded-full shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center gap-1.5"
-                  >
-                    <Printer size={12} fill="currentColor" />
-                    Print
-                  </button>
+              <div className="flex items-center justify-between mb-4 px-2">
+                <div className="text-zinc-400">
+                  <Eye size={20} />
                 </div>
               </div>
 
@@ -4241,13 +4235,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   onClick={() => setRankingTab('artilharia')}
                   className={`flex-1 py-2 text-[10px] uppercase font-black tracking-widest rounded-xl transition-all ${rankingTab === 'artilharia' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
                 >
-                  Artilharia
+                  Gols
                 </button>
                 <button
                   onClick={() => setRankingTab('assistencias')}
                   className={`flex-1 py-2 text-[10px] uppercase font-black tracking-widest rounded-xl transition-all ${rankingTab === 'assistencias' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
                 >
-                  Assistências
+                  Ass
                 </button>
               </div>
               
@@ -4257,8 +4251,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <div className="w-10 ml-3"></div>
                   <div className="flex-1"></div>
                   <div className="flex gap-4 sm:gap-6 text-[10px] font-black uppercase tracking-widest text-brand-text-secondary">
-                    <div className="w-8 text-center">Gols</div>
-                    <div className="w-8 text-center">Ass</div>
+                    <div className="w-8 text-center">{rankingTab !== 'assistencias' ? 'Gols' : ''}</div>
+                    <div className="w-8 text-center">{rankingTab !== 'artilharia' ? 'Ass' : ''}</div>
                   </div>
                 </div>
 
@@ -4288,12 +4282,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       {index === 2 && (
                         <div className="absolute -inset-1 border border-amber-700/50 rounded-full" />
                       )}
-                      <div className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-brand-dark border-2 ${
-                        index === 0 ? 'border-[#FFD700]' : 
-                        index === 1 ? 'border-zinc-400' : 
-                        index === 2 ? 'border-amber-700' : 
-                        'border-brand-border'
-                      }`}>
+                      <div className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-brand-dark border-zinc-200 border`}>
                         {player.photo ? (
                           <img src={player.photo} alt={player.name} className="w-full h-full object-cover" />
                         ) : (
@@ -4307,8 +4296,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     </div>
 
                     <div className="flex gap-4 sm:gap-6">
-                      <div className="w-8 text-center text-sm font-black text-brand-text-primary">{player.goals}</div>
-                      <div className="w-8 text-center text-sm font-black text-brand-text-primary">{player.assists}</div>
+                      <div className={`w-8 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'assistencias' ? 'opacity-0' : ''}`}>{player.goals}</div>
+                      <div className={`w-8 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'artilharia' ? 'opacity-0' : ''}`}>{player.assists}</div>
                     </div>
                   </div>
                 ))}
