@@ -4218,12 +4218,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               }}
               className="p-6 space-y-6 pb-24"
             >
-              <div className="flex items-center justify-between mb-4 px-2">
-                <div className="text-zinc-400">
-                  <Eye size={20} />
-                </div>
-              </div>
-
               <div className="flex bg-brand-dark p-1 rounded-2xl border border-brand-border mb-4">
                 <button
                   onClick={() => setRankingTab('geral')}
@@ -4235,24 +4229,24 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   onClick={() => setRankingTab('artilharia')}
                   className={`flex-1 py-2 text-[10px] uppercase font-black tracking-widest rounded-xl transition-all ${rankingTab === 'artilharia' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
                 >
-                  Gols
+                  Artilharia
                 </button>
                 <button
                   onClick={() => setRankingTab('assistencias')}
                   className={`flex-1 py-2 text-[10px] uppercase font-black tracking-widest rounded-xl transition-all ${rankingTab === 'assistencias' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
                 >
-                  Ass
+                  Assistências
                 </button>
               </div>
               
               <div className={`rounded-3xl overflow-hidden border bg-brand-card/50 border-brand-border p-4`}>
-                <div className="flex items-center pb-2 border-b border-dashed border-brand-border mb-4 px-2">
-                  <div className="w-6"></div>
-                  <div className="w-10 ml-3"></div>
-                  <div className="flex-1"></div>
+                <div className="flex items-center justify-between pb-2 border-b border-dashed border-brand-border mb-4 px-2">
+                  <button onClick={() => setIsPrintMode(true)} className="text-zinc-400 p-2 hover:bg-zinc-800 rounded-full transition-colors">
+                    <Eye size={20} />
+                  </button>
                   <div className="flex gap-4 sm:gap-6 text-[10px] font-black uppercase tracking-widest text-brand-text-secondary">
-                    <div className="w-8 text-center">{rankingTab !== 'assistencias' ? 'Gols' : ''}</div>
-                    <div className="w-8 text-center">{rankingTab !== 'artilharia' ? 'Ass' : ''}</div>
+                    <div className={`w-8 text-center flex items-center justify-center gap-1 ${rankingTab !== 'assistencias' ? '' : 'opacity-0'}`}>⚽ Gols</div>
+                    <div className={`w-8 text-center flex items-center justify-center gap-1 ${rankingTab !== 'artilharia' ? '' : 'opacity-0'}`}>👟 Ass</div>
                   </div>
                 </div>
 
@@ -4291,7 +4285,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </div>
                     </div>
 
-                    <div className="flex-1 text-sm font-black text-brand-text-primary tracking-tight">
+                    <div className="flex-1 text-sm text-brand-text-primary tracking-tight">
                       {player.name}
                     </div>
 
