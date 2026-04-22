@@ -145,24 +145,9 @@ const TEAM_COLORS = [
 const TutorialCarousel = () => {
   const [index, setIndex] = useState(0);
   const items = [
-    { 
-      title: "Crie sua Partida", 
-      text: "Comece criando um grupo, configure os times e defina as regras do jogo.", 
-      color: "#3b82f6",
-      icon: <Shield size={36} className="text-[#3b82f6]" />
-    },
-    { 
-      title: "Gerencie Jogadores", 
-      text: "Adicione a galera, registre gols, assistências e acompanhe o Ranking de Artilharia.", 
-      color: "#22c55e",
-      icon: <Users size={36} className="text-[#22c55e]" />
-    },
-    { 
-      title: "Financeiro", 
-      text: "Acompanhe mensalidades dos jogadores e o balanço do mês para o futebol não parar.", 
-      color: "#eab308",
-      icon: <Wallet size={36} className="text-[#eab308]" />
-    }
+    { image: "/slide1.png.png", alt: "Crie Suas Partidas" },
+    { image: "/slide2.png.png", alt: "Gerencie Jogadores" },
+    { image: "/slide3.png.png", alt: "Tudo do Seu Jeito" }
   ];
 
   useEffect(() => {
@@ -173,7 +158,7 @@ const TutorialCarousel = () => {
   }, [items.length]);
 
   return (
-    <div className="relative w-full h-64 overflow-hidden rounded-2xl bg-transparent">
+    <div className="relative w-full aspect-video overflow-hidden rounded-2xl bg-transparent">
       <AnimatePresence mode="wait">
         <motion.div
           key={index}
@@ -181,18 +166,21 @@ const TutorialCarousel = () => {
           animate={{ opacity: 1, x: 0 }}
           exit={{ opacity: 0, x: -100 }}
           transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center"
+          className="absolute inset-0 flex items-center justify-center pointer-events-none"
         >
-          <div className="w-20 h-20 mb-4 flex items-center justify-center rounded-2xl border-4 border-black bg-white shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
-            {items[index].icon}
-          </div>
-          <h3 className="text-lg font-black uppercase tracking-tight text-black mb-2">{items[index].title}</h3>
-          <p className="text-xs text-black font-bold opacity-80 leading-relaxed px-2 lowercase first-letter:uppercase">{items[index].text}</p>
+          <img 
+            src={items[index].image} 
+            alt={items[index].alt} 
+            className="w-full h-full object-cover rounded-2xl" 
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = `https://placehold.co/600x400/1a1a1a/ffffff?text=${items[index].alt.replace(/ /g, '+')}\n(Faça+upload+da+imagem)`;
+            }}
+          />
         </motion.div>
       </AnimatePresence>
       <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
         {items.map((_, i) => (
-          <div key={i} className={`w-2.5 h-2.5 rounded-full border-2 border-black transition-colors duration-500 ${i === index ? 'bg-black' : 'bg-transparent'}`} />
+          <div key={i} className={`w-2.5 h-2.5 rounded-full border-2 border-black transition-colors duration-500 ${i === index ? 'bg-black' : 'bg-white/50'}`} />
         ))}
       </div>
     </div>
