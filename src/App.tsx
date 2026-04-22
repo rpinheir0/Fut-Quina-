@@ -142,6 +142,63 @@ const TEAM_COLORS = [
   '#0ea5e9', '#8b5cf6', '#6b7280', '#ffffff', '#1a1a1a'
 ];
 
+const TutorialCarousel = () => {
+  const [index, setIndex] = useState(0);
+  const items = [
+    { 
+      title: "Crie sua Partida", 
+      text: "Comece criando um grupo, configure os times e defina as regras do jogo.", 
+      color: "#3b82f6",
+      icon: <Shield size={36} className="text-[#3b82f6]" />
+    },
+    { 
+      title: "Gerencie Jogadores", 
+      text: "Adicione a galera, registre gols, assistências e acompanhe o Ranking de Artilharia.", 
+      color: "#22c55e",
+      icon: <Users size={36} className="text-[#22c55e]" />
+    },
+    { 
+      title: "Financeiro", 
+      text: "Acompanhe mensalidades dos jogadores e o balanço do mês para o futebol não parar.", 
+      color: "#eab308",
+      icon: <Wallet size={36} className="text-[#eab308]" />
+    }
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % items.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [items.length]);
+
+  return (
+    <div className="relative w-full h-64 overflow-hidden rounded-2xl bg-transparent">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={index}
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -100 }}
+          transition={{ duration: 0.5, ease: "easeInOut" }}
+          className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center"
+        >
+          <div className="w-20 h-20 mb-4 flex items-center justify-center rounded-2xl border-4 border-black bg-white shadow-[4px_4px_0_0_rgba(0,0,0,1)]">
+            {items[index].icon}
+          </div>
+          <h3 className="text-lg font-black uppercase tracking-tight text-black mb-2">{items[index].title}</h3>
+          <p className="text-xs text-black font-bold opacity-80 leading-relaxed px-2 lowercase first-letter:uppercase">{items[index].text}</p>
+        </motion.div>
+      </AnimatePresence>
+      <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+        {items.map((_, i) => (
+          <div key={i} className={`w-2.5 h-2.5 rounded-full border-2 border-black transition-colors duration-500 ${i === index ? 'bg-black' : 'bg-transparent'}`} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const getNextTeamColor = (existingTeams: Team[]) => {
   const usedColors = existingTeams.map(t => t.color).filter(Boolean);
   const availableColors = TEAM_COLORS.filter(c => !usedColors.includes(c));
@@ -6729,20 +6786,18 @@ export default function App() {
         </div>
 
         <div className="space-y-4">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-center" style={{ color: '#1E3D2F', opacity: 0.8, fontWeight: 'bold' }}>Suas Partidas</h2>
+          <h2 className="text-sm font-bold uppercase tracking-widest text-center" style={{ color: '#1E3D2F', opacity: 0.8, fontWeight: 'bold', fontFamily: '"Silkscreen", monospace' }}>Crie suas partidas</h2>
           
           {groups.length === 0 ? (
-            <div className="text-center py-12 px-4 rounded-2xl border border-dashed" style={{ borderColor: 'rgba(30, 61, 47, 0.2)' }}>
-              <p className="text-sm mb-4" style={{ color: '#1E3D2F', opacity: 0.7 }}>Você ainda não tem nenhuma partida configurada.</p>
-            </div>
+            <TutorialCarousel />
           ) : (
             <div className="space-y-3">
               {groups.map((group, index) => (
                 <div key={`${group.id}-${index}`} className="flex items-center gap-2">
                   <button
                     onClick={() => setSelectedGroupOptions({ id: group.id, name: group.name })}
-                    className="flex-1 p-4 rounded-[48px] transition-all flex items-center justify-center relative group"
-                    style={{ backgroundColor: '#e1e1e1', color: '#1E3D2F' }}
+                    className="flex-1 p-4 transition-all flex items-center justify-center relative group rounded-full border border-zinc-300 bg-[#f4f4f4]"
+                    style={{ color: '#1E3D2F' }}
                   >
                     <span className="text-xs leading-[14px] text-center w-full px-8" style={{ fontWeight: 'bold', fontFamily: 'system-ui' }}>{group.name}</span>
                     <ChevronRight size={20} className="absolute right-4 transition-colors opacity-70 group-hover:opacity-100" />
@@ -6810,7 +6865,7 @@ export default function App() {
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
           <div className="w-full max-w-sm p-6 rounded-2xl shadow-md bg-white">
             <h3 className="text-xl font-black uppercase tracking-tighter mb-2 text-red-500">Excluir Partida</h3>
-            <p className="text-sm mb-6 text-zinc-600">
+            <p className="text-sm mb-6 text-zinc-600 lowercase first-letter:uppercase">
               Tem certeza que deseja excluir a partida <strong className="text-black">{groupToDelete.name}</strong>? Todos os dados serão perdidos e esta ação não pode ser desfeita.
             </p>
             <div className="flex gap-3">
