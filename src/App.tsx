@@ -6760,17 +6760,17 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen font-sans transition-colors duration-300 flex flex-col justify-center" style={{ backgroundColor: '#CFE5C3', color: '#1E3D2F' }}>
-      <div className="w-full max-w-md mx-auto p-6 space-y-8">
-        <div className="flex items-center justify-center mb-8">
-          <div className="flex items-center gap-3">
-            <SpinningBall size="md" spin={false} />
-            <FutQuinaLogo size="md" colorClass="" style={{ color: '#ffffff', fontStyle: 'normal', fontFamily: 'system-ui' }} />
+    <div className="min-h-screen font-sans transition-colors duration-300 flex flex-col justify-center" style={{ background: 'linear-gradient(135deg, #14301F, #58703D)', color: '#FFFFFF' }}>
+      <div className="w-full max-w-md mx-auto p-8 space-y-12">
+        <div className="flex items-center justify-center mb-4">
+          <div className="flex flex-col items-center gap-4 text-center">
+            <SpinningBall size="lg" spin={false} />
+            <FutQuinaLogo size="lg" colorClass="" style={{ color: '#ffffff', fontStyle: 'normal', fontFamily: 'system-ui', fontWeight: '900' }} />
           </div>
         </div>
 
-        <div className="space-y-4">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-center" style={{ color: '#1E3D2F', opacity: 0.8, fontWeight: 'bold', fontFamily: '"Silkscreen", monospace' }}>Crie suas partidas</h2>
+        <div className="space-y-6">
+          <h2 className="text-sm font-bold uppercase tracking-widest text-center" style={{ color: '#FFFFFF', opacity: 0.9, fontWeight: 'bold', fontFamily: '"Silkscreen", monospace' }}>Crie suas partidas</h2>
           
           {groups.length === 0 ? (
             <TutorialCarousel />
@@ -6890,14 +6890,14 @@ export default function App() {
       {/* Rename Modal */}
       {groupToRename && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="w-full max-w-sm p-6 rounded-2xl shadow-md bg-white">
-            <h3 className="text-xl font-black uppercase tracking-tighter mb-4">Renomear Partida</h3>
+          <div className="w-full max-w-sm p-6 rounded-2xl shadow-md bg-zinc-100">
+            <h3 className="text-xl font-black uppercase tracking-tighter mb-4 text-zinc-500">Renomear Partida</h3>
             <input
               type="text"
               value={renameValue}
               onChange={e => setRenameValue(e.target.value)}
               placeholder="Novo nome"
-              className="w-full p-4 rounded-xl mb-6 outline-none font-bold bg-zinc-100"
+              className="w-full p-4 rounded-xl mb-6 outline-none font-bold bg-white text-zinc-800 placeholder:text-zinc-400"
               autoFocus
             />
             <div className="flex gap-3">
@@ -6931,14 +6931,14 @@ export default function App() {
       {/* New Group Modal */}
       {showNewGroupModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="w-full max-w-sm p-6 rounded-2xl shadow-md bg-white">
-            <h3 className="text-xl font-black uppercase tracking-tighter mb-4">Nome da Partida</h3>
+          <div className="w-full max-w-sm p-6 rounded-2xl shadow-md bg-zinc-100">
+            <h3 className="text-xl font-black uppercase tracking-tighter mb-4 text-zinc-500">Nome da Partida</h3>
             <input
               type="text"
               value={newGroupName}
               onChange={e => setNewGroupName(e.target.value)}
               placeholder="Ex: Futebol de Quinta"
-              className="w-full p-4 rounded-xl mb-6 outline-none font-bold bg-zinc-100"
+              className="w-full p-4 rounded-xl mb-6 outline-none font-bold bg-white text-zinc-800 placeholder:text-zinc-400"
               autoFocus
             />
             <div className="flex gap-3">
