@@ -6340,7 +6340,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         />
 
         {/* Bottom Navigation */}
-        <nav className="bg-[#1E3D2F] z-50 rounded-t-3xl pt-1">
+        <nav className="bg-[#1E3D2F] z-50 rounded-none pt-1">
           <div className="flex px-2 py-2 gap-2">
             <button 
               onClick={() => {
