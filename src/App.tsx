@@ -426,7 +426,7 @@ const GoalCelebration = ({ isOpen, scorerName, teamName, scorerPhoto }: { isOpen
             ]
           }}
           transition={{ duration: 0.3, repeat: 5 }}
-          className="text-8xl sm:text-[12rem] font-black text-brand-primary uppercase italic tracking-tighter mb-8 z-10 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]"
+          className="text-6xl sm:text-8xl font-black text-brand-primary uppercase tracking-tighter mb-8 z-10 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)]"
         >
           GOL!
         </motion.div>
