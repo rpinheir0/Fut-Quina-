@@ -2536,13 +2536,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         {/* Sticky Header and Tabs Container */}
         <div className={`sticky top-0 z-50 bg-brand-dark border-b border-brand-border/10 ${isPrintMode ? 'hidden' : ''}`}>
         {/* Header */}
-        <header className="px-6 py-4 flex justify-between items-center">
+        <header className="px-6 py-4 flex justify-center items-center">
           <div className="flex items-center gap-3">
             <SpinningBall size="sm" spin={false} />
             <FutQuinaLogo size="md" style={{ color: '#ffffff' }} colorClass="" />
-          </div>
-          <div className="flex items-center gap-2">
-            {/* Theme toggle removed */}
           </div>
         </header>
 
@@ -6763,15 +6760,12 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen font-sans transition-colors duration-300" style={{ backgroundColor: '#CFE5C3', color: '#1E3D2F' }}>
-      <div className="max-w-md mx-auto p-6 space-y-8 pt-12">
-        <div className="flex items-center justify-between">
+    <div className="min-h-screen font-sans transition-colors duration-300 flex flex-col justify-center" style={{ backgroundColor: '#CFE5C3', color: '#1E3D2F' }}>
+      <div className="w-full max-w-md mx-auto p-6 space-y-8">
+        <div className="flex items-center justify-center mb-8">
           <div className="flex items-center gap-3">
             <SpinningBall size="md" spin={false} />
             <FutQuinaLogo size="md" colorClass="" style={{ color: '#ffffff', fontStyle: 'normal', fontFamily: 'system-ui' }} />
-          </div>
-          <div className="flex items-center gap-2">
-            {/* Theme toggle removed */}
           </div>
         </div>
 
