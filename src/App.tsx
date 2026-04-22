@@ -53,7 +53,8 @@ import {
   ArrowLeftRight,
   MoveRight,
   Home,
-  Eye
+  Eye,
+  Award
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
@@ -4244,9 +4245,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <button onClick={() => setIsPrintMode(true)} className="text-zinc-400 p-2 hover:bg-zinc-800 rounded-full transition-colors">
                     <Eye size={20} />
                   </button>
+                  <div className="text-zinc-500 text-xs font-bold font-mono tracking-tighter">ranking</div>
                   <div className="flex gap-4 sm:gap-6 text-[10px] font-black uppercase tracking-widest text-brand-text-secondary">
-                    <div className={`w-8 text-center flex items-center justify-center gap-1 ${rankingTab !== 'assistencias' ? '' : 'opacity-0'}`}>⚽ Gols</div>
-                    <div className={`w-8 text-center flex items-center justify-center gap-1 ${rankingTab !== 'artilharia' ? '' : 'opacity-0'}`}>👟 Ass</div>
+                    <div className={`w-10 text-center flex items-center justify-center gap-1 ${rankingTab !== 'assistencias' ? '' : 'opacity-0'}`}><Trophy size={14} /> Gols</div>
+                    <div className={`w-10 text-center flex items-center justify-center gap-1 ${rankingTab !== 'artilharia' ? '' : 'opacity-0'}`}><Award size={14} /> Ass</div>
                   </div>
                 </div>
 
@@ -4270,12 +4272,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       {index === 0 && (
                         <div className="absolute -inset-1 border-2 border-[#FFD700] rounded-full border-dashed animate-[spin_10s_linear_infinite]" />
                       )}
-                      {index === 1 && (
-                        <div className="absolute -inset-1 border border-zinc-400 rounded-full" />
-                      )}
-                      {index === 2 && (
-                        <div className="absolute -inset-1 border border-amber-700/50 rounded-full" />
-                      )}
+                      
                       <div className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-brand-dark border-zinc-200 border`}>
                         {player.photo ? (
                           <img src={player.photo} alt={player.name} className="w-full h-full object-cover" />
@@ -4290,8 +4287,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     </div>
 
                     <div className="flex gap-4 sm:gap-6">
-                      <div className={`w-8 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'assistencias' ? 'opacity-0' : ''}`}>{player.goals}</div>
-                      <div className={`w-8 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'artilharia' ? 'opacity-0' : ''}`}>{player.assists}</div>
+                      <div className={`w-10 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'assistencias' ? 'opacity-0' : ''}`}>{player.goals}</div>
+                      <div className={`w-10 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'artilharia' ? 'opacity-0' : ''}`}>{player.assists}</div>
                     </div>
                   </div>
                 ))}
