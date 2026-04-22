@@ -4240,15 +4240,15 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 </button>
               </div>
               
-              <div className={`rounded-3xl overflow-hidden border bg-brand-card/50 border-brand-border p-4`}>
+              <div className={`rounded-2xl overflow-hidden border bg-brand-card/50 border-brand-border p-4`}>
                 <div className="flex items-center justify-between pb-2 border-b border-dashed border-brand-border mb-4 px-2">
                   <button onClick={() => setIsPrintMode(true)} className="text-zinc-400 p-2 hover:bg-zinc-800 rounded-full transition-colors">
                     <Eye size={20} />
                   </button>
                   <div className="text-zinc-500 text-xs font-bold font-mono tracking-tighter">ranking</div>
-                  <div className="flex gap-4 sm:gap-6 text-[10px] font-black uppercase tracking-widest text-brand-text-secondary">
-                    <div className={`w-10 text-center flex items-center justify-center gap-1 ${rankingTab !== 'assistencias' ? '' : 'opacity-0'}`}><Trophy size={14} /> Gols</div>
-                    <div className={`w-10 text-center flex items-center justify-center gap-1 ${rankingTab !== 'artilharia' ? '' : 'opacity-0'}`}><Award size={14} /> Ass</div>
+                  <div className="flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-brand-text-secondary">
+                    <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'assistencias' ? '' : 'opacity-0'}`}><Trophy size={14} /> Gols</div>
+                    <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'artilharia' ? '' : 'opacity-0'}`}><Award size={14} /> Ass</div>
                   </div>
                 </div>
 
@@ -4264,16 +4264,16 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     key={`ranking-player-${player.id}`}
                     className={`flex items-center py-3 px-2 transition-colors rounded-xl ${index !== 0 ? `border-t border-brand-border/50` : ''}`}
                   >
-                    <div className="w-6 text-sm font-black text-brand-text-secondary text-center">
+                    <div className="w-8 text-sm font-black text-brand-text-secondary text-center shrink-0">
                       {index + 1}
                     </div>
                     
-                    <div className="relative ml-2 mr-4">
+                    <div className="relative ml-2 mr-4 shrink-0">
                       {index === 0 && (
                         <div className="absolute -inset-1 border-2 border-[#FFD700] rounded-full border-dashed animate-[spin_10s_linear_infinite]" />
                       )}
                       
-                      <div className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-brand-dark border-zinc-200 border`}>
+                      <div className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-zinc-200 border border-zinc-300`}>
                         {player.photo ? (
                           <img src={player.photo} alt={player.name} className="w-full h-full object-cover" />
                         ) : (
@@ -4282,13 +4282,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </div>
                     </div>
 
-                    <div className="flex-1 text-sm text-brand-text-primary tracking-tight">
+                    <div className="flex-1 text-xs text-brand-text-primary tracking-tight truncate mr-4">
                       {player.name}
                     </div>
 
-                    <div className="flex gap-4 sm:gap-6">
-                      <div className={`w-10 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'assistencias' ? 'opacity-0' : ''}`}>{player.goals}</div>
-                      <div className={`w-10 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'artilharia' ? 'opacity-0' : ''}`}>{player.assists}</div>
+                    <div className="flex gap-4 sm:gap-8 shrink-0">
+                      <div className={`w-12 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'assistencias' ? 'opacity-0' : ''}`}>{player.goals}</div>
+                      <div className={`w-12 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'artilharia' ? 'opacity-0' : ''}`}>{player.assists}</div>
                     </div>
                   </div>
                 ))}
@@ -4329,11 +4329,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       <div className="flex justify-end px-4">
                         <button 
                           onClick={() => setIsPrintMode(true)}
-                          className="px-4 py-2 bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest text-[10px] rounded-full shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center gap-1.5"
+                          className="text-zinc-400 p-2 hover:bg-zinc-800 rounded-full transition-colors"
                           title="Gerar Print"
                         >
-                          <Camera size={12} fill="currentColor" />
-                          Print
+                          <Eye size={20} />
                         </button>
                       </div>
                     )}
@@ -4537,7 +4536,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               className="p-1.5 text-emerald-600 hover:bg-emerald-100 rounded-full transition-colors"
                               title="Gerar Print desta lista"
                             >
-                              <Camera size={14} />
+                              <Eye size={14} />
                             </button>
                           )}
                         </div>
@@ -4574,7 +4573,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               className="p-1.5 text-red-600 hover:bg-red-100 rounded-full transition-colors"
                               title="Gerar Print desta lista"
                             >
-                              <Camera size={14} />
+                              <Eye size={14} />
                             </button>
                           )}
                         </div>
@@ -4613,10 +4612,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       <div className="flex gap-1.5">
                         <button 
                           onClick={() => setIsPrintMode(true)}
-                          className="px-4 py-2 bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest text-[10px] rounded-full shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center gap-1.5"
+                          className="text-zinc-400 p-2 hover:bg-zinc-800 rounded-full transition-colors"
                         >
-                          <Camera size={12} fill="currentColor" />
-                          Print
+                          <Eye size={20} />
                         </button>
                       </div>
                     </div>
