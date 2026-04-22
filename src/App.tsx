@@ -61,9 +61,6 @@ import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
 import { supabase } from './lib/supabase';
 import { sounds } from './lib/sounds';
-import slide1 from './slide1.png';
-import slide2 from './slide2.png';
-import slide3 from './slide3.png';
 
 // --- Supabase Hooks ---
 function useSupabaseArraySync<T extends { id: string }>(
@@ -148,9 +145,9 @@ const TEAM_COLORS = [
 const TutorialCarousel = () => {
   const [index, setIndex] = useState(0);
   const items = [
-    { image: slide1, alt: "Crie Suas Partidas" },
-    { image: slide2, alt: "Gerencie Jogadores" },
-    { image: slide3, alt: "Tudo do Seu Jeito" }
+    { image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?q=80&w=1000&auto=format&fit=crop", alt: "Crie Suas Partidas" },
+    { image: "https://images.unsplash.com/photo-1518605368461-1e1e38ce8058?q=80&w=1000&auto=format&fit=crop", alt: "Gerencie Jogadores" },
+    { image: "https://images.unsplash.com/photo-1459865264687-595d652de67e?q=80&w=1000&auto=format&fit=crop", alt: "Tudo do Seu Jeito" }
   ];
 
   useEffect(() => {
