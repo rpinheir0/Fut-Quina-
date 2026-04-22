@@ -2914,7 +2914,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       return newTeams;
                                     });
                                   }}
-                                  className="px-3 py-1.5 text-[8px] sm:px-4 sm:py-2 sm:text-[10px] bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest rounded-full shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center gap-1.5"
+                                  className="px-4 py-2 bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest text-[10px] rounded-full shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center gap-1.5"
                                 >
                                   <CheckCircle2 size={12} />
                                   Todos Presentes
