@@ -2112,18 +2112,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       return;
     }
 
-    setTeams(prev => {
-      const newTeams = [...prev];
-      if (newTeams[teamAIdx]) {
-        const { lastMatchStatus, ...restA } = newTeams[teamAIdx];
-        newTeams[teamAIdx] = restA;
-      }
-      if (newTeams[teamBIdx]) {
-        const { lastMatchStatus, ...restB } = newTeams[teamBIdx];
-        newTeams[teamBIdx] = restB;
-      }
-      return newTeams;
-    });
+    setTeams(prev => prev.map(team => {
+      const { lastMatchStatus, ...rest } = team;
+      return rest;
+    }));
 
     setMatch(prev => ({
       ...prev,
@@ -2914,7 +2906,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       return newTeams;
                                     });
                                   }}
-                                  className="px-4 py-2 bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest text-[10px] rounded-full shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center gap-1.5"
+                                  className="px-3 py-1.5 text-[8px] sm:px-4 sm:py-2 sm:text-[10px] bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest rounded-full shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center gap-1.5"
                                 >
                                   <CheckCircle2 size={12} />
                                   Todos Presentes
@@ -4252,7 +4244,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 </button>
               </div>
               
-              <div className={`rounded-3xl overflow-hidden border bg-brand-card/50 border-brand-border`}>
+              <div className={`rounded-3xl overflow-hidden border bg-brand-card/50 border-brand-border p-4`}>
+                <div className="flex items-center pb-2 border-b border-dashed border-brand-border mb-4 px-2">
+                  <div className="w-6"></div>
+                  <div className="w-10 ml-3"></div>
+                  <div className="flex-1"></div>
+                  <div className="flex gap-4 sm:gap-6 text-[10px] font-black uppercase tracking-widest text-brand-text-secondary">
+                    <div className="w-8 text-center">Gols</div>
+                    <div className="w-8 text-center">Ass</div>
+                  </div>
+                </div>
+
                 {[...players]
                   .sort((a, b) => {
                     if (rankingTab === 'geral') return (b.goals + b.assists) - (a.goals + a.assists);
@@ -4263,39 +4265,48 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   .map((player, index) => (
                   <div 
                     key={`ranking-player-${player.id}`}
-                    className={`flex items-center gap-4 p-4 ${index !== 0 ? `border-t border-brand-border` : ''}`}
+                    className={`flex items-center py-3 px-2 transition-colors rounded-xl ${index !== 0 ? `border-t border-brand-border/50` : ''}`}
                   >
-                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-black border ${
-                      index === 0 ? 'bg-brand-gradient text-white border-transparent' : 
-                      index === 1 ? 'bg-zinc-300 text-zinc-800 border-zinc-400' : 
-                      index === 2 ? 'bg-amber-700 text-white border-amber-800' : 
-                      ('bg-brand-dark text-brand-text-secondary border-brand-border')
-                    }`}>
+                    <div className="w-6 text-sm font-black text-brand-text-secondary text-center">
                       {index + 1}
                     </div>
-                    <div className="flex-1">
-                      <div className="text-xs font-bold leading-tight text-brand-text-primary">{player.name}</div>
-                      <div className="text-[10px] text-brand-text-secondary tracking-tighter flex items-center gap-2 mt-1 !normal-case">
-                        {(rankingTab === 'geral' || rankingTab === 'artilharia') && (
-                          <span className="flex items-center gap-1">⚽ {player.goals} Gols</span>
-                        )}
-                        {rankingTab === 'geral' && (
-                          <span>•</span>
-                        )}
-                        {(rankingTab === 'geral' || rankingTab === 'assistencias') && (
-                          <span className="flex items-center gap-1">👟 {player.assists} Assistências</span>
+                    
+                    <div className="relative ml-2 mr-4">
+                      {index === 0 && (
+                        <div className="absolute -inset-1 border-2 border-[#FFD700] rounded-full border-dashed animate-[spin_10s_linear_infinite]" />
+                      )}
+                      {index === 1 && (
+                        <div className="absolute -inset-1 border border-zinc-400 rounded-full" />
+                      )}
+                      {index === 2 && (
+                        <div className="absolute -inset-1 border border-amber-700/50 rounded-full" />
+                      )}
+                      <div className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-brand-dark border-2 ${
+                        index === 0 ? 'border-[#FFD700]' : 
+                        index === 1 ? 'border-zinc-400' : 
+                        index === 2 ? 'border-amber-700' : 
+                        'border-brand-border'
+                      }`}>
+                        {player.photo ? (
+                          <img src={player.photo} alt={player.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <User size={20} className="text-zinc-500" />
                         )}
                       </div>
                     </div>
-                    <div className="text-base font-black text-[#1E3D2F] border border-white py-0.5 min-w-[42px] flex items-center justify-center rounded-lg bg-white/20 shadow-sm">
-                      {rankingTab === 'geral' && (player.goals + player.assists)}
-                      {rankingTab === 'artilharia' && player.goals}
-                      {rankingTab === 'assistencias' && player.assists}
+
+                    <div className="flex-1 text-sm font-black text-brand-text-primary tracking-tight">
+                      {player.name}
+                    </div>
+
+                    <div className="flex gap-4 sm:gap-6">
+                      <div className="w-8 text-center text-sm font-black text-brand-text-primary">{player.goals}</div>
+                      <div className="w-8 text-center text-sm font-black text-brand-text-primary">{player.assists}</div>
                     </div>
                   </div>
                 ))}
                 {players.length === 0 && (
-                  <div className="p-8 text-center text-brand-text-secondary text-sm">
+                  <div className="p-8 text-center text-brand-text-secondary text-sm font-bold uppercase tracking-widest">
                     Nenhum jogador registrado ainda.
                   </div>
                 )}
