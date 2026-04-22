@@ -58,9 +58,6 @@ import {
   LogOut
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import slide1Img from './assets/slide1.png';
-import slide2Img from './assets/slide2.png';
-import slide3Img from './assets/slide3.png';
 import confetti from 'canvas-confetti';
 import { supabase } from './lib/supabase';
 import { sounds } from './lib/sounds';
@@ -148,9 +145,9 @@ const TEAM_COLORS = [
 const TutorialCarousel = () => {
   const [index, setIndex] = useState(0);
   const items = [
-    { image: slide1Img, alt: "Crie Suas Partidas" },
-    { image: slide2Img, alt: "Gerencie Jogadores" },
-    { image: slide3Img, alt: "Tudo do Seu Jeito" }
+    { image: "/slide1.png.png", alt: "Crie Suas Partidas" },
+    { image: "/slide2.png.png", alt: "Gerencie Jogadores" },
+    { image: "/slide3.png.png", alt: "Tudo do Seu Jeito" }
   ];
 
   useEffect(() => {
