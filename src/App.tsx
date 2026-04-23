@@ -394,123 +394,67 @@ const GoalCelebration = ({ isOpen, scorerName, teamName, scorerPhoto }: { isOpen
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/90 backdrop-blur-xl overflow-hidden"
+      className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/80 backdrop-blur-md overflow-hidden"
     >
       {/* Root Camera Shake/Zoom Container */}
       <motion.div
         animate={{ 
-          scale: [1, 1.05, 0.98, 1.02, 1],
-          rotate: [0, 1, -1, 0.5, 0],
+          scale: [1, 1.02, 0.99, 1],
         }}
-        transition={{ duration: 0.5, ease: "easeInOut" }}
-        className="relative flex flex-col items-center w-full h-full justify-center"
+        transition={{ duration: 0.4, ease: "easeInOut" }}
+        className="relative flex flex-col items-center w-full justify-center"
       >
-        {/* Flash Effect */}
         <motion.div
-          initial={{ opacity: 0.8, scale: 0 }}
-          animate={{ opacity: 0, scale: 4 }}
-          transition={{ duration: 0.5 }}
-          className="absolute inset-0 bg-white z-[2100] pointer-events-none rounded-full"
-        />
-
-        {/* Animated Background Pulse */}
-        <motion.div 
-          animate={{ 
-            scale: [1, 1.5, 1],
-            rotate: [0, 90, 180, 270, 360],
-            opacity: [0.2, 0.4, 0.2]
-          }}
-          transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
-          className="absolute bg-brand-primary/20 blur-[120px] rounded-full z-0 w-[500px] h-[500px]"
-        />
-
-        <motion.div
-          initial={{ scale: 0, rotate: -20 }}
-          animate={{ 
-            scale: [0, 1.5, 1],
-            rotate: 0,
-            textShadow: [
-              "0 0 20px rgba(198,255,0,0)",
-              "0 0 80px rgba(198,255,0,1)",
-              "0 0 20px rgba(198,255,0,0.5)"
-            ]
-          }}
-          transition={{ 
-            scale: { duration: 0.5, ease: "backOut" },
-            rotate: { duration: 0.5 },
-            textShadow: { duration: 1.5, repeat: Infinity }
-          }}
-          className="text-7xl sm:text-[10rem] font-black text-brand-primary uppercase tracking-tighter mb-12 z-10 drop-shadow-[0_20px_30px_rgba(0,0,0,0.8)] italic"
+          initial={{ scale: 0, rotate: -10 }}
+          animate={{ scale: 1, rotate: 0 }}
+          transition={{ type: "spring", damping: 12 }}
+          className="text-4xl sm:text-6xl font-black text-brand-primary uppercase tracking-tighter mb-6 z-10 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] italic"
         >
           GOL!
         </motion.div>
         
-        {/* Video Game Style Card */}
+        {/* Compact & Rounded Card */}
         <motion.div
-          initial={{ y: 200, opacity: 0, rotateX: 45 }}
-          animate={{ y: 0, opacity: 1, rotateX: 0 }}
-          transition={{ delay: 0.3, type: "spring", damping: 15, stiffness: 100 }}
-          style={{ perspective: 1000 }}
-          className="z-20 bg-zinc-950 border-4 border-white rounded-3xl shadow-[20px_20px_0px_0px_rgba(198,255,0,1)] overflow-hidden flex flex-col sm:flex-row items-center border-b-8"
+          initial={{ scale: 0.8, opacity: 0, y: 50 }}
+          animate={{ scale: 1, opacity: 1, y: 0 }}
+          transition={{ type: "spring", damping: 20, stiffness: 150 }}
+          className="z-20 bg-zinc-950 border-2 border-white/20 rounded-[40px] shadow-2xl overflow-hidden flex items-center p-2 pr-8 max-w-[90%] sm:max-w-md gap-4 min-h-[100px]"
         >
-          {/* Photo Section */}
-          <div className="w-full sm:w-56 h-56 bg-zinc-800 border-b-4 sm:border-b-0 sm:border-r-4 border-white flex items-center justify-center relative group overflow-hidden">
+          {/* Photo Section - Round Circle */}
+          <div className="w-20 h-20 sm:w-24 sm:h-24 bg-zinc-800 rounded-full border-2 border-brand-primary flex items-center justify-center relative shrink-0 overflow-hidden shadow-lg">
              {scorerPhoto ? (
                <img 
                  src={scorerPhoto} 
-                 className="w-full h-full object-cover grayscale-[0.1] contrast-125 scale-110" 
+                 className="w-full h-full object-cover grayscale-[0.1] contrast-125" 
                  referrerPolicy="no-referrer" 
                  alt={scorerName}
                />
              ) : (
-               <User size={100} className="text-zinc-600" />
+               <User size={40} className="text-zinc-600" />
              )}
-             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
              
              {/* Dynamic Light Sweep */}
              <motion.div 
-               animate={{ x: [-300, 300] }}
-               transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-               className="absolute top-0 bottom-0 w-20 bg-white/10 skew-x-[25deg] z-10"
-             />
-
-             {/* Scanning effect line */}
-             <motion.div 
-               animate={{ y: [-224, 224] }}
-               transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-               className="absolute w-full h-[3px] bg-brand-primary/60 z-30 shadow-[0_0_15px_rgba(198,255,0,1)]"
+               animate={{ x: [-150, 150] }}
+               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+               className="absolute top-0 bottom-0 w-8 bg-white/20 skew-x-[25deg] z-10"
              />
           </div>
 
           {/* Info Section */}
-          <div className="flex-1 p-8 flex flex-col justify-center items-start w-full bg-zinc-950">
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.7 }}
-              className="px-3 py-1 bg-brand-primary text-black text-[10px] font-black uppercase tracking-[0.5em] mb-4 rounded-sm"
-            >
-              Artilheiro
-            </motion.div>
-            <motion.div 
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.8 }}
-              className="text-5xl sm:text-7xl font-black uppercase tracking-tighter text-white mb-2 line-clamp-1 italic"
-            >
+          <div className="flex flex-col justify-center items-start min-w-0">
+            <div className="text-brand-primary text-[8px] font-black uppercase tracking-[0.3em] mb-1">
+              Goleador
+            </div>
+            <div className="text-xl sm:text-3xl font-black uppercase tracking-tighter text-white mb-0.5 truncate w-full italic">
               {scorerName}
-            </motion.div>
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.9 }}
-              className="flex items-center gap-3"
-            >
-              <div className="w-3 h-3 rounded-full bg-brand-primary animate-ping" />
-              <div className="text-lg font-black uppercase tracking-[0.2em] text-zinc-500">
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
+              <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 truncate">
                 {teamName}
               </div>
-            </motion.div>
+            </div>
           </div>
         </motion.div>
       </motion.div>
