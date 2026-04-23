@@ -1489,7 +1489,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     return `${days} DIAS ATRÁS`;
   };
 
-  const addPlayer = (name: string) => {
+  const addPlayer = (name: string, photo?: string) => {
     if (!name.trim()) return;
     const trimmedName = name.trim();
     
@@ -1503,6 +1503,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             goals: 0,
             assists: 0,
             isAvailable: false,
+            photo: photo,
             arrivedAt: undefined
           };
           setPlayers(prev => [...prev, newPlayer]);
@@ -1517,6 +1518,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       goals: 0,
       assists: 0,
       isAvailable: false,
+      photo: photo,
       arrivedAt: undefined
     };
     setPlayers(prev => [...prev, newPlayer]);
@@ -1529,19 +1531,28 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     }
 
     try {
-      const props = ['name'];
+      const props = ['name', 'icon'];
       const opts = { multiple: true };
       const contacts = await (navigator as any).contacts.select(props, opts);
       
       if (contacts && contacts.length > 0) {
         let addedCount = 0;
-        contacts.forEach((contact: any) => {
+        for (const contact of contacts) {
           const contactName = contact.name && contact.name[0];
           if (contactName) {
-            addPlayer(contactName);
+            let photoUrl = undefined;
+            if (contact.icon && contact.icon.length > 0) {
+              const blob = contact.icon[0];
+              photoUrl = await new Promise<string>((resolve) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result as string);
+                reader.readAsDataURL(blob);
+              });
+            }
+            addPlayer(contactName, photoUrl);
             addedCount++;
           }
-        });
+        }
         if (addedCount > 0) {
           setToast({ message: `${addedCount} contatos importados!`, type: 'success' });
         }
