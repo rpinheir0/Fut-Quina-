@@ -508,8 +508,9 @@ const PlayerManagementModalComponent = ({
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        onUpdatePhoto(player.id, reader.result as string);
+      reader.onloadend = async () => {
+        const resized = await resizeImage(reader.result as string);
+        onUpdatePhoto(player.id, resized);
       };
       reader.readAsDataURL(file);
     }
@@ -648,6 +649,37 @@ interface PaymentRecord {
 type Screen = 'players' | 'teams' | 'ranking' | 'finance';
 
 // --- Utils ---
+
+const resizeImage = (base64Str: string, maxWidth = 150, maxHeight = 150): Promise<string> => {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.src = base64Str;
+    img.onerror = () => resolve(base64Str); // Fallback to original if error
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > maxWidth) {
+          height *= maxWidth / width;
+          width = maxWidth;
+        }
+      } else {
+        if (height > maxHeight) {
+          width *= maxHeight / height;
+          height = maxHeight;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx?.drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL('image/jpeg', 0.8));
+    };
+  });
+};
 
 const safeLocalStorage = {
   getItem: (key: string) => {
@@ -1543,11 +1575,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             let photoUrl = undefined;
             if (contact.icon && contact.icon.length > 0) {
               const blob = contact.icon[0];
-              photoUrl = await new Promise<string>((resolve) => {
+              const originalPhoto = await new Promise<string>((resolve) => {
                 const reader = new FileReader();
                 reader.onloadend = () => resolve(reader.result as string);
                 reader.readAsDataURL(blob);
               });
+              photoUrl = await resizeImage(originalPhoto);
             }
             addPlayer(contactName, photoUrl);
             addedCount++;
