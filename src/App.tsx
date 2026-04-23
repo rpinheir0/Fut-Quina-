@@ -3261,7 +3261,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                 <stop offset="100%" stopColor={teams[lastMatchResult.teamAIndex]?.color || TEAM_COLORS[0]} stopOpacity="0.85" />
                                               </linearGradient>
                                             </defs>
-                                            <path fill="url(#shield-grad-A-last)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="white" strokeWidth="1.5" />
+                                            <path fill="url(#shield-grad-A-last)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="white" strokeWidth="1.5" strokeLinejoin="round" />
                                             <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.15" />
                                           </svg>
                                         </div>
@@ -3281,7 +3281,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                 <stop offset="100%" stopColor={teams[lastMatchResult.teamBIndex]?.color || TEAM_COLORS[1]} stopOpacity="0.85" />
                                               </linearGradient>
                                             </defs>
-                                            <path fill="url(#shield-grad-B-last)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="white" strokeWidth="1.5" />
+                                            <path fill="url(#shield-grad-B-last)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="white" strokeWidth="1.5" strokeLinejoin="round" />
                                             <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.15" />
                                           </svg>
                                         </div>
@@ -3374,7 +3374,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           <stop offset="100%" stopColor={teams[match.teamAIndex]?.color || TEAM_COLORS[0]} stopOpacity="0.85" />
                                         </linearGradient>
                                       </defs>
-                                      <path fill="url(#shield-grad-A-main)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(0,0,0,0.1)" strokeWidth="1" />
+                                      <path fill="url(#shield-grad-A-main)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(0,0,0,0.1)" strokeWidth="1" strokeLinejoin="round" />
                                       <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.15" />
                                     </svg>
                                   </button>
@@ -3463,7 +3463,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           <stop offset="100%" stopColor={teams[match.teamBIndex]?.color || TEAM_COLORS[1]} stopOpacity="0.85" />
                                         </linearGradient>
                                       </defs>
-                                      <path fill="url(#shield-grad-B-main)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(0,0,0,0.1)" strokeWidth="1" />
+                                      <path fill="url(#shield-grad-B-main)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(0,0,0,0.1)" strokeWidth="1" strokeLinejoin="round" />
                                       <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.15" />
                                     </svg>
                                   </button>
@@ -3965,7 +3965,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                               d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
                                               stroke={strokeColor === '#ffffff40' ? '#ffffff' : (strokeColor === '#e4e4e7' ? '#000000' : strokeColor)}
                                               strokeWidth="1.5"
-                                              strokeLinejoin="miter"
+                                              strokeLinejoin="round"
                                             />
                                             {/* Subtle texture overlay */}
                                             <path 
@@ -4378,7 +4378,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <button onClick={() => setIsPrintMode(true)} className="text-zinc-400 p-2 hover:bg-zinc-800 rounded-full transition-colors">
                     <Eye size={20} />
                   </button>
-                  <div className="text-zinc-500 text-xs font-bold font-mono tracking-tighter">ranking</div>
+                  <div className="text-zinc-500 text-xs font-bold font-mono tracking-tighter">Ranking</div>
                   <div className="flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-brand-text-secondary">
                     <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'assistencias' ? '' : 'opacity-0'}`}><Trophy size={14} /> Gols</div>
                     <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'artilharia' ? '' : 'opacity-0'}`}><Award size={14} /> Ass</div>
@@ -6927,10 +6927,10 @@ export default function App() {
       {/* Delete Confirmation Modal */}
       {groupToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="w-full max-w-sm p-6 rounded-2xl shadow-md bg-white">
-            <h3 className="text-xl font-black uppercase tracking-tighter mb-2 text-red-500">Excluir Partida</h3>
-            <p className="text-sm mb-6 text-zinc-600 lowercase first-letter:uppercase">
-              Tem certeza que deseja excluir a partida <strong className="text-black">{groupToDelete.name}</strong>? Todos os dados serão perdidos e esta ação não pode ser desfeita.
+          <div className="bg-brand-dark border border-orange-500/30 rounded-lg p-6 max-w-sm w-full shadow-2xl shadow-orange-500/20">
+            <h3 className="text-xl font-black uppercase tracking-tighter mb-2 text-[#464656] text-center">Excluir Partida</h3>
+            <p className="text-center text-[#464656] mb-6 text-sm opacity-90 lowercase first-letter:uppercase">
+              Tem certeza que deseja excluir a partida <strong className="text-[#464656] font-black">{groupToDelete.name}</strong>? Todos os dados serão perdidos e esta ação não pode ser desfeita.
             </p>
             <div className="flex gap-3">
               <button
@@ -6958,7 +6958,7 @@ export default function App() {
                   ].forEach(k => safeLocalStorage.removeItem(k));
                   setGroupToDelete(null);
                 }}
-                className="flex-1 py-3 rounded-xl font-black uppercase tracking-widest text-xs bg-red-500 text-white hover:bg-red-600 transition-colors"
+                className="flex-1 py-3 rounded-xl font-black uppercase tracking-widest text-xs bg-orange-500 text-white hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20"
               >
                 Excluir
               </button>
