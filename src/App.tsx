@@ -3051,7 +3051,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           id: generateId(),
                                           name: `Time ${teamLetter}`,
                                           playerIds: teamPlayers,
-                                          emoji: TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length]
+                                          emoji: TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length],
+                                          color: TEAM_COLORS[teamIndex % TEAM_COLORS.length]
                                         });
                                       }
                                       return newTeams;
@@ -3092,7 +3093,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       id: generateId(),
                                       name: `Time ${teamLetter}`,
                                       playerIds: teamPlayers,
-                                      emoji: TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length]
+                                      emoji: TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length],
+                                      color: TEAM_COLORS[teamIndex % TEAM_COLORS.length]
                                     });
                                   }
                                   
@@ -3175,7 +3177,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           id: generateId(),
                                           name: `Time ${teamLetter}`,
                                           playerIds: teamPlayers,
-                                          emoji: TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length]
+                                          emoji: TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length],
+                                          color: TEAM_COLORS[teamIndex % TEAM_COLORS.length]
                                         });
                                       }
                                       return newTeams;
@@ -3197,7 +3200,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           id: generateId(),
                                           name: `Time ${teamLetter}`,
                                           playerIds: teamPlayers,
-                                          emoji: TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length]
+                                          emoji: TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length],
+                                          color: TEAM_COLORS[teamIndex % TEAM_COLORS.length]
                                         });
                                       }
                                       return newTeams;
