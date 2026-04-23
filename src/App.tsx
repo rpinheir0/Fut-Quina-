@@ -4137,7 +4137,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                   }}
                                                 >
                                                 <div className="flex items-center gap-2 ml-auto overflow-hidden">
-                                                  <span className="text-[11px] sm:text-[10px] font-bold uppercase truncate text-black">{p.name}</span>
+                                                  <span className="text-[11px] sm:text-[10px] font-bold truncate text-black capitalize">{p.name.toLowerCase()}</span>
                                                   <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 border border-zinc-300">
                                                     {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <User size={10} className="text-black" />}
                                                   </div>
@@ -5324,8 +5324,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     <User size={32} className="text-brand-primary" />
                   )}
                 </div>
-                <h3 className="text-xl font-black uppercase tracking-tighter text-black">
-                  {players.find(p => p.id === showQueuePlayerModal.playerId)?.name}
+                <h3 className="text-xl font-black tracking-tighter text-black capitalize">
+                  {players.find(p => p.id === showQueuePlayerModal.playerId)?.name?.toLowerCase()}
                 </h3>
                 <p className="text-xs uppercase mt-1 text-zinc-800">Ações do Jogador</p>
               </div>
