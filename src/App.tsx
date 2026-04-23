@@ -852,7 +852,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const theme = 'light';
   const setTheme = (t: string) => {}; // No-op if needed elsewhere
   // --- State ---
-  const [currentScreen, setCurrentScreen] = useState<Screen>('players');
+  const [currentScreen, setCurrentScreen] = useState<Screen>(() => {
+    const saved = safeLocalStorage.getItem(`futquina_current_screen_${groupId}`);
+    return (saved as Screen) || 'players';
+  });
+
+  useEffect(() => {
+    safeLocalStorage.setItem(`futquina_current_screen_${groupId}`, currentScreen);
+  }, [currentScreen, groupId]);
   const [isInitialSetupFlow, setIsInitialSetupFlow] = useState(false);
   const [firstSetupDone, setFirstSetupDone] = useState(() => {
     const saved = safeLocalStorage.getItem(`futquina_first_setup_done_${groupId}`);
@@ -891,7 +898,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [isPrintMode, setIsPrintMode] = useState(false);
   const [isPrintPaymentsOnly, setIsPrintPaymentsOnly] = useState(false);
   const [isRandomizing, setIsRandomizing] = useState(false);
-  const [financeSubScreen, setFinanceSubScreen] = useState<'mensalidade' | 'balanco' | 'menu'>('balanco');
+  const [financeSubScreen, setFinanceSubScreen] = useState<'mensalidade' | 'balanco' | 'menu'>(() => {
+    const saved = safeLocalStorage.getItem(`futquina_finance_subscreen_${groupId}`);
+    return (saved as 'mensalidade' | 'balanco' | 'menu') || 'balanco';
+  });
+
+  useEffect(() => {
+    safeLocalStorage.setItem(`futquina_finance_subscreen_${groupId}`, financeSubScreen);
+  }, [financeSubScreen, groupId]);
   const [manualAdjustment, setManualAdjustment] = useState<number>(() => {
     const saved = safeLocalStorage.getItem(`futquina_manual_adjustment_${groupId}`);
     return saved ? Number(saved) : 0;
@@ -1194,8 +1208,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
   const [swappingPlayerId, setSwappingPlayerId] = useState<string | null>(null);
   const [fillingVacancyForTeam, setFillingVacancyForTeam] = useState<number | null>(null);
-  const [playersTab, setPlayersTab] = useState<'jogadores' | 'configuracao'>('jogadores');
+  const [playersTab, setPlayersTab] = useState<'jogadores' | 'configuracao'>(() => {
+    const saved = safeLocalStorage.getItem(`futquina_players_tab_${groupId}`);
+    return (saved as 'jogadores' | 'configuracao') || 'jogadores';
+  });
+
+  useEffect(() => {
+    safeLocalStorage.setItem(`futquina_players_tab_${groupId}`, playersTab);
+  }, [playersTab, groupId]);
+
   const [teamsTab, setTeamsTab] = useState<'configuracao' | 'chegada' | 'historico' | 'proximos'>(() => {
+    const savedTab = safeLocalStorage.getItem(`futquina_teams_tab_${groupId}`);
+    if (savedTab) return savedTab as 'configuracao' | 'chegada' | 'historico' | 'proximos';
+
     const saved = safeLocalStorage.getItem(`futquina_match_${groupId}`);
     if (saved) {
       try {
@@ -1205,6 +1230,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     }
     return 'proximos';
   });
+
+  useEffect(() => {
+    safeLocalStorage.setItem(`futquina_teams_tab_${groupId}`, teamsTab);
+  }, [teamsTab, groupId]);
   const [swipeDirection, setSwipeDirection] = useState(0);
 
   const navigateTeamsTab = (target: 'configuracao' | 'chegada' | 'historico' | 'proximos') => {
@@ -1217,7 +1246,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     setTeamsTab(target);
   };
 
-  const [rankingTab, setRankingTab] = useState<'geral' | 'artilharia' | 'assistencias'>('geral');
+  const [rankingTab, setRankingTab] = useState<'geral' | 'artilharia' | 'assistencias'>(() => {
+    const saved = safeLocalStorage.getItem(`futquina_ranking_tab_${groupId}`);
+    return (saved as 'geral' | 'artilharia' | 'assistencias') || 'geral';
+  });
+
+  useEffect(() => {
+    safeLocalStorage.setItem(`futquina_ranking_tab_${groupId}`, rankingTab);
+  }, [rankingTab, groupId]);
   const [showNotEnoughPlayersModal, setShowNotEnoughPlayersModal] = useState(false);
   const [showLogoAnimation, setShowLogoAnimation] = useState(false);
   const [isInitializing, setIsInitializing] = useState(true);
@@ -6820,7 +6856,24 @@ export default function App() {
   
   // Clean all previous unused hooks required for syncing
   
-  const [currentGroupId, setCurrentGroupId] = useState<string | null>(null);
+  const [currentGroupId, setCurrentGroupId] = useState<string | null>(() => {
+    const saved = safeLocalStorage.getItem('futquina_current_group_id_offline');
+    if (saved) {
+      const savedGroups = safeLocalStorage.getItem('futquina_groups_offline');
+      if (savedGroups && JSON.parse(savedGroups).find((g: any) => g.id === saved)) {
+        return saved;
+      }
+    }
+    return null;
+  });
+
+  useEffect(() => {
+    if (currentGroupId) {
+      safeLocalStorage.setItem('futquina_current_group_id_offline', currentGroupId);
+    } else {
+      safeLocalStorage.removeItem('futquina_current_group_id_offline');
+    }
+  }, [currentGroupId]);
   const [showNewGroupModal, setShowNewGroupModal] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
   const [selectedGroupOptions, setSelectedGroupOptions] = useState<{ id: string, name: string } | null>(null);
