@@ -4415,7 +4415,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     <Eye size={20} />
                   </button>
                   <div className="text-zinc-500 text-xs font-bold font-mono tracking-tighter">Ranking</div>
-                  <div className="flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-brand-text-secondary">
+                  <div className={`flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-brand-text-secondary ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
                     <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'assistencias' ? '' : 'opacity-0'}`}><Trophy size={14} /> Gols</div>
                     <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'artilharia' ? '' : 'opacity-0'}`}><Award size={14} /> Ass</div>
                   </div>
@@ -4455,7 +4455,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       {player.name}
                     </div>
 
-                    <div className="flex gap-4 sm:gap-8 shrink-0">
+                    <div className={`flex gap-4 sm:gap-8 shrink-0 ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
                       <div className={`w-12 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'assistencias' ? 'opacity-0' : ''}`}>{player.goals}</div>
                       <div className={`w-12 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'artilharia' ? 'opacity-0' : ''}`}>{player.assists}</div>
                     </div>
