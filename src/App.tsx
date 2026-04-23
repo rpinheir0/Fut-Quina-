@@ -3725,45 +3725,45 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             className="p-2 rounded-lg transition-all active:scale-90 hover:bg-zinc-200"
                             title="Configurações"
                           >
-                            <Settings size={20} className="text-zinc-400" />
+                            <Settings size={20} className="text-brand-text-primary" />
                           </button>
-                          <div className="flex gap-2">
-                            <button
-                              onClick={() => {
-                                if (match.isActive && !match.hasEnded) return;
-                                if (teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2) return;
-                                
-                                setShowLogoAnimation(true);
-                                setTimeout(() => {
-                                randomizeTeams(match.config.playersPerTeam);
-                                  setShowLogoAnimation(false);
-                                  sounds.playDrawFinished();
-                                  setToast({ message: "Times sorteados com sucesso!", type: 'success' });
-                                }, 3000);
-                              }}
-                              disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
-                              className="px-4 py-2 bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest text-[10px] rounded-full shadow-lg hover:opacity-90 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 relative overflow-hidden"
-                            >
-                              <Shuffle size={12} className="relative z-10" />
-                              <span className="relative z-10">Sortear</span>
-                            </button>
-                            <button
-                              onClick={() => {
-                                if (match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
-                                    (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
-                                    teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) {
-                                  startNextMatch(match.teamAIndex, match.teamBIndex);
-                                }
-                              }}
-                              disabled={!((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
-                                (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
-                                 teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)))}
-                              className="px-4 py-2 bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest text-[10px] rounded-full shadow-lg hover:opacity-90 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 relative overflow-hidden"
-                            >
-                              <Play size={12} fill="currentColor" className="relative z-10" />
-                              <span className="relative z-10">Iniciar</span>
-                            </button>
-                          </div>
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => {
+                                  if (match.isActive && !match.hasEnded) return;
+                                  if (teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2) return;
+                                  
+                                  setShowLogoAnimation(true);
+                                  setTimeout(() => {
+                                  randomizeTeams(match.config.playersPerTeam);
+                                    setShowLogoAnimation(false);
+                                    sounds.playDrawFinished();
+                                    setToast({ message: "Times sorteados com sucesso!", type: 'success' });
+                                  }, 3000);
+                                }}
+                                disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
+                                className="p-2 rounded-lg transition-all active:scale-90 hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+                              >
+                                <Shuffle size={20} className="text-brand-text-primary" />
+                                <span className="text-[10px] font-black uppercase tracking-widest text-brand-text-primary">Sortear</span>
+                              </button>
+                              <button
+                                onClick={() => {
+                                  if (match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
+                                      (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
+                                      teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) {
+                                    startNextMatch(match.teamAIndex, match.teamBIndex);
+                                  }
+                                }}
+                                disabled={!((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
+                                  (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
+                                   teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)))}
+                                className="p-2 rounded-lg transition-all active:scale-90 hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+                              >
+                                <Play size={20} fill="currentColor" className="text-brand-text-primary" />
+                                <span className="text-[10px] font-black uppercase tracking-widest text-brand-text-primary">Iniciar</span>
+                              </button>
+                            </div>
                         </div>
                         <div className="space-y-4">
                           {teams.length < 2 ? (
