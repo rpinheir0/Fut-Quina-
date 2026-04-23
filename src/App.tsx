@@ -2751,7 +2751,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
               <section className="rounded-2xl overflow-hidden bg-brand-card/50 border border-brand-border">
                 {players.length === 0 ? (
-                  <div className="text-center py-12 opacity-50 text-brand-text-secondary text-xs">Nenhum jogador adicionado ainda.</div>
+                  <div className="text-center py-12 opacity-50 text-brand-text-secondary text-xs normal-case">Nenhum jogador adicionado ainda.</div>
                 ) : (
                   <div className="divide-y divide-brand-border">
                     {players.map((player) => (
@@ -3078,7 +3078,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {players.filter(p => sessionPlayerIds.includes(p.id)).length === 0 ? (
                             <div className="col-span-full py-12 text-center border border-dashed border-white/5 rounded-xl flex flex-col items-center gap-4">
-                              <p className="text-xs font-bold text-brand-text-secondary uppercase tracking-widest">Nenhum jogador na sessão</p>
+                              <p className="text-xs font-bold text-brand-text-secondary normal-case">Nenhum jogador na sessão</p>
                               <button 
                                 onClick={() => {
                                   if (players.length < 2) {
@@ -3184,7 +3184,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           <div className="py-12 text-center border border-dashed border-white/5 rounded-3xl flex flex-col items-center gap-4">
                             {players.filter(p => p.isAvailable).length === 0 ? (
                               <>
-                                <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">
+                                <p className="text-xs font-bold text-zinc-500 normal-case">
                                   Nenhum jogador presente
                                 </p>
                                 <button
@@ -3741,7 +3741,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="space-y-4">
                           {teams.length < 2 ? (
                             <div className="py-12 text-center border border-dashed border-zinc-200 rounded-xl flex flex-col items-center gap-4">
-                              <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">Crie mais times para ver a fila</p>
+                              <p className="text-xs font-bold text-zinc-500 normal-case">Crie mais times para ver a fila</p>
                               <button
                                 onClick={() => {
                                   if (players.filter(p => sessionPlayerIds.includes(p.id)).length > 0) {
@@ -4398,7 +4398,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   </div>
                 ))}
                 {players.length === 0 && (
-                  <div className="p-8 text-center text-brand-text-secondary text-sm font-bold uppercase tracking-widest">
+                  <div className="p-8 text-center text-brand-text-secondary text-sm font-bold normal-case">
                     Nenhum jogador registrado ainda.
                   </div>
                 )}
@@ -4874,7 +4874,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           })}
                           {players.length === 0 && (
                             <tr>
-                              <td colSpan={14} className="p-4 text-center text-zinc-400 italic">
+                              <td colSpan={14} className="p-4 text-center text-zinc-400 italic normal-case">
                                 Nenhum jogador cadastrado.
                               </td>
                             </tr>
@@ -6268,7 +6268,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <div className="max-h-48 overflow-y-auto space-y-2 pr-2 custom-scrollbar">
                     {players.filter(p => p.isAvailable && !teams.flatMap(t => t.playerIds).includes(p.id)).length === 0 ? (
                       <div className="py-4 text-center border border-dashed border-white/10 rounded-lg opacity-40">
-                        <p className="text-xs font-bold">Nenhum jogador livre</p>
+                        <p className="text-xs font-bold normal-case">Nenhum jogador livre</p>
                       </div>
                     ) : (
                       players.filter(p => p.isAvailable && !teams.flatMap(t => t.playerIds).includes(p.id)).map((p) => (

@@ -144,7 +144,6 @@
 @layer base {
   body {
     @apply bg-brand-dark text-brand-text-primary antialiased selection:bg-brand-dark selection:text-brand-primary;
-    text-transform: uppercase;
     font-size: 1.1rem;
   }
   
