@@ -6894,17 +6894,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen font-sans transition-colors duration-300 flex flex-col justify-center p-4" style={{ backgroundColor: '#315130' }}>
-      <div className="w-full max-w-md mx-auto p-8 space-y-12 rounded-2xl shadow-2xl border" style={{ background: '#14301F', borderColor: '#E3D39E' }}>
-        <div className="flex items-center justify-center mb-4">
-          <div className="flex flex-col items-center gap-4 text-center">
-            <SpinningBall size="lg" spin={true} />
-            <FutQuinaLogo size="md" colorClass="" style={{ color: '#315130', fontStyle: 'normal', fontFamily: 'system-ui', fontWeight: '900', WebkitTextStroke: '1px #E3D39E' }} />
-          </div>
+      <div className="w-full max-w-md mx-auto flex items-center justify-center mb-8 mt-4">
+        <div className="flex flex-row items-center gap-3 text-center">
+          <SpinningBall size="md" spin={true} />
+          <FutQuinaLogo size="md" colorClass="" style={{ color: '#E3D39E', fontStyle: 'normal', fontFamily: 'system-ui', fontWeight: '900' }} />
         </div>
+      </div>
 
+      <div className="w-full max-w-md mx-auto p-8 rounded-2xl shadow-2xl border" style={{ background: '#14301F', borderColor: '#E3D39E' }}>
         <div className="space-y-6">
-          <h2 className="text-base font-normal tracking-widest text-center" style={{ color: '#E3D39E', opacity: 0.9, fontFamily: 'Roboto, sans-serif' }}>Futebol mais competitivo e organizado.</h2>
-          
           <TutorialCarousel />
           
           {groups.length > 0 && (
@@ -6913,7 +6911,7 @@ export default function App() {
                 <div key={`${group.id}-${index}`} className="flex items-center gap-2">
                   <button
                     onClick={() => setSelectedGroupOptions({ id: group.id, name: group.name })}
-                    className="flex-1 p-4 transition-all flex items-center justify-center relative group rounded-xl border"
+                    className="flex-1 p-4 transition-all flex items-center justify-center relative group rounded-md border"
                     style={{ backgroundColor: '#14301F', borderColor: '#E3D39E', color: '#E3D39E' }}
                   >
                     <span className="text-lg font-normal text-center w-full px-8" style={{ fontFamily: 'system-ui' }}>{group.name}</span>
@@ -6926,8 +6924,7 @@ export default function App() {
 
           <button
             onClick={() => setShowNewGroupModal(true)}
-            className="w-full p-4 rounded-full font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 transition-all shadow-md hover:scale-[1.02] active:scale-[0.98]"
-            style={{ backgroundColor: '#A3D900', color: '#1E3D2F' }}
+            className="w-full p-4 rounded-full font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 btn-silver-3d"
           >
             <Plus size={16} />
             Criar Partida
