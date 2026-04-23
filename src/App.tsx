@@ -2102,6 +2102,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       loserIndex,
       winnerId: winnerIndex !== -1 ? teams[winnerIndex]?.id : null,
       loserId: loserIndex !== -1 ? teams[loserIndex]?.id : null,
+      events: match.events,
       timestamp: Date.now()
     };
 
@@ -3260,7 +3261,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                 <stop offset="100%" stopColor={teams[lastMatchResult.teamAIndex]?.color || TEAM_COLORS[0]} stopOpacity="0.85" />
                                               </linearGradient>
                                             </defs>
-                                            <path fill="url(#shield-grad-A-last)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(0,0,0,0.1)" strokeWidth="1" />
+                                            <path fill="url(#shield-grad-A-last)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="white" strokeWidth="1.5" />
                                             <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.15" />
                                           </svg>
                                         </div>
@@ -3269,7 +3270,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                         </div>
                                       </div>
                                       
-                                      <div className="text-sm font-black text-brand-text-secondary opacity-50 uppercase tracking-widest italic">vs</div>
+                                      <div className="text-sm font-black text-brand-text-secondary opacity-50 uppercase tracking-widest">vs</div>
                                       
                                       <div className="flex-1 flex flex-col items-center text-center space-y-1">
                                         <div className="w-10 h-10 flex items-center justify-center shrink-0">
@@ -3280,7 +3281,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                 <stop offset="100%" stopColor={teams[lastMatchResult.teamBIndex]?.color || TEAM_COLORS[1]} stopOpacity="0.85" />
                                               </linearGradient>
                                             </defs>
-                                            <path fill="url(#shield-grad-B-last)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(0,0,0,0.1)" strokeWidth="1" />
+                                            <path fill="url(#shield-grad-B-last)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="white" strokeWidth="1.5" />
                                             <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.15" />
                                           </svg>
                                         </div>
@@ -3717,7 +3718,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         )}
                       </div>
                     ) : teamsTab === 'proximos' ? (
-                      <div className="space-y-6 relative overflow-hidden bg-zinc-100 p-6 rounded-xl border border-zinc-200">
+                      <div className="space-y-6 relative overflow-hidden bg-gradient-to-br from-zinc-50 to-zinc-200 p-6 rounded-3xl border border-zinc-300 shadow-inner">
                         
                         <div className="flex justify-between items-center relative z-10">
                           <button 
@@ -4101,7 +4102,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                 >
                                                 <div className="flex items-center gap-2 ml-auto overflow-hidden">
                                                   <span className="text-[11px] sm:text-[10px] font-bold uppercase truncate text-black">{p.name}</span>
-                                                  <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-300 flex items-center justify-center shrink-0 border border-zinc-400">
+                                                  <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 border border-zinc-300">
                                                     {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <User size={10} className="text-black" />}
                                                   </div>
                                                 </div>
