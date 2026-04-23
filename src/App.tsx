@@ -6897,13 +6897,13 @@ export default function App() {
       <div className="w-full max-w-md mx-auto p-8 space-y-12">
         <div className="flex items-center justify-center mb-4">
           <div className="flex flex-col items-center gap-4 text-center">
-            <SpinningBall size="lg" spin={false} />
+            <SpinningBall size="lg" spin={true} />
             <FutQuinaLogo size="lg" colorClass="" style={{ color: '#ffffff', fontStyle: 'normal', fontFamily: 'system-ui', fontWeight: '900' }} />
           </div>
         </div>
 
         <div className="space-y-6">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-center" style={{ color: '#FFFFFF', opacity: 0.9, fontWeight: 'bold', fontFamily: '"Silkscreen", monospace' }}>Crie suas partidas</h2>
+          <h2 className="text-sm font-bold uppercase tracking-widest text-center" style={{ color: '#FFFFFF', opacity: 0.9, fontWeight: 'bold', fontFamily: '"Silkscreen", monospace' }}>Futebol mais competitivo e organizado.</h2>
           
           {groups.length === 0 ? (
             <TutorialCarousel />
@@ -6913,10 +6913,10 @@ export default function App() {
                 <div key={`${group.id}-${index}`} className="flex items-center gap-2">
                   <button
                     onClick={() => setSelectedGroupOptions({ id: group.id, name: group.name })}
-                    className="flex-1 p-4 transition-all flex items-center justify-center relative group rounded-full border border-zinc-300 bg-[#f4f4f4]"
+                    className="flex-1 p-4 transition-all flex items-center justify-center relative group rounded-full border border-zinc-300 bg-gradient-to-br from-zinc-100 to-zinc-300"
                     style={{ color: '#1E3D2F' }}
                   >
-                    <span className="text-xs leading-[14px] text-center w-full px-8" style={{ fontWeight: 'bold', fontFamily: 'system-ui' }}>{group.name}</span>
+                    <span className="text-lg font-normal text-center w-full px-8" style={{ fontFamily: 'system-ui' }}>{group.name}</span>
                     <ChevronRight size={20} className="absolute right-4 transition-colors opacity-70 group-hover:opacity-100" />
                   </button>
                 </div>
@@ -6930,7 +6930,7 @@ export default function App() {
             style={{ backgroundColor: '#A3D900', color: '#1E3D2F' }}
           >
             <Plus size={16} />
-            Nova Partida
+            Criar Partida
           </button>
         </div>
       </div>
