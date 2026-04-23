@@ -389,16 +389,6 @@ const GoalCelebration = ({ isOpen, scorerName, teamName, scorerPhoto }: { isOpen
   const theme = 'light';
   if (!isOpen) return null;
 
-  // Generate some random particles
-  const particles = Array.from({ length: 15 }).map((_, i) => ({
-    id: i,
-    size: Math.random() * 10 + 5,
-    delay: Math.random() * 0.5,
-    duration: Math.random() * 2 + 1,
-    angle: Math.random() * 360,
-    distance: Math.random() * 300 + 100,
-  }));
-
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -422,28 +412,6 @@ const GoalCelebration = ({ isOpen, scorerName, teamName, scorerPhoto }: { isOpen
           transition={{ duration: 0.5 }}
           className="absolute inset-0 bg-white z-[2100] pointer-events-none rounded-full"
         />
-
-        {/* Particles Explosion */}
-        {particles.map((p) => (
-          <motion.div
-            key={`particle-${p.id}`}
-            initial={{ scale: 0, x: 0, y: 0, opacity: 1 }}
-            animate={{ 
-              x: Math.cos(p.angle) * p.distance,
-              y: Math.sin(p.angle) * p.distance,
-              scale: 0,
-              opacity: 0,
-              rotate: 360
-            }}
-            transition={{ 
-              duration: p.duration, 
-              delay: p.delay, 
-              ease: "easeOut" 
-            }}
-            className="absolute w-2 h-2 bg-brand-primary rounded-full z-[1900]"
-            style={{ width: p.size, height: p.size }}
-          />
-        ))}
 
         {/* Animated Background Pulse */}
         <motion.div 
