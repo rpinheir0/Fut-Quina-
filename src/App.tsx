@@ -6835,6 +6835,24 @@ export default function App() {
     safeLocalStorage.setItem('futquina_groups_offline', JSON.stringify(groups));
   }, [groups]);
 
+  // Prevent reloading or pull-to-refresh when inside a match (not in main menu)
+  useEffect(() => {
+    if (currentGroupId) {
+      const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+        e.preventDefault();
+        e.returnValue = '';
+      };
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      document.body.style.overscrollBehaviorY = 'none';
+      return () => {
+        window.removeEventListener('beforeunload', handleBeforeUnload);
+        document.body.style.overscrollBehaviorY = 'auto';
+      };
+    } else {
+      document.body.style.overscrollBehaviorY = 'auto';
+    }
+  }, [currentGroupId]);
+
   if (currentGroupId) {
     return <GroupApp groupId={currentGroupId} onBackToHome={() => setCurrentGroupId(null)} />;
   }
