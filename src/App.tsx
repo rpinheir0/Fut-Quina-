@@ -6893,28 +6893,28 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen font-sans transition-colors duration-300 flex flex-col justify-center" style={{ background: '#14301F', color: '#FFFFFF' }}>
-      <div className="w-full max-w-md mx-auto p-8 space-y-12">
+    <div className="min-h-screen font-sans transition-colors duration-300 flex flex-col justify-center p-4" style={{ backgroundColor: '#315130' }}>
+      <div className="w-full max-w-md mx-auto p-8 space-y-12 rounded-2xl shadow-2xl border" style={{ background: '#14301F', borderColor: '#E3D39E' }}>
         <div className="flex items-center justify-center mb-4">
           <div className="flex flex-col items-center gap-4 text-center">
             <SpinningBall size="lg" spin={true} />
-            <FutQuinaLogo size="lg" colorClass="" style={{ color: '#ffffff', fontStyle: 'normal', fontFamily: 'system-ui', fontWeight: '900' }} />
+            <FutQuinaLogo size="md" colorClass="" style={{ color: '#315130', fontStyle: 'normal', fontFamily: 'system-ui', fontWeight: '900', WebkitTextStroke: '1px #E3D39E' }} />
           </div>
         </div>
 
         <div className="space-y-6">
-          <h2 className="text-sm font-bold uppercase tracking-widest text-center" style={{ color: '#FFFFFF', opacity: 0.9, fontWeight: 'bold', fontFamily: '"Silkscreen", monospace' }}>Futebol mais competitivo e organizado.</h2>
+          <h2 className="text-base font-normal tracking-widest text-center" style={{ color: '#E3D39E', opacity: 0.9, fontFamily: 'Roboto, sans-serif' }}>Futebol mais competitivo e organizado.</h2>
           
-          {groups.length === 0 ? (
-            <TutorialCarousel />
-          ) : (
+          <TutorialCarousel />
+          
+          {groups.length > 0 && (
             <div className="space-y-3">
               {groups.map((group, index) => (
                 <div key={`${group.id}-${index}`} className="flex items-center gap-2">
                   <button
                     onClick={() => setSelectedGroupOptions({ id: group.id, name: group.name })}
-                    className="flex-1 p-4 transition-all flex items-center justify-center relative group rounded-full border border-zinc-300 bg-gradient-to-br from-zinc-100 to-zinc-300"
-                    style={{ color: '#1E3D2F' }}
+                    className="flex-1 p-4 transition-all flex items-center justify-center relative group rounded-xl border"
+                    style={{ backgroundColor: '#14301F', borderColor: '#E3D39E', color: '#E3D39E' }}
                   >
                     <span className="text-lg font-normal text-center w-full px-8" style={{ fontFamily: 'system-ui' }}>{group.name}</span>
                     <ChevronRight size={20} className="absolute right-4 transition-colors opacity-70 group-hover:opacity-100" />
@@ -7071,7 +7071,7 @@ export default function App() {
               value={newGroupName}
               onChange={e => setNewGroupName(e.target.value)}
               placeholder="Ex: Futebol de Quinta"
-              className="w-full p-4 rounded-xl mb-6 outline-none font-bold bg-white text-zinc-800 placeholder:text-zinc-400"
+              className="w-full p-4 rounded-xl mb-6 outline-none font-bold bg-white text-zinc-800 placeholder:text-zinc-400 placeholder:text-sm text-base"
               autoFocus
             />
             <div className="flex gap-3">
