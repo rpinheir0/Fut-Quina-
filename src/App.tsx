@@ -6894,26 +6894,28 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen font-sans transition-colors duration-300 flex flex-col justify-center p-2 sm:p-4" style={{ backgroundColor: '#315130' }}>
-      <div className="w-full max-w-md mx-auto p-4 sm:p-8 rounded-2xl shadow-2xl border" style={{ background: '#14301F', borderColor: '#E3D39E' }}>
-        <div className="flex flex-row items-center justify-center gap-3 text-center mb-6 sm:mb-8">
+    <div className="min-h-screen font-sans transition-colors duration-300 flex flex-col justify-center p-0 pt-4 pb-4 sm:p-4" style={{ backgroundColor: '#315130' }}>
+      <div className="w-[96%] sm:w-full max-w-md mx-auto px-5 py-10 sm:p-8 rounded-2xl shadow-2xl border flex flex-col min-h-[85vh] sm:min-h-0 justify-between" style={{ background: '#14301F', borderColor: '#E3D39E' }}>
+        <div className="flex flex-row items-center justify-center gap-3 text-center mb-8 sm:mb-8 mt-2 sm:mt-0">
           <SpinningBall size="md" spin={true} />
           <FutQuinaLogo size="md" colorClass="" style={{ color: '#E3D39E', fontStyle: 'normal', fontFamily: 'system-ui', fontWeight: '900' }} />
         </div>
 
-        <div className="space-y-5 sm:space-y-6">
-          <TutorialCarousel />
+        <div className="space-y-8 sm:space-y-6 flex-1 flex flex-col justify-center">
+          <div className="transform sm:scale-100 scale-105 origin-center w-full max-w-[95%] sm:max-w-full mx-auto">
+            <TutorialCarousel />
+          </div>
           
           {groups.length > 0 && (
-            <div className="space-y-3">
+            <div className="space-y-4 sm:space-y-3 pt-4 sm:pt-0">
               {groups.map((group, index) => (
                 <div key={`${group.id}-${index}`} className="flex items-center gap-2">
                   <button
                     onClick={() => setSelectedGroupOptions({ id: group.id, name: group.name })}
-                    className="flex-1 p-4 transition-all flex items-center justify-center relative group rounded-full border"
+                    className="flex-1 p-5 sm:p-4 transition-all flex items-center justify-center relative group rounded-full border"
                     style={{ backgroundColor: '#14301F', borderColor: '#E3D39E', color: '#E3D39E' }}
                   >
-                    <span className="text-lg font-normal text-center w-full px-8" style={{ fontFamily: 'system-ui' }}>{group.name}</span>
+                    <span className="text-xl sm:text-lg font-normal text-center w-full px-8" style={{ fontFamily: 'system-ui' }}>{group.name}</span>
                     <ChevronRight size={20} className="absolute right-4 transition-colors opacity-70 group-hover:opacity-100" />
                   </button>
                 </div>
@@ -6921,13 +6923,15 @@ export default function App() {
             </div>
           )}
 
-          <button
-            onClick={() => setShowNewGroupModal(true)}
-            className="w-full p-4 rounded-full font-black uppercase tracking-widest text-xs flex items-center justify-center gap-2 btn-silver-3d"
-          >
-            <Plus size={16} />
-            Criar Partida
-          </button>
+          <div className="pt-8 sm:pt-4">
+            <button
+              onClick={() => setShowNewGroupModal(true)}
+              className="w-full p-5 sm:p-4 rounded-full font-black uppercase tracking-widest text-xs sm:text-xs flex items-center justify-center gap-2 btn-silver-3d"
+            >
+              <Plus size={16} />
+              Criar Partida
+            </button>
+          </div>
         </div>
       </div>
 
