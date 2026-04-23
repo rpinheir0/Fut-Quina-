@@ -55,7 +55,8 @@ import {
   Home,
   Eye,
   Award,
-  LogOut
+  LogOut,
+  Contact
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
@@ -1521,6 +1522,35 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     setPlayers(prev => [...prev, newPlayer]);
   };
 
+  const handleImportContacts = async () => {
+    if (!('contacts' in navigator && 'select' in (navigator as any).contacts)) {
+      setToast({ message: "Seu dispositivo não suporta importação de contatos.", type: 'info' });
+      return;
+    }
+
+    try {
+      const props = ['name'];
+      const opts = { multiple: true };
+      const contacts = await (navigator as any).contacts.select(props, opts);
+      
+      if (contacts && contacts.length > 0) {
+        let addedCount = 0;
+        contacts.forEach((contact: any) => {
+          const contactName = contact.name && contact.name[0];
+          if (contactName) {
+            addPlayer(contactName);
+            addedCount++;
+          }
+        });
+        if (addedCount > 0) {
+          setToast({ message: `${addedCount} contatos importados!`, type: 'success' });
+        }
+      }
+    } catch (err) {
+      console.error('Contact Picker Error:', err);
+    }
+  };
+
   const addBulkPlayers = (text: string) => {
     const lines = text.split('\n');
     const newPlayers: Player[] = [];
@@ -2655,6 +2685,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         }
                       }}
                     />
+                    <button 
+                      onClick={handleImportContacts}
+                      className="p-2 bg-brand-card text-brand-text-primary rounded-2xl shadow hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square"
+                      title="Importar dos Contatos"
+                    >
+                      <Contact size={18} />
+                    </button>
                     <button 
                       onClick={() => {
                         const input = document.querySelector('input') as HTMLInputElement;
