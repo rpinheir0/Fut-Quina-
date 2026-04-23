@@ -3401,12 +3401,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.15" />
                                     </svg>
                                   </button>
-                                  <button 
-                                    onClick={() => (match.isActive && !match.isPaused) && setShowEventModal({ team: 'A' })}
-                                    className={`text-4xl sm:text-7xl font-black transition-all hover:scale-110 active:scale-95 origin-center cursor-pointer text-black ${(!match.isActive || match.isPaused) ? 'cursor-default opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-[20px] bg-white border-b-4 border-zinc-300 shadow-sm`}
+                                  <div 
+                                    className={`text-4xl sm:text-7xl font-black origin-center text-black ${(!match.isActive || match.isPaused) ? 'opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-[20px] bg-white border-b-4 border-zinc-300 shadow-sm`}
                                   >
                                     {match.scoreA}
-                                  </button>
+                                  </div>
                                   <span className="text-[7px] sm:text-[9px] font-black uppercase tracking-widest text-[#1E3D2F] opacity-60 truncate max-w-[80px] sm:max-w-[120px] px-1 text-center">{teams[match.teamAIndex]?.name}</span>
                               </div>
                               
@@ -3491,12 +3490,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.15" />
                                     </svg>
                                   </button>
-                                  <button 
-                                    onClick={() => (match.isActive && !match.isPaused) && setShowEventModal({ team: 'B' })}
-                                    className={`text-4xl sm:text-7xl font-black transition-all hover:scale-110 active:scale-95 origin-center cursor-pointer text-black ${(!match.isActive || match.isPaused) ? 'cursor-default opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-[20px] bg-white border-b-4 border-zinc-300 shadow-sm`}
+                                  <div 
+                                    className={`text-4xl sm:text-7xl font-black origin-center text-black ${(!match.isActive || match.isPaused) ? 'opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-[20px] bg-white border-b-4 border-zinc-300 shadow-sm`}
                                   >
                                     {match.scoreB}
-                                  </button>
+                                  </div>
                                   <span className="text-[7px] sm:text-[9px] font-black uppercase tracking-widest text-[#1E3D2F] opacity-60 truncate max-w-full px-1">{teams[match.teamBIndex]?.name}</span>
                               </div>
                             </div>
