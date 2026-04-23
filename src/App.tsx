@@ -3350,7 +3350,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     </div>
                                   </div>
                                 ) : (
-                                  <p className="text-xs font-bold text-brand-primary uppercase tracking-widest">
+                                  <p className="text-xs font-medium text-zinc-400">
                                     Agora você está pronto para iniciar uma partida
                                   </p>
                                 )}
@@ -6707,22 +6707,22 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <div className="space-y-2">
                   <h3 className="text-xl font-black uppercase tracking-tighter text-black">Tudo Pronto!</h3>
                   <p className="text-xs font-medium leading-relaxed text-zinc-600">
-                    Agora você está na tela de <strong className="text-brand-primary">Ordem de Chegada</strong>. Siga estes passos para organizar sua partida:
+                    Siga estes passos simples para organizar suas partidas:
                   </p>
                 </div>
 
                 <div className="w-full space-y-3 text-left">
                   <div className="flex gap-3">
                     <div className="w-6 h-6 rounded-full bg-brand-primary text-black text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm">1</div>
-                    <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-700">Toque nos jogadores para marcar a ordem de chegada (Verde = Presente).</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-700">Confirme a presença dos jogadores tocando em seus nomes (Verde = Confirmado).</p>
                   </div>
                   <div className="flex gap-3">
                     <div className="w-6 h-6 rounded-full bg-brand-primary text-black text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm">2</div>
-                    <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-700">Os times são formados AUTOMATICAMENTE conforme a ordem (Time A, Time B...).</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-700">O app organiza os times automaticamente com base na ordem de entrada.</p>
                   </div>
                   <div className="flex gap-3">
                     <div className="w-6 h-6 rounded-full bg-brand-primary text-black text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm">3</div>
-                    <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-700">Finalize indo para a aba <strong className="text-brand-primary">Próximos</strong> para selecionar quem inicia o jogo.</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-700">Toque em "Pronto" para ir à tela de confrontos e iniciar o sorteio ou o jogo.</p>
                   </div>
                 </div>
 
