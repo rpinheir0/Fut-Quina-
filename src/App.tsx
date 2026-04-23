@@ -137,10 +137,10 @@ interface Team {
 
 const TEAM_EMOJIS = ['🛡️', '⚔️', '🔰', '⚜️', '🔱', '🎖️', '🏅', '🥇', '🦅', '🦁', '⭐', '🔥', '🐉', '🌪️', '⚡', '🏆', '⚓', '👑', '🦈', '🐺'];
 const TEAM_COLORS = [
-  '#3b82f6', '#ef4444', '#22c55e', '#a855f7', '#f97316', 
-  '#eab308', '#ec4899', '#14b8a6', '#06b6d4', '#84cc16', 
-  '#6366f1', '#f43f5e', '#f59e0b', '#10b981', '#d946ef', 
-  '#0ea5e9', '#8b5cf6', '#6b7280', '#ffffff', '#1a1a1a'
+  '#3b82f6', '#ef4444', '#22c55e', '#f97316', 
+  '#eab308', '#14b8a6', '#06b6d4', '#84cc16', 
+  '#f59e0b', '#10b981', '#0ea5e9', '#6b7280', 
+  '#ffffff', '#1a1a1a'
 ];
 
 const TutorialCarousel = () => {
@@ -2606,7 +2606,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 bg-brand-primary/20`}>
                 <Info size={24} className="text-brand-primary" />
               </div>
-              <p className="text-sm font-black uppercase tracking-widest leading-tight text-center text-zinc-500">
+              <p className="text-sm font-black tracking-widest leading-tight text-center text-zinc-500">
                 {toast.message}
               </p>
               <button 
@@ -5427,9 +5427,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               className="w-full max-w-xs rounded-xl border shadow-md overflow-hidden bg-zinc-100 border-zinc-200"
             >
               <div className="bg-brand-primary p-6 text-center">
-                <div className="inline-flex p-2 rounded-full bg-black/10 mb-2">
-                  <Heart size={20} className="text-black" />
-                </div>
                 <h3 className="text-sm font-black uppercase tracking-tighter text-black">Quem deu a assistência?</h3>
                 <p className="text-[10px] text-black/70 font-bold mt-1 uppercase tracking-widest">
                   Gol de <span className="text-black underline decoration-2 underline-offset-2">{players.find(p => p.id === showAssistSelection.scorerId)?.name}</span>
