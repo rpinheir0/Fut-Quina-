@@ -3191,7 +3191,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     : 'bg-zinc-200 border-zinc-300 opacity-100'
                                 }`}
                               >
-                                <div className={`w-8 h-8 rounded-full ${p.isAvailable ? 'bg-black/10' : 'bg-zinc-300'} flex items-center justify-center overflow-hidden border ${p.isAvailable ? 'border-black/20' : 'border-zinc-400'}`}>
+                                <div className={`w-8 h-8 rounded-full ${p.isAvailable ? 'bg-black/10' : 'bg-zinc-100'} flex items-center justify-center overflow-hidden border ${p.isAvailable ? 'border-black/20' : 'border-zinc-300'}`}>
                                   {p.photo ? (
                                     <img src={p.photo} alt="P" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                                   ) : (
