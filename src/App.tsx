@@ -6894,14 +6894,14 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen font-sans transition-colors duration-300 flex flex-col justify-center p-4" style={{ backgroundColor: '#315130' }}>
-      <div className="w-full max-w-md mx-auto p-8 rounded-2xl shadow-2xl border" style={{ background: '#14301F', borderColor: '#E3D39E' }}>
-        <div className="flex flex-row items-center justify-center gap-3 text-center mb-8">
+    <div className="min-h-screen font-sans transition-colors duration-300 flex flex-col justify-center p-2 sm:p-4" style={{ backgroundColor: '#315130' }}>
+      <div className="w-full max-w-md mx-auto p-4 sm:p-8 rounded-2xl shadow-2xl border" style={{ background: '#14301F', borderColor: '#E3D39E' }}>
+        <div className="flex flex-row items-center justify-center gap-3 text-center mb-6 sm:mb-8">
           <SpinningBall size="md" spin={true} />
           <FutQuinaLogo size="md" colorClass="" style={{ color: '#E3D39E', fontStyle: 'normal', fontFamily: 'system-ui', fontWeight: '900' }} />
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-5 sm:space-y-6">
           <TutorialCarousel />
           
           {groups.length > 0 && (
@@ -7066,7 +7066,7 @@ export default function App() {
               type="text"
               value={newGroupName}
               onChange={e => setNewGroupName(e.target.value)}
-              placeholder="Ex: Futebol de Quinta"
+              placeholder=""
               className="w-full p-4 rounded-xl mb-6 outline-none font-bold bg-white text-zinc-800 placeholder:text-zinc-400 placeholder:text-sm text-base"
               autoFocus
             />
