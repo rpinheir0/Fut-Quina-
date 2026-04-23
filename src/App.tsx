@@ -730,9 +730,24 @@ const formatPlayerName = (name: string) => {
   return `${firstName} ${lastInitial}.`;
 };
 
-const SpinningBall = ({ size = "md", className = "", spin = true }: { size?: 'sm' | 'md' | 'lg', className?: string, spin?: boolean }) => {
+const SpinningBall = ({ 
+  size = "md", 
+  className = "", 
+  spin = true,
+  color = "#39FF14",
+  patternColor = "#000000",
+  isIcon = false
+}: { 
+  size?: 'xs' | 'sm' | 'md' | 'lg', 
+  className?: string, 
+  spin?: boolean,
+  color?: string,
+  patternColor?: string,
+  isIcon?: boolean
+}) => {
   const theme = 'light';
   const sizeClasses = {
+    xs: "w-[18px] h-[18px]",
     sm: "w-6 h-6",
     md: "w-8 h-8",
     lg: "w-16 h-16"
@@ -746,13 +761,14 @@ const SpinningBall = ({ size = "md", className = "", spin = true }: { size?: 'sm
         duration: 2, 
         ease: "linear" 
       } : {}}
-      className={`${sizeClasses[size]} rounded-full bg-[#39FF14] relative flex items-center justify-center z-10 ${className}`}
+      className={`${sizeClasses[size]} rounded-full relative flex items-center justify-center z-10 ${className}`}
+      style={{ backgroundColor: color }}
     >
       {/* Ball pattern */}
-      <div className="absolute inset-0 rounded-full border-2 border-black/20 overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-full bg-black/10" />
-        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full h-0.5 bg-black/10" />
-        <div className="absolute inset-0 border-[6px] border-transparent border-t-black/5 rounded-full" />
+      <div className="absolute inset-0 rounded-full border-2 overflow-hidden" style={{ borderColor: isIcon ? patternColor : 'rgba(0,0,0,0.2)' }}>
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-full" style={{ backgroundColor: patternColor, opacity: isIcon ? 0.8 : 0.1 }} />
+        <div className="absolute top-1/2 left-0 -translate-y-1/2 w-full h-0.5" style={{ backgroundColor: patternColor, opacity: isIcon ? 0.8 : 0.1 }} />
+        <div className="absolute inset-0 border-[6px] border-transparent rounded-full" style={{ borderTopColor: patternColor, opacity: isIcon ? 0.7 : 0.05 }} />
       </div>
     </motion.div>
   );
@@ -3111,7 +3127,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {players.filter(p => sessionPlayerIds.includes(p.id)).length === 0 ? (
                             <div className="col-span-full py-12 text-center border border-dashed border-white/5 rounded-xl flex flex-col items-center gap-4">
-                              <p className="text-xs font-bold text-brand-text-secondary normal-case">Nenhum jogador na sessão</p>
+                              <p className="text-base text-brand-text-secondary normal-case">Nenhum jogador na sessão</p>
                               <button 
                                 onClick={() => {
                                   if (players.length < 2) {
@@ -3217,7 +3233,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           <div className="py-12 text-center border border-dashed border-white/5 rounded-3xl flex flex-col items-center gap-4">
                             {players.filter(p => p.isAvailable).length === 0 ? (
                               <>
-                                <p className="text-xs font-bold text-zinc-500 normal-case">
+                                <p className="text-base text-zinc-500 normal-case">
                                   Nenhum jogador presente
                                 </p>
                                 <button
@@ -3774,7 +3790,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="space-y-4">
                           {teams.length < 2 ? (
                             <div className="py-12 text-center border border-dashed border-zinc-200 rounded-xl flex flex-col items-center gap-4">
-                              <p className="text-xs font-bold text-zinc-500 normal-case">Crie mais times para ver a fila</p>
+                              <p className="text-base text-zinc-500 normal-case">Crie mais times para ver a fila</p>
                               <button
                                 onClick={() => {
                                   if (players.filter(p => sessionPlayerIds.includes(p.id)).length > 0) {
@@ -6526,7 +6542,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   : 'text-white/70 hover:text-white hover:bg-white/5'
               }`}
             >
-              <Swords size={18} className="mb-1" />
+              <SpinningBall 
+                size="xs" 
+                spin={false} 
+                color="transparent"
+                patternColor="currentColor"
+                isIcon={true}
+                className="mb-1" 
+              />
               <span className="text-[10px] font-black lowercase first-letter:uppercase tracking-wider leading-none">Partida</span>
             </button>
             <button 
@@ -6841,7 +6864,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen font-sans transition-colors duration-300 flex flex-col justify-center" style={{ background: 'linear-gradient(135deg, #14301F, #58703D)', color: '#FFFFFF' }}>
+    <div className="min-h-screen font-sans transition-colors duration-300 flex flex-col justify-center" style={{ background: '#14301F', color: '#FFFFFF' }}>
       <div className="w-full max-w-md mx-auto p-8 space-y-12">
         <div className="flex items-center justify-center mb-4">
           <div className="flex flex-col items-center gap-4 text-center">
