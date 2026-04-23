@@ -181,6 +181,7 @@ const TutorialCarousel = () => {
           />
         </motion.div>
       </AnimatePresence>
+      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#14301F] to-transparent pointer-events-none"></div>
       <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
         {items.map((_, i) => (
           <div key={i} className={`w-2.5 h-2.5 rounded-full border-2 border-black transition-colors duration-500 ${i === index ? 'bg-black' : 'bg-white/50'}`} />
@@ -6894,14 +6895,12 @@ export default function App() {
 
   return (
     <div className="min-h-screen font-sans transition-colors duration-300 flex flex-col justify-center p-4" style={{ backgroundColor: '#315130' }}>
-      <div className="w-full max-w-md mx-auto flex items-center justify-center mb-8 mt-4">
-        <div className="flex flex-row items-center gap-3 text-center">
+      <div className="w-full max-w-md mx-auto p-8 rounded-2xl shadow-2xl border" style={{ background: '#14301F', borderColor: '#E3D39E' }}>
+        <div className="flex flex-row items-center justify-center gap-3 text-center mb-8">
           <SpinningBall size="md" spin={true} />
           <FutQuinaLogo size="md" colorClass="" style={{ color: '#E3D39E', fontStyle: 'normal', fontFamily: 'system-ui', fontWeight: '900' }} />
         </div>
-      </div>
 
-      <div className="w-full max-w-md mx-auto p-8 rounded-2xl shadow-2xl border" style={{ background: '#14301F', borderColor: '#E3D39E' }}>
         <div className="space-y-6">
           <TutorialCarousel />
           
@@ -6911,7 +6910,7 @@ export default function App() {
                 <div key={`${group.id}-${index}`} className="flex items-center gap-2">
                   <button
                     onClick={() => setSelectedGroupOptions({ id: group.id, name: group.name })}
-                    className="flex-1 p-4 transition-all flex items-center justify-center relative group rounded-md border"
+                    className="flex-1 p-4 transition-all flex items-center justify-center relative group rounded-full border"
                     style={{ backgroundColor: '#14301F', borderColor: '#E3D39E', color: '#E3D39E' }}
                   >
                     <span className="text-lg font-normal text-center w-full px-8" style={{ fontFamily: 'system-ui' }}>{group.name}</span>
@@ -6943,7 +6942,8 @@ export default function App() {
                   setCurrentGroupId(selectedGroupOptions.id);
                   setSelectedGroupOptions(null);
                 }}
-                className="w-full flex items-center justify-center gap-3 p-4 rounded-[30px] bg-brand-gradient text-black font-normal font-[system-ui] tracking-widest text-xs hover:opacity-90 transition-opacity"
+                className="w-full flex items-center justify-center gap-3 p-4 rounded-[30px] font-normal font-[system-ui] tracking-widest text-xs hover:opacity-90 transition-opacity border"
+                style={{ backgroundColor: '#315130', color: '#E3D39E', borderColor: '#E3D39E' }}
               >
                 <Play size={16} />
                 Partida
@@ -6956,7 +6956,6 @@ export default function App() {
                 }}
                 className="w-full flex items-center justify-center gap-3 p-4 rounded-[30px] font-normal font-[system-ui] tracking-widest text-xs transition-colors bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
               >
-                <Pencil size={16} />
                 Renomear
               </button>
               <button
@@ -6965,9 +6964,9 @@ export default function App() {
                   setSelectedGroupOptions(null);
                 }}
                 className="w-full flex items-center justify-center gap-3 p-4 rounded-[30px] bg-red-500/10 text-red-500 font-normal font-[system-ui] tracking-widest text-xs hover:bg-red-500/20 transition-colors"
+                title="Excluir"
               >
                 <Trash2 size={16} />
-                Excluir
               </button>
             </div>
           </div>
