@@ -4137,7 +4137,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                   }}
                                                 >
                                                 <div className="flex items-center gap-2 ml-auto overflow-hidden">
-                                                  <span className="text-[11px] sm:text-[10px] font-bold truncate text-black capitalize">{p.name.toLowerCase()}</span>
+                                                  <span className="text-sm sm:text-[13px] font-normal truncate text-black capitalize">{p.name.toLowerCase()}</span>
                                                   <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 border border-zinc-300">
                                                     {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <User size={10} className="text-black" />}
                                                   </div>
