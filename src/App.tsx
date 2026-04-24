@@ -7895,14 +7895,14 @@ export default function App() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.4 }}
-              className="pt-6"
+              className="pt-3"
             >
               <button
                 onClick={() => setShowNewGroupModal(true)}
-                className="w-full p-6 rounded-[28px] font-black uppercase tracking-[0.2em] text-[11px] flex items-center justify-center gap-4 transition-all duration-300 shadow-[0_15px_40px_rgba(183,217,108,0.2)] bg-brand-primary text-black hover:opacity-90 hover:scale-[1.02] active:scale-95 border-b-4 border-black/20"
+                className="w-full p-4 rounded-[24px] font-black uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-4 transition-all duration-300 shadow-[0_12px_30px_rgba(183,217,108,0.2)] bg-brand-primary text-black hover:opacity-90 hover:scale-[1.01] active:scale-95 border-b-4 border-black/20"
               >
-                <div className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center">
-                  <Plus size={20} strokeWidth={3} />
+                <div className="w-7 h-7 rounded-full bg-black/10 flex items-center justify-center">
+                  <Plus size={18} strokeWidth={3} />
                 </div>
                 Nova Partida
               </button>
