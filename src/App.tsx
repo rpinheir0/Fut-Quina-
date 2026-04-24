@@ -464,20 +464,21 @@ const TieBreakerModal = ({
         className="w-full max-w-lg bg-zinc-100 rounded-[32px] overflow-hidden border-2 border-black shadow-2xl"
       >
         {/* Selection Header */}
-        <div className="p-6 bg-[#112F24] text-white border-b-2 border-black flex flex-col items-center gap-2 relative">
+        <div className="p-8 bg-brand-gradient text-black border-b-4 border-black flex flex-col items-center gap-3 relative shadow-[0_10px_20px_-10px_rgba(0,0,0,0.5)]">
           {state.type !== 'none' && (
             <button 
               onClick={() => onTypeSelect('none')}
-              className="absolute left-4 top-4 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
+              className="absolute left-6 top-6 p-2 bg-black/5 hover:bg-black/10 rounded-full transition-colors backdrop-blur-sm border border-black/10 shadow-sm"
+              title="Voltar"
             >
-              <ArrowLeft size={20} />
+              <ArrowLeft size={24} className="text-[#1E3D2F]" strokeWidth={2.5} />
             </button>
           )}
-          <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
-            <ArrowLeftRight className="text-brand-primary" size={24} />
+          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center border-4 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] rotate-12">
+            <ArrowLeftRight className="text-black" size={32} strokeWidth={3} />
           </div>
-          <h2 className="text-xl font-black uppercase tracking-tighter">Empate Detectado!</h2>
-          <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Escolha como desempatar a partida</p>
+          <h2 className="text-3xl font-black uppercase tracking-tighter text-[#1E3D2F]">Empate Detectado</h2>
+          <p className="text-xs font-black uppercase tracking-widest text-[#1E3D2F]/70 px-4 py-1 bg-white/30 rounded-full">Como deseja desempatar?</p>
         </div>
 
         {state.type === 'none' && (
@@ -3113,7 +3114,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           </div>
           
           {/* Centralized Scoreboard */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 hidden sm:flex items-center justify-center w-full max-w-[200px] pointer-events-none">
+          <div 
+            onClick={() => {
+              setCurrentScreen('teams');
+              setTeamsTab('historico');
+            }}
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 hidden sm:flex items-center justify-center w-full max-w-[200px] cursor-pointer"
+          >
             <AnimatePresence mode="popLayout" initial={false}>
               {(match.isActive && !match.hasEnded) && (
                 <motion.div
@@ -3122,7 +3129,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   animate={{ y: 0, opacity: 1, scale: 1 }}
                   exit={{ y: -40, opacity: 0, scale: 0.8 }}
                   transition={{ type: 'spring', damping: 20 }}
-                  className="flex items-center justify-center gap-2 bg-black/40 px-4 py-1.5 rounded-full border border-white/20 shadow-lg backdrop-blur-md pointer-events-auto"
+                  className="flex items-center justify-center gap-2 bg-black/40 hover:bg-black/60 px-4 py-1.5 rounded-full border border-white/20 shadow-lg backdrop-blur-md pointer-events-auto transition-colors"
                 >
                   {match.teamAIndex !== -1 && match.teamBIndex !== -1 ? (
                     <>
@@ -3151,7 +3158,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           </div>
 
           {/* Centralized Scoreboard For Mobile */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 sm:hidden flex items-center justify-center w-auto pointer-events-none pl-6 pr-10">
+          <div 
+            onClick={() => {
+              setCurrentScreen('teams');
+              setTeamsTab('historico');
+            }}
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 sm:hidden flex items-center justify-center w-auto pl-6 pr-10 cursor-pointer"
+          >
             <AnimatePresence mode="popLayout" initial={false}>
               {(match.isActive && !match.hasEnded) && (
                 <motion.div
@@ -3160,7 +3173,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   animate={{ y: 0, opacity: 1, scale: 1 }}
                   exit={{ y: -40, opacity: 0, scale: 0.8 }}
                   transition={{ type: 'spring', damping: 20 }}
-                  className="flex items-center justify-center gap-1.5 bg-black/40 px-3 py-1 rounded-full border border-white/20 shadow-lg backdrop-blur-md pointer-events-auto"
+                  className="flex items-center justify-center gap-1.5 bg-black/40 hover:bg-black/60 px-3 py-1 rounded-full border border-white/20 shadow-lg backdrop-blur-md pointer-events-auto transition-colors"
                 >
                   {match.teamAIndex !== -1 && match.teamBIndex !== -1 ? (
                     <>
@@ -4474,11 +4487,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       (movingPlayers && isSelectingDestination) ? 'cursor-pointer hover:opacity-90' : 'cursor-default'
                                     } ${
                                       isCurrent 
-                                        ? 'shadow-lg z-10 border-emerald-500 ring-2 ring-emerald-500/20'
-                                        : 'shadow-sm opacity-80 border-zinc-300'
+                                        ? 'shadow-lg z-10 border-emerald-500 bg-emerald-500/40 ring-2 ring-emerald-500/20'
+                                        : 'shadow-sm opacity-80 border-zinc-300 bg-transparent'
                                     } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-emerald-500/10 !border-emerald-500' : ''}`}
                                     style={{
-                                      backgroundColor: 'transparent',
                                       borderColor: (movingPlayers?.teamId === t.id || (swappingPlayerId && t.playerIds.includes(swappingPlayerId))) ? '#22c55e' : undefined
                                     }}
                                   >
