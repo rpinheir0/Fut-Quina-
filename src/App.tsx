@@ -641,13 +641,13 @@ const TieBreakerModal = ({
                         <div className="flex gap-1.5">
                           <button 
                             onClick={() => onPenaltyToggle('A', idx)}
-                            className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === true ? 'bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-white/5 text-white/20'}`}
+                            className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === true ? 'bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-zinc-100 text-emerald-600'}`}
                           >
                             <CheckCircle2 size={16} strokeWidth={3} />
                           </button>
                           <button 
                             onClick={() => onPenaltyToggle('A', idx)}
-                            className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === false ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'bg-white/5 text-white/20'}`}
+                            className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === false ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'bg-zinc-100 text-red-600'}`}
                           >
                             <AlertCircle size={16} strokeWidth={3} />
                           </button>
@@ -668,13 +668,13 @@ const TieBreakerModal = ({
                         <div className="flex gap-1.5">
                           <button 
                             onClick={() => onPenaltyToggle('B', idx)}
-                            className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === true ? 'bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-white/5 text-white/20'}`}
+                            className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === true ? 'bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-zinc-100 text-emerald-600'}`}
                           >
                             <CheckCircle2 size={16} strokeWidth={3} />
                           </button>
                           <button 
                             onClick={() => onPenaltyToggle('B', idx)}
-                            className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === false ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'bg-white/5 text-white/20'}`}
+                            className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === false ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'bg-zinc-100 text-red-600'}`}
                           >
                             <AlertCircle size={16} strokeWidth={3} />
                           </button>
