@@ -2689,14 +2689,105 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         {/* Sticky Header and Tabs Container */}
         <div className={`sticky top-0 z-50 bg-brand-dark border-b border-brand-border/10 ${isPrintMode ? 'hidden' : ''}`}>
         {/* Header */}
-        <header className="px-6 py-4 flex justify-between items-center bg-[#1E3D2F]">
-          <div className="flex items-center gap-3">
-            <SpinningBall size="sm" spin={false} />
-            <FutQuinaLogo size="md" style={{ color: '#ffffff' }} colorClass="" />
+        <header className="px-6 py-4 flex justify-between items-center bg-[#1E3D2F] relative">
+          <div className="flex items-center gap-3 overflow-hidden relative z-10">
+            <motion.div
+              initial={false}
+              animate={{ rotate: match.isActive ? 360 : 0 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+            >
+              <SpinningBall size="sm" spin={match.isActive && !match.isPaused} />
+            </motion.div>
+            
+            <AnimatePresence mode="popLayout" initial={false}>
+              {!match.isActive || match.hasEnded ? (
+                <motion.div
+                  key="logo"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <FutQuinaLogo size="md" style={{ color: '#ffffff' }} colorClass="" />
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
           </div>
+          
+          {/* Centralized Scoreboard */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 hidden sm:flex items-center justify-center w-full max-w-[200px] pointer-events-none">
+            <AnimatePresence mode="popLayout" initial={false}>
+              {(match.isActive && !match.hasEnded) && (
+                <motion.div
+                  key="scoreboard"
+                  initial={{ y: -40, opacity: 0, scale: 0.8 }}
+                  animate={{ y: 0, opacity: 1, scale: 1 }}
+                  exit={{ y: -40, opacity: 0, scale: 0.8 }}
+                  transition={{ type: 'spring', damping: 20 }}
+                  className="flex items-center justify-center gap-2 bg-black/40 px-4 py-1.5 rounded-full border border-white/20 shadow-lg backdrop-blur-md pointer-events-auto"
+                >
+                  {match.teamAIndex !== -1 && match.teamBIndex !== -1 ? (
+                    <>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-white text-[10px] font-black uppercase truncate max-w-[40px] hidden sm:block">{teams[match.teamAIndex]?.name.substring(0, 3)}</span>
+                        <Shield size={14} style={{ color: teams[match.teamAIndex]?.color || '#ffffff' }} fill="currentColor" className="drop-shadow-sm" />
+                        <span className="text-brand-primary font-black text-sm ml-1">{match.scoreA}</span>
+                      </div>
+                      
+                      <span className="text-white/40 text-[10px] font-bold mx-1">x</span>
+                      
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-brand-primary font-black text-sm mr-1">{match.scoreB}</span>
+                        <Shield size={14} style={{ color: teams[match.teamBIndex]?.color || '#ffffff' }} fill="currentColor" className="drop-shadow-sm" />
+                        <span className="text-white text-[10px] font-black uppercase truncate max-w-[40px] hidden sm:block">{teams[match.teamBIndex]?.name.substring(0, 3)}</span>
+                      </div>
+                      
+                      <span className={`ml-3 flex items-center justify-center text-[10px] sm:text-xs font-black tracking-widest bg-black/50 px-2 py-0.5 rounded ${match.timeRemaining <= 60 && !match.isPaused ? 'text-red-400 animate-pulse' : 'text-white'}`}>
+                        {Math.floor(match.timeRemaining / 60).toString().padStart(2, '0')}:{(match.timeRemaining % 60).toString().padStart(2, '0')}
+                      </span>
+                    </>
+                  ) : null}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          {/* Centralized Scoreboard For Mobile */}
+          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 sm:hidden flex items-center justify-center w-auto pointer-events-none pl-6 pr-10">
+            <AnimatePresence mode="popLayout" initial={false}>
+              {(match.isActive && !match.hasEnded) && (
+                <motion.div
+                  key="scoreboard"
+                  initial={{ y: -40, opacity: 0, scale: 0.8 }}
+                  animate={{ y: 0, opacity: 1, scale: 1 }}
+                  exit={{ y: -40, opacity: 0, scale: 0.8 }}
+                  transition={{ type: 'spring', damping: 20 }}
+                  className="flex items-center justify-center gap-1.5 bg-black/40 px-3 py-1 rounded-full border border-white/20 shadow-lg backdrop-blur-md pointer-events-auto"
+                >
+                  {match.teamAIndex !== -1 && match.teamBIndex !== -1 ? (
+                    <>
+                      <div className="flex items-center gap-1">
+                        <Shield size={12} style={{ color: teams[match.teamAIndex]?.color || '#ffffff' }} fill="currentColor" className="drop-shadow-sm" />
+                        <span className="text-brand-primary font-black text-xs ml-0.5">{match.scoreA}</span>
+                      </div>
+                      <span className="text-white/40 text-[9px] font-bold mx-0.5">x</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-brand-primary font-black text-xs mr-0.5">{match.scoreB}</span>
+                        <Shield size={12} style={{ color: teams[match.teamBIndex]?.color || '#ffffff' }} fill="currentColor" className="drop-shadow-sm" />
+                      </div>
+                      <span className={`ml-1.5 flex items-center justify-center text-[9px] font-black tracking-widest bg-black/50 px-1.5 py-0.5 rounded ${match.timeRemaining <= 60 && !match.isPaused ? 'text-red-400 animate-pulse' : 'text-white'}`}>
+                        {Math.floor(match.timeRemaining / 60).toString().padStart(2, '0')}:{(match.timeRemaining % 60).toString().padStart(2, '0')}
+                      </span>
+                    </>
+                  ) : null}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           <button 
             onClick={() => setShowMainMenu(true)}
-            className="p-2 text-white hover:bg-white/10 rounded-full transition-colors"
+            className="p-2 text-white hover:bg-white/10 rounded-full transition-colors relative z-10"
           >
             <Menu size={24} />
           </button>
@@ -3864,7 +3955,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </div>
                     ) : teamsTab === 'proximos' ? (
                       <div className="space-y-6 relative overflow-hidden bg-gradient-to-br from-zinc-50 to-zinc-200 p-6 rounded-3xl border border-zinc-300 shadow-inner">
-                        <div className="absolute inset-0 pointer-events-none opacity-25 z-0" style={{
+                        <div className="absolute inset-0 pointer-events-none opacity-10 z-0" style={{
                           backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 15px, #cccccc 15px, #cccccc 16px), repeating-linear-gradient(-45deg, transparent, transparent 15px, #cccccc 15px, #cccccc 16px)`,
                         }}></div>
                         
@@ -4292,7 +4383,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                       ? 'bg-green-500/20 text-black border-2 border-green-500 shadow-lg scale-105'
                                                       : (swappingPlayerId && swappingPlayerId !== pid) || fillingVacancyForTeam !== null || ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < match.config.playersPerTeam))
                                                         ? 'bg-brand-primary/20 text-brand-primary animate-pulse shadow-sm shadow-brand-primary/10'
-                                                        : 'text-black border border-black/5 hover:border-black/20 group bg-white/60 shadow-sm'
+                                                        : `text-black border group bg-white/60 shadow-sm ${isCurrent ? 'border-emerald-500 ring-1 ring-emerald-500' : 'border-black/5 hover:border-black/20'}`
                                                   }`}
                                                   style={{ 
                                                     backgroundColor: !((swappingPlayerId && swappingPlayerId !== pid) || 
@@ -4438,7 +4529,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     : 'bg-transparent border-transparent'
                               }`}>
                                 <div className="flex items-center gap-2 overflow-hidden">
-                                  <div className="w-6 h-6 rounded-full bg-zinc-300 flex items-center justify-center overflow-hidden border border-zinc-400 shrink-0">
+                                  <div className={`w-6 h-6 rounded-full bg-zinc-300 flex items-center justify-center overflow-hidden border shrink-0 ${match.teamAIndex === tIndex || match.teamBIndex === tIndex ? 'border-emerald-500 ring-1 ring-emerald-500' : 'border-zinc-400'}`}>
                                     {p.photo ? (
                                       <img src={p.photo} alt={p.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                                     ) : (
@@ -4557,12 +4648,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   }
                 }}
               >
-                <div className="flex items-center justify-between pb-2 border-b border-dashed border-brand-border mb-4 px-2">
+                <div className="flex items-center justify-between pb-2 border-b border-dashed mb-4 px-2" style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}>
                   <button onClick={() => setIsPrintMode(true)} className="text-zinc-400 p-2 hover:bg-zinc-800 rounded-full transition-colors">
                     <Eye size={20} />
                   </button>
-                  <div className="text-zinc-500 text-xs font-bold font-mono tracking-tighter">Ranking</div>
-                  <div className={`flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-brand-text-secondary ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
+                  <div className="text-zinc-500 text-xs font-bold font-mono tracking-tighter uppercase"></div>
+                  <div className={`flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-black ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
                     <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'assistencias' ? '' : 'opacity-0'}`}><Trophy size={14} /> Gols</div>
                     <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'artilharia' ? '' : 'opacity-0'}`}><Award size={14} /> Ass</div>
                   </div>
@@ -4586,10 +4677,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     
                     <div className="relative ml-2 mr-4 shrink-0">
                       {index === 0 && (
-                        <div className="absolute -inset-1 border-2 border-[#FFD700] rounded-full border-dashed animate-[spin_10s_linear_infinite]" />
+                        <>
+                          <div className="absolute inset-0 border-2 border-[#FFD700] rounded-full scale-110 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] opacity-50" />
+                          <div className="absolute inset-0 border-2 border-[#FFD700] shadow-[0_0_15px_#FFD700] rounded-full scale-110" />
+                        </>
                       )}
                       
-                      <div className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-zinc-200 border border-zinc-300`}>
+                      <div className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-zinc-200 border border-zinc-300 relative z-10`}>
                         {player.photo ? (
                           <img src={player.photo} alt={player.name} className="w-full h-full object-cover" />
                         ) : (
@@ -6701,8 +6795,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         />
 
         {/* Bottom Navigation */}
-        <nav className="bg-[#1E3D2F] z-50 fixed bottom-0 left-0 right-0 pt-1 pb-safe shadow-[0_-4px_20px_rgba(0,0,0,0.4)] border-t border-white/5">
-          <div className="flex px-2 py-2 gap-2">
+        <div className="fixed bottom-0 left-0 right-0 z-[100] pointer-events-none pb-4 sm:pb-6 px-4">
+          <nav className="mx-auto max-w-[400px] bg-[#1E3D2F]/95 backdrop-blur-2xl border border-white/10 p-1.5 flex items-center justify-between shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-2xl pointer-events-auto">
             <button 
               onClick={() => {
                 const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
@@ -6711,14 +6805,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
                 setCurrentScreen('players');
               }}
-              className={`flex-1 flex flex-col items-center justify-center py-2 transition-none rounded-2xl ${
+              className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-[12px] relative overflow-hidden ${
                 currentScreen === 'players' 
-                  ? 'bg-white/10 text-white' 
-                  : 'text-white/70 hover:text-white hover:bg-white/5'
+                  ? 'text-brand-primary bg-white/5 shadow-inner' 
+                  : 'text-white/50 hover:text-white/80 hover:bg-white/5'
               }`}
             >
-              <Users size={18} className="mb-1" />
-              <span className="text-[10px] font-black lowercase first-letter:uppercase tracking-wider leading-none">Gerenciar</span>
+              {currentScreen === 'players' && (
+                <motion.div layoutId="nav-glow" className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full" />
+              )}
+              <UserCog size={22} strokeWidth={currentScreen === 'players' ? 2.5 : 2} className={`mb-1 transition-transform duration-300 ${currentScreen === 'players' ? '-translate-y-0.5' : ''}`} />
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'players' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Gerenciar</span>
             </button>
             <button 
               onClick={() => {
@@ -6730,21 +6827,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 // Open 'Confrontos' if match is active, otherwise 'Próximos'
                 setTeamsTab(match.isActive ? 'historico' : 'proximos');
               }}
-              className={`flex-1 flex flex-col items-center justify-center py-2 transition-none rounded-2xl ${
+              className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-[12px] relative overflow-hidden ${
                 currentScreen === 'teams' 
-                  ? 'bg-white/10 text-white' 
-                  : 'text-white/70 hover:text-white hover:bg-white/5'
+                  ? 'text-brand-primary bg-white/5 shadow-inner' 
+                  : 'text-white/50 hover:text-white/80 hover:bg-white/5'
               }`}
             >
-              <SpinningBall 
-                size="xs" 
-                spin={false} 
-                color="transparent"
-                patternColor="currentColor"
-                isIcon={true}
-                className="mb-1" 
-              />
-              <span className="text-[10px] font-black lowercase first-letter:uppercase tracking-wider leading-none">Partida</span>
+              {currentScreen === 'teams' && (
+                <motion.div layoutId="nav-glow" className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full" />
+              )}
+              <Swords size={22} strokeWidth={currentScreen === 'teams' ? 2.5 : 2} className={`mb-1 transition-transform duration-300 ${currentScreen === 'teams' ? '-translate-y-0.5' : ''}`} />
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'teams' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Partida</span>
             </button>
             <button 
               onClick={() => {
@@ -6754,17 +6847,20 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
                 setCurrentScreen('ranking');
               }}
-              className={`flex-1 flex flex-col items-center justify-center py-2 transition-none rounded-2xl ${
+              className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-[12px] relative overflow-hidden ${
                 currentScreen === 'ranking' 
-                  ? 'bg-white/10 text-white' 
-                  : 'text-white/70 hover:text-white hover:bg-white/5'
+                  ? 'text-brand-primary bg-white/5 shadow-inner' 
+                  : 'text-white/50 hover:text-white/80 hover:bg-white/5'
               }`}
             >
-              <Medal size={18} className="mb-1" />
-              <span className="text-[10px] font-black lowercase first-letter:uppercase tracking-wider leading-none">Ranking</span>
+              {currentScreen === 'ranking' && (
+                <motion.div layoutId="nav-glow" className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full" />
+              )}
+              <Trophy size={22} strokeWidth={currentScreen === 'ranking' ? 2.5 : 2} className={`mb-1 transition-transform duration-300 ${currentScreen === 'ranking' ? '-translate-y-0.5' : ''}`} />
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'ranking' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Ranking</span>
             </button>
-          </div>
-        </nav>
+          </nav>
+        </div>
 
         {/* Main Menu Modal */}
         <AnimatePresence>
