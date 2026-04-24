@@ -4615,6 +4615,25 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             </div>
                           ) : (
                             <div className="space-y-3">
+                              {/* Tie resolution info */}
+                              {teams.some(t => t.lastMatchStatus === 'Empate') && (
+                                <motion.div 
+                                  initial={{ opacity: 0, y: -10 }}
+                                  animate={{ opacity: 1, y: 0 }}
+                                  className="p-4 bg-zinc-900 border border-white/10 rounded-2xl flex items-start gap-3 shadow-xl mb-4"
+                                >
+                                  <div className="w-8 h-8 rounded-xl bg-brand-primary/20 flex items-center justify-center shrink-0">
+                                    <Info size={16} className="text-brand-primary" />
+                                  </div>
+                                  <div className="flex flex-col">
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-brand-primary mb-1">Empate Resolvido Manualmente</span>
+                                    <p className="text-[9px] text-white/50 font-bold uppercase leading-relaxed tracking-wider">
+                                      Desmarque o time que deve <span className="text-white">descer na fila</span>. O time que permanecer selecionado jogará a próxima partida.
+                                    </p>
+                                  </div>
+                                </motion.div>
+                              )}
+
                               {teams.map((t, tIdx) => {
                                 const isCurrent = tIdx === match.teamAIndex || tIdx === match.teamBIndex;
                                 const isFlashing = flashingTeamIds.includes(t.id);
