@@ -457,146 +457,158 @@ const TieBreakerModal = ({
   const isLotteryOngoing = state.type === 'lottery';
 
   return (
-    <div className="fixed inset-0 z-[2500] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+    <div className="fixed inset-0 z-[2500] flex items-center justify-center p-0 sm:p-4 bg-brand-dark/20 backdrop-blur-xl">
       <motion.div 
-        initial={{ scale: 0.9, opacity: 0, y: 20 }}
-        animate={{ scale: 1, opacity: 1, y: 0 }}
-        className="w-full max-w-lg bg-zinc-100 rounded-[32px] overflow-hidden border-2 border-black shadow-2xl"
+        initial={{ y: "100%" }}
+        animate={{ y: 0 }}
+        exit={{ y: "100%" }}
+        transition={{ type: "spring", damping: 25, stiffness: 200 }}
+        className="w-full h-full sm:h-auto sm:max-w-lg bg-[#112F24] sm:rounded-[48px] overflow-hidden border-t sm:border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative"
       >
-        {/* Selection Header */}
-        <div className="p-8 bg-brand-gradient text-black border-b-4 border-black flex flex-col items-center gap-3 relative shadow-[0_10px_20px_-10px_rgba(0,0,0,0.5)]">
+        {/* Background Decorative Elements */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-[100px] -mr-32 -mt-32" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/20 rounded-full blur-[80px] -ml-32 -mb-32" />
+
+        {/* Header Section */}
+        <div className="pt-12 pb-6 px-8 relative z-10">
+          <div className="flex flex-col gap-1">
+            <div className="flex items-center gap-2">
+              <div className="w-1.5 h-6 bg-brand-primary rounded-full shadow-[0_0_10px_rgba(183,217,108,0.5)]" />
+              <span className="text-[10px] font-black text-brand-primary uppercase tracking-[0.25em]">Desempate</span>
+            </div>
+            <h2 className="text-3xl font-black uppercase tracking-tighter text-white drop-shadow-lg">
+              {state.type === 'none' ? 'Empate Detectado' : state.type === 'penalties' ? 'Pênaltis' : 'Sorteio'}
+            </h2>
+          </div>
           {state.type !== 'none' && (
             <button 
               onClick={() => onTypeSelect('none')}
-              className="absolute left-6 top-6 p-2 bg-black/5 hover:bg-black/10 rounded-full transition-colors backdrop-blur-sm border border-black/10 shadow-sm"
-              title="Voltar"
+              className="absolute right-8 top-12 w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all active:scale-90"
             >
-              <ArrowLeft size={24} className="text-[#1E3D2F]" strokeWidth={2.5} />
+              <ArrowLeft size={20} />
             </button>
           )}
-          <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center border-4 border-black shadow-[4px_4px_0_0_rgba(0,0,0,1)] rotate-12">
-            <ArrowLeftRight className="text-black" size={32} strokeWidth={3} />
-          </div>
-          <h2 className="text-3xl font-black uppercase tracking-tighter text-[#1E3D2F]">Empate Detectado</h2>
-          <p className="text-xs font-black uppercase tracking-widest text-[#1E3D2F]/70 px-4 py-1 bg-white/30 rounded-full">Como deseja desempatar?</p>
         </div>
 
-        {state.type === 'none' && (
-          <div className="p-8 space-y-4">
-            <button 
-              onClick={() => onTypeSelect('penalties')}
-              className="w-full p-6 bg-white border-2 border-black rounded-2xl flex items-center justify-between group hover:bg-brand-primary/10 transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center group-hover:bg-brand-primary/20">
-                  <Swords className="text-black" size={24} />
+        {/* Content Section */}
+        <div className="p-8 pt-0 relative z-10">
+          {state.type === 'none' && (
+            <div className="space-y-4">
+              <div className="flex items-center gap-4 bg-white/5 p-6 rounded-[32px] border border-white/10 mb-8">
+                <div className="flex-1 text-center">
+                  <div className="text-4xl mb-2">{teamA.emoji}</div>
+                  <div className="text-[10px] font-black text-white/40 uppercase tracking-widest">{teamA.name}</div>
                 </div>
-                <div className="text-left">
-                  <div className="text-lg font-black uppercase tracking-tighter">Disputa de Pênaltis</div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Marcar acertos e erros</div>
-                </div>
-              </div>
-              <ChevronRight size={24} className="text-zinc-300" />
-            </button>
-
-            <button 
-              onClick={() => onTypeSelect('lottery')}
-              className="w-full p-6 bg-white border-2 border-black rounded-2xl flex items-center justify-between group hover:bg-brand-primary/10 transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
-            >
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center group-hover:bg-brand-primary/20">
-                  <RefreshCw className="text-black" size={24} />
-                </div>
-                <div className="text-left">
-                  <div className="text-lg font-black uppercase tracking-tighter">Sorteio Aleatório</div>
-                  <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Girar a roleta da sorte</div>
+                <div className="text-white/20 font-black italic text-xl">VS</div>
+                <div className="flex-1 text-center">
+                  <div className="text-4xl mb-2">{teamB.emoji}</div>
+                  <div className="text-[10px] font-black text-white/40 uppercase tracking-widest">{teamB.name}</div>
                 </div>
               </div>
-              <ChevronRight size={24} className="text-zinc-300" />
-            </button>
 
-            <button 
-              onClick={() => onConfirm()}
-              className="w-full p-4 bg-zinc-200 border-2 border-black rounded-2xl flex items-center justify-center gap-2 hover:bg-zinc-300 transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none shadow-[2px_2px_0_0_rgba(0,0,0,1)] mt-8"
-            >
-              <span className="text-xs font-black uppercase tracking-widest">Manter o Resultado</span>
-            </button>
-          </div>
-        )}
+              <div className="grid grid-cols-1 gap-3">
+                <button 
+                  onClick={() => onTypeSelect('penalties')}
+                  className="group w-full flex items-center gap-4 p-5 rounded-[24px] bg-white/5 border border-white/10 hover:bg-white/10 hover:border-brand-primary/30 transition-all duration-400 transform active:scale-95 text-left"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <Swords size={24} strokeWidth={2.5} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-black uppercase tracking-widest text-xs text-white">Disputa de Pênaltis</span>
+                    <span className="text-[10px] text-white/40 uppercase font-bold tracking-tight mt-0.5">Marcar acertos e erros</span>
+                  </div>
+                  <ChevronRight size={16} className="ml-auto text-white/20 group-hover:text-brand-primary transition-colors" />
+                </button>
 
-        {isPenaltiesOngoing && (
-          <div className="p-6 space-y-6">
-            <div className="flex justify-between items-center gap-4 bg-zinc-200 p-4 rounded-2xl border border-black/10">
-              <div className="text-center flex-1">
-                <div className="text-3xl mb-1">{teamA.emoji || '🛡️'}</div>
-                <div className="text-4xl font-black">{teamAGoals}</div>
-              </div>
-              <div className="text-zinc-300 font-black text-xl italic uppercase">VS</div>
-              <div className="text-center flex-1">
-                <div className="text-3xl mb-1">{teamB.emoji || '🛡️'}</div>
-                <div className="text-4xl font-black">{teamBGoals}</div>
+                <button 
+                  onClick={() => onTypeSelect('lottery')}
+                  className="group w-full flex items-center gap-4 p-5 rounded-[24px] bg-white/5 border border-white/10 hover:bg-white/10 hover:border-brand-primary/30 transition-all duration-400 transform active:scale-95 text-left"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <RefreshCw size={24} strokeWidth={2.5} />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-black uppercase tracking-widest text-xs text-white">Sorteio Aleatório</span>
+                    <span className="text-[10px] text-white/40 uppercase font-bold tracking-tight mt-0.5">Roleta da sorte</span>
+                  </div>
+                  <ChevronRight size={16} className="ml-auto text-white/20 group-hover:text-brand-primary transition-colors" />
+                </button>
+
+                <div className="pt-4">
+                  <button 
+                    onClick={() => onConfirm()}
+                    className="w-full p-4 rounded-[20px] text-white/40 hover:text-white/60 text-[10px] font-black uppercase tracking-[0.2em] transition-colors"
+                  >
+                    Manter o resultado atual
+                  </button>
+                </div>
               </div>
             </div>
+          )}
 
-            <div className="grid grid-cols-2 gap-6">
-              {/* Team A Penalties */}
-              <div className="space-y-4">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 text-center border-b border-black/5 pb-2">Batedores {teamA.emoji || '🛡️'}</h4>
-                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+          {isPenaltiesOngoing && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center bg-white/5 p-6 rounded-[32px] border border-white/10">
+                <div className="text-center flex-1">
+                  <div className="text-4xl mb-3 drop-shadow-md">{teamA.emoji}</div>
+                  <div className="text-4xl font-black text-white">{teamAGoals}</div>
+                </div>
+                <div className="text-white/10 font-black text-2xl italic tracking-tighter uppercase mx-4">VS</div>
+                <div className="text-center flex-1">
+                  <div className="text-4xl mb-3 drop-shadow-md">{teamB.emoji}</div>
+                  <div className="text-4xl font-black text-white">{teamBGoals}</div>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4 h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                {/* Team A Penalties */}
+                <div className="space-y-2">
+                  <div className="text-[9px] font-black text-white/20 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#112F24] py-1">Time A</div>
                   {state.penalties.teamA.map((shot, idx) => {
                     const p = players.find(player => player.id === shot.playerId);
                     return (
-                      <div key={`pen-a-${idx}`} className="flex flex-col gap-1 p-2 bg-white rounded-xl border border-black/5 shadow-sm">
-                        <span className="text-[10px] font-black uppercase truncate text-zinc-800">{p?.name || 'Jogador'}</span>
-                        <div className="flex gap-1">
+                      <div key={`pen-a-${idx}`} className="p-3 bg-white/5 rounded-2xl border border-white/5 space-y-2">
+                        <div className="text-[10px] font-black text-white/80 truncate uppercase">{p?.name}</div>
+                        <div className="flex gap-1.5">
                           <button 
                             onClick={() => onPenaltyToggle('A', idx)}
-                            className={`flex-1 py-1.5 rounded-lg border flex items-center justify-center transition-all ${
-                              shot.success === true ? 'bg-emerald-500 text-white border-emerald-600 scale-105 shadow-md' : 'bg-zinc-100 text-zinc-400 border-zinc-200 grayscale opacity-50'
-                            }`}
+                            className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === true ? 'bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-white/5 text-white/20'}`}
                           >
-                            <CheckCircle2 size={14} />
+                            <CheckCircle2 size={16} strokeWidth={3} />
                           </button>
                           <button 
                             onClick={() => onPenaltyToggle('A', idx)}
-                            className={`flex-1 py-1.5 rounded-lg border flex items-center justify-center transition-all ${
-                              shot.success === false ? 'bg-red-500 text-white border-red-600 scale-105 shadow-md' : 'bg-zinc-100 text-zinc-400 border-zinc-200 grayscale opacity-50'
-                            }`}
+                            className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === false ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'bg-white/5 text-white/20'}`}
                           >
-                            <AlertCircle size={14} />
+                            <AlertCircle size={16} strokeWidth={3} />
                           </button>
                         </div>
                       </div>
                     );
                   })}
                 </div>
-              </div>
 
-              {/* Team B Penalties */}
-              <div className="space-y-4">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 text-center border-b border-black/5 pb-2">Batedores {teamB.emoji || '🛡️'}</h4>
-                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                {/* Team B Penalties */}
+                <div className="space-y-2">
+                  <div className="text-[9px] font-black text-white/20 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#112F24] py-1">Time B</div>
                   {state.penalties.teamB.map((shot, idx) => {
                     const p = players.find(player => player.id === shot.playerId);
                     return (
-                      <div key={`pen-b-${idx}`} className="flex flex-col gap-1 p-2 bg-white rounded-xl border border-black/5 shadow-sm">
-                        <span className="text-[10px] font-black uppercase truncate text-zinc-800 text-right">{p?.name || 'Jogador'}</span>
-                        <div className="flex gap-1">
+                      <div key={`pen-b-${idx}`} className="p-3 bg-white/5 rounded-2xl border border-white/5 space-y-2">
+                        <div className="text-[10px] font-black text-white/80 truncate uppercase">{p?.name}</div>
+                        <div className="flex gap-1.5">
                           <button 
                             onClick={() => onPenaltyToggle('B', idx)}
-                            className={`flex-1 py-1.5 rounded-lg border flex items-center justify-center transition-all ${
-                              shot.success === true ? 'bg-emerald-500 text-white border-emerald-600 scale-105 shadow-md' : 'bg-zinc-100 text-zinc-400 border-zinc-200 grayscale opacity-50'
-                            }`}
+                            className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === true ? 'bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-white/5 text-white/20'}`}
                           >
-                            <CheckCircle2 size={14} />
+                            <CheckCircle2 size={16} strokeWidth={3} />
                           </button>
                           <button 
                             onClick={() => onPenaltyToggle('B', idx)}
-                            className={`flex-1 py-1.5 rounded-lg border flex items-center justify-center transition-all ${
-                              shot.success === false ? 'bg-red-500 text-white border-red-600 scale-105 shadow-md' : 'bg-zinc-100 text-zinc-400 border-zinc-200 grayscale opacity-50'
-                            }`}
+                            className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === false ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'bg-white/5 text-white/20'}`}
                           >
-                            <AlertCircle size={14} />
+                            <AlertCircle size={16} strokeWidth={3} />
                           </button>
                         </div>
                       </div>
@@ -604,74 +616,84 @@ const TieBreakerModal = ({
                   })}
                 </div>
               </div>
-            </div>
 
-            <button 
-              disabled={teamAGoals === teamBGoals}
-              onClick={() => onConfirm()}
-              className="w-full py-4 bg-brand-gradient text-black rounded-2xl font-black uppercase tracking-widest shadow-[4px_4px_0_0_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all text-sm border-2 border-black disabled:opacity-50 disabled:cursor-not-allowed mt-4"
-            >
-              {teamAGoals === teamBGoals ? 'Aguardando Desempate' : 'Finalizar Disputa'}
-            </button>
-          </div>
-        )}
-
-        {isLotteryOngoing && (
-          <div className="p-8 flex flex-col items-center gap-8">
-            <div className="relative">
-              <motion.div 
-                animate={state.lottery.isSpinning ? { 
-                  rotate: [0, 360 * 10],
-                  transition: { duration: 3, ease: "easeInOut" }
-                } : { 
-                  rotate: state.lottery.winnerId ? (state.lottery.winnerId === teamA.id ? 0 : 180) : 0 
-                }}
-                className="w-48 h-48 rounded-full border-8 border-[#112F24] relative shadow-2xl flex items-center justify-center bg-zinc-200"
-              >
-                {/* Team Dividers */}
-                <div className="absolute top-0 bottom-0 left-1/2 w-2 bg-black/20 -translate-x-1/2"></div>
-                
-                {/* Team Labels */}
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 text-3xl">{teamA.emoji || '🛡️'}</div>
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-3xl rotate-180">{teamB.emoji || '🛡️'}</div>
-
-                {/* Central Ball */}
-                <div className="w-20 h-20 bg-white rounded-full border-4 border-black shadow-lg flex items-center justify-center z-10 overflow-hidden">
-                  <CircleDot className="text-[#112F24]" size={40} />
-                </div>
-              </motion.div>
-
-              {/* Ticker */}
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-4 h-8 bg-red-600 rounded-b-lg shadow-md z-30" />
-            </div>
-
-            {!state.lottery.winnerId && !state.lottery.isSpinning && (
               <button 
-                onClick={onLotterySpin}
-                className="w-full py-4 bg-brand-gradient text-black rounded-2xl font-black uppercase tracking-widest shadow-[4px_4px_0_0_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all text-sm border-2 border-black"
+                disabled={teamAGoals === teamBGoals}
+                onClick={() => onConfirm()}
+                className="w-full py-5 bg-brand-primary text-brand-text-primary rounded-[24px] font-black uppercase tracking-widest text-xs shadow-lg shadow-brand-primary/20 active:scale-95 transition-all disabled:opacity-20 disabled:grayscale"
               >
-                Sortear agora
+                {teamAGoals === teamBGoals ? 'Placar Empatado' : 'Finalizar e Salvar'}
               </button>
-            )}
+            </div>
+          )}
 
-            {state.lottery.winnerId && !state.lottery.isSpinning && (
-              <div className="w-full space-y-4 text-center">
-                <div className="p-4 bg-brand-primary/20 rounded-2xl border-2 border-brand-primary">
-                  <div className="text-[10px] font-black uppercase tracking-widest text-[#112F24] mb-1">Vencedor do Sorteio</div>
-                  <div className="text-4xl mb-4">
-                    {state.lottery.winnerId === teamA.id ? (teamA.emoji || '🛡️') : (teamB.emoji || '🛡️')}
-                  </div>
-                </div>
-                <button 
-                  onClick={() => onConfirm()}
-                  className="w-full py-4 bg-brand-gradient text-black rounded-2xl font-black uppercase tracking-widest shadow-[4px_4px_0_0_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all text-sm border-2 border-black"
+          {isLotteryOngoing && (
+            <div className="flex flex-col items-center gap-10 py-4">
+              <div className="relative">
+                <motion.div 
+                  animate={state.lottery.isSpinning ? { 
+                    rotate: [0, 3600],
+                    transition: { duration: 3, ease: [0.45, 0.05, 0.55, 0.95] }
+                  } : { 
+                    rotate: state.lottery.winnerId ? (state.lottery.winnerId === teamA.id ? 0 : 180) : 0 
+                  }}
+                  className="w-56 h-56 rounded-full bg-white/5 border-[10px] border-[#1a3a2e] relative shadow-[0_0_50px_rgba(0,0,0,0.5)] flex items-center justify-center"
                 >
-                  Confirmar Resultado
-                </button>
+                  <div className="absolute top-0 bottom-0 left-1/2 w-[2px] bg-white/10 -translate-x-1/2" />
+                  
+                  {/* Result Indicators */}
+                  <div className="absolute top-6 left-1/2 -translate-x-1/2 text-4xl group-hover:scale-110 transition-transform">{teamA.emoji}</div>
+                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-4xl rotate-180 group-hover:scale-110 transition-transform">{teamB.emoji}</div>
+
+                  {/* Marker */}
+                  <div className="w-24 h-24 bg-[#112F24] rounded-full border-4 border-brand-primary/30 shadow-inner flex items-center justify-center z-10">
+                    <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center">
+                      <div className="w-2 h-10 bg-brand-primary rounded-full absolute top-4 shadow-[0_0_10px_rgba(183,217,108,0.5)]" />
+                      <SpinningBall size="sm" spin={state.lottery.isSpinning} />
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Arrow Pointer */}
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[20px] border-t-brand-primary drop-shadow-[0_0_10px_rgba(183,217,108,0.5)]" />
               </div>
-            )}
-          </div>
-        )}
+
+              {!state.lottery.winnerId && !state.lottery.isSpinning && (
+                <button 
+                  onClick={onLotterySpin}
+                  className="w-full py-5 bg-brand-primary text-brand-text-primary rounded-[24px] font-black uppercase tracking-widest text-xs shadow-lg shadow-brand-primary/20 active:scale-95 transition-all"
+                >
+                  Girar Roleta
+                </button>
+              )}
+
+              {state.lottery.winnerId && !state.lottery.isSpinning && (
+                <div className="w-full space-y-6 text-center">
+                  <div className="bg-white/5 p-6 rounded-[32px] border border-white/10 animate-in fade-in zoom-in duration-500">
+                    <div className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em] mb-4">Vencedor Sorteado</div>
+                    <div className="flex flex-col items-center gap-3">
+                      <div className="text-6xl drop-shadow-xl">{state.lottery.winnerId === teamA.id ? teamA.emoji : teamB.emoji}</div>
+                      <div className="text-xl font-black text-white uppercase tracking-tighter">
+                        {state.lottery.winnerId === teamA.id ? teamA.name : teamB.name}
+                      </div>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={() => onConfirm()}
+                    className="w-full py-5 bg-brand-primary text-brand-text-primary rounded-[24px] font-black uppercase tracking-widest text-xs shadow-lg shadow-brand-primary/20 active:scale-95 transition-all"
+                  >
+                    Confirmar Resultado
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Footer info */}
+        <div className="pb-8 px-8 flex justify-center opacity-20">
+           <span className="text-[8px] font-black text-white uppercase tracking-[0.3em]">FutQuina Engine</span>
+        </div>
       </motion.div>
     </div>
   );
