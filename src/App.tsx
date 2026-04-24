@@ -57,7 +57,8 @@ import {
   Eye,
   Award,
   LogOut,
-  Contact
+  Contact,
+  Rocket
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
@@ -1606,7 +1607,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
   const handlePlayerGoal = (playerId: string, team: 'A' | 'B') => {
     if (!match.isActive || match.isPaused) {
-      setToast({ message: "⏱️ O jogo deve estar rolando para registrar o gol!", type: 'warning' });
+      setToast({ message: "⏱️ O cronômetro precisa estar rodando!", type: 'warning' });
       setTimeout(() => setToast(null), 3000);
       return;
     }
@@ -1641,9 +1642,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           e.id === pendingAssist.eventId ? { ...e, assistId } : e
         )
       }));
-      setToast({ message: "⚽ GOLAÇO! Tudo registrado com sucesso.", type: 'success' });
+      setToast({ message: "⚽️ GOL! Assistência registrada", type: 'success' });
     } else {
-      setToast({ message: "⚽ GOL! Registro concluído.", type: 'success' });
+      setToast({ message: "⚽️ GOL! Placar atualizado", type: 'info' });
     }
 
     setPendingAssist(null);
@@ -2096,7 +2097,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
   const handleImportContacts = async () => {
     if (!('contacts' in navigator && 'select' in (navigator as any).contacts)) {
-      setToast({ message: "🚫 Ops! Seu aparelho não permite importar contatos.", type: 'info' });
+      setToast({ message: "Seu dispositivo não suporta importação de contatos.", type: 'info' });
       return;
     }
 
@@ -2125,7 +2126,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           }
         }
         if (addedCount > 0) {
-          setToast({ message: `${addedCount} contatos importados com sucesso!`, type: 'success' });
+          setToast({ message: `${addedCount} contatos importados!`, type: 'success' });
         }
       }
     } catch (err) {
@@ -2192,7 +2193,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       const emoji = TEAM_EMOJIS[teams.length % TEAM_EMOJIS.length];
       const newTeam = { id: generateId(), name: `Time ${nextLetter}`, playerIds: [newPlayer.id], emoji, color: getNextTeamColor(teams) };
       setTeams(prev => [...prev, newTeam]);
-      setToast({ message: `Time completo! Novo time criado: ${newTeam.name}`, type: 'info' });
+      setToast({ message: `✅ Time formado! Próximo: ${newTeam.name}`, type: 'info' });
       setShowQuickAddPlayerModal(teams.length);
     } else {
       setTeams(prev => prev.map((t, idx) => 
@@ -2209,7 +2210,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     const trimmedName = name.trim();
     
     if (match.isActive && (teamIndex === match.teamAIndex || teamIndex === match.teamBIndex)) {
-      setToast({ message: "🛑 Jogo em andamento! Finalize a partida para gerenciar os times.", type: 'warning' });
+      setToast({ message: "Não é possível adicionar jogadores a times em campo. Finalize a partida primeiro.", type: 'gray' });
       setTimeout(() => setToast(null), 3000);
       return;
     }
@@ -2238,7 +2239,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       const emoji = TEAM_EMOJIS[teams.length % TEAM_EMOJIS.length];
     const newTeam = { id: generateId(), name: `Time ${nextLetter}`, playerIds: [playerId], emoji, color: getNextTeamColor(teams) };
     setTeams(prev => [...prev, newTeam]);
-      setToast({ message: `Time completo! Novo time criado: ${newTeam.name}`, type: 'info' });
+      setToast({ message: `✅ Time formado! Próximo: ${newTeam.name}`, type: 'info' });
       setShowQuickAddPlayerModal(teams.length);
     } else {
       setTeams(prev => prev.map((t, idx) => 
@@ -2525,7 +2526,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
   const resetAllStats = () => {
     setPlayers(prev => prev.map(p => ({ ...p, goals: 0, assists: 0 })));
-    setToast({ message: "🔄 Tudo limpo! Estatísticas zeradas.", type: 'success' });
+    setToast({ message: "🔄 Histórico resetado", type: 'info' });
     setShowResetStatsConfirm(false);
   };
 
@@ -2800,19 +2801,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       isActive: true,
       hasEnded: false
     }));
-    setToast({ message: "🚀 Partida reiniciada! Tudo pronto.", type: 'success' });
+    setToast({ message: "🔄 Partida reiniciada", type: 'info' });
     setTimeout(() => setToast(null), 3000);
   };
 
   const startNextMatch = (teamAIdx: number, teamBIdx: number, force: boolean = false) => {
     setFlashingTeamIds([]);
     if (teamAIdx === -1 || teamBIdx === -1) {
-      setToast({ message: "Selecione dois times para a próxima partida.", type: 'warning' });
+      setToast({ message: "📋 Selecione os times do confronto", type: 'warning' });
       setTimeout(() => setToast(null), 3000);
       return;
     }
     if (teamAIdx === teamBIdx) {
-      setToast({ message: "Os times devem ser diferentes.", type: 'warning' });
+      setToast({ message: "❌ Escolha times diferentes!", type: 'warning' });
       setTimeout(() => setToast(null), 3000);
       return;
     }
@@ -3240,36 +3241,35 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       <AnimatePresence>
         {toast && (
           <motion.div 
-            initial={{ opacity: 0, y: 100, scale: 0.8 }}
+            initial={{ opacity: 0, y: 30, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 50, scale: 0.9 }}
-            transition={{ type: "spring", damping: 20, stiffness: 150 }}
-            className={`fixed bottom-8 left-4 right-4 z-[3000] sm:left-auto sm:right-8 sm:max-w-xs p-5 rounded-[32px] shadow-[0_30px_60px_rgba(0,0,0,0.5)] border backdrop-blur-2xl flex items-center gap-4 ${
-              toast.type === 'success' ? 'bg-emerald-500/90 border-emerald-400/50 text-white' :
-              toast.type === 'warning' ? 'bg-amber-500/90 border-amber-400/50 text-white' :
-              toast.type === 'info' ? 'bg-brand-primary/95 border-brand-primary/50 text-brand-text-primary' :
-              'bg-zinc-900/90 border-zinc-800 text-white'
-            }`}
+            exit={{ opacity: 0, scale: 0.9, y: 20 }}
+            className="fixed bottom-24 left-0 right-0 z-[200] flex justify-center px-6 pointer-events-none"
           >
-            <div className={`w-12 h-12 rounded-2xl flex items-center justify-center shrink-0 bg-white/20 shadow-[inset_0_2px_10px_rgba(255,255,255,0.3)]`}>
-              {toast.type === 'success' ? <CheckCircle2 size={24} strokeWidth={3} /> :
-               toast.type === 'warning' ? <AlertCircle size={24} strokeWidth={3} /> :
-               toast.type === 'info' ? <Info size={24} strokeWidth={3} /> :
-               <Bell size={24} strokeWidth={3} />}
-            </div>
-            
-            <div className="flex-1">
-              <p className="text-[10px] font-black uppercase tracking-[0.15em] leading-relaxed drop-shadow-md">
+            <motion.div
+              className={`pointer-events-auto flex items-center gap-3 px-5 py-3 rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] border backdrop-blur-xl transition-all ${
+                toast.type === 'success' ? 'bg-emerald-500/90 border-emerald-400/50 text-white' :
+                toast.type === 'warning' ? 'bg-amber-500/90 border-amber-400/50 text-white' :
+                toast.type === 'gray' ? 'bg-zinc-800/90 border-zinc-700/50 text-white' :
+                'bg-brand-dark/95 border-brand-primary/20 text-white'
+              }`}
+            >
+              <div className="shrink-0">
+                {toast.type === 'success' && <CheckCircle2 size={18} strokeWidth={3} />}
+                {toast.type === 'warning' && <AlertTriangle size={18} strokeWidth={3} />}
+                {toast.type === 'gray' && <Info size={18} strokeWidth={3} />}
+                {toast.type === 'info' && <Rocket size={18} strokeWidth={3} />}
+              </div>
+              <p className="text-[11px] font-black uppercase tracking-widest leading-none drop-shadow-sm">
                 {toast.message}
               </p>
-            </div>
-
-            <button 
-              onClick={() => setToast(null)}
-              className="w-8 h-8 flex items-center justify-center hover:bg-white/10 rounded-full transition-all active:scale-75"
-            >
-              <X size={18} opacity={0.6} />
-            </button>
+              <button 
+                onClick={() => setToast(null)}
+                className="ml-2 hover:opacity-70 transition-opacity"
+              >
+                <X size={14} strokeWidth={3} />
+              </button>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
