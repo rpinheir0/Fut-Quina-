@@ -1606,7 +1606,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
   const handlePlayerGoal = (playerId: string, team: 'A' | 'B') => {
     if (!match.isActive || match.isPaused) {
-      setToast({ message: "A partida precisa estar ativa e rolando para marcar gols.", type: 'warning' });
+      setToast({ message: "O cronômetro deve estar rodando para registrar um gol.", type: 'warning' });
       setTimeout(() => setToast(null), 3000);
       return;
     }
@@ -1641,9 +1641,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           e.id === pendingAssist.eventId ? { ...e, assistId } : e
         )
       }));
-      setToast({ message: "Gol e assistência registrados!", type: 'success' });
+      setToast({ message: "Gol registrado! Bela jogada.", type: 'success' });
     } else {
-      setToast({ message: "Gol registrado sem assistência.", type: 'info' });
+      setToast({ message: "Gol registrado!", type: 'info' });
     }
 
     setPendingAssist(null);
@@ -2525,8 +2525,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
   const resetAllStats = () => {
     setPlayers(prev => prev.map(p => ({ ...p, goals: 0, assists: 0 })));
-    setToast({ message: "Estatísticas zeradas com sucesso!", type: 'info' });
+    setToast({ message: "Estatísticas resetadas! Tudo pronto para o novo começo.", type: 'info' });
     setShowResetStatsConfirm(false);
+    setTimeout(() => setToast(null), 3000);
   };
 
   const registerGoal = (team: 'A' | 'B', playerId: string, assistId?: string) => {
@@ -2800,19 +2801,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       isActive: true,
       hasEnded: false
     }));
-    setToast({ message: "Partida reiniciada!", type: 'info' });
+    setToast({ message: "Placar reiniciado!", type: 'info' });
     setTimeout(() => setToast(null), 3000);
   };
 
   const startNextMatch = (teamAIdx: number, teamBIdx: number, force: boolean = false) => {
     setFlashingTeamIds([]);
     if (teamAIdx === -1 || teamBIdx === -1) {
-      setToast({ message: "Selecione dois times para a próxima partida.", type: 'warning' });
+      setToast({ message: "Selecione os dois times do próximo confronto.", type: 'warning' });
       setTimeout(() => setToast(null), 3000);
       return;
     }
     if (teamAIdx === teamBIdx) {
-      setToast({ message: "Os times devem ser diferentes.", type: 'warning' });
+      setToast({ message: "Os times do confronto devem ser diferentes.", type: 'warning' });
       setTimeout(() => setToast(null), 3000);
       return;
     }
@@ -3236,37 +3237,47 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         )}
       </AnimatePresence>
 
-      {/* Toast Notification */}
-      <AnimatePresence>
-        {toast && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[150] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-          >
-            <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="p-6 rounded-3xl shadow-md flex flex-col items-center gap-6 border w-full max-w-xs bg-zinc-100 border-zinc-300"
+      {/* Toast Notification (Improved) */}
+      <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[3000] w-full max-w-sm px-4 pointer-events-none">
+        <AnimatePresence>
+          {toast && (
+            <motion.div 
+              initial={{ opacity: 0, y: -20, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.95 }}
+              className={`p-4 rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.5)] flex items-center gap-4 border pointer-events-auto backdrop-blur-xl group ${
+                toast.type === 'success' ? 'bg-emerald-500/95 border-emerald-400/30 text-white' :
+                toast.type === 'warning' ? 'bg-amber-500/95 border-amber-400/30 text-white' :
+                toast.type === 'gray' ? 'bg-zinc-800/95 border-zinc-700/30 text-white' :
+                'bg-brand-primary/95 border-brand-primary/30 text-brand-text-secondary'
+              }`}
             >
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 bg-brand-primary/20`}>
-                <Info size={24} className="text-brand-primary" />
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                toast.type === 'success' ? 'bg-white/20' :
+                toast.type === 'warning' ? 'bg-white/20' :
+                toast.type === 'gray' ? 'bg-white/10' :
+                'bg-brand-text-secondary/10'
+              }`}>
+                {toast.type === 'success' ? <CheckCircle2 size={24} strokeWidth={2.5} /> : 
+                 toast.type === 'warning' ? <AlertCircle size={24} strokeWidth={2.5} /> :
+                 <Info size={24} strokeWidth={2.5} />}
               </div>
-              <p className="text-sm font-black tracking-widest leading-tight text-center text-zinc-500">
-                {toast.message}
-              </p>
+              <div className="flex flex-col gap-0.5 flex-1">
+                <span className="text-[10px] font-black uppercase tracking-[0.2em] opacity-40">Notificação</span>
+                <p className="text-[11px] font-black uppercase tracking-wider leading-tight">
+                  {toast.message}
+                </p>
+              </div>
               <button 
                 onClick={() => setToast(null)}
-                className="w-full py-3 bg-brand-gradient text-black rounded-2xl font-black uppercase tracking-widest text-xs shadow-sm hover:opacity-90 transition-all active:scale-95 text-center mt-2"
+                className="w-8 h-8 flex items-center justify-center hover:bg-white/10 rounded-full transition-colors active:scale-90"
               >
-                OK
+                <X size={16} strokeWidth={3} />
               </button>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
+      </div>
 
       <div 
         className="h-full flex flex-col overflow-hidden"
@@ -3404,19 +3415,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 onClick={() => navigateTeamsTab('chegada')}
                 className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'chegada' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
               >
-                <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Chegada</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Check-in</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('historico')}
                 className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'historico' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
               >
-                <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Confrontos</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Na Quadra</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('proximos')}
                 className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'proximos' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
               >
-                <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Próximos</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Espera</span>
               </button>
             </div>
           </div>
@@ -3430,7 +3441,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 onClick={() => setRankingTab('geral')}
                 className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${rankingTab === 'geral' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
               >
-                <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Geral</span>
+                <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Equipes</span>
               </button>
               <button
                 onClick={() => setRankingTab('artilharia')}
@@ -7022,7 +7033,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               
                               setTeams([...teams, newTeam]);
                               setToast({ 
-                                message: `O ${currentTeam.name} já está lotado. Criamos o ${newTeam.name} para este jogador.`, 
+                                message: `Time Lotado! Criamos o ${newTeam.name} para este jogador.`, 
                                 type: 'warning' 
                               });
                               setTimeout(() => setToast(null), 4000);
@@ -7411,7 +7422,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <motion.div layoutId="nav-glow" className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full" />
               )}
               <UserCog size={22} strokeWidth={currentScreen === 'players' ? 2.5 : 2} className={`mb-1 transition-transform duration-300 ${currentScreen === 'players' ? '-translate-y-0.5' : ''}`} />
-              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'players' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Gerenciar</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'players' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Jogadores</span>
             </button>
             <button 
               onClick={() => {
@@ -7433,7 +7444,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <motion.div layoutId="nav-glow" className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full" />
               )}
               <Swords size={22} strokeWidth={currentScreen === 'teams' ? 2.5 : 2} className={`mb-1 transition-transform duration-300 ${currentScreen === 'teams' ? '-translate-y-0.5' : ''}`} />
-              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'teams' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Partida</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'teams' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Na Quadra</span>
             </button>
             <button 
               onClick={() => {
@@ -7453,7 +7464,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <motion.div layoutId="nav-glow" className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full" />
               )}
               <Trophy size={22} strokeWidth={currentScreen === 'ranking' ? 2.5 : 2} className={`mb-1 transition-transform duration-300 ${currentScreen === 'ranking' ? '-translate-y-0.5' : ''}`} />
-              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'ranking' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Ranking</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'ranking' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Estatísticas</span>
             </button>
           </nav>
         </div>
@@ -7570,9 +7581,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center mx-auto mb-4">
                 <RotateCcw size={32} />
               </div>
-              <h2 className="text-xl font-black text-center mb-2 uppercase tracking-tighter text-white">Zerar Estatísticas?</h2>
+              <h2 className="text-xl font-black text-center mb-2 uppercase tracking-tighter text-white">Resetar Temporada?</h2>
               <p className="text-center text-brand-text-secondary mb-6 text-sm">
-                Deseja zerar todos os gols e assistências de todos os jogadores? Esta ação não pode ser desfeita.
+                Isso apagará todos os gols e assistências. Tudo pronto para começar do zero?
               </p>
               
               <div className="flex gap-3">
@@ -7580,13 +7591,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   onClick={() => setShowResetStatsConfirm(false)}
                   className="flex-1 py-3 bg-white/5 text-white rounded-xl font-black uppercase tracking-widest text-xs hover:bg-white/10 transition-colors"
                 >
-                  Cancelar
+                  Voltar
                 </button>
                 <button 
                   onClick={resetAllStats}
-                  className="flex-1 py-3 bg-emerald-500 text-white rounded-xl font-black uppercase tracking-widest text-xs hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20"
+                  className="flex-1 py-3 bg-brand-primary text-brand-text-primary rounded-xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-lg shadow-brand-primary/20"
                 >
-                  Zerar Agora
+                  Confirmar Reset
                 </button>
               </div>
             </motion.div>
@@ -7611,26 +7622,26 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             >
               <div className="text-orange-500 flex justify-center mb-4">
               </div>
-              <h2 className="text-xl font-black text-center mb-2 uppercase tracking-tighter text-[#464656]">Sair da Partida?</h2>
-              <p className="text-center text-[#464656] mb-6 text-sm opacity-90 lowercase">
-                tem certeza que deseja sair desta partida e voltar para o menu principal?
+              <h2 className="text-xl font-black text-center mb-2 uppercase tracking-tighter text-white">Encerrar Partida?</h2>
+              <p className="text-center text-white/50 mb-6 text-sm">
+                Deseja fechar o painel de jogo e voltar ao menu principal agora?
               </p>
               
               <div className="flex gap-3">
                 <button 
                   onClick={() => setShowBackToHomeConfirm(false)}
-                  className="flex-1 py-3 bg-zinc-200 text-zinc-900 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-zinc-300 transition-colors"
+                  className="flex-1 py-3 bg-white/5 text-white rounded-xl font-black uppercase tracking-widest text-xs hover:bg-white/10 transition-colors"
                 >
-                  Não
+                  Continuar
                 </button>
                 <button 
                   onClick={() => {
                     setShowBackToHomeConfirm(false);
                     onBackToHome();
                   }}
-                  className="flex-1 py-3 bg-orange-500 text-white rounded-xl font-black uppercase tracking-widest text-xs hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20"
+                  className="flex-1 py-3 bg-brand-primary text-brand-text-primary rounded-xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-lg shadow-brand-primary/20"
                 >
-                  Sim
+                  Sair Agora
                 </button>
               </div>
             </motion.div>
