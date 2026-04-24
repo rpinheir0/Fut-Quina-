@@ -3778,11 +3778,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </div>
                     ) : teamsTab === 'proximos' ? (
                       <div className="space-y-6 relative overflow-hidden bg-gradient-to-br from-zinc-50 to-zinc-200 p-6 rounded-3xl border border-zinc-300 shadow-inner">
+                        <div className="absolute inset-0 pointer-events-none opacity-25 z-0" style={{
+                          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 15px, #cccccc 15px, #cccccc 16px), repeating-linear-gradient(-45deg, transparent, transparent 15px, #cccccc 15px, #cccccc 16px)`,
+                        }}></div>
                         
                         <div className="flex justify-between items-center relative z-10">
                           <button 
                             onClick={() => setTeamsTab('configuracao')}
-                            className="p-2 rounded-lg transition-all active:scale-90 hover:bg-zinc-200"
+                            className="p-2 rounded-lg transition-all active:scale-90 hover:bg-zinc-200 bg-white/95 backdrop-blur shadow-sm border border-zinc-200"
                             title="Configurações"
                           >
                             <Settings size={20} className="text-brand-text-primary" />
@@ -3802,7 +3805,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   }, 3000);
                                 }}
                                 disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
-                                className="p-2 rounded-lg transition-all active:scale-90 hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+                                className="p-2 rounded-lg transition-all active:scale-90 hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 bg-white/95 backdrop-blur shadow-sm border border-zinc-200"
                               >
                                 <Shuffle size={20} className="text-brand-text-primary" />
                                 <span className="text-[10px] font-black uppercase tracking-widest text-brand-text-primary">Sortear</span>
@@ -3818,7 +3821,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 disabled={!((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
                                   (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
                                    teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)))}
-                                className="p-2 rounded-lg transition-all active:scale-90 hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5"
+                                className="p-2 rounded-lg transition-all active:scale-90 hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 bg-white/95 backdrop-blur shadow-sm border border-zinc-200"
                               >
                                 <Play size={20} fill="currentColor" className="text-brand-text-primary" />
                                 <span className="text-[10px] font-black uppercase tracking-widest text-brand-text-primary">Iniciar</span>
@@ -3979,7 +3982,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     }}
                                     className={`p-4 rounded-xl border-2 transition-all relative cursor-pointer min-h-[100px] flex flex-col justify-center overflow-hidden ${
                                       isCurrent 
-                                        ? `bg-emerald-500/10 border-emerald-500` 
+                                        ? `bg-emerald-50 border-emerald-500 shadow-md shadow-emerald-500/20 z-10` 
                                         : theme === 'light'
                                           ? 'bg-gradient-to-br from-zinc-100 to-zinc-200 border-zinc-300 hover:border-emerald-500/50'
                                           : 'bg-brand-glass border-brand-border hover:border-emerald-500/50'
