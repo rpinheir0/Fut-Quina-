@@ -465,6 +465,10 @@ const TieBreakerModal = ({
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
         className="w-full h-full sm:h-auto sm:max-w-lg bg-[#112F24] sm:rounded-[48px] overflow-hidden border-t sm:border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative"
       >
+        <div className="absolute inset-0 pointer-events-none opacity-10 z-0" style={{
+          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 21px), repeating-linear-gradient(-45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 21px)`,
+        }}></div>
+
         {/* Background Decorative Elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-[100px] -mr-32 -mt-32" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/20 rounded-full blur-[80px] -ml-32 -mb-32" />
@@ -494,14 +498,36 @@ const TieBreakerModal = ({
         <div className="p-8 pt-0 relative z-10">
           {state.type === 'none' && (
             <div className="space-y-4">
-              <div className="flex items-center gap-4 bg-white/5 p-6 rounded-[32px] border border-white/10 mb-8">
-                <div className="flex-1 text-center">
-                  <div className="text-4xl mb-2">{teamA.emoji}</div>
+              <div className="flex items-center gap-4 bg-white/10 p-6 rounded-[32px] border border-white/10 mb-8 backdrop-blur-sm">
+                <div className="flex-1 flex flex-col items-center">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center drop-shadow-lg mb-2">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
+                      <defs>
+                        <linearGradient id="shield-tie-A-none" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor={teamA.color || TEAM_COLORS[0]} />
+                          <stop offset="100%" stopColor={teamA.color || TEAM_COLORS[0]} stopOpacity="0.85" />
+                        </linearGradient>
+                      </defs>
+                      <path fill="url(#shield-tie-A-none)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
+                      <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.1" />
+                    </svg>
+                  </div>
                   <div className="text-[10px] font-black text-white/40 uppercase tracking-widest">{teamA.name}</div>
                 </div>
                 <div className="text-white/20 font-black italic text-xl">VS</div>
-                <div className="flex-1 text-center">
-                  <div className="text-4xl mb-2">{teamB.emoji}</div>
+                <div className="flex-1 flex flex-col items-center">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center drop-shadow-lg mb-2">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
+                      <defs>
+                        <linearGradient id="shield-tie-B-none" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor={teamB.color || TEAM_COLORS[1]} />
+                          <stop offset="100%" stopColor={teamB.color || TEAM_COLORS[1]} stopOpacity="0.85" />
+                        </linearGradient>
+                      </defs>
+                      <path fill="url(#shield-tie-B-none)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
+                      <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.1" />
+                    </svg>
+                  </div>
                   <div className="text-[10px] font-black text-white/40 uppercase tracking-widest">{teamB.name}</div>
                 </div>
               </div>
@@ -549,15 +575,37 @@ const TieBreakerModal = ({
 
           {isPenaltiesOngoing && (
             <div className="space-y-6">
-              <div className="flex justify-between items-center bg-white/5 p-6 rounded-[32px] border border-white/10">
-                <div className="text-center flex-1">
-                  <div className="text-4xl mb-3 drop-shadow-md">{teamA.emoji}</div>
-                  <div className="text-4xl font-black text-white">{teamAGoals}</div>
+              <div className="flex justify-between items-center bg-white/10 p-6 rounded-[32px] border border-white/10 backdrop-blur-sm">
+                <div className="text-center flex-1 flex flex-col items-center">
+                  <div className="w-16 h-16 flex items-center justify-center drop-shadow-md mb-3">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
+                      <defs>
+                        <linearGradient id="shield-tie-A-pen" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor={teamA.color || TEAM_COLORS[0]} />
+                          <stop offset="100%" stopColor={teamA.color || TEAM_COLORS[0]} stopOpacity="0.85" />
+                        </linearGradient>
+                      </defs>
+                      <path fill="url(#shield-tie-A-pen)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
+                      <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.1" />
+                    </svg>
+                  </div>
+                  <div className="text-4xl font-black text-white tracking-tighter">{teamAGoals}</div>
                 </div>
                 <div className="text-white/10 font-black text-2xl italic tracking-tighter uppercase mx-4">VS</div>
-                <div className="text-center flex-1">
-                  <div className="text-4xl mb-3 drop-shadow-md">{teamB.emoji}</div>
-                  <div className="text-4xl font-black text-white">{teamBGoals}</div>
+                <div className="text-center flex-1 flex flex-col items-center">
+                  <div className="w-16 h-16 flex items-center justify-center drop-shadow-md mb-3">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
+                      <defs>
+                        <linearGradient id="shield-tie-B-pen" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor={teamB.color || TEAM_COLORS[1]} />
+                          <stop offset="100%" stopColor={teamB.color || TEAM_COLORS[1]} stopOpacity="0.85" />
+                        </linearGradient>
+                      </defs>
+                      <path fill="url(#shield-tie-B-pen)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
+                      <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.1" />
+                    </svg>
+                  </div>
+                  <div className="text-4xl font-black text-white tracking-tighter">{teamBGoals}</div>
                 </div>
               </div>
 
@@ -642,8 +690,28 @@ const TieBreakerModal = ({
                   <div className="absolute top-0 bottom-0 left-1/2 w-[2px] bg-white/10 -translate-x-1/2" />
                   
                   {/* Result Indicators */}
-                  <div className="absolute top-6 left-1/2 -translate-x-1/2 text-4xl group-hover:scale-110 transition-transform">{teamA.emoji}</div>
-                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-4xl rotate-180 group-hover:scale-110 transition-transform">{teamB.emoji}</div>
+                  <div className="absolute top-6 left-1/2 -translate-x-1/2 w-12 h-12">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
+                      <defs>
+                        <linearGradient id="shield-tie-A-lot" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor={teamA.color || TEAM_COLORS[0]} />
+                          <stop offset="100%" stopColor={teamA.color || TEAM_COLORS[0]} stopOpacity="0.85" />
+                        </linearGradient>
+                      </defs>
+                      <path fill="url(#shield-tie-A-lot)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-12 h-12 rotate-180">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
+                      <defs>
+                        <linearGradient id="shield-tie-B-lot" x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor={teamB.color || TEAM_COLORS[1]} />
+                          <stop offset="100%" stopColor={teamB.color || TEAM_COLORS[1]} stopOpacity="0.85" />
+                        </linearGradient>
+                      </defs>
+                      <path fill="url(#shield-tie-B-lot)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
+                    </svg>
+                  </div>
 
                   {/* Marker */}
                   <div className="w-24 h-24 bg-[#112F24] rounded-full border-4 border-brand-primary/30 shadow-inner flex items-center justify-center z-10">
@@ -669,10 +737,21 @@ const TieBreakerModal = ({
 
               {state.lottery.winnerId && !state.lottery.isSpinning && (
                 <div className="w-full space-y-6 text-center">
-                  <div className="bg-white/5 p-6 rounded-[32px] border border-white/10 animate-in fade-in zoom-in duration-500">
+                  <div className="bg-white/10 p-6 rounded-[32px] border border-white/10 animate-in fade-in zoom-in duration-500 backdrop-blur-sm">
                     <div className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em] mb-4">Vencedor Sorteado</div>
                     <div className="flex flex-col items-center gap-3">
-                      <div className="text-6xl drop-shadow-xl">{state.lottery.winnerId === teamA.id ? teamA.emoji : teamB.emoji}</div>
+                      <div className="w-20 h-20 flex items-center justify-center drop-shadow-xl">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                          <defs>
+                            <linearGradient id="shield-tie-winner-lot" x1="0%" y1="0%" x2="0%" y2="100%">
+                              <stop offset="0%" stopColor={(state.lottery.winnerId === teamA.id ? teamA.color : teamB.color) || TEAM_COLORS[0]} />
+                              <stop offset="100%" stopColor={(state.lottery.winnerId === teamA.id ? teamA.color : teamB.color) || TEAM_COLORS[0]} stopOpacity="0.85" />
+                            </linearGradient>
+                          </defs>
+                          <path fill="url(#shield-tie-winner-lot)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" strokeLinejoin="round" />
+                          <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.1" />
+                        </svg>
+                      </div>
                       <div className="text-xl font-black text-white uppercase tracking-tighter">
                         {state.lottery.winnerId === teamA.id ? teamA.name : teamB.name}
                       </div>
