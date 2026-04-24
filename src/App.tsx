@@ -135,6 +135,26 @@ interface Team {
   lastMatchStatus?: 'Vencedor' | 'Empate' | 'Derrota';
 }
 
+interface PenaltyShot {
+  playerId: string;
+  success: boolean | null;
+}
+
+interface TieBreakerState {
+  showSelection: boolean;
+  type: 'penalties' | 'lottery' | 'none';
+  penalties: {
+    teamA: PenaltyShot[];
+    teamB: PenaltyShot[];
+    isFinished: boolean;
+    winnerId: string | null;
+  };
+  lottery: {
+    isSpinning: boolean;
+    winnerId: string | null;
+  };
+}
+
 const TEAM_EMOJIS = ['🛡️', '⚔️', '🔰', '⚜️', '🔱', '🎖️', '🏅', '🥇', '🦅', '🦁', '⭐', '🔥', '🐉', '🌪️', '⚡', '🏆', '⚓', '👑', '🦈', '🐺'];
 const TEAM_COLORS = [
   '#3b82f6', '#ef4444', '#22c55e', '#f97316', 
@@ -403,6 +423,245 @@ const ScorerModal = ({
             </button>
           ))}
         </div>
+      </motion.div>
+    </div>
+  );
+};
+
+const TieBreakerModal = ({ 
+  state, 
+  onTypeSelect, 
+  onPenaltyToggle, 
+  onLotterySpin, 
+  onConfirm,
+  teamA,
+  teamB,
+  players
+}: { 
+  state: TieBreakerState, 
+  onTypeSelect: (type: 'penalties' | 'lottery' | 'none') => void, 
+  onPenaltyToggle: (team: 'A' | 'B', index: number) => void,
+  onLotterySpin: () => void,
+  onConfirm: () => void,
+  teamA: Team | undefined,
+  teamB: Team | undefined,
+  players: Player[]
+}) => {
+  if (!state.showSelection || !teamA || !teamB) return null;
+
+  const teamAGoals = state.penalties.teamA.filter(p => p.success === true).length;
+  const teamBGoals = state.penalties.teamB.filter(p => p.success === true).length;
+  
+  const isPenaltiesOngoing = state.type === 'penalties';
+  const isLotteryOngoing = state.type === 'lottery';
+
+  return (
+    <div className="fixed inset-0 z-[2500] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+      <motion.div 
+        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        className="w-full max-w-lg bg-zinc-100 rounded-[32px] overflow-hidden border-2 border-black shadow-2xl"
+      >
+        {/* Selection Header */}
+        <div className="p-6 bg-[#112F24] text-white border-b-2 border-black flex flex-col items-center gap-2">
+          <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
+            <ArrowLeftRight className="text-brand-primary" size={24} />
+          </div>
+          <h2 className="text-xl font-black uppercase tracking-tighter">Empate Detectado!</h2>
+          <p className="text-[10px] font-bold uppercase tracking-widest opacity-60">Escolha como desempatar a partida</p>
+        </div>
+
+        {state.type === 'none' && (
+          <div className="p-8 space-y-4">
+            <button 
+              onClick={() => onTypeSelect('penalties')}
+              className="w-full p-6 bg-white border-2 border-black rounded-2xl flex items-center justify-between group hover:bg-brand-primary/10 transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center group-hover:bg-brand-primary/20">
+                  <Swords className="text-black" size={24} />
+                </div>
+                <div className="text-left">
+                  <div className="text-lg font-black uppercase tracking-tighter">Disputa de Pênaltis</div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Marcar acertos e erros</div>
+                </div>
+              </div>
+              <ChevronRight size={24} className="text-zinc-300" />
+            </button>
+
+            <button 
+              onClick={() => onTypeSelect('lottery')}
+              className="w-full p-6 bg-white border-2 border-black rounded-2xl flex items-center justify-between group hover:bg-brand-primary/10 transition-all active:translate-x-[2px] active:translate-y-[2px] active:shadow-none shadow-[4px_4px_0_0_rgba(0,0,0,1)]"
+            >
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-full bg-zinc-100 flex items-center justify-center group-hover:bg-brand-primary/20">
+                  <RefreshCw className="text-black" size={24} />
+                </div>
+                <div className="text-left">
+                  <div className="text-lg font-black uppercase tracking-tighter">Sorteio Aleatório</div>
+                  <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Girar a roleta da sorte</div>
+                </div>
+              </div>
+              <ChevronRight size={24} className="text-zinc-300" />
+            </button>
+
+            <button 
+              onClick={() => onConfirm()}
+              className="w-full p-4 bg-zinc-200 border-2 border-black rounded-2xl flex items-center justify-center gap-2 hover:bg-zinc-300 transition-all active:translate-x-[1px] active:translate-y-[1px] active:shadow-none shadow-[2px_2px_0_0_rgba(0,0,0,1)] mt-8"
+            >
+              <span className="text-xs font-black uppercase tracking-widest">Manter o Resultado</span>
+            </button>
+          </div>
+        )}
+
+        {isPenaltiesOngoing && (
+          <div className="p-6 space-y-6">
+            <div className="flex justify-between items-center gap-4 bg-zinc-200 p-4 rounded-2xl border border-black/10">
+              <div className="text-center flex-1">
+                <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-1">{teamA.name}</div>
+                <div className="text-4xl font-black">{teamAGoals}</div>
+              </div>
+              <div className="text-zinc-300 font-black text-xl italic uppercase">VS</div>
+              <div className="text-center flex-1">
+                <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-1">{teamB.name}</div>
+                <div className="text-4xl font-black">{teamBGoals}</div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-6">
+              {/* Team A Penalties */}
+              <div className="space-y-4">
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 text-center border-b border-black/5 pb-2">Batedores {teamA.name}</h4>
+                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                  {state.penalties.teamA.map((shot, idx) => {
+                    const p = players.find(player => player.id === shot.playerId);
+                    return (
+                      <div key={`pen-a-${idx}`} className="flex flex-col gap-1 p-2 bg-white rounded-xl border border-black/5 shadow-sm">
+                        <span className="text-[10px] font-black uppercase truncate text-zinc-800">{p?.name || 'Jogador'}</span>
+                        <div className="flex gap-1">
+                          <button 
+                            onClick={() => onPenaltyToggle('A', idx)}
+                            className={`flex-1 py-1.5 rounded-lg border flex items-center justify-center transition-all ${
+                              shot.success === true ? 'bg-emerald-500 text-white border-emerald-600 scale-105 shadow-md' : 'bg-zinc-100 text-zinc-400 border-zinc-200 grayscale opacity-50'
+                            }`}
+                          >
+                            <CheckCircle2 size={14} />
+                          </button>
+                          <button 
+                            onClick={() => onPenaltyToggle('A', idx)}
+                            className={`flex-1 py-1.5 rounded-lg border flex items-center justify-center transition-all ${
+                              shot.success === false ? 'bg-red-500 text-white border-red-600 scale-105 shadow-md' : 'bg-zinc-100 text-zinc-400 border-zinc-200 grayscale opacity-50'
+                            }`}
+                          >
+                            <AlertCircle size={14} />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Team B Penalties */}
+              <div className="space-y-4">
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 text-center border-b border-black/5 pb-2">Batedores {teamB.name}</h4>
+                <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
+                  {state.penalties.teamB.map((shot, idx) => {
+                    const p = players.find(player => player.id === shot.playerId);
+                    return (
+                      <div key={`pen-b-${idx}`} className="flex flex-col gap-1 p-2 bg-white rounded-xl border border-black/5 shadow-sm">
+                        <span className="text-[10px] font-black uppercase truncate text-zinc-800 text-right">{p?.name || 'Jogador'}</span>
+                        <div className="flex gap-1">
+                          <button 
+                            onClick={() => onPenaltyToggle('B', idx)}
+                            className={`flex-1 py-1.5 rounded-lg border flex items-center justify-center transition-all ${
+                              shot.success === true ? 'bg-emerald-500 text-white border-emerald-600 scale-105 shadow-md' : 'bg-zinc-100 text-zinc-400 border-zinc-200 grayscale opacity-50'
+                            }`}
+                          >
+                            <CheckCircle2 size={14} />
+                          </button>
+                          <button 
+                            onClick={() => onPenaltyToggle('B', idx)}
+                            className={`flex-1 py-1.5 rounded-lg border flex items-center justify-center transition-all ${
+                              shot.success === false ? 'bg-red-500 text-white border-red-600 scale-105 shadow-md' : 'bg-zinc-100 text-zinc-400 border-zinc-200 grayscale opacity-50'
+                            }`}
+                          >
+                            <AlertCircle size={14} />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            <button 
+              disabled={teamAGoals === teamBGoals}
+              onClick={() => onConfirm()}
+              className="w-full py-4 bg-brand-gradient text-black rounded-2xl font-black uppercase tracking-widest shadow-[4px_4px_0_0_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all text-sm border-2 border-black disabled:opacity-50 disabled:cursor-not-allowed mt-4"
+            >
+              {teamAGoals === teamBGoals ? 'Aguardando Desempate' : 'Finalizar Disputa'}
+            </button>
+          </div>
+        )}
+
+        {isLotteryOngoing && (
+          <div className="p-8 flex flex-col items-center gap-8">
+            <div className="relative">
+              <motion.div 
+                animate={state.lottery.isSpinning ? { 
+                  rotate: [0, 360 * 10],
+                  transition: { duration: 3, ease: "easeInOut" }
+                } : { 
+                  rotate: state.lottery.winnerId ? (state.lottery.winnerId === teamA.id ? 0 : 180) : 0 
+                }}
+                className="w-48 h-48 rounded-full border-8 border-[#112F24] relative shadow-2xl flex items-center justify-center bg-zinc-200"
+              >
+                {/* Team Dividers */}
+                <div className="absolute top-0 bottom-0 left-1/2 w-2 bg-black/20 -translate-x-1/2"></div>
+                
+                {/* Team Labels */}
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 text-[10px] font-black uppercase text-[#112F24]">{teamA.name}</div>
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] font-black uppercase text-[#112F24] rotate-180">{teamB.name}</div>
+
+                {/* Central Ball */}
+                <div className="w-20 h-20 bg-white rounded-full border-4 border-black shadow-lg flex items-center justify-center z-10 overflow-hidden">
+                  <CircleDot className="text-[#112F24]" size={40} />
+                </div>
+              </motion.div>
+
+              {/* Ticker */}
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-4 h-8 bg-red-600 rounded-b-lg shadow-md z-30" />
+            </div>
+
+            {!state.lottery.winnerId && !state.lottery.isSpinning && (
+              <button 
+                onClick={onLotterySpin}
+                className="w-full py-4 bg-brand-gradient text-black rounded-2xl font-black uppercase tracking-widest shadow-[4px_4px_0_0_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all text-sm border-2 border-black"
+              >
+                Sortear agora
+              </button>
+            )}
+
+            {state.lottery.winnerId && !state.lottery.isSpinning && (
+              <div className="w-full space-y-4 text-center">
+                <div className="p-4 bg-brand-primary/20 rounded-2xl border-2 border-brand-primary">
+                  <div className="text-[10px] font-black uppercase tracking-widest text-[#112F24] mb-1">Vencedor do Sorteio</div>
+                  <div className="text-2xl font-black uppercase tracking-tighter text-[#112F24]">
+                    {state.lottery.winnerId === teamA.id ? teamA.name : teamB.name}
+                  </div>
+                </div>
+                <button 
+                  onClick={() => onConfirm()}
+                  className="w-full py-4 bg-brand-gradient text-black rounded-2xl font-black uppercase tracking-widest shadow-[4px_4px_0_0_rgba(0,0,0,1)] active:translate-x-[2px] active:translate-y-[2px] active:shadow-none transition-all text-sm border-2 border-black"
+                >
+                  Confirmar Resultado
+                </button>
+              </div>
+            )}
+          </div>
+        )}
       </motion.div>
     </div>
   );
@@ -1240,6 +1499,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
   const [swappingPlayerId, setSwappingPlayerId] = useState<string | null>(null);
   const [fillingVacancyForTeam, setFillingVacancyForTeam] = useState<number | null>(null);
+  const [tieBreaker, setTieBreaker] = useState<TieBreakerState>({
+    showSelection: false,
+    type: 'none',
+    penalties: { teamA: [], teamB: [], isFinished: false, winnerId: null },
+    lottery: { isSpinning: false, winnerId: null }
+  });
   const [playersTab, setPlayersTab] = useState<'jogadores' | 'configuracao'>(() => {
     const saved = safeLocalStorage.getItem(`futquina_players_tab_${groupId}`);
     return (saved as 'jogadores' | 'configuracao') || 'jogadores';
@@ -2145,17 +2410,20 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     setSelectedScorerId(null);
   };
 
-  function finishMatch() {
-    sounds.playFinishMatch();
-    const scoreA = match.scoreA;
-    const scoreB = match.scoreB;
-    const teamAIndex = match.teamAIndex;
-    const teamBIndex = match.teamBIndex;
+  function finalizeMatch(sA: number, sB: number, tAIdx: number, tBIdx: number, tieBreakerWinnerIndex?: number) {
+    const scoreA = sA;
+    const scoreB = sB;
+    const teamAIndex = tAIdx;
+    const teamBIndex = tBIdx;
 
     // Determine winner and loser for stats/history
     let winnerIndex = teamAIndex;
     let loserIndex = teamBIndex;
-    if (scoreB > scoreA) {
+    
+    if (tieBreakerWinnerIndex !== undefined) {
+      winnerIndex = tieBreakerWinnerIndex;
+      loserIndex = tieBreakerWinnerIndex === teamAIndex ? teamBIndex : teamAIndex;
+    } else if (scoreB > scoreA) {
       winnerIndex = teamBIndex;
       loserIndex = teamAIndex;
     } else if (scoreA === scoreB) {
@@ -2167,7 +2435,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     // Determine who stays and who leaves for queue rotation
     let teamToStayIndex = teamAIndex;
     let teamToLeaveIndex = teamBIndex;
-    if (scoreB > scoreA) {
+    
+    if (tieBreakerWinnerIndex !== undefined) {
+      teamToStayIndex = tieBreakerWinnerIndex;
+      teamToLeaveIndex = tieBreakerWinnerIndex === teamAIndex ? teamBIndex : teamAIndex;
+    } else if (scoreB > scoreA) {
       teamToStayIndex = teamBIndex;
       teamToLeaveIndex = teamAIndex;
     } else if (scoreA === scoreB) {
@@ -2188,7 +2460,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       winnerId: winnerIndex !== -1 ? teams[winnerIndex]?.id : null,
       loserId: loserIndex !== -1 ? teams[loserIndex]?.id : null,
       events: match.events,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      tieBreakerWinnerId: tieBreakerWinnerIndex !== undefined ? teams[tieBreakerWinnerIndex]?.id : null
     };
 
     setLastMatchResult(result);
@@ -2213,6 +2486,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           if (t.id === teamBId) return { ...t, lastMatchStatus: scoreA === scoreB ? 'Empate' : scoreB > scoreA ? 'Vencedor' : 'Derrota' };
           return t;
         });
+
+        // Set status based on tie breaker if it happened
+        if (tieBreakerWinnerIndex !== undefined) {
+           const winnerId = teams[tieBreakerWinnerIndex]?.id;
+           const loserId = teams[tieBreakerWinnerIndex === teamAIndex ? teamBIndex : teamAIndex]?.id;
+           newTeams = newTeams.map(t => {
+             if (t.id === winnerId) return { ...t, lastMatchStatus: 'Vencedor' };
+             if (t.id === loserId) return { ...t, lastMatchStatus: 'Derrota' };
+             return t;
+           });
+        }
 
         const leavingTeam = newTeams.splice(teamToLeaveIndex, 1)[0];
         newTeams.push(leavingTeam);
@@ -2251,7 +2535,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     const teamB = teams[match.teamBIndex];
     
     if (teamA && teamB) {
-      if (scoreA > scoreB) {
+      if (tieBreakerWinnerIndex !== undefined) {
+        winners.push(teams[tieBreakerWinnerIndex].id);
+      } else if (scoreA > scoreB) {
         winners.push(teamA.id);
       } else if (scoreB > scoreA) {
         winners.push(teamB.id);
@@ -2275,6 +2561,35 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     
     setTeamsTab('proximos');
     playWhistle();
+  }
+
+  function finishMatch() {
+    sounds.playFinishMatch();
+    const scoreA = match.scoreA;
+    const scoreB = match.scoreB;
+    const teamAIndex = match.teamAIndex;
+    const teamBIndex = match.teamBIndex;
+
+    // Check for draw to initiate tie breaker
+    if (scoreA === scoreB) {
+      setTieBreaker({
+        showSelection: true,
+        type: 'none',
+        penalties: {
+          teamA: (teams[teamAIndex]?.playerIds || []).map(pid => ({ playerId: pid, success: null })),
+          teamB: (teams[teamBIndex]?.playerIds || []).map(pid => ({ playerId: pid, success: null })),
+          isFinished: false,
+          winnerId: null
+        },
+        lottery: {
+          isSpinning: false,
+          winnerId: null
+        }
+      });
+      return;
+    }
+
+    finalizeMatch(scoreA, scoreB, teamAIndex, teamBIndex);
   };
 
   const resetMatch = () => {
@@ -2342,6 +2657,70 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     setShowMatchSettingsModal(false);
     setCurrentScreen('teams');
     setTeamsTab('historico');
+  };
+
+  const handleTieBreakerTypeSelect = (type: 'penalties' | 'lottery' | 'none') => {
+    setTieBreaker(prev => ({ ...prev, type }));
+  };
+
+  const handlePenaltyToggle = (team: 'A' | 'B', index: number) => {
+    setTieBreaker(prev => {
+      const nextPenalties = { ...prev.penalties };
+      const list = team === 'A' ? [...nextPenalties.teamA] : [...nextPenalties.teamB];
+      
+      // Cycle: null -> true -> false -> null
+      const current = list[index].success;
+      let next: boolean | null = null;
+      if (current === null) next = true;
+      else if (current === true) next = false;
+      else next = null;
+
+      list[index] = { ...list[index], success: next };
+      
+      if (team === 'A') nextPenalties.teamA = list;
+      else nextPenalties.teamB = list;
+
+      return { ...prev, penalties: nextPenalties };
+    });
+  };
+
+  const handleLotterySpin = () => {
+    if (tieBreaker.lottery.isSpinning) return;
+    
+    setTieBreaker(prev => ({ ...prev, lottery: { ...prev.lottery, isSpinning: true } }));
+    
+    setTimeout(() => {
+      const winnerIdx = Math.random() > 0.5 ? match.teamAIndex : match.teamBIndex;
+      const winnerId = teams[winnerIdx]?.id;
+      setTieBreaker(prev => ({ 
+        ...prev, 
+        lottery: { isSpinning: false, winnerId: winnerId || null } 
+      }));
+    }, 3000);
+  };
+
+  const handleTieBreakerConfirm = () => {
+    const scoreA = match.scoreA;
+    const scoreB = match.scoreB;
+    const teamAIndex = match.teamAIndex;
+    const teamBIndex = match.teamBIndex;
+
+    let winnerIndex: number | undefined = undefined;
+
+    if (tieBreaker.type === 'penalties') {
+      const teamAGoals = tieBreaker.penalties.teamA.filter(p => p.success === true).length;
+      const teamBGoals = tieBreaker.penalties.teamB.filter(p => p.success === true).length;
+      if (teamAGoals > teamBGoals) winnerIndex = teamAIndex;
+      else if (teamBGoals > teamAGoals) winnerIndex = teamBIndex;
+      // If still equal, we don't finalize or let user decide?
+      // The button is disabled if equal in the UI
+    } else if (tieBreaker.type === 'lottery') {
+      if (tieBreaker.lottery.winnerId === teams[teamAIndex]?.id) winnerIndex = teamAIndex;
+      else if (tieBreaker.lottery.winnerId === teams[teamBIndex]?.id) winnerIndex = teamBIndex;
+    }
+
+    setTieBreaker(prev => ({ ...prev, showSelection: false }));
+    finalizeMatch(scoreA, scoreB, teamAIndex, teamBIndex, winnerIndex);
   };
 
   const togglePayment = (playerId: string, field: string, amount: number) => {
@@ -2586,6 +2965,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           />
         )}
       </AnimatePresence>
+
+      <TieBreakerModal 
+        state={tieBreaker}
+        onTypeSelect={handleTieBreakerTypeSelect}
+        onPenaltyToggle={handlePenaltyToggle}
+        onLotterySpin={handleLotterySpin}
+        onConfirm={handleTieBreakerConfirm}
+        teamA={teams[match.teamAIndex]}
+        teamB={teams[match.teamBIndex]}
+        players={players}
+      />
 
       <AnimatePresence>
         {isInitializing && (
@@ -3105,7 +3495,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <div id="teams-list-section" className="max-w-5xl mx-auto w-full space-y-4">
                     {teamsTab === 'configuracao' ? (
                       <div className="space-y-6 bg-zinc-100 p-6 rounded-3xl border border-zinc-200">
-                        <div className="flex justify-between items-center">
+                        <div className="sticky top-[-1px] z-40 bg-zinc-100 py-4 -mx-6 px-6 border-b border-zinc-200 flex justify-between items-center rounded-t-3xl">
                           <h3 className="text-sm font-black uppercase tracking-widest text-zinc-900">Configuração</h3>
                         </div>
                         
@@ -3559,7 +3949,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             {match.hasEnded && (
                               <div className="absolute inset-0 z-40 bg-black/10 backdrop-blur-[1px] rounded-2xl pointer-events-auto cursor-default" />
                             )}
-                            <div className="flex flex-row items-center justify-between gap-2 sm:gap-6 px-4 py-8 bg-zinc-200/50 rounded-[40px] border border-zinc-300 shadow-sm w-full max-w-2xl mx-auto relative overflow-hidden">
+                            <div className="sticky top-[-1px] z-40 bg-zinc-100/95 backdrop-blur-md py-6 -mx-6 px-6 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-[40px] border border-zinc-300 shadow-sm w-full max-w-2xl mx-auto relative overflow-hidden">
                               <div className="flex-1 flex flex-col items-center text-center space-y-2 sm:space-y-4">
                                   <button 
                                     className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm"
@@ -4635,7 +5025,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               className="p-6 space-y-6 pb-24"
             >
               <motion.div 
-                className={`rounded-2xl overflow-hidden border bg-brand-card/50 border-brand-border p-4`}
+                className={`bg-zinc-100 p-6 rounded-3xl border border-zinc-200 overflow-hidden shadow-sm`}
                 drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
                 onDragEnd={(event, info) => {
@@ -4647,12 +5037,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   }
                 }}
               >
-                <div className="flex items-center justify-between pb-2 border-b border-dashed mb-4 px-2" style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}>
-                  <button onClick={() => setIsPrintMode(true)} className="text-zinc-400 p-2 hover:bg-zinc-800 rounded-full transition-colors">
+                <div className="flex items-center justify-between pb-2 border-b border-dashed border-zinc-300 mb-4 px-2">
+                  <button onClick={() => setIsPrintMode(true)} className="text-zinc-600 p-2 hover:bg-zinc-200 rounded-full transition-colors">
                     <Eye size={20} />
                   </button>
                   <div className="text-zinc-500 text-xs font-bold font-mono tracking-tighter uppercase"></div>
-                  <div className={`flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-black ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
+                  <div className={`flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-[#1E3D2F]/60 ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
                     <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'assistencias' ? '' : 'opacity-0'}`}><Trophy size={14} /> Gols</div>
                     <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'artilharia' ? '' : 'opacity-0'}`}><Award size={14} /> Ass</div>
                   </div>
@@ -4668,7 +5058,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   .map((player, index) => (
                   <div 
                     key={`ranking-player-${player.id}`}
-                    className={`flex items-center py-3 px-2 transition-colors rounded-xl ${index !== 0 ? `border-t border-brand-border/50` : ''}`}
+                    className={`flex items-center py-3 px-2 transition-colors rounded-xl ${index !== 0 ? `border-t border-zinc-200` : ''}`}
                   >
                     <div className="w-8 text-sm font-black text-brand-text-secondary text-center shrink-0">
                       {index + 1}
