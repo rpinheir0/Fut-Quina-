@@ -513,6 +513,16 @@ const TieBreakerModal = ({
                     </svg>
                   </div>
                   <div className="text-[10px] font-black text-white/40 uppercase tracking-widest">{teamA.name}</div>
+                  <div className="mt-2 flex flex-wrap justify-center gap-1 px-2">
+                    {teamA.playerIds.map((pid, idx) => {
+                      const p = players.find(player => player.id === pid);
+                      return (
+                        <span key={pid} className="text-[7px] font-bold text-white/30 uppercase tracking-tighter">
+                          {p?.name}{idx < teamA.playerIds.length - 1 ? ' •' : ''}
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
                 <div className="text-white/20 font-black italic text-xl">VS</div>
                 <div className="flex-1 flex flex-col items-center">
@@ -529,6 +539,16 @@ const TieBreakerModal = ({
                     </svg>
                   </div>
                   <div className="text-[10px] font-black text-white/40 uppercase tracking-widest">{teamB.name}</div>
+                  <div className="mt-2 flex flex-wrap justify-center gap-1 px-2">
+                    {teamB.playerIds.map((pid, idx) => {
+                      const p = players.find(player => player.id === pid);
+                      return (
+                        <span key={pid} className="text-[7px] font-bold text-white/30 uppercase tracking-tighter">
+                          {p?.name}{idx < teamB.playerIds.length - 1 ? ' •' : ''}
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
 
@@ -564,7 +584,7 @@ const TieBreakerModal = ({
                 <div className="pt-4">
                   <button 
                     onClick={() => onConfirm()}
-                    className="w-full p-4 rounded-[20px] text-white/40 hover:text-white/60 text-[10px] font-black uppercase tracking-[0.2em] transition-colors"
+                    className="w-full p-4 rounded-[20px] bg-gradient-to-br from-zinc-800 to-zinc-900 border border-white/10 text-brand-primary text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:from-zinc-700 hover:to-zinc-800 shadow-lg active:scale-95"
                   >
                     Manter o resultado atual
                   </button>
