@@ -56,7 +56,8 @@ import {
   Eye,
   Award,
   LogOut,
-  Contact
+  Contact,
+  Menu
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
@@ -138,9 +139,9 @@ interface Team {
 const TEAM_EMOJIS = ['🛡️', '⚔️', '🔰', '⚜️', '🔱', '🎖️', '🏅', '🥇', '🦅', '🦁', '⭐', '🔥', '🐉', '🌪️', '⚡', '🏆', '⚓', '👑', '🦈', '🐺'];
 const TEAM_COLORS = [
   '#3b82f6', '#ef4444', '#22c55e', '#f97316', 
-  '#eab308', '#14b8a6', '#6366f1', '#84cc16', 
-  '#0ea5e9', '#10b981', '#f59e0b', '#6b7280',
-  '#ffffff'
+  '#eab308', '#14b8a6', '#84cc16', '#0ea5e9', 
+  '#10b981', '#f59e0b', '#6b7280', '#ffffff',
+  '#000000'
 ];
 
 const TutorialCarousel = () => {
@@ -1306,6 +1307,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [showResetStatsConfirm, setShowResetStatsConfirm] = useState(false);
   const [showGoalAnimation, setShowGoalAnimation] = useState<{ scorerName: string, teamName: string, scorerPhoto?: string } | null>(null);
   const [showSetupGuide, setShowSetupGuide] = useState(false);
+  const [showMainMenu, setShowMainMenu] = useState(false);
   const [highlightFirstPlayer, setHighlightFirstPlayer] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
   const teamRects = useRef<DOMRect[]>([]);
@@ -2687,11 +2689,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         {/* Sticky Header and Tabs Container */}
         <div className={`sticky top-0 z-50 bg-brand-dark border-b border-brand-border/10 ${isPrintMode ? 'hidden' : ''}`}>
         {/* Header */}
-        <header className="px-6 py-4 flex justify-start items-center">
+        <header className="px-6 py-4 flex justify-between items-center bg-[#1E3D2F]">
           <div className="flex items-center gap-3">
             <SpinningBall size="sm" spin={false} />
             <FutQuinaLogo size="md" style={{ color: '#ffffff' }} colorClass="" />
           </div>
+          <button 
+            onClick={() => setShowMainMenu(true)}
+            className="p-2 text-white hover:bg-white/10 rounded-full transition-colors"
+          >
+            <Menu size={24} />
+          </button>
         </header>
 
         {/* Tabs for Teams */}
@@ -2721,6 +2729,32 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'proximos' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
               >
                 <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Próximos</span>
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* Tabs for Ranking */}
+        {currentScreen === 'ranking' && (
+          <div className="px-6 pb-4">
+            <div className="flex bg-brand-dark p-1 rounded-2xl border border-brand-border">
+              <button
+                onClick={() => setRankingTab('geral')}
+                className={`flex-1 py-2 text-[10px] uppercase font-black tracking-widest rounded-xl transition-all ${rankingTab === 'geral' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
+              >
+                Geral
+              </button>
+              <button
+                onClick={() => setRankingTab('artilharia')}
+                className={`flex-1 py-2 text-[10px] uppercase font-black tracking-widest rounded-xl transition-all ${rankingTab === 'artilharia' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
+              >
+                Artilharia
+              </button>
+              <button
+                onClick={() => setRankingTab('assistencias')}
+                className={`flex-1 py-2 text-[10px] uppercase font-black tracking-widest rounded-xl transition-all ${rankingTab === 'assistencias' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
+              >
+                Assistências
               </button>
             </div>
           </div>
@@ -3951,12 +3985,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       (movingPlayers && isSelectingDestination) ? 'cursor-pointer hover:opacity-90' : 'cursor-default'
                                     } ${
                                       isCurrent 
-                                        ? 'shadow-md z-10'
-                                        : 'shadow-sm opacity-80'
-                                    } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-emerald-500/10 border-emerald-500' : ''}`}
+                                        ? 'shadow-lg z-10 border-emerald-500 ring-2 ring-emerald-500/20'
+                                        : 'shadow-sm opacity-80 border-zinc-300'
+                                    } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-emerald-500/10 !border-emerald-500' : ''}`}
                                     style={{
                                       backgroundColor: 'transparent',
-                                      borderColor: (movingPlayers?.teamId === t.id || (swappingPlayerId && t.playerIds.includes(swappingPlayerId))) ? '#22c55e' : (isCurrent ? '#10b981' : '#d4d4d8')
+                                      borderColor: (movingPlayers?.teamId === t.id || (swappingPlayerId && t.playerIds.includes(swappingPlayerId))) ? '#22c55e' : undefined
                                     }}
                                   >
                                     
@@ -4510,27 +4544,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               }}
               className="p-6 space-y-6 pb-24"
             >
-              <div className="flex bg-brand-dark p-1 rounded-2xl border border-brand-border mb-4">
-                <button
-                  onClick={() => setRankingTab('geral')}
-                  className={`flex-1 py-2 text-[10px] uppercase font-black tracking-widest rounded-xl transition-all ${rankingTab === 'geral' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
-                >
-                  Geral
-                </button>
-                <button
-                  onClick={() => setRankingTab('artilharia')}
-                  className={`flex-1 py-2 text-[10px] uppercase font-black tracking-widest rounded-xl transition-all ${rankingTab === 'artilharia' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
-                >
-                  Artilharia
-                </button>
-                <button
-                  onClick={() => setRankingTab('assistencias')}
-                  className={`flex-1 py-2 text-[10px] uppercase font-black tracking-widest rounded-xl transition-all ${rankingTab === 'assistencias' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
-                >
-                  Assistências
-                </button>
-              </div>
-              
               <motion.div 
                 className={`rounded-2xl overflow-hidden border bg-brand-card/50 border-brand-border p-4`}
                 drag="x"
@@ -6750,33 +6763,68 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               <Medal size={18} className="mb-1" />
               <span className="text-[10px] font-black lowercase first-letter:uppercase tracking-wider leading-none">Ranking</span>
             </button>
-            <button 
-              onClick={() => {
-                const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
-                const targetIndex = screens.indexOf('finance');
-                const currentIndex = screens.indexOf(currentScreen);
-                setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
-                setCurrentScreen('finance');
-                setFinanceSubScreen('balanco');
-              }}
-              className={`flex-1 flex flex-col items-center justify-center py-2 transition-none rounded-2xl ${
-                currentScreen === 'finance' 
-                  ? 'bg-white/10 text-white' 
-                  : 'text-white/70 hover:text-white hover:bg-white/5'
-              }`}
-            >
-              <Wallet size={18} className="mb-1" />
-              <span className="text-[10px] font-black lowercase first-letter:uppercase tracking-wider leading-none">Financeiro</span>
-            </button>
-            <button 
-              onClick={() => setShowBackToHomeConfirm(true)}
-              className={`flex-1 flex flex-col items-center justify-center py-2 transition-none rounded-2xl text-white/70 hover:text-white hover:bg-white/5`}
-            >
-              <LogOut size={18} className="mb-1" />
-              <span className="text-[10px] font-black lowercase first-letter:uppercase tracking-wider leading-none">Sair</span>
-            </button>
           </div>
         </nav>
+
+        {/* Main Menu Modal */}
+        <AnimatePresence>
+          {showMainMenu && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex justify-end"
+              onClick={() => setShowMainMenu(false)}
+            >
+              <motion.div
+                initial={{ x: '100%' }}
+                animate={{ x: 0 }}
+                exit={{ x: '100%' }}
+                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+                className="bg-[#1E3D2F] w-64 h-full shadow-2xl flex flex-col"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <div className="p-6 border-b border-white/10 flex justify-between items-center">
+                  <h2 className="text-xl font-black uppercase tracking-tighter text-white">Menu</h2>
+                  <button onClick={() => setShowMainMenu(false)} className="p-2 -mr-2 text-white/50 hover:text-white transition-colors">
+                    <X size={20} />
+                  </button>
+                </div>
+                
+                <div className="flex-1 p-4 flex flex-col gap-2">
+                  <button 
+                    onClick={() => {
+                      setShowMainMenu(false);
+                      const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
+                      const targetIndex = screens.indexOf('finance');
+                      const currentIndex = screens.indexOf(currentScreen);
+                      setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
+                      setCurrentScreen('finance');
+                      setFinanceSubScreen('balanco');
+                    }}
+                    className="flex items-center gap-3 p-4 rounded-xl text-[#1E3D2F] bg-white hover:bg-white/90 transition-all text-left"
+                  >
+                    <Wallet size={20} />
+                    <span className="font-bold uppercase tracking-wider text-sm">Financeiro</span>
+                  </button>
+                </div>
+
+                <div className="p-4 border-t border-white/10">
+                  <button 
+                    onClick={() => {
+                      setShowMainMenu(false);
+                      setShowBackToHomeConfirm(true);
+                    }}
+                    className="w-full flex items-center justify-center gap-2 p-4 rounded-xl text-brand-primary opacity-80 hover:opacity-100 hover:bg-white/5 transition-all"
+                  >
+                    <LogOut size={20} />
+                    <span className="font-bold uppercase tracking-wider text-sm">Sair da Partida</span>
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         {/* Reset Stats Confirm Modal */}
         {showResetStatsConfirm && (
