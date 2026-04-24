@@ -636,8 +636,8 @@ const TieBreakerModal = ({
                   {state.penalties.teamA.map((shot, idx) => {
                     const p = players.find(player => player.id === shot.playerId);
                     return (
-                      <div key={`pen-a-${idx}`} className="p-3 bg-white/10 rounded-2xl border border-white/5 space-y-2">
-                        <div className="text-[10px] font-black text-white truncate uppercase">{p?.name}</div>
+                      <div key={`pen-a-${idx}`} className="p-3 bg-white/90 rounded-2xl border border-white/5 space-y-2">
+                        <div className="text-[10px] font-black text-zinc-900 truncate uppercase">{p?.name}</div>
                         <div className="flex gap-1.5">
                           <button 
                             onClick={() => onPenaltyToggle('A', idx)}
@@ -663,8 +663,8 @@ const TieBreakerModal = ({
                   {state.penalties.teamB.map((shot, idx) => {
                     const p = players.find(player => player.id === shot.playerId);
                     return (
-                      <div key={`pen-b-${idx}`} className="p-3 bg-white/10 rounded-2xl border border-white/5 space-y-2">
-                        <div className="text-[10px] font-black text-white truncate uppercase">{p?.name}</div>
+                      <div key={`pen-b-${idx}`} className="p-3 bg-white/90 rounded-2xl border border-white/5 space-y-2">
+                        <div className="text-[10px] font-black text-zinc-900 truncate uppercase">{p?.name}</div>
                         <div className="flex gap-1.5">
                           <button 
                             onClick={() => onPenaltyToggle('B', idx)}
