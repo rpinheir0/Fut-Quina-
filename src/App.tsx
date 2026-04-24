@@ -138,9 +138,9 @@ interface Team {
 const TEAM_EMOJIS = ['🛡️', '⚔️', '🔰', '⚜️', '🔱', '🎖️', '🏅', '🥇', '🦅', '🦁', '⭐', '🔥', '🐉', '🌪️', '⚡', '🏆', '⚓', '👑', '🦈', '🐺'];
 const TEAM_COLORS = [
   '#3b82f6', '#ef4444', '#22c55e', '#f97316', 
-  '#eab308', '#14b8a6', '#06b6d4', '#84cc16', 
-  '#f59e0b', '#10b981', '#0ea5e9', '#6b7280', 
-  '#ffffff', '#1a1a1a'
+  '#eab308', '#14b8a6', '#6366f1', '#84cc16', 
+  '#0ea5e9', '#10b981', '#f59e0b', '#6b7280',
+  '#ffffff'
 ];
 
 const TutorialCarousel = () => {
@@ -218,12 +218,12 @@ const getNextTeamColor = (existingTeams: Team[]) => {
   const availableColors = TEAM_COLORS.filter(c => !usedColors.includes(c));
   
   if (availableColors.length > 0) {
-    // Pick a random color from available colors to avoid predictable patterns
-    return availableColors[Math.floor(Math.random() * availableColors.length)];
+    // Pick the first available color to ensure stable, sequential variety
+    return availableColors[0];
   }
   
-  // If no colors are available, pick a random color from the entire set
-  return TEAM_COLORS[Math.floor(Math.random() * TEAM_COLORS.length)];
+  // If no colors are available, pick sequentially based on length
+  return TEAM_COLORS[existingTeams.length % TEAM_COLORS.length];
 };
 
 const FlipDigit = ({ value, size = 'normal', clockId = '', digitId = '' }: { value: string, size?: 'normal' | 'small' | 'xs', clockId?: string, digitId?: string }) => {
@@ -1028,6 +1028,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         const uniqueTeams: Team[] = [];
         const seenTeamIds = new Set<string>();
         
+        const allSameGreen = parsed.length > 1 && parsed.every((t: any) => t && t.color === '#4ade80');
+        const allSameBlack = parsed.length > 1 && parsed.every((t: any) => t && t.color === '#1a1a1a');
+        const forceRecolor = allSameGreen || allSameBlack;
+        
         for (const t of parsed) {
           if (!t || typeof t !== 'object') continue;
           const teamId = (t.id && !seenTeamIds.has(t.id)) ? t.id : generateId();
@@ -1043,7 +1047,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             }
           }
           
-          uniqueTeams.push({ ...t, id: teamId, playerIds: uniquePlayerIds, color: t.color || getNextTeamColor(uniqueTeams) });
+          let parsedColor = t.color;
+          if (forceRecolor || !parsedColor || parsedColor === '#1a1a1a') {
+            parsedColor = getNextTeamColor(uniqueTeams);
+          }
+          
+          uniqueTeams.push({ ...t, id: teamId, playerIds: uniquePlayerIds, color: parsedColor });
         }
         return uniqueTeams;
       } catch (e) {
@@ -1288,7 +1297,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [duplicatePlayerName, setDuplicatePlayerName] = useState<{ name: string, callback: (newName: string) => void } | null>(null);
   const [showPlayerActionsModal, setShowPlayerActionsModal] = useState<{ teamIndex: number, playerId: string } | null>(null);
   const [showQueuePlayerModal, setShowQueuePlayerModal] = useState<{ teamIndex: number, playerId: string, showMoveOptions?: boolean } | null>(null);
-  const [movingPlayer, setMovingPlayer] = useState<{ teamId: string, playerId: string } | null>(null);
+  const [movingPlayers, setMovingPlayers] = useState<{ teamId: string, playerIds: string[] } | null>(null);
+  const [isSelectingDestination, setIsSelectingDestination] = useState(false);
+  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
   const [showAssistSelection, setShowAssistSelection] = useState<{ teamIndex: number, scorerId: string } | null>(null);
   const [playerManagementModal, setPlayerManagementModal] = useState<Player | null>(null);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
@@ -1347,12 +1358,26 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           setPlayers(Array.from(uniquePlayersMap.values()));
         }
         if (teamsData && teamsData.length > 0) {
-          setTeams(teamsData.map(t => ({
-            id: t.id,
-            name: t.name,
-            color: t.color || '#4ade80',
-            playerIds: t.player_ids || []
-          })));
+          const loadedTeams: Team[] = [];
+          
+          // Detect if all teams have the exact same bugged fallback color
+          const allSameGreen = teamsData.length > 1 && teamsData.every(t => t.color === '#4ade80');
+          const allSameBlack = teamsData.length > 1 && teamsData.every(t => t.color === '#1a1a1a');
+          const forceRecolor = allSameGreen || allSameBlack;
+          
+          for (const t of teamsData) {
+            let parsedColor = t.color;
+            if (forceRecolor || !parsedColor || parsedColor === '#1a1a1a') {
+              parsedColor = getNextTeamColor(loadedTeams);
+            }
+            loadedTeams.push({
+              id: t.id,
+              name: t.name,
+              color: parsedColor,
+              playerIds: t.player_ids || []
+            });
+          }
+          setTeams(loadedTeams);
         }
         if (paymentsData && paymentsData.length > 0) {
           setPayments(paymentsData.map(p => ({
@@ -3625,31 +3650,45 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   <button 
                                     key={`empty-a-${i}`}
                                     onClick={() => {
-                                      if (movingPlayer) {
-                                        const sourceTeamIdx = teams.findIndex(team => team.id === movingPlayer.teamId);
+                                      if (movingPlayers && isSelectingDestination) {
+                                        const sourceTeamIdx = teams.findIndex(team => team.id === movingPlayers.teamId);
                                         if (sourceTeamIdx === match.teamAIndex) {
-                                          setToast({ message: "O jogador já está neste time.", type: 'info' });
-                                          setMovingPlayer(null);
+                                          setToast({ message: "Os jogadores já estão neste time.", type: 'info' });
+                                          setMovingPlayers(null);
+                                          setIsSelectingDestination(false);
                                           return;
                                         }
+                                        const availableSlots = match.config.playersPerTeam - (teams[match.teamAIndex]?.playerIds?.length || 0);
+                                        if (availableSlots <= 0) {
+                                          setToast({ message: "Este time já está completo.", type: 'warning' });
+                                          return;
+                                        }
+                                        const playersToMove = movingPlayers.playerIds.slice(0, availableSlots);
                                         setTeams(prev => {
                                           const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
-                                          const sTeam = newTeams.find(team => team.id === movingPlayer.teamId);
+                                          const sTeam = newTeams.find(team => team.id === movingPlayers.teamId);
                                           if (sTeam) {
-                                            sTeam.playerIds = sTeam.playerIds.filter(id => id !== movingPlayer.playerId);
+                                            sTeam.playerIds = sTeam.playerIds.filter(id => !playersToMove.includes(id));
                                           }
                                           if (newTeams[match.teamAIndex]) {
-                                            newTeams[match.teamAIndex].playerIds.push(movingPlayer.playerId);
+                                            newTeams[match.teamAIndex].playerIds.push(...playersToMove);
                                           }
                                           return newTeams.filter(team => team.playerIds.length > 0);
                                         });
-                                        setMovingPlayer(null);
-                                        setToast({ message: "Jogador movido para o Time A!", type: 'success' });
+
+                                        if (playersToMove.length < movingPlayers.playerIds.length) {
+                                          setMovingPlayers(prev => prev ? { ...prev, playerIds: prev.playerIds.slice(availableSlots) } : null);
+                                          setToast({ message: `Apenas ${availableSlots} jogador(es) movido(s). Selecione outro time para o(s) restante(s).`, type: 'info' });
+                                        } else {
+                                          setMovingPlayers(null);
+                                          setIsSelectingDestination(false);
+                                          setToast({ message: "Jogador(es) movido(s) para o Time A!", type: 'success' });
+                                        }
                                       }
                                     }}
                                     className={`w-full flex items-center justify-center p-2 sm:p-1.5 rounded-xl border border-dashed transition-all active:scale-95 ${
                                       theme === 'light' ? 'border-zinc-300 bg-zinc-50 text-zinc-300 hover:bg-zinc-100' : 'border-white/10 bg-white/5 text-white/5 hover:bg-white/10'
-                                    } ${movingPlayer ? 'animate-pulse border-brand-primary' : ''}`}
+                                    } ${movingPlayers && isSelectingDestination ? 'animate-pulse border-brand-primary' : ''}`}
                                   >
                                     <Plus size={12} />
                                   </button>
@@ -3742,31 +3781,44 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   <button 
                                     key={`empty-b-${i}`}
                                     onClick={() => {
-                                      if (movingPlayer) {
-                                        const sourceTeamIdx = teams.findIndex(team => team.id === movingPlayer.teamId);
+                                      if (movingPlayers && isSelectingDestination) {
+                                        const sourceTeamIdx = teams.findIndex(team => team.id === movingPlayers.teamId);
                                         if (sourceTeamIdx === match.teamBIndex) {
-                                          setToast({ message: "O jogador já está neste time.", type: 'info' });
-                                          setMovingPlayer(null);
+                                          setToast({ message: "Os jogadores já estão neste time.", type: 'info' });
+                                          setMovingPlayers(null);
+                                          setIsSelectingDestination(false);
                                           return;
                                         }
+                                        const availableSlots = match.config.playersPerTeam - (teams[match.teamBIndex]?.playerIds?.length || 0);
+                                        if (availableSlots <= 0) {
+                                          setToast({ message: "Este time já está completo.", type: 'warning' });
+                                          return;
+                                        }
+                                        const playersToMove = movingPlayers.playerIds.slice(0, availableSlots);
                                         setTeams(prev => {
                                           const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
-                                          const sTeam = newTeams.find(team => team.id === movingPlayer.teamId);
+                                          const sTeam = newTeams.find(team => team.id === movingPlayers.teamId);
                                           if (sTeam) {
-                                            sTeam.playerIds = sTeam.playerIds.filter(id => id !== movingPlayer.playerId);
+                                            sTeam.playerIds = sTeam.playerIds.filter(id => !playersToMove.includes(id));
                                           }
                                           if (newTeams[match.teamBIndex]) {
-                                            newTeams[match.teamBIndex].playerIds.push(movingPlayer.playerId);
+                                            newTeams[match.teamBIndex].playerIds.push(...playersToMove);
                                           }
                                           return newTeams.filter(team => team.playerIds.length > 0);
                                         });
-                                        setMovingPlayer(null);
-                                        setToast({ message: "Jogador movido para o Time B!", type: 'success' });
+                                        if (playersToMove.length < movingPlayers.playerIds.length) {
+                                          setMovingPlayers(prev => prev ? { ...prev, playerIds: prev.playerIds.slice(availableSlots) } : null);
+                                          setToast({ message: `Apenas ${availableSlots} jogador(es) movido(s). Selecione outro time para o(s) restante(s).`, type: 'info' });
+                                        } else {
+                                          setMovingPlayers(null);
+                                          setIsSelectingDestination(false);
+                                          setToast({ message: "Jogador(es) movido(s) para o Time B!", type: 'success' });
+                                        }
                                       }
                                     }}
                                     className={`w-full flex items-center justify-center p-2 sm:p-1.5 rounded-xl border border-dashed transition-all active:scale-95 ${
                                       theme === 'light' ? 'border-zinc-300 bg-zinc-50 text-zinc-300 hover:bg-zinc-100' : 'border-white/10 bg-white/5 text-white/5 hover:bg-white/10'
-                                    } ${movingPlayer ? 'animate-pulse border-brand-primary' : ''}`}
+                                    } ${movingPlayers && isSelectingDestination ? 'animate-pulse border-brand-primary' : ''}`}
                                   >
                                     <Plus size={12} />
                                   </button>
@@ -3860,133 +3912,52 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 const isFlashing = flashingTeamIds.includes(t.id);
                                 return (
                                   <div 
-                                    key={t.id} 
+                                    key={`team-card-${t.id}-${tIdx}`} 
                                     id={`team-card-${tIdx}`}
                                     onClick={(e) => {
                                       if (swappingPlayerId) return;
-                                      if (movingPlayer) {
+                                      if (movingPlayers && isSelectingDestination) {
                                         e.stopPropagation();
-                                        if (t.playerIds.length >= match.config.playersPerTeam) {
+                                        const availableSlots = match.config.playersPerTeam - t.playerIds.length;
+                                        if (availableSlots <= 0) {
                                           setToast({ message: "Este time já está completo.", type: 'warning' });
                                           return;
                                         }
+                                        const playersToMove = movingPlayers.playerIds.slice(0, availableSlots);
                                         setTeams(prev => {
                                           const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
-                                          const sourceTeam = newTeams.find(team => team.id === movingPlayer.teamId);
+                                          const sourceTeam = newTeams.find(team => team.id === movingPlayers.teamId);
                                           if (sourceTeam) {
-                                            sourceTeam.playerIds = sourceTeam.playerIds.filter(id => id !== movingPlayer.playerId);
+                                            sourceTeam.playerIds = sourceTeam.playerIds.filter(id => !playersToMove.includes(id));
                                           }
                                           const targetTeam = newTeams.find(team => team.id === t.id);
                                           if (targetTeam) {
-                                            targetTeam.playerIds.push(movingPlayer.playerId);
+                                            targetTeam.playerIds.push(...playersToMove);
                                           }
                                           return newTeams.filter(team => team.playerIds.length > 0);
                                         });
-                                        setMovingPlayer(null);
-                                        setToast({ message: "Jogador movido com sucesso!", type: 'success' });
+                                        if (playersToMove.length < movingPlayers.playerIds.length) {
+                                          setMovingPlayers(prev => prev ? { ...prev, playerIds: prev.playerIds.slice(availableSlots) } : null);
+                                          setToast({ message: `Apenas ${availableSlots} jogador(es) movido(s). Selecione outro time para o(s) restante(s).`, type: 'info' });
+                                        } else {
+                                          setMovingPlayers(null);
+                                          setIsSelectingDestination(false);
+                                          setToast({ message: "Jogador(es) movido(s) com sucesso!", type: 'success' });
+                                        }
                                         return;
                                       }
-
-                                      if (match.isActive && !match.hasEnded && !match.isPaused) return; // Cannot change if timer is running
-                                      
-                                      if (isCurrent) {
-                                        if (t.lastMatchStatus === 'Empate') {
-                                          setTeams(prevTeams => {
-                                              const newTeams = [...prevTeams];
-                                              const deselectedTeam = newTeams.splice(tIdx, 1)[0];
-                                              newTeams.push(deselectedTeam);
-                                              
-                                              setMatch(prevMatch => {
-                                                let newTeamAIndex = prevMatch.teamAIndex;
-                                                let newTeamBIndex = prevMatch.teamBIndex;
-                                                
-                                                if (prevMatch.teamAIndex === tIdx) {
-                                                  newTeamAIndex = -1;
-                                                } else if (prevMatch.teamAIndex > tIdx) {
-                                                  newTeamAIndex--;
-                                                }
-                                                
-                                                if (prevMatch.teamBIndex === tIdx) {
-                                                  newTeamBIndex = -1;
-                                                } else if (prevMatch.teamBIndex > tIdx) {
-                                                  newTeamBIndex--;
-                                                }
-                                                
-                                                return {
-                                                  ...prevMatch,
-                                                  teamAIndex: newTeamAIndex,
-                                                  teamBIndex: newTeamBIndex
-                                                };
-                                              });
-                                              return newTeams;
-                                          });
-                                        } else {
-                                          // Deselect normally
-                                          if (match.teamAIndex === tIdx) setMatch(prev => ({ ...prev, teamAIndex: -1 }));
-                                          else if (match.teamBIndex === tIdx) setMatch(prev => ({ ...prev, teamBIndex: -1 }));
-                                        }
-                                      } else {
-                                        // Select
-                                        if (match.teamAIndex === -1) {
-                                          setMatch(prev => ({ ...prev, teamAIndex: tIdx }));
-                                        } else if (match.teamBIndex === -1) {
-                                          const teamA = teams[match.teamAIndex];
-                                          const teamB = teams[tIdx];
-                                          if (teamA && teamB && teamA.playerIds.some(id => teamB.playerIds.includes(id))) {
-                                            setToast({ message: "Estes times possuem jogadores em comum.", type: 'warning' });
-                                            return;
-                                          }
-                                          setMatch(prev => ({ ...prev, teamBIndex: tIdx }));
-                                        } else {
-                                          // Both selected, prioritize keeping the winner and removing the loser
-                                          const isTeamALoser = lastMatchResult && teams[match.teamAIndex]?.id === lastMatchResult.loserId;
-                                          const isTeamBLoser = lastMatchResult && teams[match.teamBIndex]?.id === lastMatchResult.loserId;
-                                          
-                                          let teamToReplaceIndex = match.teamAIndex;
-                                          if (isTeamBLoser) {
-                                            teamToReplaceIndex = match.teamBIndex;
-                                          } else if (isTeamALoser) {
-                                            teamToReplaceIndex = match.teamAIndex;
-                                          }
-                                          
-                                          setTeams(prevTeams => {
-                                            const newTeams = [...prevTeams];
-                                            const replacedTeam = newTeams[teamToReplaceIndex];
-                                            const selectedTeam = newTeams[tIdx];
-                                            
-                                            const filteredTeams = newTeams.filter((_, i) => i !== teamToReplaceIndex && i !== tIdx);
-                                            filteredTeams.splice(teamToReplaceIndex, 0, selectedTeam);
-                                            filteredTeams.push(replacedTeam);
-                                            
-                                            const otherTeamIndex = teamToReplaceIndex === match.teamAIndex ? match.teamBIndex : match.teamAIndex;
-                                            const otherTeam = prevTeams[otherTeamIndex];
-                                            
-                                            const newSelectedTeamIndex = filteredTeams.findIndex(team => team.id === selectedTeam.id);
-                                            const newOtherTeamIndex = filteredTeams.findIndex(team => team.id === otherTeam.id);
-                                            
-                                            setMatch(prev => ({
-                                              ...prev,
-                                              teamAIndex: teamToReplaceIndex === match.teamAIndex ? newSelectedTeamIndex : newOtherTeamIndex,
-                                              teamBIndex: teamToReplaceIndex === match.teamBIndex ? newSelectedTeamIndex : newOtherTeamIndex,
-                                              scoreA: 0, scoreB: 0, timeRemaining: prev.config.duration * 60, isActive: false, isPaused: true, hasEnded: false, events: []
-                                            }));
-                                            
-                                            return filteredTeams;
-                                          });
-                                        }
-                                      }
-                                      // Reset match state when changing teams (handled inside setTeams for the replacement case)
-                                      if (match.teamAIndex === -1 || match.teamBIndex === -1 || isCurrent) {
-                                        setMatch(prev => ({ ...prev, scoreA: 0, scoreB: 0, timeRemaining: prev.config.duration * 60, isActive: false, isPaused: true, hasEnded: false, events: [] }));
-                                      }
                                     }}
-                                    className={`p-4 rounded-xl border-2 transition-all relative cursor-pointer min-h-[100px] flex flex-col justify-center overflow-hidden ${
+                                    className={`p-4 rounded-xl border-2 transition-all relative min-h-[100px] flex flex-col justify-center overflow-hidden ${
+                                      (movingPlayers && isSelectingDestination) ? 'cursor-pointer hover:opacity-90' : 'cursor-default'
+                                    } ${
                                       isCurrent 
-                                        ? `bg-emerald-50 border-emerald-500 shadow-md shadow-emerald-500/20 z-10` 
-                                        : theme === 'light'
-                                          ? 'bg-gradient-to-br from-zinc-100 to-zinc-200 border-zinc-300 hover:border-emerald-500/50'
-                                          : 'bg-brand-glass border-brand-border hover:border-emerald-500/50'
-                                    } ${isFlashing || (movingPlayer && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-emerald-500/30 border-emerald-500' : ''}`}
+                                        ? 'shadow-md z-10'
+                                        : 'shadow-sm opacity-80'
+                                    } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-emerald-500/10 border-emerald-500' : ''}`}
+                                    style={{
+                                      backgroundColor: 'transparent',
+                                      borderColor: (movingPlayers?.teamId === t.id || (swappingPlayerId && t.playerIds.includes(swappingPlayerId))) ? '#22c55e' : (isCurrent ? '#10b981' : '#d4d4d8')
+                                    }}
                                   >
                                     
                                     {/* Status Top Right (Winner/Loser/Draw) */}
@@ -4010,22 +3981,122 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     )}
 
                                     {/* Jersey Icon Top Left */}
-                                    <div className="absolute top-3 left-3 w-8 h-8 rounded-xl border flex items-center justify-center transition-all bg-white border-zinc-200">
+                                    <div 
+                                      className={`absolute top-2 left-2 w-10 h-10 rounded-xl border flex items-center justify-center transition-all bg-white cursor-pointer z-50 ${isCurrent ? 'border-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'border-zinc-200 hover:scale-110'}`}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (match.isActive && !match.hasEnded && !match.isPaused) {
+                                          setToast({ message: "Não é possível trocar times durante uma partida ativa.", type: 'warning' });
+                                          return;
+                                        }
+                                        
+                                        if (isCurrent) {
+                                          if (t.lastMatchStatus === 'Empate') {
+                                            setTeams(prevTeams => {
+                                                const newTeams = [...prevTeams];
+                                                const deselectedTeam = newTeams.splice(tIdx, 1)[0];
+                                                newTeams.push(deselectedTeam);
+                                                
+                                                setMatch(prevMatch => {
+                                                  let newTeamAIndex = prevMatch.teamAIndex;
+                                                  let newTeamBIndex = prevMatch.teamBIndex;
+                                                  
+                                                  if (prevMatch.teamAIndex === tIdx) {
+                                                    newTeamAIndex = -1;
+                                                  } else if (prevMatch.teamAIndex > tIdx) {
+                                                    newTeamAIndex--;
+                                                  }
+                                                  
+                                                  if (prevMatch.teamBIndex === tIdx) {
+                                                    newTeamBIndex = -1;
+                                                  } else if (prevMatch.teamBIndex > tIdx) {
+                                                    newTeamBIndex--;
+                                                  }
+                                                  
+                                                  return {
+                                                    ...prevMatch,
+                                                    teamAIndex: newTeamAIndex,
+                                                    teamBIndex: newTeamBIndex
+                                                  };
+                                                });
+                                                return newTeams;
+                                            });
+                                          } else {
+                                            // Deselect normally
+                                            if (match.teamAIndex === tIdx) setMatch(prev => ({ ...prev, teamAIndex: -1 }));
+                                            else if (match.teamBIndex === tIdx) setMatch(prev => ({ ...prev, teamBIndex: -1 }));
+                                          }
+                                        } else {
+                                          // Select
+                                          if (match.teamAIndex === -1) {
+                                            setMatch(prev => ({ ...prev, teamAIndex: tIdx }));
+                                          } else if (match.teamBIndex === -1) {
+                                            const teamA = teams[match.teamAIndex];
+                                            const teamB = teams[tIdx];
+                                            if (teamA && teamB && teamA.playerIds.some(id => teamB.playerIds.includes(id))) {
+                                              setToast({ message: "Estes times possuem jogadores em comum.", type: 'warning' });
+                                              return;
+                                            }
+                                            setMatch(prev => ({ ...prev, teamBIndex: tIdx }));
+                                          } else {
+                                            // Both selected, prioritize keeping the winner and removing the loser
+                                            const isTeamALoser = lastMatchResult && teams[match.teamAIndex]?.id === lastMatchResult.loserId;
+                                            const isTeamBLoser = lastMatchResult && teams[match.teamBIndex]?.id === lastMatchResult.loserId;
+                                            
+                                            let teamToReplaceIndex = match.teamAIndex;
+                                            if (isTeamBLoser) {
+                                              teamToReplaceIndex = match.teamBIndex;
+                                            } else if (isTeamALoser) {
+                                              teamToReplaceIndex = match.teamAIndex;
+                                            }
+                                            
+                                            setTeams(prevTeams => {
+                                              const newTeams = [...prevTeams];
+                                              const replacedTeam = newTeams[teamToReplaceIndex];
+                                              const selectedTeam = newTeams[tIdx];
+                                              
+                                              const filteredTeams = newTeams.filter((_, i) => i !== teamToReplaceIndex && i !== tIdx);
+                                              filteredTeams.splice(teamToReplaceIndex, 0, selectedTeam);
+                                              filteredTeams.push(replacedTeam);
+                                              
+                                              const otherTeamIndex = teamToReplaceIndex === match.teamAIndex ? match.teamBIndex : match.teamAIndex;
+                                              const otherTeam = prevTeams[otherTeamIndex];
+                                              
+                                              const newSelectedTeamIndex = filteredTeams.findIndex(team => team.id === selectedTeam.id);
+                                              const newOtherTeamIndex = filteredTeams.findIndex(team => team.id === otherTeam.id);
+                                              
+                                              setMatch(prev => ({
+                                                ...prev,
+                                                teamAIndex: teamToReplaceIndex === match.teamAIndex ? newSelectedTeamIndex : newOtherTeamIndex,
+                                                teamBIndex: teamToReplaceIndex === match.teamBIndex ? newSelectedTeamIndex : newOtherTeamIndex,
+                                                scoreA: 0, scoreB: 0, timeRemaining: prev.config.duration * 60, isActive: false, isPaused: true, hasEnded: false, events: []
+                                              }));
+                                              
+                                              return filteredTeams;
+                                            });
+                                          }
+                                        }
+                                        // Reset match state when changing teams (handled inside setTeams for the replacement case)
+                                        if (match.teamAIndex === -1 || match.teamBIndex === -1 || isCurrent) {
+                                          setMatch(prev => ({ ...prev, scoreA: 0, scoreB: 0, timeRemaining: prev.config.duration * 60, isActive: false, isPaused: true, hasEnded: false, events: [] }));
+                                        }
+                                      }}
+                                    >
                                       {(() => {
                                         const teamColor = t.color || TEAM_COLORS[0];
                                         const strokeColor = teamColor === '#1a1a1a' ? '#ffffff40' : (teamColor === '#ffffff' ? '#e4e4e7' : 'white');
                                         return (
                                           <svg viewBox="0 0 24 24" stroke={strokeColor} strokeWidth="0.5" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
                                             <defs>
-                                              <linearGradient id={`shield-grad-${tIdx}`} x1="0%" y1="0%" x2="0%" y2="100%">
+                                              <linearGradient id={`shield-grad-${t.id}`} x1="0%" y1="0%" x2="0%" y2="100%">
                                                 <stop offset="0%" stopColor={teamColor} />
                                                 <stop offset="100%" stopColor={teamColor} stopOpacity="0.85" />
                                               </linearGradient>
                                             </defs>
                                             <path 
-                                              fill={`url(#shield-grad-${tIdx})`}
+                                              fill={`url(#shield-grad-${t.id})`}
                                               d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
-                                              stroke={strokeColor === '#ffffff40' ? '#ffffff' : (strokeColor === '#e4e4e7' ? '#000000' : strokeColor)}
+                                              stroke={isCurrent ? '#10b981' : (strokeColor === '#ffffff40' ? '#ffffff' : (strokeColor === '#e4e4e7' ? '#000000' : strokeColor))}
                                               strokeWidth="1.5"
                                               strokeLinejoin="round"
                                             />
@@ -4071,8 +4142,48 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           return (
                                                 <button
                                                   key={`queue-player-${t.id}-${pid}-${idx}`}
+                                                  onTouchStart={(e) => {
+                                                    if (swappingPlayerId || fillingVacancyForTeam || (movingPlayers && isSelectingDestination)) return;
+                                                    if (movingPlayers && movingPlayers.teamId !== t.id) return;
+                                                    if (longPressTimer.current) clearTimeout(longPressTimer.current);
+                                                    longPressTimer.current = setTimeout(() => {
+                                                      navigator.vibrate?.(50);
+                                                      setMovingPlayers(prev => {
+                                                        if (!prev) return { teamId: t.id, playerIds: [pid] };
+                                                        if (!prev.playerIds.includes(pid)) return { ...prev, playerIds: [...prev.playerIds, pid] };
+                                                        return prev;
+                                                      });
+                                                    }, 500);
+                                                  }}
+                                                  onTouchEnd={() => { if (longPressTimer.current) clearTimeout(longPressTimer.current); }}
+                                                  onTouchCancel={() => { if (longPressTimer.current) clearTimeout(longPressTimer.current); }}
+                                                  onMouseDown={(e) => {
+                                                    if (swappingPlayerId || fillingVacancyForTeam || (movingPlayers && isSelectingDestination)) return;
+                                                    if (movingPlayers && movingPlayers.teamId !== t.id) return;
+                                                    if (longPressTimer.current) clearTimeout(longPressTimer.current);
+                                                    longPressTimer.current = setTimeout(() => {
+                                                      setMovingPlayers(prev => {
+                                                        if (!prev) return { teamId: t.id, playerIds: [pid] };
+                                                        if (!prev.playerIds.includes(pid)) return { ...prev, playerIds: [...prev.playerIds, pid] };
+                                                        return prev;
+                                                      });
+                                                    }, 500);
+                                                  }}
+                                                  onMouseUp={() => { if (longPressTimer.current) clearTimeout(longPressTimer.current); }}
+                                                  onMouseLeave={() => { if (longPressTimer.current) clearTimeout(longPressTimer.current); }}
                                                   onClick={(e) => {
                                                     e.stopPropagation();
+                                                    if (movingPlayers && movingPlayers.teamId === t.id) {
+                                                      setMovingPlayers(prev => {
+                                                        if (!prev) return null;
+                                                        const pIds = prev.playerIds.includes(pid) 
+                                                          ? prev.playerIds.filter(id => id !== pid)
+                                                          : [...prev.playerIds, pid];
+                                                        if (pIds.length === 0) return null;
+                                                        return { ...prev, playerIds: pIds };
+                                                      });
+                                                      return;
+                                                    }
                                                     if (swappingPlayerId) {
                                                       if (swappingPlayerId === pid) {
                                                         setSwappingPlayerId(null);
@@ -4143,22 +4254,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                     }
                                                   }}
                                                   className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
-                                                    (swappingPlayerId && swappingPlayerId !== pid) || 
-                                                    fillingVacancyForTeam !== null || 
-                                                    (movingPlayer && movingPlayer.playerId === pid) ||
-                                                    ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < match.config.playersPerTeam))
-                                                      ? 'bg-brand-primary/20 text-brand-primary animate-pulse shadow-sm shadow-brand-primary/10'
-                                                      : swappingPlayerId === pid
-                                                        ? 'bg-brand-primary/40 text-black border-2 border-brand-primary shadow-lg scale-105'
-                                                        : 'text-black border border-black/5 hover:border-black/20 group'
+                                                    swappingPlayerId === pid || movingPlayers?.playerIds.includes(pid)
+                                                      ? 'bg-green-500/20 text-black border-2 border-green-500 shadow-lg scale-105'
+                                                      : (swappingPlayerId && swappingPlayerId !== pid) || fillingVacancyForTeam !== null || ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < match.config.playersPerTeam))
+                                                        ? 'bg-brand-primary/20 text-brand-primary animate-pulse shadow-sm shadow-brand-primary/10'
+                                                        : 'text-black border border-black/5 hover:border-black/20 group bg-white/60 shadow-sm'
                                                   }`}
                                                   style={{ 
                                                     backgroundColor: !((swappingPlayerId && swappingPlayerId !== pid) || 
                                                                        fillingVacancyForTeam !== null || 
-                                                                       (movingPlayer && movingPlayer.playerId === pid) ||
+                                                                       (movingPlayers?.playerIds.includes(pid)) ||
                                                                        ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < match.config.playersPerTeam)) ||
                                                                        swappingPlayerId === pid)
-                                                      ? (t.color === '#1a1a1a' ? '#00000010' : (t.color || TEAM_COLORS[0]) + '15') 
+                                                      ? undefined 
                                                       : undefined 
                                                   }}
                                                 >
@@ -5148,6 +5256,39 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           </motion.div>
         )}
 
+        {/* Floating Multi-select Bar */}
+        <AnimatePresence>
+          {movingPlayers && !isSelectingDestination && movingPlayers.playerIds.length > 0 && (
+            <motion.div
+              initial={{ y: 100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 100, opacity: 0 }}
+              className="fixed bottom-24 left-0 right-0 px-4 z-[100] flex justify-center pointer-events-none"
+            >
+              <div className="bg-brand-card/95 backdrop-blur-md border border-brand-primary/50 shadow-[0_10px_40px_rgba(0,0,0,0.5)] rounded-full p-2 flex items-center gap-3 pointer-events-auto">
+                <div className="px-4 text-sm font-bold text-brand-text-primary">
+                  {movingPlayers.playerIds.length} selecionado{movingPlayers.playerIds.length > 1 ? 's' : ''}
+                </div>
+                <button
+                  onClick={() => {
+                    setIsSelectingDestination(true);
+                    setToast({ message: "Selecione o time de destino (apenas times incompletos).", type: 'info' });
+                  }}
+                  className="px-6 py-2 bg-brand-primary text-black rounded-full font-black uppercase text-xs flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow shadow-brand-primary/20"
+                >
+                  <MoveRight size={16} /> Mover
+                </button>
+                <button
+                  onClick={() => { setMovingPlayers(null); setIsSelectingDestination(false); }}
+                  className="w-10 h-10 flex items-center justify-center rounded-full bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-all"
+                >
+                  <X size={16} />
+                </button>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
       </main>
     </div>
 
@@ -5284,7 +5425,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 {!swappingPlayerId && (
                   <button 
                     onClick={() => {
-                      setMovingPlayer({ teamId: teams[showPlayerActionsModal.teamIndex].id, playerId: showPlayerActionsModal.playerId });
+                      setMovingPlayers({ teamId: teams[showPlayerActionsModal.teamIndex].id, playerIds: [showPlayerActionsModal.playerId] });
+                      setIsSelectingDestination(true);
                       setTeamsTab('proximos');
                       setShowPlayerActionsModal(null);
                       setToast({ message: "Selecione o time de destino (apenas times incompletos).", type: 'info' });
@@ -5373,7 +5515,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                     <button 
                       onClick={() => {
-                        setMovingPlayer({ teamId: teams[showQueuePlayerModal.teamIndex].id, playerId: showQueuePlayerModal.playerId });
+                        setMovingPlayers({ teamId: teams[showQueuePlayerModal.teamIndex].id, playerIds: [showQueuePlayerModal.playerId] });
+                        setIsSelectingDestination(true);
                         setShowQueuePlayerModal(null);
                         setToast({ message: "Selecione o time de destino (apenas times incompletos).", type: 'info' });
                       }}
