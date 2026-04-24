@@ -828,6 +828,18 @@ const TieBreakerModal = ({
                       <div className="text-xl font-black text-white uppercase tracking-tighter">
                         {state.lottery.winnerId === teamA.id ? teamA.name : teamB.name}
                       </div>
+
+                      {/* Display winning team players */}
+                      <div className="mt-2 flex flex-wrap justify-center gap-1.5 px-4">
+                        {(state.lottery.winnerId === teamA.id ? teamA.playerIds : teamB.playerIds).map((pid, idx, arr) => {
+                          const p = players.find(player => player.id === pid);
+                          return (
+                            <span key={pid} className="text-[8px] font-bold text-white/40 uppercase tracking-widest">
+                              {p?.name}{idx < arr.length - 1 ? ' •' : ''}
+                            </span>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                   <button 
