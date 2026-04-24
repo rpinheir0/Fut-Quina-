@@ -56,8 +56,7 @@ import {
   Eye,
   Award,
   LogOut,
-  Contact,
-  Menu
+  Contact
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import confetti from 'canvas-confetti';
@@ -6869,53 +6868,116 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex justify-end"
+              className="fixed inset-0 bg-black/60 backdrop-blur-md z-[200] flex justify-end"
               onClick={() => setShowMainMenu(false)}
             >
               <motion.div
-                initial={{ x: '100%' }}
-                animate={{ x: 0 }}
-                exit={{ x: '100%' }}
+                initial={{ x: '100%', filter: 'blur(10px)' }}
+                animate={{ x: 0, filter: 'blur(0px)' }}
+                exit={{ x: '100%', filter: 'blur(10px)' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="bg-[#1E3D2F] w-64 h-full shadow-2xl flex flex-col"
+                className="bg-[#1E3D2F]/95 w-72 h-full shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col border-l border-white/10 relative overflow-hidden"
                 onClick={(e) => e.stopPropagation()}
               >
-                <div className="p-6 border-b border-white/10 flex justify-between items-center">
-                  <h2 className="text-xl font-black uppercase tracking-tighter text-white">Menu</h2>
-                  <button onClick={() => setShowMainMenu(false)} className="p-2 -mr-2 text-white/50 hover:text-white transition-colors">
+                {/* Background Pattern */}
+                <div className="absolute inset-0 opacity-5 pointer-events-none" style={{
+                  backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 21px), repeating-linear-gradient(-45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 21px)`,
+                }}></div>
+
+                {/* Header Section with Badge */}
+                <div className="pt-12 pb-6 px-8 relative z-10">
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2">
+                      <div className="w-1.5 h-6 bg-brand-primary rounded-full shadow-[0_0_10px_rgba(183,217,108,0.5)]" />
+                      <span className="text-[10px] font-black text-brand-primary uppercase tracking-[0.25em]">Painel Administrativo</span>
+                    </div>
+                    <h2 className="text-3xl font-black uppercase tracking-tighter text-white drop-shadow-lg">Menu</h2>
+                  </div>
+                  <button 
+                    onClick={() => setShowMainMenu(false)} 
+                    className="absolute top-10 right-8 p-3 bg-white/5 text-white/40 hover:text-white hover:bg-white/10 rounded-2xl transition-all duration-300 border border-white/5"
+                  >
                     <X size={20} />
                   </button>
                 </div>
                 
-                <div className="flex-1 p-4 flex flex-col gap-2">
-                  <button 
-                    onClick={() => {
-                      setShowMainMenu(false);
-                      const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
-                      const targetIndex = screens.indexOf('finance');
-                      const currentIndex = screens.indexOf(currentScreen);
-                      setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
-                      setCurrentScreen('finance');
-                      setFinanceSubScreen('balanco');
-                    }}
-                    className="flex items-center gap-3 p-4 rounded-xl text-[#1E3D2F] bg-white hover:bg-white/90 transition-all text-left"
-                  >
-                    <Wallet size={20} />
-                    <span className="font-bold uppercase tracking-wider text-sm">Financeiro</span>
-                  </button>
+                <div className="flex-1 p-6 flex flex-col gap-8 relative z-10 overflow-y-auto">
+                  {/* Navigation Group */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 px-2">
+                      <div className="h-[1px] flex-1 bg-white/5" />
+                      <span className="text-[9px] font-black text-white/20 uppercase tracking-[0.2em] whitespace-nowrap">Navegação</span>
+                      <div className="h-[1px] flex-1 bg-white/5" />
+                    </div>
+                    
+                    <button 
+                      onClick={() => {
+                        setShowMainMenu(false);
+                        const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
+                        const targetIndex = screens.indexOf('finance');
+                        const currentIndex = screens.indexOf(currentScreen);
+                        setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
+                        setCurrentScreen('finance');
+                        setFinanceSubScreen('balanco');
+                      }}
+                      className="group w-full flex items-center gap-4 p-4 rounded-[24px] bg-gradient-to-br from-white/10 to-white/5 border border-white/10 hover:from-white/15 hover:to-white/10 hover:border-white/20 transition-all duration-400 transform active:scale-95 text-left shadow-xl"
+                    >
+                      <div className="w-12 h-12 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500 shadow-inner">
+                        <Wallet size={22} strokeWidth={2.5} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-black uppercase tracking-widest text-xs text-white">Financeiro</span>
+                        <span className="text-[10px] text-white/40 uppercase font-bold tracking-tight mt-0.5">Gestão de Caixa</span>
+                      </div>
+                      <ChevronRight size={16} className="ml-auto text-white/20 group-hover:text-brand-primary transition-colors" />
+                    </button>
+                  </div>
+
+                  {/* Actions Group */}
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 px-2">
+                      <div className="h-[1px] flex-1 bg-white/5" />
+                      <span className="text-[9px] font-black text-white/20 uppercase tracking-[0.2em] whitespace-nowrap">Ações</span>
+                      <div className="h-[1px] flex-1 bg-white/5" />
+                    </div>
+
+                    <button 
+                      onClick={() => {
+                        setShowMainMenu(false);
+                        setShowResetStatsConfirm(true);
+                      }}
+                      className="group w-full flex items-center gap-4 p-4 rounded-[24px] bg-red-400/5 border border-red-400/10 hover:bg-red-400/10 hover:border-red-400/20 transition-all duration-400 transform active:scale-95 text-left"
+                    >
+                      <div className="w-12 h-12 rounded-2xl bg-red-400/20 text-red-400 flex items-center justify-center shrink-0 group-hover:rotate-180 transition-transform duration-700">
+                        <RotateCcw size={22} strokeWidth={2.5} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-black uppercase tracking-widest text-xs text-white">Zerar Tudo</span>
+                        <span className="text-[10px] text-red-400/60 uppercase font-bold tracking-tight mt-0.5">Rankings e Stats</span>
+                      </div>
+                      <ChevronRight size={16} className="ml-auto text-white/20 transition-colors" />
+                    </button>
+                  </div>
                 </div>
 
-                <div className="p-4 border-t border-white/10">
+                {/* Footer Section */}
+                <div className="p-8 border-t border-white/5 relative z-10 bg-black/20 backdrop-blur-md pb-safe">
                   <button 
                     onClick={() => {
                       setShowMainMenu(false);
                       setShowBackToHomeConfirm(true);
                     }}
-                    className="w-full flex items-center justify-center gap-2 p-4 rounded-xl text-brand-primary opacity-80 hover:opacity-100 hover:bg-white/5 transition-all"
+                    className="group w-full flex items-center justify-center gap-3 py-4 rounded-[24px] bg-white text-[#1E3D2F] font-black uppercase tracking-[0.15em] text-[11px] hover:bg-zinc-100 transition-all duration-300 shadow-2xl active:scale-95"
                   >
-                    <LogOut size={20} />
-                    <span className="font-bold uppercase tracking-wider text-sm">Sair da Partida</span>
+                    <LogOut size={18} strokeWidth={3} className="group-hover:-translate-x-1 transition-transform" />
+                    <span>Sair da Partida</span>
                   </button>
+                  <div className="mt-6 flex flex-col items-center gap-1">
+                    <div className="flex items-center gap-2">
+                      <div className="w-1 h-1 rounded-full bg-brand-primary animate-pulse" />
+                      <span className="text-[9px] font-black text-white/30 uppercase tracking-[0.4em]">FutQuina v2.5</span>
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             </motion.div>
@@ -7206,108 +7268,170 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen font-sans transition-colors duration-300 flex flex-col justify-center p-0 pt-4 pb-4 sm:p-4" style={{ backgroundColor: '#315130' }}>
-      <div className="w-[96%] sm:w-full max-w-md mx-auto px-5 py-10 sm:p-8 rounded-2xl shadow-2xl border flex flex-col min-h-[85vh] sm:min-h-0 justify-between relative overflow-hidden" style={{ background: '#14301F', borderColor: '#E3D39E' }}>
-        <div className="absolute inset-0 pointer-events-none opacity-25 z-0" style={{
-          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 15px, #cccccc 15px, #cccccc 16px), repeating-linear-gradient(-45deg, transparent, transparent 15px, #cccccc 15px, #cccccc 16px)`,
-        }}></div>
-
-        <div className="relative z-10 flex flex-row items-center justify-center gap-3 text-center mb-8 sm:mb-8 mt-2 sm:mt-0">
-          <SpinningBall size="md" spin={true} />
-          <FutQuinaLogo size="md" colorClass="" style={{ color: '#E3D39E', fontStyle: 'normal', fontFamily: 'system-ui', fontWeight: '900' }} />
+    <div className="min-h-screen font-sans transition-colors duration-500 flex flex-col justify-center p-0 pt-4 pb-4 sm:p-4 bg-[#14301F]">
+      <div className="w-[96%] sm:w-full max-w-md mx-auto px-6 py-12 sm:px-10 sm:py-16 rounded-[40px] shadow-[0_32px_80px_rgba(0,0,0,0.8)] border border-[#E3D39E]/20 flex flex-col min-h-[85vh] sm:min-h-0 justify-between relative overflow-hidden bg-[#14301F]">
+        {/* Animated Background Polish */}
+        <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute inset-0 opacity-10" style={{
+            backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 21px), repeating-linear-gradient(-45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 21px)`,
+          }}></div>
+          <div className="absolute -top-[20%] -left-[20%] w-[80%] h-[80%] bg-brand-primary opacity-10 blur-[120px] rounded-full animate-pulse" />
+          <div className="absolute -bottom-[20%] -right-[20%] w-[80%] h-[80%] bg-brand-primary opacity-5 blur-[120px] rounded-full" />
         </div>
 
-        <div className="relative z-10 space-y-8 sm:space-y-6 flex-1 flex flex-col justify-center">
-          <div className="transform sm:scale-100 scale-105 origin-center w-full max-w-[95%] sm:max-w-full mx-auto">
-            <TutorialCarousel />
+        <div className="relative z-10 flex flex-col items-center justify-center gap-6 text-center mb-12">
+          <motion.div 
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.8, type: 'spring' }}
+          >
+            <SpinningBall size="lg" spin={true} />
+          </motion.div>
+          <div className="flex flex-col items-center">
+            <FutQuinaLogo size="lg" colorClass="" style={{ color: '#E3D39E', fontStyle: 'normal', fontFamily: 'system-ui', fontWeight: '900', letterSpacing: '-0.05em' }} />
+            <div className="h-0.5 w-12 bg-brand-primary mt-2 rounded-full opacity-60" />
           </div>
-          
-          {groups.length > 0 && (
-            <div className="space-y-4 sm:space-y-3 pt-4 sm:pt-0">
-              {groups.map((group, index) => (
-                <div key={`${group.id}-${index}`} className="flex items-center gap-2">
-                  <button
-                    onClick={() => setSelectedGroupOptions({ id: group.id, name: group.name })}
-                    className="flex-1 p-5 sm:p-4 transition-all duration-300 flex items-center justify-center relative group rounded-full bg-white/5 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.6)] hover:bg-white/10 border border-[#E3D39E]/30"
-                    style={{ color: '#E3D39E' }}
-                  >
-                    <span className="text-xl sm:text-lg font-normal text-center w-full px-8 drop-shadow-md" style={{ fontFamily: 'system-ui' }}>{group.name}</span>
-                    <ChevronRight size={20} className="absolute right-4 transition-colors opacity-70 group-hover:opacity-100 drop-shadow-md" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+        </div>
 
-          <div className="pt-8 sm:pt-4">
-            <button
-              onClick={() => setShowNewGroupModal(true)}
-              className="w-full p-5 sm:p-4 rounded-full font-black uppercase tracking-widest text-xs sm:text-xs flex items-center justify-center gap-2 btn-silver-3d"
+        <div className="relative z-10 space-y-10 sm:space-y-8 flex-1 flex flex-col justify-center">
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="transform sm:scale-100 scale-105 origin-center w-full"
+          >
+            <TutorialCarousel />
+          </motion.div>
+          
+          <div className="space-y-4">
+            <AnimatePresence mode="popLayout">
+              {groups.length > 0 && (
+                <div className="space-y-4 pt-4 sm:pt-0">
+                  <div className="flex items-center gap-3 px-2 mb-2">
+                    <span className="text-[10px] font-black text-[#E3D39E]/40 uppercase tracking-[0.3em]">Minhas Partidas</span>
+                    <div className="h-[1px] flex-1 bg-[#E3D39E]/10" />
+                  </div>
+                  {groups.map((group, index) => (
+                    <motion.div 
+                      key={`${group.id}-${index}`}
+                      initial={{ x: -20, opacity: 0 }}
+                      animate={{ x: 0, opacity: 1 }}
+                      transition={{ delay: 0.1 * index }}
+                      className="flex items-center gap-2"
+                    >
+                      <button
+                        onClick={() => setSelectedGroupOptions({ id: group.id, name: group.name })}
+                        className="flex-1 p-6 transition-all duration-400 flex items-center justify-between relative group rounded-[24px] bg-white/5 backdrop-blur-xl border border-[#E3D39E]/20 shadow-[0_15px_35px_rgba(0,0,0,0.3)] hover:-translate-y-1 hover:bg-white/10 hover:border-[#E3D39E]/40 overflow-hidden active:scale-95"
+                      >
+                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E3D39E]/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                        <div className="flex flex-col items-start gap-1">
+                          <span className="text-xl font-black text-[#E3D39E] drop-shadow-md tracking-tight uppercase" style={{ fontFamily: 'system-ui' }}>{group.name}</span>
+                          <span className="text-[9px] font-black text-[#E3D39E]/40 uppercase tracking-widest">{new Date(group.createdAt).toLocaleDateString()}</span>
+                        </div>
+                        <div className="w-10 h-10 rounded-full bg-[#E3D39E]/10 flex items-center justify-center group-hover:bg-brand-primary group-hover:text-black transition-all">
+                          <ChevronRight size={24} className="opacity-70 group-hover:opacity-100" />
+                        </div>
+                      </button>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </AnimatePresence>
+
+            <motion.div 
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.4 }}
+              className="pt-6"
             >
-              <Plus size={16} />
-              Criar Partida
-            </button>
+              <button
+                onClick={() => setShowNewGroupModal(true)}
+                className="w-full p-6 rounded-[28px] font-black uppercase tracking-[0.2em] text-[11px] flex items-center justify-center gap-4 transition-all duration-300 shadow-[0_15px_40px_rgba(183,217,108,0.2)] bg-brand-primary text-black hover:opacity-90 hover:scale-[1.02] active:scale-95 border-b-4 border-black/20"
+              >
+                <div className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center">
+                  <Plus size={20} strokeWidth={3} />
+                </div>
+                Nova Partida
+              </button>
+            </motion.div>
           </div>
         </div>
       </div>
 
       {/* Group Options Modal */}
       {selectedGroupOptions && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setSelectedGroupOptions(null)}>
-          <div className="w-full max-w-sm p-6 rounded-2xl shadow-md bg-white" onClick={e => e.stopPropagation()}>
-            <h3 className="text-[18px] font-bold font-[system-ui] tracking-tighter mb-6 text-center text-[#464656]">{selectedGroupOptions.name}</h3>
-            <div className="flex flex-col gap-3 items-center">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md" onClick={() => setSelectedGroupOptions(null)}>
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="w-full max-w-sm p-8 rounded-[32px] shadow-2xl bg-[#14301F] border border-[#E3D39E]/30 relative overflow-hidden" 
+            onClick={e => e.stopPropagation()}
+          >
+            <div className="absolute inset-0 opacity-5 pointer-events-none" style={{
+              backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 15px, #ffffff 15px, #ffffff 16px), repeating-linear-gradient(-45deg, transparent, transparent 15px, #ffffff 15px, #ffffff 16px)`,
+            }}></div>
+            
+            <div className="relative z-10 text-center mb-8">
+              <span className="text-[10px] font-black text-brand-primary uppercase tracking-[0.3em] mb-2 block">Opções da Partida</span>
+              <h3 className="text-2xl font-black font-[system-ui] tracking-tighter text-[#E3D39E] uppercase">{selectedGroupOptions.name}</h3>
+            </div>
+
+            <div className="relative z-10 flex flex-col gap-4">
               <button
                 onClick={() => {
                   setCurrentGroupId(selectedGroupOptions.id);
                   setSelectedGroupOptions(null);
                 }}
-                className="w-full flex items-center justify-center gap-3 p-4 rounded-[30px] font-normal font-[system-ui] tracking-widest text-xs hover:opacity-90 transition-opacity border"
-                style={{ backgroundColor: '#315130', color: '#E3D39E', borderColor: '#E3D39E' }}
+                className="group w-full flex items-center justify-center gap-4 p-5 rounded-[24px] font-black uppercase tracking-widest text-xs transition-all duration-300 bg-brand-primary text-black hover:scale-[1.02] active:scale-95 shadow-xl shadow-brand-primary/20"
               >
-                <Play size={16} />
-                Partida
+                <div className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center">
+                  <Play size={18} fill="currentColor" />
+                </div>
+                Entrar na Partida
               </button>
-              <button
-                onClick={() => {
-                  setGroupToRename(selectedGroupOptions);
-                  setRenameValue(selectedGroupOptions.name);
-                  setSelectedGroupOptions(null);
-                }}
-                className="w-full flex items-center justify-center gap-3 p-4 rounded-[30px] font-normal font-[system-ui] tracking-widest text-xs transition-colors bg-zinc-100 hover:bg-zinc-200 text-zinc-700"
-              >
-                Renomear
-              </button>
-              <button
-                onClick={() => {
-                  setGroupToDelete(selectedGroupOptions);
-                  setSelectedGroupOptions(null);
-                }}
-                className="w-full flex items-center justify-center gap-3 p-4 rounded-[30px] bg-red-500/10 text-red-500 font-normal font-[system-ui] tracking-widest text-xs hover:bg-red-500/20 transition-colors"
-                title="Excluir"
-              >
-                <Trash2 size={16} />
-              </button>
+              
+              <div className="grid grid-cols-2 gap-4">
+                <button
+                  onClick={() => {
+                    setGroupToRename(selectedGroupOptions);
+                    setRenameValue(selectedGroupOptions.name);
+                    setSelectedGroupOptions(null);
+                  }}
+                  className="flex items-center justify-center gap-3 p-4 rounded-[20px] font-black uppercase tracking-widest text-[10px] transition-all bg-white/5 border border-white/10 hover:bg-white/10 text-white"
+                >
+                  <RefreshCw size={14} />
+                  Renomear
+                </button>
+                <button
+                  onClick={() => {
+                    setGroupToDelete(selectedGroupOptions);
+                    setSelectedGroupOptions(null);
+                  }}
+                  className="flex items-center justify-center gap-3 p-4 rounded-[20px] bg-red-500/10 text-red-400 font-black uppercase tracking-widest text-[10px] hover:bg-red-500/20 transition-all border border-red-500/20"
+                >
+                  <Trash2 size={14} />
+                  Excluir
+                </button>
+              </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* Delete Confirmation Modal */}
       {groupToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-brand-dark border border-orange-500/30 rounded-lg p-6 max-w-sm w-full shadow-2xl shadow-orange-500/20">
-            <h3 className="text-xl font-black uppercase tracking-tighter mb-2 text-[#464656] text-center">Excluir Partida</h3>
-            <p className="text-center text-[#464656] mb-6 text-sm opacity-90 lowercase first-letter:uppercase">
-              Tem certeza que deseja excluir a partida <strong className="text-[#464656] font-black">{groupToDelete.name}</strong>? Todos os dados serão perdidos e esta ação não pode ser desfeita.
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="bg-[#14301F] border border-red-500/30 rounded-[32px] p-8 max-w-sm w-full shadow-2xl relative overflow-hidden"
+          >
+            <div className="absolute inset-0 bg-red-500/5 pointer-events-none" />
+            <h3 className="text-2xl font-black uppercase tracking-tighter mb-4 text-red-400 text-center relative z-10">Excluir Partida</h3>
+            <p className="text-center text-white/70 mb-8 text-sm lowercase first-letter:uppercase leading-relaxed px-2 relative z-10">
+              Tem certeza que deseja excluir a partida <strong className="text-white font-black">{groupToDelete.name}</strong>? Todos os dados serão perdidos.
             </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setGroupToDelete(null)}
-                className="flex-1 py-3 rounded-xl font-bold uppercase tracking-widest text-xs transition-colors bg-zinc-200 text-black hover:bg-zinc-300"
-              >
-                Cancelar
-              </button>
+            <div className="flex flex-col gap-3 relative z-10">
               <button
                 onClick={() => {
                   setGroups(prev => prev.filter(g => g.id !== groupToDelete.id));
@@ -7327,38 +7451,42 @@ export default function App() {
                   ].forEach(k => safeLocalStorage.removeItem(k));
                   setGroupToDelete(null);
                 }}
-                className="flex-1 py-3 rounded-xl font-black uppercase tracking-widest text-xs bg-orange-500 text-white hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20"
+                className="w-full py-5 rounded-[20px] font-black uppercase tracking-widest text-xs bg-red-500 text-white hover:bg-red-600 transition-all shadow-xl shadow-red-500/20 active:scale-95"
               >
-                Excluir
+                Confirmar Exclusão
+              </button>
+              <button
+                onClick={() => setGroupToDelete(null)}
+                className="w-full py-4 rounded-[20px] font-black uppercase tracking-widest text-[10px] transition-all bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
+              >
+                Cancelar
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* Rename Modal */}
       {groupToRename && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="w-full max-w-sm p-6 rounded-2xl shadow-md bg-zinc-100">
-            <h3 className="text-xl font-black uppercase tracking-tighter mb-4 text-zinc-500">Renomear Partida</h3>
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+          <motion.div 
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="w-full max-w-sm p-8 rounded-[32px] shadow-2xl bg-[#14301F] border border-[#E3D39E]/30 relative overflow-hidden"
+          >
+            <div className="absolute inset-0 opacity-5 pointer-events-none" style={{
+              backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 15px, #ffffff 15px, #ffffff 16px), repeating-linear-gradient(-45deg, transparent, transparent 15px, #ffffff 15px, #ffffff 16px)`,
+            }}></div>
+            <h3 className="relative z-10 text-xl font-black uppercase tracking-tighter mb-6 text-[#E3D39E] text-center">Renomear</h3>
             <input
               type="text"
               value={renameValue}
               onChange={e => setRenameValue(e.target.value)}
               placeholder="Novo nome"
-              className="w-full p-4 rounded-xl mb-6 outline-none font-bold bg-white text-zinc-800 placeholder:text-zinc-400"
+              className="relative z-10 w-full p-5 rounded-[20px] mb-8 outline-none font-bold bg-white/5 border border-white/10 text-white placeholder:text-white/20 focus:border-brand-primary transition-all text-center text-lg"
               autoFocus
             />
-            <div className="flex gap-3">
-              <button
-                onClick={() => {
-                  setGroupToRename(null);
-                  setRenameValue('');
-                }}
-                className="flex-1 py-3 rounded-xl font-bold uppercase tracking-widest text-xs transition-colors bg-zinc-200 text-black hover:bg-zinc-300"
-              >
-                Cancelar
-              </button>
+            <div className="relative z-10 flex flex-col gap-3">
               <button
                 onClick={() => {
                   if (renameValue.trim()) {
@@ -7368,38 +7496,54 @@ export default function App() {
                   }
                 }}
                 disabled={!renameValue.trim()}
-                className="flex-1 py-3 rounded-xl font-black uppercase tracking-widest text-xs bg-brand-gradient text-black hover:opacity-90 transition-opacity disabled:opacity-50"
+                className="w-full py-5 rounded-[20px] font-black uppercase tracking-widest text-[11px] bg-brand-primary text-black hover:opacity-90 transition-all disabled:opacity-50 active:scale-95 shadow-xl shadow-brand-primary/20"
               >
-                Salvar
+                Salvar Alteração
+              </button>
+              <button
+                onClick={() => {
+                  setGroupToRename(null);
+                  setRenameValue('');
+                }}
+                className="w-full py-4 rounded-[20px] font-black uppercase tracking-widest text-[10px] transition-all bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
+              >
+                Cancelar
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
       {/* New Group Modal */}
       {showNewGroupModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="w-full max-w-sm p-6 rounded-2xl shadow-md bg-zinc-100">
-            <h3 className="text-xl font-black uppercase tracking-tighter mb-4 text-zinc-500">Nome da Partida</h3>
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+          <motion.div 
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="w-full max-w-sm p-8 rounded-[36px] shadow-[0_20px_60px_rgba(0,0,0,0.8)] bg-[#14301F] border border-[#E3D39E]/30 relative overflow-hidden"
+          >
+             <div className="absolute inset-0 opacity-5 pointer-events-none" style={{
+              backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 15px, #ffffff 15px, #ffffff 16px), repeating-linear-gradient(-45deg, transparent, transparent 15px, #ffffff 15px, #ffffff 16px)`,
+            }}></div>
+
+            <div className="relative z-10 text-center mb-8">
+              <div className="w-16 h-16 rounded-full bg-brand-primary/10 text-brand-primary flex items-center justify-center mx-auto mb-4 border border-brand-primary/20">
+                <Plus size={32} strokeWidth={2.5} />
+              </div>
+              <h3 className="text-2xl font-black uppercase tracking-tighter text-[#E3D39E]">Nova Partida</h3>
+              <p className="text-[10px] font-black text-[#E3D39E]/40 uppercase tracking-[0.2em] mt-1">Como vai se chamar?</p>
+            </div>
+
             <input
               type="text"
               value={newGroupName}
               onChange={e => setNewGroupName(e.target.value)}
-              placeholder=""
-              className="w-full p-4 rounded-xl mb-6 outline-none font-bold bg-white text-zinc-800 placeholder:text-zinc-400 placeholder:text-sm text-base"
+              placeholder="Ex: Racha dos Amigos"
+              className="relative z-10 w-full p-6 rounded-[24px] mb-8 outline-none font-black bg-white/5 border border-white/10 text-white placeholder:text-white/20 focus:border-brand-primary transition-all text-center text-lg shadow-inner"
               autoFocus
             />
-            <div className="flex gap-3">
-              <button
-                onClick={() => {
-                  setShowNewGroupModal(false);
-                  setNewGroupName('');
-                }}
-                className="flex-1 py-3 rounded-xl font-bold uppercase tracking-widest text-xs transition-colors bg-zinc-200 text-black hover:bg-zinc-300"
-              >
-                Cancelar
-              </button>
+            
+            <div className="relative z-10 flex flex-col gap-4">
               <button
                 onClick={() => {
                   if (newGroupName.trim()) {
@@ -7424,12 +7568,21 @@ export default function App() {
                   }
                 }}
                 disabled={!newGroupName.trim()}
-                className="flex-1 py-3 rounded-xl font-black uppercase tracking-widest text-xs bg-brand-gradient text-black hover:opacity-90 transition-opacity disabled:opacity-50"
+                className="w-full p-5 rounded-[24px] font-black uppercase tracking-widest text-xs bg-brand-primary text-black hover:scale-[1.02] transition-all disabled:opacity-50 active:scale-95 shadow-xl shadow-brand-primary/20"
               >
-                Criar
+                Confirmar Criação
+              </button>
+              <button
+                onClick={() => {
+                  setShowNewGroupModal(false);
+                  setNewGroupName('');
+                }}
+                className="w-full py-4 rounded-[24px] font-black uppercase tracking-widest text-[10px] transition-all bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
+              >
+                Voltar
               </button>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
     </div>
