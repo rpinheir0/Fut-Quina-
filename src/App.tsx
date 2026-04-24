@@ -161,30 +161,52 @@ const TutorialCarousel = () => {
   }, [items.length]);
 
   return (
-    <div className="relative w-full aspect-video overflow-hidden rounded-2xl bg-transparent">
+    <div className="relative w-full aspect-video overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800 shadow-[0_0_50px_-12px_rgba(57,255,20,0.15)] group">
+      {/* High-tech border glow overlay */}
+      <div className="absolute inset-0 rounded-[2rem] border-[1px] border-white/5 z-20 pointer-events-none" />
+      <div className="absolute inset-0 rounded-[2rem] shadow-[inset_0_0_20px_rgba(0,0,0,0.8)] z-10 pointer-events-none" />
+
       <AnimatePresence mode="wait">
         <motion.div
           key={index}
-          initial={{ opacity: 0, x: 100 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -100 }}
-          transition={{ duration: 0.5, ease: "easeInOut" }}
-          className="absolute inset-0 flex items-center justify-center pointer-events-none"
+          initial={{ opacity: 0, x: 50, filter: "blur(5px)" }}
+          animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, x: -50, filter: "blur(5px)" }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="absolute inset-0 flex items-center justify-center pointer-events-none mix-blend-screen"
         >
           <img 
             src={items[index].image} 
             alt={items[index].alt} 
-            className="w-full h-full object-cover rounded-2xl" 
+            className="w-full h-full object-cover rounded-[2rem] opacity-90 contrast-125 saturate-150" 
             onError={(e) => {
               (e.target as HTMLImageElement).src = `https://placehold.co/600x400/1a1a1a/ffffff?text=${items[index].alt.replace(/ /g, '+')}\n(Faça+upload+da+imagem)`;
             }}
           />
         </motion.div>
       </AnimatePresence>
-      <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-[#14301F] to-transparent pointer-events-none"></div>
-      <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-2">
+
+      {/* Cyberpunk gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-t from-[#14301F]/90 via-[#14301F]/40 to-transparent pointer-events-none z-10 mix-blend-multiply"></div>
+      
+      {/* Inner tech scanline effect */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none z-10 opacity-30"></div>
+
+      <div className="absolute bottom-5 left-0 right-0 flex justify-center gap-3 z-20">
         {items.map((_, i) => (
-          <div key={i} className={`w-2.5 h-2.5 rounded-full border-2 border-black transition-colors duration-500 ${i === index ? 'bg-black' : 'bg-white/50'}`} />
+          <div 
+            key={i} 
+            className={`transition-all duration-700 ease-out flex items-center justify-center ${
+              i === index ? 'w-8' : 'w-2'
+            } h-1 rounded-full overflow-hidden bg-white/20 backdrop-blur-sm`}
+          >
+            {i === index && (
+              <motion.div 
+                layoutId="activeSlideIndicator"
+                className="w-full h-full bg-[#E3D39E] shadow-[0_0_10px_rgba(227,211,158,0.8)]"
+              />
+            )}
+          </div>
         ))}
       </div>
     </div>
@@ -6895,13 +6917,17 @@ export default function App() {
 
   return (
     <div className="min-h-screen font-sans transition-colors duration-300 flex flex-col justify-center p-0 pt-4 pb-4 sm:p-4" style={{ backgroundColor: '#315130' }}>
-      <div className="w-[96%] sm:w-full max-w-md mx-auto px-5 py-10 sm:p-8 rounded-2xl shadow-2xl border flex flex-col min-h-[85vh] sm:min-h-0 justify-between" style={{ background: '#14301F', borderColor: '#E3D39E' }}>
-        <div className="flex flex-row items-center justify-center gap-3 text-center mb-8 sm:mb-8 mt-2 sm:mt-0">
+      <div className="w-[96%] sm:w-full max-w-md mx-auto px-5 py-10 sm:p-8 rounded-2xl shadow-2xl border flex flex-col min-h-[85vh] sm:min-h-0 justify-between relative overflow-hidden" style={{ background: '#14301F', borderColor: '#E3D39E' }}>
+        <div className="absolute inset-0 pointer-events-none opacity-25 z-0" style={{
+          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 15px, #cccccc 15px, #cccccc 16px), repeating-linear-gradient(-45deg, transparent, transparent 15px, #cccccc 15px, #cccccc 16px)`,
+        }}></div>
+
+        <div className="relative z-10 flex flex-row items-center justify-center gap-3 text-center mb-8 sm:mb-8 mt-2 sm:mt-0">
           <SpinningBall size="md" spin={true} />
           <FutQuinaLogo size="md" colorClass="" style={{ color: '#E3D39E', fontStyle: 'normal', fontFamily: 'system-ui', fontWeight: '900' }} />
         </div>
 
-        <div className="space-y-8 sm:space-y-6 flex-1 flex flex-col justify-center">
+        <div className="relative z-10 space-y-8 sm:space-y-6 flex-1 flex flex-col justify-center">
           <div className="transform sm:scale-100 scale-105 origin-center w-full max-w-[95%] sm:max-w-full mx-auto">
             <TutorialCarousel />
           </div>
@@ -6912,11 +6938,11 @@ export default function App() {
                 <div key={`${group.id}-${index}`} className="flex items-center gap-2">
                   <button
                     onClick={() => setSelectedGroupOptions({ id: group.id, name: group.name })}
-                    className="flex-1 p-5 sm:p-4 transition-all flex items-center justify-center relative group rounded-full border"
-                    style={{ backgroundColor: '#14301F', borderColor: '#E3D39E', color: '#E3D39E' }}
+                    className="flex-1 p-5 sm:p-4 transition-all duration-300 flex items-center justify-center relative group rounded-full bg-white/5 backdrop-blur-md shadow-[0_10px_30px_rgba(0,0,0,0.5)] hover:-translate-y-1 hover:shadow-[0_15px_35px_rgba(0,0,0,0.6)] hover:bg-white/10 border border-[#E3D39E]/30"
+                    style={{ color: '#E3D39E' }}
                   >
-                    <span className="text-xl sm:text-lg font-normal text-center w-full px-8" style={{ fontFamily: 'system-ui' }}>{group.name}</span>
-                    <ChevronRight size={20} className="absolute right-4 transition-colors opacity-70 group-hover:opacity-100" />
+                    <span className="text-xl sm:text-lg font-normal text-center w-full px-8 drop-shadow-md" style={{ fontFamily: 'system-ui' }}>{group.name}</span>
+                    <ChevronRight size={20} className="absolute right-4 transition-colors opacity-70 group-hover:opacity-100 drop-shadow-md" />
                   </button>
                 </div>
               ))}
