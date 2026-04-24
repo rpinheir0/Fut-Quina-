@@ -51,6 +51,7 @@ import {
   Swords,
   Wallet,
   ArrowLeftRight,
+  ArrowLeft,
   MoveRight,
   Home,
   Eye,
@@ -463,7 +464,15 @@ const TieBreakerModal = ({
         className="w-full max-w-lg bg-zinc-100 rounded-[32px] overflow-hidden border-2 border-black shadow-2xl"
       >
         {/* Selection Header */}
-        <div className="p-6 bg-[#112F24] text-white border-b-2 border-black flex flex-col items-center gap-2">
+        <div className="p-6 bg-[#112F24] text-white border-b-2 border-black flex flex-col items-center gap-2 relative">
+          {state.type !== 'none' && (
+            <button 
+              onClick={() => onTypeSelect('none')}
+              className="absolute left-4 top-4 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors"
+            >
+              <ArrowLeft size={20} />
+            </button>
+          )}
           <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center">
             <ArrowLeftRight className="text-brand-primary" size={24} />
           </div>
@@ -518,12 +527,12 @@ const TieBreakerModal = ({
           <div className="p-6 space-y-6">
             <div className="flex justify-between items-center gap-4 bg-zinc-200 p-4 rounded-2xl border border-black/10">
               <div className="text-center flex-1">
-                <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-1">{teamA.name}</div>
+                <div className="text-3xl mb-1">{teamA.emoji || '🛡️'}</div>
                 <div className="text-4xl font-black">{teamAGoals}</div>
               </div>
               <div className="text-zinc-300 font-black text-xl italic uppercase">VS</div>
               <div className="text-center flex-1">
-                <div className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-1">{teamB.name}</div>
+                <div className="text-3xl mb-1">{teamB.emoji || '🛡️'}</div>
                 <div className="text-4xl font-black">{teamBGoals}</div>
               </div>
             </div>
@@ -531,7 +540,7 @@ const TieBreakerModal = ({
             <div className="grid grid-cols-2 gap-6">
               {/* Team A Penalties */}
               <div className="space-y-4">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 text-center border-b border-black/5 pb-2">Batedores {teamA.name}</h4>
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 text-center border-b border-black/5 pb-2">Batedores {teamA.emoji || '🛡️'}</h4>
                 <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
                   {state.penalties.teamA.map((shot, idx) => {
                     const p = players.find(player => player.id === shot.playerId);
@@ -564,7 +573,7 @@ const TieBreakerModal = ({
 
               {/* Team B Penalties */}
               <div className="space-y-4">
-                <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 text-center border-b border-black/5 pb-2">Batedores {teamB.name}</h4>
+                <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 text-center border-b border-black/5 pb-2">Batedores {teamB.emoji || '🛡️'}</h4>
                 <div className="space-y-2 max-h-[300px] overflow-y-auto pr-1">
                   {state.penalties.teamB.map((shot, idx) => {
                     const p = players.find(player => player.id === shot.playerId);
@@ -622,8 +631,8 @@ const TieBreakerModal = ({
                 <div className="absolute top-0 bottom-0 left-1/2 w-2 bg-black/20 -translate-x-1/2"></div>
                 
                 {/* Team Labels */}
-                <div className="absolute top-4 left-1/2 -translate-x-1/2 text-[10px] font-black uppercase text-[#112F24]">{teamA.name}</div>
-                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-[10px] font-black uppercase text-[#112F24] rotate-180">{teamB.name}</div>
+                <div className="absolute top-4 left-1/2 -translate-x-1/2 text-3xl">{teamA.emoji || '🛡️'}</div>
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-3xl rotate-180">{teamB.emoji || '🛡️'}</div>
 
                 {/* Central Ball */}
                 <div className="w-20 h-20 bg-white rounded-full border-4 border-black shadow-lg flex items-center justify-center z-10 overflow-hidden">
@@ -648,8 +657,8 @@ const TieBreakerModal = ({
               <div className="w-full space-y-4 text-center">
                 <div className="p-4 bg-brand-primary/20 rounded-2xl border-2 border-brand-primary">
                   <div className="text-[10px] font-black uppercase tracking-widest text-[#112F24] mb-1">Vencedor do Sorteio</div>
-                  <div className="text-2xl font-black uppercase tracking-tighter text-[#112F24]">
-                    {state.lottery.winnerId === teamA.id ? teamA.name : teamB.name}
+                  <div className="text-4xl mb-4">
+                    {state.lottery.winnerId === teamA.id ? (teamA.emoji || '🛡️') : (teamB.emoji || '🛡️')}
                   </div>
                 </div>
                 <button 
