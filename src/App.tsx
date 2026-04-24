@@ -2827,24 +2827,24 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         {/* Tabs for Ranking */}
         {currentScreen === 'ranking' && (
           <div className="px-6 pb-4">
-            <div className="flex bg-brand-dark p-1 rounded-2xl border border-brand-border">
+            <div className="flex bg-brand-dark p-1 rounded-[24px] border border-brand-border">
               <button
                 onClick={() => setRankingTab('geral')}
-                className={`flex-1 py-2 text-[10px] uppercase font-black tracking-widest rounded-xl transition-all ${rankingTab === 'geral' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${rankingTab === 'geral' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
               >
-                Geral
+                <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Geral</span>
               </button>
               <button
                 onClick={() => setRankingTab('artilharia')}
-                className={`flex-1 py-2 text-[10px] uppercase font-black tracking-widest rounded-xl transition-all ${rankingTab === 'artilharia' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${rankingTab === 'artilharia' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
               >
-                Artilharia
+                <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Artilharia</span>
               </button>
               <button
                 onClick={() => setRankingTab('assistencias')}
-                className={`flex-1 py-2 text-[10px] uppercase font-black tracking-widest rounded-xl transition-all ${rankingTab === 'assistencias' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${rankingTab === 'assistencias' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
               >
-                Assistências
+                <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Assistências</span>
               </button>
             </div>
           </div>
@@ -6887,10 +6887,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 {/* Header Section with Badge */}
                 <div className="pt-12 pb-6 px-8 relative z-10">
                   <div className="flex flex-col gap-1">
-                    <div className="flex items-center gap-2">
-                      <div className="w-1.5 h-6 bg-brand-primary rounded-full shadow-[0_0_10px_rgba(183,217,108,0.5)]" />
-                      <span className="text-[10px] font-black text-brand-primary uppercase tracking-[0.25em]">Painel Administrativo</span>
-                    </div>
                     <h2 className="text-3xl font-black uppercase tracking-tighter text-white drop-shadow-lg">Menu</h2>
                   </div>
                   <button 
@@ -6930,32 +6926,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <span className="text-[10px] text-white/40 uppercase font-bold tracking-tight mt-0.5">Gestão de Caixa</span>
                       </div>
                       <ChevronRight size={16} className="ml-auto text-white/20 group-hover:text-brand-primary transition-colors" />
-                    </button>
-                  </div>
-
-                  {/* Actions Group */}
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3 px-2">
-                      <div className="h-[1px] flex-1 bg-white/5" />
-                      <span className="text-[9px] font-black text-white/20 uppercase tracking-[0.2em] whitespace-nowrap">Ações</span>
-                      <div className="h-[1px] flex-1 bg-white/5" />
-                    </div>
-
-                    <button 
-                      onClick={() => {
-                        setShowMainMenu(false);
-                        setShowResetStatsConfirm(true);
-                      }}
-                      className="group w-full flex items-center gap-4 p-4 rounded-[24px] bg-red-400/5 border border-red-400/10 hover:bg-red-400/10 hover:border-red-400/20 transition-all duration-400 transform active:scale-95 text-left"
-                    >
-                      <div className="w-12 h-12 rounded-2xl bg-red-400/20 text-red-400 flex items-center justify-center shrink-0 group-hover:rotate-180 transition-transform duration-700">
-                        <RotateCcw size={22} strokeWidth={2.5} />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="font-black uppercase tracking-widest text-xs text-white">Zerar Tudo</span>
-                        <span className="text-[10px] text-red-400/60 uppercase font-bold tracking-tight mt-0.5">Rankings e Stats</span>
-                      </div>
-                      <ChevronRight size={16} className="ml-auto text-white/20 transition-colors" />
                     </button>
                   </div>
                 </div>
