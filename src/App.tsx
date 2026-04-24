@@ -584,7 +584,7 @@ const TieBreakerModal = ({
                 <div className="pt-4">
                   <button 
                     onClick={() => onConfirm()}
-                    className="w-full p-4 rounded-[20px] bg-gradient-to-br from-zinc-800 to-zinc-900 border border-white/10 text-brand-primary text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:from-zinc-700 hover:to-zinc-800 shadow-lg active:scale-95"
+                    className="w-full p-4 rounded-[20px] bg-gradient-to-br from-zinc-100 to-zinc-300 border border-white/20 text-[#112F24] text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:from-white hover:to-zinc-200 shadow-xl active:scale-95"
                   >
                     Manter o resultado atual
                   </button>
@@ -632,12 +632,12 @@ const TieBreakerModal = ({
               <div className="grid grid-cols-2 gap-4 h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                 {/* Team A Penalties */}
                 <div className="space-y-2">
-                  <div className="text-[9px] font-black text-white/20 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#112F24] py-1">Time A</div>
+                  <div className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#112F24] py-1">Time A</div>
                   {state.penalties.teamA.map((shot, idx) => {
                     const p = players.find(player => player.id === shot.playerId);
                     return (
-                      <div key={`pen-a-${idx}`} className="p-3 bg-white/5 rounded-2xl border border-white/5 space-y-2">
-                        <div className="text-[10px] font-black text-white/80 truncate uppercase">{p?.name}</div>
+                      <div key={`pen-a-${idx}`} className="p-3 bg-white/10 rounded-2xl border border-white/5 space-y-2">
+                        <div className="text-[10px] font-black text-white truncate uppercase">{p?.name}</div>
                         <div className="flex gap-1.5">
                           <button 
                             onClick={() => onPenaltyToggle('A', idx)}
@@ -659,12 +659,12 @@ const TieBreakerModal = ({
 
                 {/* Team B Penalties */}
                 <div className="space-y-2">
-                  <div className="text-[9px] font-black text-white/20 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#112F24] py-1">Time B</div>
+                  <div className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#112F24] py-1">Time B</div>
                   {state.penalties.teamB.map((shot, idx) => {
                     const p = players.find(player => player.id === shot.playerId);
                     return (
-                      <div key={`pen-b-${idx}`} className="p-3 bg-white/5 rounded-2xl border border-white/5 space-y-2">
-                        <div className="text-[10px] font-black text-white/80 truncate uppercase">{p?.name}</div>
+                      <div key={`pen-b-${idx}`} className="p-3 bg-white/10 rounded-2xl border border-white/5 space-y-2">
+                        <div className="text-[10px] font-black text-white truncate uppercase">{p?.name}</div>
                         <div className="flex gap-1.5">
                           <button 
                             onClick={() => onPenaltyToggle('B', idx)}
@@ -696,7 +696,7 @@ const TieBreakerModal = ({
           )}
 
           {isLotteryOngoing && (
-            <div className="flex flex-col items-center gap-10 py-4">
+            <div className="flex flex-col items-center gap-6 py-4">
               <div className="relative">
                 <motion.div 
                   animate={state.lottery.isSpinning ? { 
@@ -747,12 +747,65 @@ const TieBreakerModal = ({
               </div>
 
               {!state.lottery.winnerId && !state.lottery.isSpinning && (
-                <button 
-                  onClick={onLotterySpin}
-                  className="w-full py-5 bg-brand-primary text-brand-text-primary rounded-[24px] font-black uppercase tracking-widest text-xs shadow-lg shadow-brand-primary/20 active:scale-95 transition-all"
-                >
-                  Girar Roleta
-                </button>
+                <div className="w-full space-y-6">
+                  <div className="flex items-center gap-4 bg-white/10 p-5 rounded-[24px] border border-white/10 backdrop-blur-sm">
+                    <div className="flex-1 flex flex-col items-center">
+                      <div className="w-10 h-10 flex items-center justify-center drop-shadow-lg mb-2">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                          <defs>
+                            <linearGradient id="shield-lot-A" x1="0%" y1="0%" x2="0%" y2="100%">
+                              <stop offset="0%" stopColor={teamA.color || TEAM_COLORS[0]} />
+                              <stop offset="100%" stopColor={teamA.color || TEAM_COLORS[0]} stopOpacity="0.85" />
+                            </linearGradient>
+                          </defs>
+                          <path fill="url(#shield-lot-A)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+                      <div className="text-[8px] font-black text-white/40 uppercase tracking-widest">{teamA.name}</div>
+                      <div className="mt-1 flex flex-wrap justify-center gap-0.5">
+                        {teamA.playerIds.map((pid, idx) => {
+                          const p = players.find(player => player.id === pid);
+                          return (
+                            <span key={pid} className="text-[6px] font-bold text-white/20 uppercase">
+                              {p?.name}{idx < teamA.playerIds.length - 1 ? ',' : ''}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                    <div className="text-white/10 font-bold italic text-xs uppercase">VS</div>
+                    <div className="flex-1 flex flex-col items-center">
+                      <div className="w-10 h-10 flex items-center justify-center drop-shadow-lg mb-2">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                          <defs>
+                            <linearGradient id="shield-lot-B" x1="0%" y1="0%" x2="0%" y2="100%">
+                              <stop offset="0%" stopColor={teamB.color || TEAM_COLORS[1]} />
+                              <stop offset="100%" stopColor={teamB.color || TEAM_COLORS[1]} stopOpacity="0.85" />
+                            </linearGradient>
+                          </defs>
+                          <path fill="url(#shield-lot-B)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+                      <div className="text-[8px] font-black text-white/40 uppercase tracking-widest">{teamB.name}</div>
+                      <div className="mt-1 flex flex-wrap justify-center gap-0.5">
+                        {teamB.playerIds.map((pid, idx) => {
+                          const p = players.find(player => player.id === pid);
+                          return (
+                            <span key={pid} className="text-[6px] font-bold text-white/20 uppercase">
+                              {p?.name}{idx < teamB.playerIds.length - 1 ? ',' : ''}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                  <button 
+                    onClick={onLotterySpin}
+                    className="w-full py-5 bg-brand-primary text-brand-text-primary rounded-[24px] font-black uppercase tracking-widest text-xs shadow-lg shadow-brand-primary/20 active:scale-95 transition-all"
+                  >
+                    Girar Roleta
+                  </button>
+                </div>
               )}
 
               {state.lottery.winnerId && !state.lottery.isSpinning && (
