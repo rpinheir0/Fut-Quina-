@@ -197,7 +197,7 @@ interface Team {
   playerIds: string[];
   emoji?: string;
   color?: string;
-  lastMatchStatus?: 'Vencedor' | 'Empate' | 'Derrota';
+  lastMatchStatus?: 'Vencedor' | 'Empate' | 'Derrota' | 'Subiu';
 }
 
 interface PenaltyShot {
@@ -2115,7 +2115,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
 
   useEffect(() => {
-    // Auto-hide disabled, requires manual confirmation via OK button
+    if (toast) {
+      const timer = setTimeout(() => {
+        setToast(null);
+      }, 7000);
+      return () => clearTimeout(timer);
+    }
   }, [toast]);
 
   // --- Initialization ---
@@ -2806,6 +2811,21 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
         const leavingTeam = newTeams.splice(teamToLeaveIndex, 1)[0];
         newTeams.push(leavingTeam);
+
+        // Identify which team just "subiu" to the match selection
+        const finalStayIndex = teamToStayIndex > teamToLeaveIndex ? teamToStayIndex - 1 : teamToStayIndex;
+        const nextTeamIndex = finalStayIndex === 0 ? 1 : 0;
+        const joinedTeamId = newTeams[nextTeamIndex]?.id;
+
+        if (joinedTeamId) {
+          newTeams = newTeams.map(t => {
+            if (t.id === joinedTeamId && t.id !== teamAId && t.id !== teamBId) {
+              return { ...t, lastMatchStatus: 'Subiu' };
+            }
+            return t;
+          });
+        }
+
         return newTeams;
       });
 
@@ -3359,8 +3379,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               className={`pointer-events-auto flex items-center gap-3 px-5 py-3 rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] border backdrop-blur-xl transition-all ${
                 toast.type === 'success' ? 'bg-emerald-500/90 border-emerald-400/50 text-white' :
                 toast.type === 'warning' ? 'bg-amber-500/90 border-amber-400/50 text-white' :
-                toast.type === 'gray' ? 'bg-zinc-800/90 border-zinc-700/50 text-white' :
-                'bg-brand-dark/95 border-brand-primary/20 text-white'
+                'bg-[#1E3D2F]/95 border-white/10 text-white'
               }`}
             >
               <div className="shrink-0">
@@ -4844,9 +4863,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           <div className="px-2 py-0.5 rounded-full bg-zinc-500 text-white text-[8px] font-black uppercase tracking-widest shadow-sm">
                                             Empate
                                           </div>
-                                        ) : (
+                                        ) : t.lastMatchStatus === 'Derrota' ? (
                                           <div className="px-2 py-0.5 rounded-full bg-red-500 text-white text-[8px] font-black uppercase tracking-widest shadow-sm">
                                             Perdeu
+                                          </div>
+                                        ) : (
+                                          <div className="px-2 py-0.5 rounded-full bg-sky-500 text-white text-[8px] font-black uppercase tracking-widest shadow-sm animate-bounce">
+                                            Subiu
                                           </div>
                                         )}
                                       </div>
