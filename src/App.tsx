@@ -405,7 +405,7 @@ const AssistModal = ({
           </motion.div>
           <h3 className="text-xl font-black uppercase tracking-tighter text-black leading-tight">Quem deu a assistência?</h3>
           <p className="text-[10px] text-black/60 font-medium mt-1 uppercase tracking-[0.2em] max-w-[200px] mx-auto leading-relaxed">
-            Selecione o craque que serviu o garçom no gol
+            Selecione o craque que serviu o <span className="text-zinc-500">garçom</span> no gol
           </p>
         </div>
 
@@ -2419,17 +2419,31 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       // Regroup all players from all teams to maintain order and fill gap
       const allPlayerIds = prev.flatMap(t => t.playerIds).filter(pid => pid !== id);
       const limit = match.config.playersPerTeam;
-      const newTeams = [];
+      const newTeams: Team[] = [];
       
       for (let i = 0; i < allPlayerIds.length; i += limit) {
         const chunk = allPlayerIds.slice(i, i + limit);
+        const teamIndex = Math.floor(i/limit);
+        const existingTeam = prev[teamIndex];
+
         newTeams.push({
-          id: `team-${Date.now()}-${Math.floor(i/limit)}`,
-          name: `Time ${String.fromCharCode(65 + Math.floor(i/limit))}`,
+          id: existingTeam?.id || `team-regrouped-${teamIndex}-${generateId()}`,
+          name: `Time ${String.fromCharCode(65 + teamIndex)}`,
           playerIds: chunk,
-          color: TEAM_COLORS[Math.floor(i/limit) % TEAM_COLORS.length]
+          emoji: existingTeam?.emoji || TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length],
+          color: existingTeam?.color || TEAM_COLORS[teamIndex % TEAM_COLORS.length]
         });
       }
+
+      // Update match indices
+      setMatch(prevMatch => {
+        let newA = prevMatch.teamAIndex;
+        let newB = prevMatch.teamBIndex;
+        if (newA >= newTeams.length) newA = -1;
+        if (newB >= newTeams.length) newB = -1;
+        return { ...prevMatch, teamAIndex: newA, teamBIndex: newB };
+      });
+
       return newTeams;
     });
   };
@@ -2460,17 +2474,31 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       // For Ordem de Chegada, we always regroup from start to maintain the queue
       const allPlayerIds = prev.flatMap(t => t.playerIds).filter(id => id !== playerId);
       const limit = match.config.playersPerTeam;
-      const newTeams = [];
+      const newTeams: Team[] = [];
       
       for (let i = 0; i < allPlayerIds.length; i += limit) {
         const chunk = allPlayerIds.slice(i, i + limit);
+        const teamIndex = Math.floor(i/limit);
+        const existingTeam = prev[teamIndex];
+
         newTeams.push({
-          id: `team-${Date.now()}-${Math.floor(i/limit)}`,
-          name: `Time ${String.fromCharCode(65 + Math.floor(i/limit))}`,
+          id: existingTeam?.id || `team-cascade-${teamIndex}-${generateId()}`,
+          name: `Time ${String.fromCharCode(65 + teamIndex)}`,
           playerIds: chunk,
-          color: TEAM_COLORS[Math.floor(i/limit) % TEAM_COLORS.length]
+          emoji: existingTeam?.emoji || TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length],
+          color: existingTeam?.color || TEAM_COLORS[teamIndex % TEAM_COLORS.length]
         });
       }
+
+      // Update match indices
+      setMatch(prevMatch => {
+        let newA = prevMatch.teamAIndex;
+        let newB = prevMatch.teamBIndex;
+        if (newA >= newTeams.length) newA = -1;
+        if (newB >= newTeams.length) newB = -1;
+        return { ...prevMatch, teamAIndex: newA, teamBIndex: newB };
+      });
+
       return newTeams;
     });
   };
@@ -4990,8 +5018,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           <svg viewBox="0 0 24 24" stroke={strokeColor} strokeWidth="0.5" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
                                             <defs>
                                               <linearGradient id={`shield-grad-${t.id}`} x1="0%" y1="0%" x2="0%" y2="100%">
-                                                <stop offset="0%" stopColor={teamColor} />
-                                                <stop offset="100%" stopColor={teamColor} stopOpacity="0.85" />
+                                                <stop offset="0%" stopColor={teamColor || '#2563EB'} />
+                                                <stop offset="100%" stopColor={teamColor || '#1E3A8A'} stopOpacity="0.85" />
                                               </linearGradient>
                                             </defs>
                                             <path 
@@ -7323,7 +7351,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 message: `O ${currentTeam.name} já está lotado. Criamos o ${newTeam.name} para este jogador.`, 
                                 type: 'warning' 
                               });
-                              setTimeout(() => setToast(null), 4000);
+                              setTimeout(() => setToast(null), 7000);
                             } else {
                               const newTeams = [...teams];
                               newTeams[teamIdx].playerIds.push(player.id);
