@@ -1824,6 +1824,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
   const [swappingPlayerId, setSwappingPlayerId] = useState<string | null>(null);
   const [fillingVacancyForTeam, setFillingVacancyForTeam] = useState<number | null>(null);
+  const [showStartMatchConfirm, setShowStartMatchConfirm] = useState(false);
   const [tieBreaker, setTieBreaker] = useState<TieBreakerState>({
     showSelection: false,
     type: 'none',
@@ -4737,6 +4738,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               </button>
                               <button
                                 onClick={() => {
+                                  if (match.isActive && !match.hasEnded) {
+                                    setShowStartMatchConfirm(true);
+                                    return;
+                                  }
+
                                   if (match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
                                       (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
                                       teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) {
@@ -5124,8 +5130,15 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                         newTeams[fillingVacancyForTeam].playerIds.push(pid);
                                                         return newTeams;
                                                       });
+                                                      const isMatchActive = match.isActive && (fillingVacancyForTeam === match.teamAIndex || fillingVacancyForTeam === match.teamBIndex);
                                                       setFillingVacancyForTeam(null);
-                                                      setToast({ message: "Jogador movido com sucesso!", type: 'success' });
+                                                      
+                                                      if (isMatchActive) {
+                                                        setTeamsTab('historico');
+                                                        setToast({ message: "✅ Jogador substituído! A partida pode continuar.", type: 'success' });
+                                                      } else {
+                                                        setToast({ message: "Jogador movido com sucesso!", type: 'success' });
+                                                      }
                                                     } else {
                                                       // Check if there's an incomplete selected team
                                                       const incompleteSelectedTeamIdx = [match.teamAIndex, match.teamBIndex].find(teamIdx => 
@@ -6317,6 +6330,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   {!swappingPlayerId && (
                     <button 
                       onClick={() => {
+                        const isPlayerInActiveMatch = match.isActive && [match.teamAIndex, match.teamBIndex].includes(showPlayerActionsModal.teamIndex);
+                        
+                        if (isPlayerInActiveMatch && !match.isPaused) {
+                          setMatch(prev => ({ ...prev, isPaused: true }));
+                        }
+
                         setTeams(prev => {
                           return prev.map(t => ({
                             ...t,
@@ -6324,8 +6343,16 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           })).filter(t => t.playerIds.length > 0);
                         });
                         setPlayers(prev => prev.map(p => p.id === showPlayerActionsModal.playerId ? { ...p, isAvailable: false, arrivedAt: undefined } : p));
+                        
+                        if (isPlayerInActiveMatch) {
+                          setFillingVacancyForTeam(showPlayerActionsModal.teamIndex);
+                          setTeamsTab('proximos');
+                          setToast({ message: "Selecione o jogador que entrará no lugar.", type: 'info' });
+                        } else {
+                          setToast({ message: "Jogador movido para ausentes.", type: 'info' });
+                        }
+                        
                         setShowPlayerActionsModal(null);
-                        setToast({ message: "Jogador movido para ausentes.", type: 'info' });
                       }}
                       className="py-4 px-4 bg-white text-zinc-800 rounded-2xl font-black uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all active:scale-95 border border-zinc-200 hover:bg-red-50 hover:border-red-200 hover:text-red-500 group"
                     >
@@ -7140,6 +7167,66 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <button 
                   onClick={() => setShowFormationChoiceModal(false)}
                   className="w-full py-2 text-xs font-bold uppercase tracking-widest text-brand-text-secondary mt-2"
+                >
+                  Cancelar
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
+        {showStartMatchConfirm && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[200] flex items-center justify-center p-6"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 40 }}
+              animate={{ scale: 1, y: 0 }}
+              className="w-full max-w-sm rounded-[40px] shadow-2xl border bg-zinc-50 border-zinc-200 overflow-hidden"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="bg-brand-primary p-10 text-center relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-12 -mt-12 blur-2xl" />
+                <div className="flex w-16 h-16 mx-auto rounded-3xl bg-white items-center justify-center mb-4 shadow-xl border-4 border-black/5">
+                  <span className="text-black"><IoFootballOutline size={32} /></span>
+                </div>
+                <h3 className="text-xl font-black uppercase tracking-tight text-black">Partida em Andamento</h3>
+                <p className="text-[10px] text-black/40 font-black uppercase tracking-[0.2em] mt-1">O que deseja fazer?</p>
+              </div>
+
+              <div className="p-8 space-y-3">
+                <button 
+                  onClick={() => {
+                    setShowStartMatchConfirm(false);
+                    setTeamsTab('historico');
+                  }}
+                  className="w-full py-4 px-4 bg-brand-primary text-black rounded-2xl font-black uppercase text-xs flex items-center justify-center gap-3 hover:scale-[1.02] transition-all active:scale-95 shadow-lg shadow-brand-primary/20"
+                >
+                  <PiPlay size={20} />
+                  Continuar Partida
+                </button>
+                
+                <button 
+                  onClick={() => {
+                    setShowStartMatchConfirm(false);
+                    if (match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
+                        (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
+                        teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) {
+                      startNextMatch(match.teamAIndex, match.teamBIndex);
+                    }
+                  }}
+                  className="w-full py-4 px-4 bg-white text-zinc-800 rounded-2xl font-black uppercase text-xs flex items-center justify-center gap-3 hover:bg-zinc-50 transition-all border border-zinc-200"
+                >
+                  <span className="text-brand-primary"><PiArrowClockwiseBold size={20} /></span>
+                  Nova Partida
+                </button>
+
+                <button 
+                  onClick={() => setShowStartMatchConfirm(false)}
+                  className="w-full py-2 text-zinc-400 text-[10px] font-black uppercase tracking-widest hover:text-zinc-600 transition-colors"
                 >
                   Cancelar
                 </button>
