@@ -122,7 +122,8 @@ import {
   PiTrashBold,
   PiTrash,
   PiCheckBold,
-  PiCheck
+  PiCheck,
+  PiHandPointingBold
 } from 'react-icons/pi';
 import { supabase } from './lib/supabase';
 import { sounds } from './lib/sounds';
@@ -377,53 +378,97 @@ const AssistModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-md">
       <motion.div 
-        initial={{ scale: 0.9, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        className={`w-full max-w-xs rounded-[24px] p-6 shadow-md border ${
+        initial={{ scale: 0.9, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        className={`w-full max-w-sm rounded-[32px] overflow-hidden shadow-2xl border ${
           theme === 'light' 
-            ? 'bg-zinc-100 border-zinc-200' 
+            ? 'bg-zinc-50 border-zinc-200' 
             : 'bg-brand-card border-white/10'
         }`}
       >
-        <div className="text-center mb-4">
-          <div className="w-12 h-12 bg-brand-primary/20 rounded-full flex items-center justify-center mx-auto mb-3">
-            <Medal className="text-brand-primary" size={24} />
+        <div className="bg-brand-primary p-8 text-center relative overflow-hidden">
+          {/* Decorative Background Pattern */}
+          <div className="absolute inset-0 opacity-10 pointer-events-none">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full -mr-16 -mt-16 blur-3xl" />
+            <div className="absolute bottom-0 left-0 w-32 h-32 bg-white rounded-full -ml-16 -mb-16 blur-3xl" />
           </div>
-          <h3 className={`text-lg font-black uppercase tracking-tight text-zinc-900`}>Quem deu a assistência?</h3>
-          <p className={`text-zinc-500 text-xs mt-1 font-bold uppercase tracking-widest`}>Selecione o jogador que ajudou no gol</p>
+
+          <motion.div 
+            initial={{ y: -10, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/20 shadow-lg"
+          >
+            <span className="text-black"><GiTrophy size={32} /></span>
+          </motion.div>
+          <h3 className="text-xl font-black uppercase tracking-tighter text-black leading-tight">Quem deu a assistência?</h3>
+          <p className="text-[10px] text-black/60 font-medium mt-1 uppercase tracking-[0.2em] max-w-[200px] mx-auto leading-relaxed">
+            Selecione o craque que serviu o garçom no gol
+          </p>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 mb-4">
-          {teamPlayers.filter(id => id !== goalPlayerId).map((pid, idx) => (
-            <button
-              key={`assist-choice-${pid}-${idx}`}
-              onClick={() => onSelect(pid)}
-              className={`p-3 rounded-lg border transition-all text-left group ${
-                theme === 'light' 
-                  ? 'bg-white border-zinc-200 hover:border-brand-primary/50 hover:bg-brand-primary/5' 
-                  : 'bg-black/20 border-white/5 hover:border-brand-primary/50 hover:bg-brand-primary/5'
-              }`}
+        <div className="p-6">
+          <div className="grid grid-cols-1 gap-2.5 max-h-[320px] overflow-y-auto pr-1 custom-scrollbar mb-6">
+            <motion.button 
+              initial={{ x: -20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              onClick={() => onSelect(null)}
+              className="w-full p-4 rounded-2xl border-2 border-dashed transition-all text-center flex items-center justify-center gap-2 bg-white border-zinc-200 hover:border-zinc-300 hover:bg-zinc-50 group"
             >
-              <div className="text-[8px] font-black uppercase tracking-widest text-brand-primary mb-1 opacity-60">Jogador</div>
-              <div className={`text-xs font-black uppercase transition-colors ${
-                theme === 'light' ? 'text-zinc-900 group-hover:text-brand-primary' : 'text-brand-text-primary group-hover:text-brand-primary'
-              }`}>
-                {players.find(p => p.id === pid)?.name}
+              <div className="w-8 h-8 rounded-full flex items-center justify-center bg-zinc-100 text-zinc-400 group-hover:bg-zinc-200 transition-colors">
+                <PiXBold size={16} />
               </div>
-            </button>
-          ))}
-          
-          <button
+              <span className="text-xs font-black uppercase tracking-widest text-zinc-500 group-hover:text-zinc-600">Sem Assistência</span>
+            </motion.button>
+
+            {teamPlayers
+              .filter(id => id !== goalPlayerId)
+              .map((pid, idx) => {
+                const player = players.find(p => p.id === pid);
+                return (
+                  <motion.button
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.3 + (idx * 0.05) }}
+                    key={`assist-choice-${pid}-${idx}`}
+                    onClick={() => onSelect(pid)}
+                    className="w-full p-3.5 rounded-2xl border border-zinc-200 transition-all text-left flex items-center gap-4 bg-white hover:border-brand-primary hover:shadow-lg hover:shadow-brand-primary/10 group relative overflow-hidden"
+                  >
+                    <div className="absolute inset-y-0 left-0 w-1 bg-brand-primary opacity-0 group-hover:opacity-100 transition-opacity" />
+                    
+                    <div className="w-12 h-12 rounded-xl flex items-center justify-center overflow-hidden border border-zinc-100 bg-zinc-50 shrink-0 group-hover:border-brand-primary/20 transition-colors shadow-inner">
+                      {player?.photo ? (
+                        <img src={player.photo} alt={player.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-zinc-50 to-zinc-100">
+                          <span className="text-zinc-400"><IoPersonOutline size={20} /></span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="text-[9px] font-black uppercase tracking-widest text-brand-primary opacity-60 mb-0.5">Assistente</div>
+                      <div className="text-sm font-black uppercase truncate text-zinc-800 transition-colors group-hover:text-brand-primary">
+                        {player?.name}
+                      </div>
+                    </div>
+
+                    <div className="w-8 h-8 rounded-full border border-zinc-100 flex items-center justify-center bg-zinc-50 group-hover:bg-brand-primary/10 group-hover:border-brand-primary/20 text-zinc-300 group-hover:text-brand-primary transition-all">
+                      <PiArrowRightBold size={14} />
+                    </div>
+                  </motion.button>
+                );
+              })}
+          </div>
+
+          <button 
             onClick={() => onSelect(null)}
-            className={`col-span-2 p-3 rounded-lg border transition-all text-center ${
-              theme === 'light' 
-                ? 'bg-white border-zinc-200 hover:bg-zinc-50' 
-                : 'bg-black/20 border-white/5 hover:bg-white/5'
-            }`}
+            className="w-full py-4 text-[10px] font-black uppercase tracking-[0.3em] transition-all hover:bg-zinc-100 rounded-2xl text-zinc-400 hover:text-zinc-600"
           >
-            <span className={`text-[10px] font-black uppercase tracking-widest text-zinc-500`}>Sem assistência</span>
+            Fecar Janela
           </button>
         </div>
       </motion.div>
@@ -696,20 +741,32 @@ const TieBreakerModal = ({
                   {state.penalties.teamA.map((shot, idx) => {
                     const p = players.find(player => player.id === shot.playerId);
                     return (
-                      <div key={`pen-a-${idx}`} className="p-3 bg-white/50 rounded-2xl border border-white/5 space-y-2">
-                        <div className="text-[10px] font-black text-zinc-900 truncate uppercase">{p?.name}</div>
+                      <div key={`pen-a-${idx}`} className="p-3 bg-[#1a3a2e] border border-white/5 rounded-3xl space-y-3 relative overflow-hidden group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center shrink-0 overflow-hidden">
+                            {p?.photo ? (
+                              <img src={p.photo} alt={p.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                            ) : (
+                              <span className="text-white/30"><IoPersonOutline size={16} /></span>
+                            )}
+                          </div>
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-[10px] font-black text-white truncate uppercase tracking-tight leading-none">{p?.name}</span>
+                            <span className="text-[7px] text-white/30 font-bold uppercase tracking-widest mt-0.5">Batedor {idx + 1}</span>
+                          </div>
+                        </div>
                         <div className="flex gap-1.5">
                           <button 
                             onClick={() => onPenaltyToggle('A', idx)}
-                            className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === true ? 'bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-zinc-100 text-emerald-600'}`}
+                            className={`flex-1 h-9 rounded-2xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? 'bg-emerald-500 text-[#112F24] shadow-[0_4px_12px_rgba(16,185,129,0.4)]' : 'bg-white/5 text-emerald-500/60 hover:bg-white/10'}`}
                           >
-                            <PiCheckCircleBold size={16} />
+                            <PiCheckCircleBold size={18} />
                           </button>
                           <button 
                             onClick={() => onPenaltyToggle('A', idx)}
-                            className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === false ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'bg-zinc-100 text-red-600'}`}
+                            className={`flex-1 h-9 rounded-2xl flex items-center justify-center transition-all duration-300 ${shot.success === false ? 'bg-red-500 text-white shadow-[0_4px_12px_rgba(239,68,68,0.4)]' : 'bg-white/5 text-red-500/60 hover:bg-white/10'}`}
                           >
-                            <PiWarningCircleBold size={16} />
+                            <PiWarningCircleBold size={18} />
                           </button>
                         </div>
                       </div>
@@ -723,20 +780,32 @@ const TieBreakerModal = ({
                   {state.penalties.teamB.map((shot, idx) => {
                     const p = players.find(player => player.id === shot.playerId);
                     return (
-                      <div key={`pen-b-${idx}`} className="p-3 bg-white/50 rounded-2xl border border-white/5 space-y-2">
-                        <div className="text-[10px] font-black text-zinc-900 truncate uppercase">{p?.name}</div>
+                      <div key={`pen-b-${idx}`} className="p-3 bg-[#1a3a2e] border border-white/5 rounded-3xl space-y-3 relative overflow-hidden group">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center shrink-0 overflow-hidden">
+                            {p?.photo ? (
+                              <img src={p.photo} alt={p.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                            ) : (
+                              <span className="text-white/30"><IoPersonOutline size={16} /></span>
+                            )}
+                          </div>
+                          <div className="flex flex-col min-w-0">
+                            <span className="text-[10px] font-black text-white truncate uppercase tracking-tight leading-none">{p?.name}</span>
+                            <span className="text-[7px] text-white/30 font-bold uppercase tracking-widest mt-0.5">Batedor {idx + 1}</span>
+                          </div>
+                        </div>
                         <div className="flex gap-1.5">
                           <button 
                             onClick={() => onPenaltyToggle('B', idx)}
-                            className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === true ? 'bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-zinc-100 text-emerald-600'}`}
+                            className={`flex-1 h-9 rounded-2xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? 'bg-emerald-500 text-[#112F24] shadow-[0_4px_12px_rgba(16,185,129,0.4)]' : 'bg-white/5 text-emerald-500/60 hover:bg-white/10'}`}
                           >
-                            <PiCheckCircleBold size={16} />
+                            <PiCheckCircleBold size={18} />
                           </button>
                           <button 
                             onClick={() => onPenaltyToggle('B', idx)}
-                            className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === false ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'bg-zinc-100 text-red-600'}`}
+                            className={`flex-1 h-9 rounded-2xl flex items-center justify-center transition-all duration-300 ${shot.success === false ? 'bg-red-500 text-white shadow-[0_4px_12px_rgba(239,68,68,0.4)]' : 'bg-white/5 text-red-500/60 hover:bg-white/10'}`}
                           >
-                            <PiWarningCircleBold size={16} />
+                            <PiWarningCircleBold size={18} />
                           </button>
                         </div>
                       </div>
@@ -3618,7 +3687,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     }}
                   />
                   <div className="absolute top-3 left-4 pointer-events-none transition-all peer-focus:hidden peer-[:not(:placeholder-shown)]:hidden">
-                    <span className="text-xs font-bold bg-gradient-to-br from-[#1E3D2F] to-[#2F5D4B] bg-clip-text text-transparent opacity-70">
+                    <span className="text-xs bg-gradient-to-br from-[#1E3D2F] to-[#2F5D4B] bg-clip-text text-transparent opacity-70">
                       Cole aqui sua lista do WhatsApp (ex: 1. João, 2. Maria...)
                     </span>
                   </div>
@@ -5357,14 +5426,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     </div>
                     
                     <div className="relative ml-2 mr-4 shrink-0">
-                      {index === 0 && (
-                        <>
-                          <div className="absolute inset-0 border-2 border-[#FFD700] rounded-2xl scale-110 opacity-50" />
-                          <div className="absolute inset-0 border-2 border-[#FFD700] shadow-[0_0_15px_#FFD700] rounded-2xl scale-110" />
-                        </>
-                      )}
-                      
-                      <div className={`w-10 h-10 rounded-2xl overflow-hidden flex items-center justify-center bg-zinc-200 border border-zinc-300 relative z-10`}>
+                      <div className={`w-10 h-10 rounded-3xl overflow-hidden flex items-center justify-center bg-zinc-200 border border-zinc-300 relative z-10`}>
                         {player.photo ? (
                           <img src={player.photo} alt={player.name} className="w-full h-full object-cover" />
                         ) : (
@@ -6088,17 +6150,20 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/60 backdrop-blur-md z-[150] flex items-center justify-center p-4"
             onClick={() => setShowPlayerActionsModal(null)}
           >
             <motion.div 
-              initial={{ scale: 0.9, y: 20 }}
+              initial={{ scale: 0.9, y: 30 }}
               animate={{ scale: 1, y: 0 }}
-              className="w-full max-w-xs p-6 rounded-xl bg-brand-card border border-white/10 shadow-md"
+              className="w-full max-w-sm rounded-[40px] shadow-2xl border bg-zinc-50 border-zinc-200 overflow-hidden"
               onClick={e => e.stopPropagation()}
             >
-              <div className="flex flex-col items-center mb-6">
-                <div className="w-16 h-16 rounded-full bg-brand-primary/20 flex items-center justify-center mb-3 border border-brand-primary/30 overflow-hidden">
+              <div className="bg-brand-primary p-10 text-center relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-12 -mt-12 blur-2xl" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-12 -mb-12 blur-xl" />
+                
+                <div className="w-20 h-20 mx-auto rounded-3xl bg-white flex items-center justify-center overflow-hidden border-4 border-black/5 mb-4 shadow-xl">
                   {players.find(p => p.id === showPlayerActionsModal.playerId)?.photo ? (
                     <img 
                       src={players.find(p => p.id === showPlayerActionsModal.playerId)?.photo} 
@@ -6107,18 +6172,18 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       referrerPolicy="no-referrer"
                     />
                   ) : (
-                    <span className="text-brand-primary flex items-center shrink-0"><IoPersonOutline size={32} /></span>
+                    <span className="text-black flex items-center shrink-0"><IoPersonOutline size={36} /></span>
                   )}
                 </div>
-                <h3 className="text-lg font-black uppercase tracking-tight text-center text-black">
+                <h3 className="text-xl font-black uppercase tracking-tight text-center text-black">
                   {players.find(p => p.id === showPlayerActionsModal.playerId)?.name}
                 </h3>
-                <p className="text-[10px] text-brand-text-secondary uppercase font-bold tracking-widest mt-1">
+                <p className="text-[10px] text-black/40 uppercase font-black tracking-[0.2em] mt-1">
                   {teams[showPlayerActionsModal.teamIndex]?.name}
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 gap-2">
+              <div className="p-8 space-y-3">
                 {/* Swap Confirmation */}
                 {swappingPlayerId && swappingPlayerId !== showPlayerActionsModal.playerId && (
                   <button 
@@ -6154,9 +6219,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       setSwappingPlayerId(null);
                       setShowPlayerActionsModal(null);
                     }}
-                    className="w-full py-3 px-4 bg-brand-primary text-black rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow shadow-brand-primary/20"
+                    className="w-full py-4 px-4 bg-brand-primary text-black rounded-2xl font-black uppercase text-xs flex items-center justify-center gap-3 hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-brand-primary/20"
                   >
-                    <RefreshCw size={16} />
+                    <RefreshCw size={18} />
                     Confirmar Troca
                   </button>
                 )}
@@ -6170,9 +6235,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       setShowPlayerActionsModal(null);
                     }}
                     disabled={!match.isActive || match.isPaused || match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit}
-                    className="w-full py-3 px-4 bg-brand-primary text-black rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="w-full py-4 px-4 bg-brand-primary text-black rounded-2xl font-black uppercase text-xs flex items-center justify-center gap-3 hover:scale-[1.02] transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-brand-primary/20"
                   >
-                    <Trophy size={16} />
+                    <Trophy size={18} />
                     Marcar Gol
                   </button>
                 )}
@@ -6184,77 +6249,76 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       setSwappingPlayerId(null);
                       setShowPlayerActionsModal(null);
                     }}
-                    className="w-full py-3 px-4 bg-red-500/10 text-red-400 rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 hover:bg-red-500/20 transition-all active:scale-95 border border-red-500/20"
+                    className="w-full py-4 px-4 bg-red-50 text-red-500 rounded-2xl font-black uppercase text-xs flex items-center justify-center gap-3 hover:bg-red-100 transition-all active:scale-95 border border-red-200"
                   >
-                    <RefreshCw size={16} />
+                    <PiXBold size={18} />
                     Cancelar Troca
                   </button>
                 )}
 
-                {/* Replace (Substituir) */}
-                {swappingPlayerId !== showPlayerActionsModal.playerId && (
-                  <button 
-                    onClick={() => {
-                      setSwappingPlayerId(showPlayerActionsModal.playerId);
-                      setTeamsTab('proximos');
-                      setShowPlayerActionsModal(null);
-                      setToast({ message: "Selecione outro jogador para trocar de posição.", type: 'info' });
-                    }}
-                    className={`w-full py-3 px-4 rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 transition-all active:scale-95 border ${
-                      theme === 'light' ? 'bg-zinc-200 text-zinc-800 border-zinc-300 hover:bg-zinc-300' : 'bg-white/5 text-white border-white/5 hover:bg-white/10'
-                    }`}
-                  >
-                    <ArrowLeftRight size={16} />
-                    Substituir
-                  </button>
-                )}
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Replace (Substituir) */}
+                  {swappingPlayerId !== showPlayerActionsModal.playerId && (
+                    <button 
+                      onClick={() => {
+                        setSwappingPlayerId(showPlayerActionsModal.playerId);
+                        setTeamsTab('proximos');
+                        setShowPlayerActionsModal(null);
+                        setToast({ message: "Selecione outro jogador para trocar de posição.", type: 'info' });
+                      }}
+                      className="py-4 px-4 bg-white text-zinc-800 rounded-2xl font-black uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all active:scale-95 border border-zinc-200 hover:border-brand-primary hover:bg-brand-primary/5"
+                    >
+                      <ArrowLeftRight size={20} className="text-brand-primary" />
+                      Substituir
+                    </button>
+                  )}
 
-                {/* Move (Mover) */}
-                {!swappingPlayerId && (
-                  <button 
-                    onClick={() => {
-                      setMovingPlayers({ teamId: teams[showPlayerActionsModal.teamIndex].id, playerIds: [showPlayerActionsModal.playerId] });
-                      setIsSelectingDestination(true);
-                      setTeamsTab('proximos');
-                      setShowPlayerActionsModal(null);
-                      setToast({ message: "Selecione o time de destino (apenas times incompletos).", type: 'info' });
-                    }}
-                    className={`w-full py-3 px-4 rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 transition-all active:scale-95 border ${
-                      theme === 'light' ? 'bg-sky-100 text-sky-700 border-sky-200 hover:bg-sky-200' : 'bg-sky-500/10 text-sky-400 border-sky-500/20 hover:bg-sky-500/20'
-                    }`}
-                  >
-                    <MoveRight size={16} />
-                    Mover
-                  </button>
-                )}
+                  {/* Move (Mover) */}
+                  {!swappingPlayerId && (
+                    <button 
+                      onClick={() => {
+                        setMovingPlayers({ teamId: teams[showPlayerActionsModal.teamIndex].id, playerIds: [showPlayerActionsModal.playerId] });
+                        setIsSelectingDestination(true);
+                        setTeamsTab('proximos');
+                        setShowPlayerActionsModal(null);
+                        setToast({ message: "Selecione o time de destino (apenas times incompletos).", type: 'info' });
+                      }}
+                      className="py-4 px-4 bg-white text-zinc-800 rounded-2xl font-black uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all active:scale-95 border border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50"
+                    >
+                      <MoveRight size={20} className="text-zinc-400" />
+                      Mover
+                    </button>
+                  )}
 
-                {/* Absent (Ausente) */}
-                {!swappingPlayerId && (
-                  <button 
-                    onClick={() => {
-                      setTeams(prev => {
-                        return prev.map(t => ({
-                          ...t,
-                          playerIds: t.playerIds.filter(id => id !== showPlayerActionsModal.playerId)
-                        })).filter(t => t.playerIds.length > 0);
-                      });
-                      setPlayers(prev => prev.map(p => p.id === showPlayerActionsModal.playerId ? { ...p, isAvailable: false, arrivedAt: undefined } : p));
-                      setShowPlayerActionsModal(null);
-                      setToast({ message: "Jogador movido para ausentes.", type: 'info' });
-                    }}
-                    className="w-full py-3 px-4 bg-red-500/10 text-red-400 rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 hover:bg-red-500/20 transition-all active:scale-95 border border-red-500/20"
-                  >
-                    <X size={16} />
-                    Ausente
-                  </button>
-                )}
+                  {/* Absent (Ausente) */}
+                  {!swappingPlayerId && (
+                    <button 
+                      onClick={() => {
+                        setTeams(prev => {
+                          return prev.map(t => ({
+                            ...t,
+                            playerIds: t.playerIds.filter(id => id !== showPlayerActionsModal.playerId)
+                          })).filter(t => t.playerIds.length > 0);
+                        });
+                        setPlayers(prev => prev.map(p => p.id === showPlayerActionsModal.playerId ? { ...p, isAvailable: false, arrivedAt: undefined } : p));
+                        setShowPlayerActionsModal(null);
+                        setToast({ message: "Jogador movido para ausentes.", type: 'info' });
+                      }}
+                      className="py-4 px-4 bg-white text-zinc-800 rounded-2xl font-black uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all active:scale-95 border border-zinc-200 hover:bg-red-50 hover:border-red-200 hover:text-red-500 group"
+                    >
+                      <span className="text-zinc-400 group-hover:text-red-500"><PiHandPointingBold size={20} /></span>
+                      Ausente
+                    </button>
+                  )}
 
-                <button 
-                  onClick={() => setShowPlayerActionsModal(null)}
-                  className="w-full py-3 text-brand-text-secondary text-[10px] font-bold uppercase mt-2"
-                >
-                  Fechar
-                </button>
+                  <button 
+                    onClick={() => setShowPlayerActionsModal(null)}
+                    className="py-4 px-4 bg-white text-zinc-400 rounded-2xl font-black uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all active:scale-95 border border-zinc-100 hover:bg-zinc-50"
+                  >
+                    <PiXBold size={20} />
+                    Fechar
+                  </button>
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -6387,62 +6451,101 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[160] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/60 backdrop-blur-md z-[160] flex items-center justify-center p-4"
           >
             <motion.div 
-              initial={{ scale: 0.9, y: 20 }}
+              initial={{ scale: 0.9, y: 30 }}
               animate={{ scale: 1, y: 0 }}
-              className="w-full max-w-xs rounded-xl border shadow-md overflow-hidden bg-zinc-100 border-zinc-200"
+              className="w-full max-w-sm rounded-[32px] overflow-hidden shadow-2xl bg-zinc-50 border border-zinc-200"
             >
-              <div className="bg-brand-primary p-6 text-center">
-                <h3 className="text-sm font-black uppercase tracking-tighter text-black">Quem deu a assistência?</h3>
-                <p className="text-[10px] text-black/70 font-bold mt-1 uppercase tracking-widest">
-                  Gol de <span className="text-black underline decoration-2 underline-offset-2">{players.find(p => p.id === showAssistSelection.scorerId)?.name}</span>
+              <div className="bg-brand-primary p-10 text-center relative overflow-hidden">
+                {/* Decorative Elements */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
+                
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", damping: 12, stiffness: 200, delay: 0.2 }}
+                  className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl border-4 border-black/5"
+                >
+                  <span className="text-black"><IoIosFootball size={32} /></span>
+                </motion.div>
+
+                <h3 className="text-xl font-black uppercase tracking-tighter text-black leading-none">Quem deu a assistência?</h3>
+                <p className="text-[10px] text-black/60 font-black mt-2 uppercase tracking-[0.2em]">
+                  GOL DE <span className="bg-white/30 px-2 py-0.5 rounded text-black">{players.find(p => p.id === showAssistSelection.scorerId)?.name}</span>
                 </p>
               </div>
 
-              <div className="p-4">
-                <div className="grid grid-cols-1 gap-1.5 max-h-48 overflow-y-auto pr-1 custom-scrollbar mb-4">
-                  <button 
+              <div className="p-6">
+                <div className="grid grid-cols-1 gap-2.5 max-h-72 overflow-y-auto pr-1 custom-scrollbar mb-6">
+                  <motion.button 
+                    initial={{ x: -20, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ delay: 0.3 }}
                     onClick={() => {
                       const team = showAssistSelection.teamIndex === match.teamAIndex ? 'A' : 'B';
                       registerGoal(team, showAssistSelection.scorerId);
                       setShowAssistSelection(null);
                     }}
-                    className="w-full p-2.5 rounded-lg border transition-all text-left group bg-white border-zinc-200 hover:border-brand-primary hover:bg-brand-primary/5"
+                    className="w-full p-4 rounded-2xl border-2 border-dashed transition-all text-center flex items-center justify-center gap-3 bg-white border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50 group"
                   >
-                    <div className="text-xs font-black uppercase transition-colors text-zinc-900 group-hover:text-brand-primary">Sem Assistência</div>
-                  </button>
+                    <div className="w-8 h-8 rounded-full flex items-center justify-center bg-zinc-100 text-zinc-400 group-hover:bg-zinc-200 transition-colors">
+                      <PiXBold size={16} />
+                    </div>
+                    <span className="text-xs font-black uppercase tracking-widest text-zinc-500 group-hover:text-zinc-700">Sem Assistência</span>
+                  </motion.button>
+
+                  <div className="h-4 flex items-center gap-2">
+                    <div className="h-px flex-1 bg-zinc-200"></div>
+                    <span className="text-[8px] font-black text-zinc-300 uppercase tracking-widest">Jogadores do Time</span>
+                    <div className="h-px flex-1 bg-zinc-200"></div>
+                  </div>
 
                   {teams[showAssistSelection.teamIndex].playerIds
                     .filter(pid => pid !== showAssistSelection.scorerId)
-                    .map((pid) => (
-                      <button
-                        key={`assist-choice-modal-${pid}`}
-                        onClick={() => {
-                          const team = showAssistSelection.teamIndex === match.teamAIndex ? 'A' : 'B';
-                          registerGoal(team, showAssistSelection.scorerId, pid);
-                          setShowAssistSelection(null);
-                        }}
-                        className="w-full p-2.5 rounded-lg border transition-all text-left group flex items-center gap-2 bg-white border-zinc-200 hover:border-brand-primary hover:bg-brand-primary/5"
-                      >
-                        <div className="w-6 h-6 rounded-full flex items-center justify-center overflow-hidden border shrink-0 bg-zinc-100 border-zinc-200">
-                          {players.find(p => p.id === pid)?.photo ? (
-                            <img src={players.find(p => p.id === pid)?.photo} alt="P" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                          ) : (
-                            <span className="text-zinc-400 flex items-center shrink-0"><IoPersonOutline size={10} /></span>
-                          )}
-                        </div>
-                        <div className={`text-xs font-black uppercase transition-colors text-zinc-900 group-hover:text-brand-primary`}>
-                          {players.find(p => p.id === pid)?.name}
-                        </div>
-                      </button>
-                    ))}
+                    .map((pid, idx) => {
+                      const player = players.find(p => p.id === pid);
+                      return (
+                        <motion.button
+                          initial={{ x: -20, opacity: 0 }}
+                          animate={{ x: 0, opacity: 1 }}
+                          transition={{ delay: 0.4 + (idx * 0.05) }}
+                          key={`assist-choice-modal-${pid}`}
+                          onClick={() => {
+                            const team = showAssistSelection.teamIndex === match.teamAIndex ? 'A' : 'B';
+                            registerGoal(team, showAssistSelection.scorerId, pid);
+                            setShowAssistSelection(null);
+                          }}
+                          className="w-full p-3 rounded-2xl border border-zinc-200 transition-all text-left group flex items-center gap-3 bg-white hover:border-brand-primary hover:shadow-lg hover:shadow-brand-primary/10"
+                        >
+                          <div className="w-10 h-10 rounded-xl flex items-center justify-center overflow-hidden border border-zinc-100 bg-zinc-50 shrink-0 shadow-inner group-hover:border-brand-primary/20">
+                            {player?.photo ? (
+                              <img src={player.photo} alt={player.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                            ) : (
+                              <div className="w-full h-full flex items-center justify-center bg-zinc-100">
+                                <span className="text-zinc-400"><IoPersonOutline size={16} /></span>
+                              </div>
+                            )}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-[8px] font-black text-brand-primary/60 uppercase tracking-widest mb-0.5">Garçom</div>
+                            <div className="text-xs font-black uppercase truncate text-zinc-900 group-hover:text-brand-primary">
+                              {player?.name}
+                            </div>
+                          </div>
+                          <div className="w-7 h-7 rounded-full bg-zinc-50 border border-zinc-100 flex items-center justify-center group-hover:bg-brand-primary/10 group-hover:border-brand-primary/20 text-zinc-300 group-hover:text-brand-primary transition-all">
+                            <PiPlusBold size={12} />
+                          </div>
+                        </motion.button>
+                      );
+                    })}
                 </div>
 
                 <button 
                   onClick={() => setShowAssistSelection(null)}
-                  className="w-full py-3 text-[10px] font-black uppercase tracking-widest border transition-all active:scale-95 rounded-lg border-zinc-400 text-zinc-600 hover:bg-zinc-200"
+                  className="w-full py-4 text-[10px] font-black uppercase tracking-[0.3em] transition-all hover:bg-red-50 rounded-2xl text-zinc-400 hover:text-red-500 text-center"
                 >
                   Cancelar Gol
                 </button>
