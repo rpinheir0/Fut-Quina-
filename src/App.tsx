@@ -4750,9 +4750,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       (movingPlayers && isSelectingDestination) ? 'cursor-pointer hover:opacity-90' : 'cursor-default'
                                     } ${
                                       isCurrent 
-                                        ? 'shadow-lg z-10 border-emerald-500 bg-emerald-500/40 ring-2 ring-emerald-500/20'
+                                        ? 'shadow-lg z-10 border-brand-primary bg-brand-primary ring-2 ring-brand-primary/20'
                                         : 'shadow-sm opacity-80 border-zinc-300 bg-transparent'
-                                    } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-emerald-500/10 !border-emerald-500' : ''}`}
+                                    } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-brand-primary/20 !border-brand-primary' : ''}`}
                                     style={{
                                       borderColor: (movingPlayers?.teamId === t.id || (swappingPlayerId && t.playerIds.includes(swappingPlayerId))) ? '#22c55e' : undefined
                                     }}
@@ -4762,7 +4762,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     {t.lastMatchStatus && (
                                       <div className="absolute top-3 right-3 flex items-center gap-1.5 z-20">
                                         {t.lastMatchStatus === 'Vencedor' ? (
-                                          <div className="px-2 py-0.5 rounded-full bg-emerald-500 text-white text-[8px] font-black uppercase tracking-widest shadow-sm flex items-center gap-1">
+                                          <div className="px-2 py-0.5 rounded-full bg-brand-primary text-black text-[8px] font-black uppercase tracking-widest shadow-sm flex items-center gap-1">
                                             <Trophy size={8} fill="currentColor" />
                                             Venceu
                                           </div>
@@ -4780,7 +4780,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                                     {/* Jersey Icon Top Left */}
                                     <div 
-                                      className={`absolute top-2 left-2 w-10 h-10 rounded-xl border flex items-center justify-center transition-all bg-white cursor-pointer z-50 ${isCurrent ? 'border-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.5)]' : 'border-zinc-200 hover:scale-110'}`}
+                                      className={`absolute top-2 left-2 w-10 h-10 rounded-xl border flex items-center justify-center transition-all bg-white cursor-pointer z-50 ${isCurrent ? 'border-brand-primary shadow-[0_0_8px_rgba(183,217,108,0.5)]' : 'border-zinc-200 hover:scale-110'}`}
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         if (match.isActive && !match.hasEnded && !match.isPaused) {
@@ -4894,7 +4894,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                             <path 
                                               fill={`url(#shield-grad-${t.id})`}
                                               d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
-                                              stroke={isCurrent ? '#10b981' : (strokeColor === '#ffffff40' ? '#ffffff' : (strokeColor === '#e4e4e7' ? '#000000' : strokeColor))}
+                                              stroke={isCurrent ? '#B7D96C' : (strokeColor === '#ffffff40' ? '#ffffff' : (strokeColor === '#e4e4e7' ? '#000000' : strokeColor))}
                                               strokeWidth="1.5"
                                               strokeLinejoin="round"
                                             />
@@ -5053,10 +5053,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                   }}
                                                   className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
                                                     swappingPlayerId === pid || movingPlayers?.playerIds.includes(pid)
-                                                      ? 'bg-green-500/20 text-black border-2 border-green-500 shadow-lg scale-105'
+                                                      ? 'bg-brand-primary/20 text-black border-2 border-brand-primary shadow-lg scale-105'
                                                       : (swappingPlayerId && swappingPlayerId !== pid) || fillingVacancyForTeam !== null || ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < match.config.playersPerTeam))
                                                         ? 'bg-brand-primary/20 text-brand-primary animate-pulse shadow-sm shadow-brand-primary/10'
-                                                        : `text-black border group bg-white/60 shadow-sm ${isCurrent ? 'border-emerald-500 ring-1 ring-emerald-500' : 'border-black/5 hover:border-black/20'}`
+                                                        : `text-black border group bg-white/60 shadow-sm ${isCurrent ? 'border-brand-primary ring-1 ring-brand-primary' : 'border-black/5 hover:border-black/20'}`
                                                   }`}
                                                   style={{ 
                                                     backgroundColor: !((swappingPlayerId && swappingPlayerId !== pid) || 
