@@ -361,6 +361,97 @@ const FlipClock = ({ time, size = 'normal', clockId = 'default' }: { time: numbe
   );
 };
 
+const ColorPickerModal = ({ 
+  isOpen, 
+  onClose, 
+  onSelect, 
+  currentColor, 
+  teamName,
+  isFixed,
+  onToggleFixed
+}: { 
+  isOpen: boolean, 
+  onClose: () => void, 
+  onSelect: (color: string) => void,
+  currentColor: string,
+  teamName: string,
+  isFixed: boolean,
+  onToggleFixed: (enabled: boolean) => void
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        onClick={onClose}
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+      />
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.9, y: 20 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        className="relative bg-white w-full max-w-sm rounded-[32px] shadow-2xl p-6 overflow-hidden border border-black/10"
+      >
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex flex-col">
+            <h3 className="text-xl font-black uppercase tracking-tighter text-zinc-900">Cor do Escudo</h3>
+            <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">{teamName}</span>
+          </div>
+          <button 
+            onClick={onClose}
+            className="p-2 hover:bg-zinc-100 rounded-full transition-colors"
+          >
+            <X size={20} className="text-zinc-500" />
+          </button>
+        </div>
+
+        <div className="grid grid-cols-5 gap-3 mb-8">
+          {TEAM_COLORS.map((color) => (
+            <button
+              key={color}
+              onClick={() => onSelect(color)}
+              className={`aspect-square rounded-2xl transition-all relative ${color === currentColor ? 'ring-4 ring-black/5 scale-110 shadow-lg' : 'hover:scale-105'}`}
+              style={{ backgroundColor: color, border: color === '#ffffff' ? '1px solid #e4e4e7' : 'none' }}
+            >
+              {color === currentColor && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Check size={16} className={color === '#ffffff' ? 'text-black' : 'text-white'} />
+                </div>
+              )}
+            </button>
+          ))}
+        </div>
+
+        <div className="p-4 bg-zinc-50 rounded-2xl border border-black/5 mb-6">
+          <div className="flex items-center justify-between">
+            <div className="flex flex-col">
+              <span className="text-[11px] font-bold text-zinc-900 uppercase tracking-wider mb-0.5">Manter cor fixa?</span>
+              <p className="text-[9px] text-zinc-500 font-medium leading-relaxed">
+                A cor será mantida para esta posição nos próximos jogos.
+              </p>
+            </div>
+            <button 
+              onClick={() => onToggleFixed(!isFixed)}
+              className={`w-12 h-6 rounded-full p-1 transition-colors relative ${isFixed ? 'bg-brand-primary' : 'bg-zinc-300'}`}
+            >
+              <div className={`w-4 h-4 bg-white rounded-full transition-transform ${isFixed ? 'translate-x-6' : 'translate-x-0'} shadow-sm`} />
+            </button>
+          </div>
+        </div>
+
+        <button 
+          onClick={onClose}
+          className="w-full py-4 bg-brand-gradient text-black font-black uppercase tracking-widest text-xs rounded-2xl shadow-xl active:scale-95 transition-all"
+        >
+          Confirmar
+        </button>
+      </motion.div>
+    </div>
+  );
+};
+
 const AssistModal = ({ 
   isOpen, 
   onSelect, 
@@ -1817,6 +1908,18 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [showMatchSettingsModal, setShowMatchSettingsModal] = useState(false);
   const [showConfigMenu, setShowConfigMenu] = useState(false);
   const [showTimeEditModal, setShowTimeEditModal] = useState(false);
+  const [showColorPicker, setShowColorPicker] = useState<{ teamIdx: number; color: string } | null>(null);
+  const [fixedColors, setFixedColors] = useState<{ teamA: string | null; teamB: string | null; enabled: boolean }>(() => {
+    const saved = safeLocalStorage.getItem(`futquina_fixed_colors_${groupId}`);
+    return saved ? JSON.parse(saved) : { teamA: null, teamB: null, enabled: false };
+  });
+
+  useEffect(() => {
+    if (groupId) {
+      safeLocalStorage.setItem(`futquina_fixed_colors_${groupId}`, JSON.stringify(fixedColors));
+    }
+  }, [fixedColors, groupId]);
+
   const [showEventModal, setShowEventModal] = useState<{ team: 'A' | 'B' | number } | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'info' | 'warning' | 'gray' | 'success' } | null>(null);
   const [showEmojiPicker, setShowEmojiPicker] = useState<number | null>(null);
@@ -4344,20 +4447,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     disabled={match.hasEnded}
                                     onClick={() => {
                                       if (match.teamAIndex === -1) return;
-                                      setTeams(prev => {
-                                        const newTeams = [...prev];
-                                        const currentTeam = newTeams[match.teamAIndex];
-                                        if (!currentTeam) return prev;
-                                        currentTeam.color = TEAM_COLORS[(TEAM_COLORS.indexOf(currentTeam.color || TEAM_COLORS[0]) + 1) % TEAM_COLORS.length];
-                                        return newTeams;
+                                      setShowColorPicker({ 
+                                        teamIdx: match.teamAIndex, 
+                                        color: (fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color || TEAM_COLORS[0]
                                       });
                                     }}
                                   >
                                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
                                       <defs>
                                         <linearGradient id="shield-grad-A-main" x1="0%" y1="0%" x2="0%" y2="100%">
-                                          <stop offset="0%" stopColor={teams[match.teamAIndex]?.color || TEAM_COLORS[0]} />
-                                          <stop offset="100%" stopColor={teams[match.teamAIndex]?.color || TEAM_COLORS[0]} stopOpacity="0.85" />
+                                          <stop offset="0%" stopColor={(fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color || TEAM_COLORS[0]} />
+                                          <stop offset="100%" stopColor={(fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color || TEAM_COLORS[0]} stopOpacity="0.85" />
                                         </linearGradient>
                                       </defs>
                                       <path fill="url(#shield-grad-A-main)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(0,0,0,0.1)" strokeWidth="1" strokeLinejoin="round" />
@@ -4434,19 +4534,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     disabled={match.hasEnded}
                                     onClick={() => {
                                       if (match.teamBIndex === -1) return;
-                                      setTeams(prev => {
-                                        const newTeams = [...prev];
-                                        const currentTeam = newTeams[match.teamBIndex];
-                                        currentTeam.color = TEAM_COLORS[(TEAM_COLORS.indexOf(currentTeam.color || TEAM_COLORS[1]) + 1) % TEAM_COLORS.length];
-                                        return newTeams;
+                                      setShowColorPicker({ 
+                                        teamIdx: match.teamBIndex, 
+                                        color: (fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color || TEAM_COLORS[1]
                                       });
                                     }}
                                   >
                                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
                                       <defs>
                                         <linearGradient id="shield-grad-B-main" x1="0%" y1="0%" x2="0%" y2="100%">
-                                          <stop offset="0%" stopColor={teams[match.teamBIndex]?.color || TEAM_COLORS[1]} />
-                                          <stop offset="100%" stopColor={teams[match.teamBIndex]?.color || TEAM_COLORS[1]} stopOpacity="0.85" />
+                                          <stop offset="0%" stopColor={(fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color || TEAM_COLORS[1]} />
+                                          <stop offset="100%" stopColor={(fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color || TEAM_COLORS[1]} stopOpacity="0.85" />
                                         </linearGradient>
                                       </defs>
                                       <path fill="url(#shield-grad-B-main)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(0,0,0,0.1)" strokeWidth="1" strokeLinejoin="round" />
@@ -5018,8 +5116,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       }}
                                     >
                                       {(() => {
-                                        const teamColor = t.color || TEAM_COLORS[0];
-                                        const strokeColor = teamColor === '#1a1a1a' ? '#ffffff40' : (teamColor === '#ffffff' ? '#e4e4e7' : 'white');
+                                        let teamColor = t.color || TEAM_COLORS[0];
+                                        if (fixedColors.enabled) {
+                                          if (match.teamAIndex === tIdx && fixedColors.teamA) teamColor = fixedColors.teamA;
+                                          else if (match.teamBIndex === tIdx && fixedColors.teamB) teamColor = fixedColors.teamB;
+                                        }
+                                        const strokeColor = teamColor === '#000000' || teamColor === '#1a1a1a' ? '#ffffff40' : (teamColor === '#ffffff' ? '#e4e4e7' : 'white');
                                         return (
                                           <svg viewBox="0 0 24 24" stroke={strokeColor} strokeWidth="0.5" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
                                             <defs>
@@ -6220,188 +6322,213 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-md z-[150] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-zinc-950/80 backdrop-blur-xl z-[200] flex items-center justify-center p-4"
             onClick={() => setShowPlayerActionsModal(null)}
           >
             <motion.div 
-              initial={{ scale: 0.9, y: 30 }}
-              animate={{ scale: 1, y: 0 }}
-              className="w-full max-w-sm rounded-[40px] shadow-2xl border bg-zinc-50 border-zinc-200 overflow-hidden"
+              initial={{ scale: 0.9, y: 30, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 30, opacity: 0 }}
+              className="w-full max-w-sm rounded-[40px] shadow-2xl border bg-white border-zinc-200 overflow-hidden"
               onClick={e => e.stopPropagation()}
             >
-              <div className="bg-brand-primary p-10 text-center relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-12 -mt-12 blur-2xl" />
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-12 -mb-12 blur-xl" />
-                
-                <div className="w-20 h-20 mx-auto rounded-3xl bg-white flex items-center justify-center overflow-hidden border-4 border-black/5 mb-4 shadow-xl">
-                  {players.find(p => p.id === showPlayerActionsModal.playerId)?.photo ? (
-                    <img 
-                      src={players.find(p => p.id === showPlayerActionsModal.playerId)?.photo} 
-                      alt="Player" 
-                      className="w-full h-full object-cover"
-                      referrerPolicy="no-referrer"
-                    />
-                  ) : (
-                    <span className="text-black flex items-center shrink-0"><IoPersonOutline size={36} /></span>
-                  )}
+              {/* Header */}
+              <div className="bg-zinc-50 pt-10 pb-8 px-6 text-center border-b border-zinc-100 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 via-brand-primary to-amber-500" />
+                <div className="absolute -top-12 -right-12 w-32 h-32 bg-emerald-50 rounded-full blur-3xl opacity-50" />
+                <div className="absolute -bottom-12 -left-12 w-24 h-24 bg-amber-50 rounded-full blur-2xl opacity-50" />
+
+                <div className="relative inline-block mb-4">
+                  <div className="w-24 h-24 mx-auto rounded-[32px] bg-white flex items-center justify-center overflow-hidden border-4 border-white shadow-2xl relative z-10">
+                    {players.find(p => p.id === showPlayerActionsModal.playerId)?.photo ? (
+                      <img 
+                        src={players.find(p => p.id === showPlayerActionsModal.playerId)?.photo} 
+                        alt="Player" 
+                        className="w-full h-full object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <span className="text-zinc-200 flex items-center shrink-0"><User size={40} /></span>
+                    )}
+                  </div>
+                  {/* Status Ring / Badge */}
+                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-emerald-500 rounded-2xl flex items-center justify-center border-4 border-white shadow-lg z-20">
+                    <Activity size={14} className="text-white" />
+                  </div>
                 </div>
-                <h3 className="text-xl font-black uppercase tracking-tight text-center text-black">
+
+                <h3 className="text-2xl font-black uppercase tracking-tight text-zinc-900 leading-tight">
                   {players.find(p => p.id === showPlayerActionsModal.playerId)?.name}
                 </h3>
-                <p className="text-[10px] text-black/40 uppercase font-black tracking-[0.2em] mt-1">
-                  {teams[showPlayerActionsModal.teamIndex]?.name}
-                </p>
+                <div className="flex items-center justify-center gap-2 mt-2">
+                  <span className="px-2.5 py-1 rounded-lg bg-zinc-900 text-white text-[9px] font-black uppercase tracking-widest">
+                    {teams[showPlayerActionsModal.teamIndex]?.name}
+                  </span>
+                  <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-tight">
+                    • Em Campo
+                  </span>
+                </div>
               </div>
 
-              <div className="p-8 space-y-3">
-                {/* Swap Confirmation */}
-                {swappingPlayerId && swappingPlayerId !== showPlayerActionsModal.playerId && (
-                  <button 
-                    onClick={() => {
-                      const playerAId = swappingPlayerId;
-                      const playerBId = showPlayerActionsModal.playerId;
-                      
-                      setTeams(prev => {
-                        const newTeams = prev.map(t => ({ ...t, playerIds: [...t.playerIds] }));
-                        let teamAIdx = -1;
-                        let teamBIdx = -1;
-                        
-                        newTeams.forEach((team, idx) => {
-                          if (team.playerIds.includes(playerAId)) teamAIdx = idx;
-                          if (team.playerIds.includes(playerBId)) teamBIdx = idx;
-                        });
-
-                        if (teamAIdx !== -1 && teamBIdx !== -1) {
-                          if (teamAIdx === teamBIdx) {
-                            newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => {
-                              if (id === playerAId) return playerBId;
-                              if (id === playerBId) return playerAId;
-                              return id;
-                            });
-                          } else {
-                            newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => id === playerAId ? playerBId : id);
-                            newTeams[teamBIdx].playerIds = newTeams[teamBIdx].playerIds.map(id => id === playerBId ? playerAId : id);
-                          }
-                        }
-                        
-                        return newTeams;
-                      });
-                      setSwappingPlayerId(null);
-                      setShowPlayerActionsModal(null);
-                    }}
-                    className="w-full py-4 px-4 bg-brand-primary text-black rounded-2xl font-black uppercase text-xs flex items-center justify-center gap-3 hover:opacity-90 transition-all active:scale-95 shadow-lg shadow-brand-primary/20"
-                  >
-                    <RefreshCw size={18} />
-                    Confirmar Troca
-                  </button>
-                )}
-
-                {/* Goal Option - Only if team is in current match */}
-                {!swappingPlayerId && (showPlayerActionsModal.teamIndex === match.teamAIndex || showPlayerActionsModal.teamIndex === match.teamBIndex) && (
-                  <button 
-                    onClick={() => {
-                      if (!match.isActive || match.isPaused || match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit) return;
-                      setShowAssistSelection({ teamIndex: showPlayerActionsModal.teamIndex, scorerId: showPlayerActionsModal.playerId });
-                      setShowPlayerActionsModal(null);
-                    }}
-                    disabled={!match.isActive || match.isPaused || match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit}
-                    className="w-full py-4 px-4 bg-brand-primary text-black rounded-2xl font-black uppercase text-xs flex items-center justify-center gap-3 hover:scale-[1.02] transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-brand-primary/20"
-                  >
-                    <Trophy size={18} />
-                    Marcar Gol
-                  </button>
-                )}
-
-                {/* Cancel Swap */}
-                {swappingPlayerId === showPlayerActionsModal.playerId && (
-                  <button 
-                    onClick={() => {
-                      setSwappingPlayerId(null);
-                      setShowPlayerActionsModal(null);
-                    }}
-                    className="w-full py-4 px-4 bg-red-50 text-red-500 rounded-2xl font-black uppercase text-xs flex items-center justify-center gap-3 hover:bg-red-100 transition-all active:scale-95 border border-red-200"
-                  >
-                    <PiXBold size={18} />
-                    Cancelar Troca
-                  </button>
-                )}
-
-                <div className="grid grid-cols-2 gap-3">
-                  {/* Replace (Substituir) */}
-                  {swappingPlayerId !== showPlayerActionsModal.playerId && (
+              {/* Actions Section */}
+              <div className="p-6">
+                <div className="space-y-2">
+                  {/* Primary Success Actions (Goal) */}
+                  {!swappingPlayerId && (showPlayerActionsModal.teamIndex === match.teamAIndex || showPlayerActionsModal.teamIndex === match.teamBIndex) && (
                     <button 
                       onClick={() => {
-                        setSwappingPlayerId(showPlayerActionsModal.playerId);
-                        setTeamsTab('proximos');
+                        if (!match.isActive || match.isPaused || match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit) return;
+                        setShowAssistSelection({ teamIndex: showPlayerActionsModal.teamIndex, scorerId: showPlayerActionsModal.playerId });
                         setShowPlayerActionsModal(null);
-                        setToast({ message: "Selecione outro jogador para trocar de posição.", type: 'info' });
                       }}
-                      className="py-4 px-4 bg-white text-zinc-800 rounded-2xl font-black uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all active:scale-95 border border-zinc-200 hover:border-brand-primary hover:bg-brand-primary/5"
+                      disabled={!match.isActive || match.isPaused || match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit}
+                      className="w-full h-16 bg-emerald-600 text-white rounded-2xl font-bold uppercase text-sm flex items-center justify-between px-6 transition-all hover:bg-emerald-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/20 group"
                     >
-                      <ArrowLeftRight size={20} className="text-brand-primary" />
-                      Substituir
+                      <div className="flex items-center gap-3">
+                        <Trophy size={20} className="text-emerald-200 group-hover:scale-110 transition-transform" />
+                        <span className="tracking-tight">Registrar Gol</span>
+                      </div>
+                      <Plus size={18} className="opacity-50" />
                     </button>
                   )}
 
-                  {/* Move (Mover) */}
-                  {!swappingPlayerId && (
+                  {/* Swap Confirmation (Contextual) */}
+                  {swappingPlayerId && swappingPlayerId !== showPlayerActionsModal.playerId && (
                     <button 
                       onClick={() => {
-                        setMovingPlayers({ teamId: teams[showPlayerActionsModal.teamIndex].id, playerIds: [showPlayerActionsModal.playerId] });
-                        setIsSelectingDestination(true);
-                        setTeamsTab('proximos');
-                        setShowPlayerActionsModal(null);
-                        setToast({ message: "Selecione o time de destino (apenas times incompletos).", type: 'info' });
-                      }}
-                      className="py-4 px-4 bg-white text-zinc-800 rounded-2xl font-black uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all active:scale-95 border border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50"
-                    >
-                      <MoveRight size={20} className="text-zinc-400" />
-                      Mover
-                    </button>
-                  )}
-
-                  {/* Absent (Ausente) */}
-                  {!swappingPlayerId && (
-                    <button 
-                      onClick={() => {
-                        const isPlayerInActiveMatch = match.isActive && [match.teamAIndex, match.teamBIndex].includes(showPlayerActionsModal.teamIndex);
+                        const playerAId = swappingPlayerId;
+                        const playerBId = showPlayerActionsModal.playerId;
                         
-                        if (isPlayerInActiveMatch && !match.isPaused) {
-                          setMatch(prev => ({ ...prev, isPaused: true }));
-                        }
-
                         setTeams(prev => {
-                          return prev.map(t => ({
-                            ...t,
-                            playerIds: t.playerIds.filter(id => id !== showPlayerActionsModal.playerId)
-                          })).filter(t => t.playerIds.length > 0);
+                          const newTeams = prev.map(t => ({ ...t, playerIds: [...t.playerIds] }));
+                          let teamAIdx = -1;
+                          let teamBIdx = -1;
+                          
+                          newTeams.forEach((team, idx) => {
+                            if (team.playerIds.includes(playerAId)) teamAIdx = idx;
+                            if (team.playerIds.includes(playerBId)) teamBIdx = idx;
+                          });
+
+                          if (teamAIdx !== -1 && teamBIdx !== -1) {
+                            if (teamAIdx === teamBIdx) {
+                              newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => {
+                                if (id === playerAId) return playerBId;
+                                if (id === playerBId) return playerAId;
+                                return id;
+                              });
+                            } else {
+                              newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => id === playerAId ? playerBId : id);
+                              newTeams[teamBIdx].playerIds = newTeams[teamBIdx].playerIds.map(id => id === playerBId ? playerAId : id);
+                            }
+                          }
+                          
+                          return newTeams;
                         });
-                        setPlayers(prev => prev.map(p => p.id === showPlayerActionsModal.playerId ? { ...p, isAvailable: false, arrivedAt: undefined } : p));
-                        
-                        if (isPlayerInActiveMatch) {
-                          setFillingVacancyForTeam(showPlayerActionsModal.teamIndex);
-                          setTeamsTab('proximos');
-                          setToast({ message: "Selecione o jogador que entrará no lugar.", type: 'info' });
-                        } else {
-                          setToast({ message: "Jogador movido para ausentes.", type: 'info' });
-                        }
-                        
+                        setSwappingPlayerId(null);
                         setShowPlayerActionsModal(null);
                       }}
-                      className="py-4 px-4 bg-white text-zinc-800 rounded-2xl font-black uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all active:scale-95 border border-zinc-200 hover:bg-red-50 hover:border-red-200 hover:text-red-500 group"
+                      className="w-full h-16 bg-amber-500 text-black rounded-2xl font-bold uppercase text-sm flex items-center justify-between px-6 transition-all hover:bg-amber-600 active:scale-[0.98] shadow-lg shadow-amber-500/20 group"
                     >
-                      <span className="text-zinc-400 group-hover:text-red-500"><PiHandPointingBold size={20} /></span>
-                      Ausente
+                      <div className="flex items-center gap-3">
+                        <RefreshCw size={20} className="group-hover:rotate-180 transition-transform duration-500" />
+                        <span className="tracking-tight">Confirmar Troca</span>
+                      </div>
+                      <Check size={18} className="opacity-50" />
                     </button>
                   )}
 
-                  <button 
-                    onClick={() => setShowPlayerActionsModal(null)}
-                    className="py-4 px-4 bg-white text-zinc-400 rounded-2xl font-black uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all active:scale-95 border border-zinc-100 hover:bg-zinc-50"
-                  >
-                    <PiXBold size={20} />
-                    Fechar
-                  </button>
+                  {/* Action Grid */}
+                  <div className="grid grid-cols-2 gap-2">
+                    {/* Substituir */}
+                    {swappingPlayerId !== showPlayerActionsModal.playerId && (
+                      <button 
+                        onClick={() => {
+                          setSwappingPlayerId(showPlayerActionsModal.playerId);
+                          setTeamsTab('proximos');
+                          setShowPlayerActionsModal(null);
+                          setToast({ message: "Selecione outro jogador para trocar de posição.", type: 'info' });
+                        }}
+                        className="p-4 bg-zinc-50 text-zinc-900 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
+                      >
+                        <ArrowLeftRight size={22} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
+                        Trocar
+                      </button>
+                    )}
+
+                    {/* Mover */}
+                    {!swappingPlayerId && (
+                      <button 
+                        onClick={() => {
+                          setMovingPlayers({ teamId: teams[showPlayerActionsModal.teamIndex].id, playerIds: [showPlayerActionsModal.playerId] });
+                          setIsSelectingDestination(true);
+                          setTeamsTab('proximos');
+                          setShowPlayerActionsModal(null);
+                          setToast({ message: "Selecione o time de destino (apenas times incompletos).", type: 'info' });
+                        }}
+                        className="p-4 bg-zinc-50 text-zinc-900 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
+                      >
+                        <MoveRight size={22} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
+                        Mover
+                      </button>
+                    )}
+
+                    {/* Ausente */}
+                    {!swappingPlayerId && (
+                      <button 
+                        onClick={() => {
+                          const isPlayerInActiveMatch = match.isActive && [match.teamAIndex, match.teamBIndex].includes(showPlayerActionsModal.teamIndex);
+                          
+                          if (isPlayerInActiveMatch && !match.isPaused) {
+                            setMatch(prev => ({ ...prev, isPaused: true }));
+                          }
+
+                          setTeams(prev => {
+                            return prev.map(t => ({
+                              ...t,
+                              playerIds: t.playerIds.filter(id => id !== showPlayerActionsModal.playerId)
+                            })).filter(t => t.playerIds.length > 0);
+                          });
+                          setPlayers(prev => prev.map(p => p.id === showPlayerActionsModal.playerId ? { ...p, isAvailable: false, arrivedAt: undefined } : p));
+                          
+                          if (isPlayerInActiveMatch) {
+                            setFillingVacancyForTeam(showPlayerActionsModal.teamIndex);
+                            setTeamsTab('proximos');
+                            setToast({ message: "Selecione o jogador que entrará no lugar.", type: 'info' });
+                          } else {
+                            setToast({ message: "Jogador movido para ausentes.", type: 'info' });
+                          }
+                          
+                          setShowPlayerActionsModal(null);
+                        }}
+                        className="p-4 bg-red-50 text-red-600 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-red-100 active:scale-95 border border-red-100 hover:border-red-200 group"
+                      >
+                        <LogOut size={22} className="opacity-70 group-hover:opacity-100 transition-opacity" />
+                        Ausente
+                      </button>
+                    )}
+
+                    {/* Cancel Swap Call */}
+                    {swappingPlayerId === showPlayerActionsModal.playerId && (
+                      <button 
+                        onClick={() => {
+                          setSwappingPlayerId(null);
+                          setShowPlayerActionsModal(null);
+                        }}
+                        className="p-4 bg-red-50 text-red-600 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-red-100 active:scale-95 border border-red-100 hover:border-red-200"
+                      >
+                        <X size={22} />
+                        Cancelar
+                      </button>
+                    )}
+
+                    <button 
+                      onClick={() => setShowPlayerActionsModal(null)}
+                      className="p-4 bg-zinc-100 text-zinc-500 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-zinc-200 active:scale-95"
+                    >
+                      <X size={22} />
+                      Fechar
+                    </button>
+                  </div>
                 </div>
               </div>
             </motion.div>
@@ -6413,118 +6540,145 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[150] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-zinc-950/80 backdrop-blur-xl z-[200] flex items-center justify-center p-4"
+            onClick={() => setShowQueuePlayerModal(null)}
           >
             <motion.div 
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              className="w-full max-w-xs p-6 rounded-xl bg-brand-card border border-brand-primary/20 shadow-md"
+              initial={{ scale: 0.9, y: 30, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 30, opacity: 0 }}
+              className="w-full max-w-sm rounded-[40px] shadow-2xl border bg-white border-zinc-200 overflow-hidden"
+              onClick={e => e.stopPropagation()}
             >
-              <div className="text-center mb-6">
-                <div className="w-16 h-16 mx-auto rounded-full bg-brand-dark flex items-center justify-center overflow-hidden border border-brand-primary mb-4">
-                  {players.find(p => p.id === showQueuePlayerModal.playerId)?.photo ? (
-                    <img src={players.find(p => p.id === showQueuePlayerModal.playerId)?.photo} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                  ) : (
-                    <span className="text-brand-primary flex items-center shrink-0"><IoPersonOutline size={32} /></span>
-                  )}
+              {/* Header */}
+              <div className="bg-zinc-50 pt-10 pb-8 px-6 text-center border-b border-zinc-100 relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500" />
+                <div className="absolute -top-12 -right-12 w-32 h-32 bg-sky-50 rounded-full blur-3xl opacity-50" />
+                <div className="absolute -bottom-12 -left-12 w-24 h-24 bg-blue-50 rounded-full blur-2xl opacity-50" />
+
+                <div className="relative inline-block mb-4">
+                  <div className="w-24 h-24 mx-auto rounded-[32px] bg-white flex items-center justify-center overflow-hidden border-4 border-white shadow-2xl relative z-10">
+                    {players.find(p => p.id === showQueuePlayerModal.playerId)?.photo ? (
+                      <img 
+                        src={players.find(p => p.id === showQueuePlayerModal.playerId)?.photo} 
+                        alt="Player" 
+                        className="w-full h-full object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <span className="text-zinc-200 flex items-center shrink-0"><User size={40} /></span>
+                    )}
+                  </div>
+                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-sky-500 rounded-2xl flex items-center justify-center border-4 border-white shadow-lg z-20">
+                    <Clock size={14} className="text-white" />
+                  </div>
                 </div>
-                <h3 className="text-xl font-black tracking-tighter text-black capitalize">
-                  {players.find(p => p.id === showQueuePlayerModal.playerId)?.name?.toLowerCase()}
+
+                <h3 className="text-2xl font-black uppercase tracking-tight text-zinc-900 leading-tight">
+                  {players.find(p => p.id === showQueuePlayerModal.playerId)?.name}
                 </h3>
-                <p className="text-xs uppercase mt-1 text-zinc-800">Ações do Jogador</p>
+                <div className="flex items-center justify-center gap-2 mt-2">
+                  <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest leading-none">
+                    Ações do Jogador
+                  </span>
+                </div>
               </div>
 
-              <div className="space-y-2">
-                {!showQueuePlayerModal.showMoveOptions ? (
-                  <>
-                    <button 
-                      onClick={() => {
-                        setSwappingPlayerId(showQueuePlayerModal.playerId);
-                        setShowQueuePlayerModal(null);
-                        setToast({ message: "Selecione outro jogador para trocar de posição.", type: 'info' });
-                      }}
-                      className={`w-full py-3 px-4 rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 transition-all active:scale-95 border bg-zinc-200 text-zinc-800 border-zinc-300 hover:bg-zinc-300`}
-                    >
-                      <ArrowLeftRight size={16} />
-                      Substituir
-                    </button>
+              <div className="p-6">
+                <div className="space-y-3">
+                  {!showQueuePlayerModal.showMoveOptions ? (
+                    <div className="grid grid-cols-2 gap-2">
+                      <button 
+                        onClick={() => {
+                          setSwappingPlayerId(showQueuePlayerModal.playerId);
+                          setShowQueuePlayerModal(null);
+                          setToast({ message: "Selecione outro jogador para trocar de posição.", type: 'info' });
+                        }}
+                        className="p-5 bg-zinc-50 text-zinc-900 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
+                      >
+                        <ArrowLeftRight size={22} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
+                        Substituir
+                      </button>
 
-                    <button 
-                      onClick={() => {
-                        setMovingPlayers({ teamId: teams[showQueuePlayerModal.teamIndex].id, playerIds: [showQueuePlayerModal.playerId] });
-                        setIsSelectingDestination(true);
-                        setShowQueuePlayerModal(null);
-                        setToast({ message: "Selecione o time de destino (apenas times incompletos).", type: 'info' });
-                      }}
-                      className={`w-full py-3 px-4 rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 transition-all active:scale-95 border bg-sky-100 text-sky-700 border-sky-200 hover:bg-sky-200`}
-                    >
-                      <MoveRight size={16} />
-                      Mover
-                    </button>
+                      <button 
+                        onClick={() => {
+                          setMovingPlayers({ teamId: teams[showQueuePlayerModal.teamIndex].id, playerIds: [showQueuePlayerModal.playerId] });
+                          setIsSelectingDestination(true);
+                          setShowQueuePlayerModal(null);
+                          setToast({ message: "Selecione o time de destino (apenas times incompletos).", type: 'info' });
+                        }}
+                        className="p-5 bg-zinc-50 text-zinc-900 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
+                      >
+                        <MoveRight size={22} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
+                        Mover
+                      </button>
 
-                    <button 
-                      onClick={() => {
-                        setTeams(prev => {
-                          return prev.map(t => ({
-                            ...t,
-                            playerIds: t.playerIds.filter(id => id !== showQueuePlayerModal.playerId)
-                          })).filter(t => t.playerIds.length > 0);
-                        });
-                        setPlayers(prev => prev.map(p => p.id === showQueuePlayerModal.playerId ? { ...p, isAvailable: false, arrivedAt: undefined } : p));
-                        setShowQueuePlayerModal(null);
-                        setToast({ message: "Jogador movido para ausentes.", type: 'info' });
-                      }}
-                      className="w-full py-3 px-4 bg-red-500/10 text-red-400 rounded-lg font-black uppercase text-xs flex items-center justify-center gap-2 hover:bg-red-500/20 transition-all active:scale-95 border border-red-500/20"
-                    >
-                      <X size={16} />
-                      Ausente
-                    </button>
-                  </>
-                ) : (
-                  <div className="space-y-2">
-                    <div className="text-[10px] font-bold text-brand-text-secondary uppercase px-2 py-1 text-center">Selecione o time de destino:</div>
-                    <div className="max-h-40 overflow-y-auto custom-scrollbar space-y-1">
-                      {teams.map((t, idx) => {
-                        if (idx === showQueuePlayerModal.teamIndex) return null;
-                        return (
-                          <button
-                            key={`move-to-${t.id}`}
-                            onClick={() => {
-                              setTeams(prev => {
-                                const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
-                                if (newTeams[showQueuePlayerModal.teamIndex]) {
-                                  newTeams[showQueuePlayerModal.teamIndex].playerIds = newTeams[showQueuePlayerModal.teamIndex].playerIds.filter(id => id !== showQueuePlayerModal.playerId);
-                                }
-                                if (newTeams[idx]) {
-                                  newTeams[idx].playerIds.push(showQueuePlayerModal.playerId);
-                                }
-                                return newTeams.filter(team => team.playerIds.length > 0);
-                              });
-                              setShowQueuePlayerModal(null);
-                              setToast({ message: "Jogador movido com sucesso!", type: 'success' });
-                            }}
-                            className="w-full text-left px-4 py-3 text-xs font-bold text-white bg-white/5 hover:bg-brand-primary/20 hover:text-brand-primary rounded-lg transition-colors border border-white/5"
-                          >
-                            {t.name}
-                          </button>
-                        );
-                      })}
+                      <button 
+                        onClick={() => {
+                          setTeams(prev => {
+                            return prev.map(t => ({
+                              ...t,
+                              playerIds: t.playerIds.filter(id => id !== showQueuePlayerModal.playerId)
+                            })).filter(t => t.playerIds.length > 0);
+                          });
+                          setPlayers(prev => prev.map(p => p.id === showQueuePlayerModal.playerId ? { ...p, isAvailable: false, arrivedAt: undefined } : p));
+                          setShowQueuePlayerModal(null);
+                          setToast({ message: "Jogador movido para ausentes.", type: 'info' });
+                        }}
+                        className="p-5 bg-red-50 text-red-600 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-red-100 active:scale-95 border border-red-100 hover:border-red-200 group"
+                      >
+                        <LogOut size={22} className="opacity-70 group-hover:opacity-100 transition-opacity" />
+                        Ausente
+                      </button>
+
+                      <button 
+                        onClick={() => setShowQueuePlayerModal(null)}
+                        className="p-5 bg-zinc-100 text-zinc-500 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-zinc-200 active:scale-95"
+                      >
+                        <X size={22} />
+                        Fechar
+                      </button>
                     </div>
-                    <button 
-                      onClick={() => setShowQueuePlayerModal({ ...showQueuePlayerModal, showMoveOptions: false })}
-                      className="w-full py-2 text-brand-text-secondary text-[10px] font-bold uppercase mt-2"
-                    >
-                      Voltar
-                    </button>
-                  </div>
-                )}
-
-                <button 
-                  onClick={() => setShowQueuePlayerModal(null)}
-                  className="w-full py-3 text-brand-text-secondary text-[10px] font-bold uppercase mt-2"
-                >
-                  Fechar
-                </button>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="text-[10px] font-black text-zinc-400 uppercase tracking-widest text-center px-4">Destino:</div>
+                      <div className="max-h-60 overflow-y-auto px-1 space-y-2 custom-scrollbar">
+                        {teams.map((t, idx) => {
+                          if (idx === showQueuePlayerModal.teamIndex) return null;
+                          return (
+                            <button
+                              key={`move-to-${t.id}`}
+                              onClick={() => {
+                                setTeams(prev => {
+                                  const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+                                  if (newTeams[showQueuePlayerModal.teamIndex]) {
+                                    newTeams[showQueuePlayerModal.teamIndex].playerIds = newTeams[showQueuePlayerModal.teamIndex].playerIds.filter(id => id !== showQueuePlayerModal.playerId);
+                                  }
+                                  if (newTeams[idx]) {
+                                    newTeams[idx].playerIds.push(showQueuePlayerModal.playerId);
+                                  }
+                                  return newTeams.filter(team => team.playerIds.length > 0);
+                                });
+                                setShowQueuePlayerModal(null);
+                                setToast({ message: "Jogador movido com sucesso!", type: 'success' });
+                              }}
+                              className="w-full text-left px-5 py-4 text-xs font-black text-zinc-900 bg-zinc-50 hover:bg-brand-primary hover:text-black rounded-2xl transition-all border border-zinc-100 flex items-center justify-between group"
+                            >
+                              <span className="uppercase tracking-tight">{t.name}</span>
+                              <ChevronRight size={16} className="opacity-30 group-hover:opacity-100 transition-opacity" />
+                            </button>
+                          );
+                        })}
+                      </div>
+                      <button 
+                        onClick={() => setShowQueuePlayerModal({ ...showQueuePlayerModal, showMoveOptions: false })}
+                        className="w-full py-4 text-zinc-400 text-[10px] font-black uppercase tracking-widest"
+                      >
+                        Voltar
+                      </button>
+                    </div>
+                  )}
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -7689,6 +7843,49 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             </motion.div>
           </motion.div>
         )}
+
+        <ColorPickerModal 
+          isOpen={!!showColorPicker}
+          onClose={() => setShowColorPicker(null)}
+          currentColor={showColorPicker?.color || ''}
+          teamName={showColorPicker ? teams[showColorPicker.teamIdx]?.name || '' : ''}
+          isFixed={fixedColors.enabled}
+          onToggleFixed={(enabled) => {
+            setFixedColors(prev => {
+              if (enabled && showColorPicker) {
+                const isTeamA = showColorPicker.teamIdx === match.teamAIndex;
+                return {
+                  ...prev,
+                  enabled,
+                  teamA: isTeamA ? showColorPicker.color : (prev.teamA || teams[match.teamAIndex]?.color || TEAM_COLORS[0]),
+                  teamB: !isTeamA ? showColorPicker.color : (prev.teamB || teams[match.teamBIndex]?.color || TEAM_COLORS[1]),
+                };
+              }
+              return { ...prev, enabled };
+            });
+          }}
+          onSelect={(color) => {
+            if (!showColorPicker) return;
+            const isTeamA = showColorPicker.teamIdx === match.teamAIndex;
+            
+            if (fixedColors.enabled) {
+              setFixedColors(prev => ({
+                ...prev,
+                teamA: isTeamA ? color : prev.teamA,
+                teamB: !isTeamA ? color : prev.teamB
+              }));
+            } else {
+              setTeams(prev => {
+                const newTeams = [...prev];
+                if (newTeams[showColorPicker.teamIdx]) {
+                  newTeams[showColorPicker.teamIdx].color = color;
+                }
+                return newTeams;
+              });
+            }
+            setShowColorPicker(prev => prev ? { ...prev, color } : null);
+          }}
+        />
 
         <AssistModal 
           isOpen={!!pendingAssist}
