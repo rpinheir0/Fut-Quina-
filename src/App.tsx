@@ -2427,7 +2427,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           id: `team-${Date.now()}-${Math.floor(i/limit)}`,
           name: `Time ${String.fromCharCode(65 + Math.floor(i/limit))}`,
           playerIds: chunk,
-          color: Math.floor(i/limit) === 0 ? 'border-brand-primary' : Math.floor(i/limit) === 1 ? 'border-brand-secondary' : 'border-zinc-800'
+          color: TEAM_COLORS[Math.floor(i/limit) % TEAM_COLORS.length]
         });
       }
       return newTeams;
@@ -2468,7 +2468,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           id: `team-${Date.now()}-${Math.floor(i/limit)}`,
           name: `Time ${String.fromCharCode(65 + Math.floor(i/limit))}`,
           playerIds: chunk,
-          color: Math.floor(i/limit) === 0 ? 'border-brand-primary' : Math.floor(i/limit) === 1 ? 'border-brand-secondary' : 'border-zinc-800'
+          color: TEAM_COLORS[Math.floor(i/limit) % TEAM_COLORS.length]
         });
       }
       return newTeams;
