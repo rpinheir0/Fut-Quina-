@@ -3318,9 +3318,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         className="h-full flex flex-col overflow-hidden"
       >
         {/* Sticky Header and Tabs Container */}
-        <div className={`sticky top-0 z-50 ${(['players', 'teams', 'ranking', 'finance'].includes(currentScreen) && !isPrintMode) ? 'bg-white border-zinc-200' : 'bg-brand-dark border-brand-border/10'} border-b ${isPrintMode ? 'hidden' : ''}`}>
+        <div className={`sticky top-0 z-50 bg-gradient-to-br from-zinc-50 to-zinc-100 border-zinc-200 border-b ${isPrintMode ? 'hidden' : ''}`}>
         {/* Header */}
-        <header className={`px-6 py-4 flex justify-between items-center ${(['players', 'teams', 'ranking', 'finance'].includes(currentScreen) && !isPrintMode) ? 'bg-white' : 'bg-[#1E3D2F]'} relative transition-colors duration-300`}>
+        <header className="px-6 py-4 flex justify-between items-center bg-transparent relative transition-colors duration-300">
           <div className="flex items-center gap-3 overflow-hidden relative z-10">
             <motion.div
               initial={false}
@@ -3341,7 +3341,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 >
                   <FutQuinaLogo 
                     size="md" 
-                    style={{ color: (['players', 'teams', 'ranking', 'finance'].includes(currentScreen) && !isPrintMode) ? '#1E3D2F' : '#ffffff' }} 
+                    style={{ color: '#1E3D2F' }} 
                     colorClass="" 
                   />
                 </motion.div>
@@ -3442,7 +3442,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
           <button 
             onClick={() => setShowMainMenu(true)}
-            className={`p-2 ${(['players', 'teams', 'ranking', 'finance'].includes(currentScreen) && !isPrintMode) ? 'text-zinc-800 hover:bg-zinc-100' : 'text-white hover:bg-white/10'} rounded-full transition-all relative z-10`}
+            className="p-2 text-[#1E3D2F] hover:bg-black/5 rounded-full transition-all relative z-10"
           >
             <PiListBold size={24} />
           </button>
@@ -3608,8 +3608,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                 <div className="relative">
                   <textarea 
-                    placeholder="Cole aqui sua lista do WhatsApp (ex: 1. João, 2. Maria...)"
-                    className={`w-full h-24 px-4 py-3 rounded-2xl border-none outline-none transition-all text-xs resize-none bg-gradient-to-br from-zinc-50 to-zinc-100 text-brand-text-secondary focus:ring-2 ring-brand-primary/30 border border-zinc-200`}
+                    placeholder=" "
+                    className={`w-full h-24 px-4 py-3 rounded-2xl border-none outline-none transition-all text-xs resize-none bg-gradient-to-br from-zinc-50 to-zinc-100 text-brand-text-secondary focus:ring-2 ring-brand-primary/30 border border-zinc-200 peer`}
                     onChange={(e) => {
                       if (e.target.value.includes('\n') || e.target.value.length > 10) {
                         addBulkPlayers(e.target.value);
@@ -3617,6 +3617,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       }
                     }}
                   />
+                  <div className="absolute top-3 left-4 pointer-events-none transition-all peer-focus:hidden peer-[:not(:placeholder-shown)]:hidden">
+                    <span className="text-xs font-bold bg-gradient-to-br from-[#1E3D2F] to-[#2F5D4B] bg-clip-text text-transparent opacity-70">
+                      Cole aqui sua lista do WhatsApp (ex: 1. João, 2. Maria...)
+                    </span>
+                  </div>
                   <div 
                     className={`absolute right-4 bottom-3 text-brand-text-secondary cursor-pointer hover:text-brand-primary transition-colors flex items-center gap-1`}
                     onClick={async () => {
@@ -4113,8 +4118,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             ) : (
                               <>
                                 {lastMatchResult ? (
-                                  <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto mb-2 space-y-4 bg-zinc-200/50 p-6 rounded-[32px] border border-zinc-300">
-                                    <p className="text-[10px] font-black text-brand-text-secondary uppercase tracking-[0.2em]">Última Partida</p>
+                                  <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto mb-2 space-y-4 bg-gradient-to-br from-zinc-100 to-zinc-200 p-6 rounded-[32px] border border-zinc-300 shadow-sm">
+                                    <p className="text-[10px] font-black text-brand-text-secondary uppercase tracking-[0.2em] opacity-60">Última Partida</p>
                                     <div className="flex items-center justify-between gap-4 px-2 py-2 w-full">
                                       <div className="flex-1 flex flex-col items-center text-center space-y-1">
                                         <div className="w-10 h-10 flex items-center justify-center shrink-0">
@@ -5322,9 +5327,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 }}
               >
                 <div className="flex items-center justify-between pb-2 border-b border-dashed border-zinc-300 mb-4 px-2">
-                  <button onClick={() => setIsPrintMode(true)} className="text-zinc-600 p-2 hover:text-zinc-900 transition-colors">
-                    <GiPodiumWinner size={20} />
-                  </button>
+                  <div className="flex items-center gap-1">
+                    <button onClick={() => setIsPrintMode(true)} className="text-zinc-600 p-2 hover:text-zinc-900 transition-colors flex items-center gap-1.5">
+                      <GiPodiumWinner size={20} />
+                      <span className="text-[10px] font-black uppercase tracking-widest text-[#1E3D2F]">Ranking</span>
+                    </button>
+                  </div>
                   <div className="text-zinc-500 text-xs font-bold font-mono tracking-tighter uppercase"></div>
                   <div className={`flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-[#1E3D2F]/60 ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
                     <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'assistencias' ? '' : 'opacity-0'}`}><IoFootballOutline size={14} /> Gols</div>
@@ -5351,7 +5359,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     <div className="relative ml-2 mr-4 shrink-0">
                       {index === 0 && (
                         <>
-                          <div className="absolute inset-0 border-2 border-[#FFD700] rounded-2xl scale-110 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] opacity-50" />
+                          <div className="absolute inset-0 border-2 border-[#FFD700] rounded-2xl scale-110 opacity-50" />
                           <div className="absolute inset-0 border-2 border-[#FFD700] shadow-[0_0_15px_#FFD700] rounded-2xl scale-110" />
                         </>
                       )}
