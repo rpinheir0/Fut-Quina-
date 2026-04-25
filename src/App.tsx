@@ -635,6 +635,8 @@ const TieBreakerModal = ({
   teamA,
   teamB,
   players,
+  colorA,
+  colorB,
   queueCount = 0
 }: { 
   state: TieBreakerState, 
@@ -646,11 +648,16 @@ const TieBreakerModal = ({
   teamA: Team | undefined,
   teamB: Team | undefined,
   players: Player[],
+  colorA?: string,
+  colorB?: string,
   queueCount?: number
 }) => {
   const [showQueueOrder, setShowQueueOrder] = useState(false);
 
   if (!state.showSelection || !teamA || !teamB) return null;
+
+  const resolvedColorA = colorA || teamA.color || TEAM_COLORS[0];
+  const resolvedColorB = colorB || teamB.color || TEAM_COLORS[1];
 
   const teamAGoals = state.penalties.teamA.filter(p => p.success === true).length;
   const teamBGoals = state.penalties.teamB.filter(p => p.success === true).length;
@@ -706,8 +713,8 @@ const TieBreakerModal = ({
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
                       <defs>
                         <linearGradient id="shield-tie-A-none" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor={teamA.color || TEAM_COLORS[0]} />
-                          <stop offset="100%" stopColor={teamA.color || TEAM_COLORS[0]} stopOpacity="0.85" />
+                          <stop offset="0%" stopColor={resolvedColorA} />
+                          <stop offset="100%" stopColor={resolvedColorA} stopOpacity="0.85" />
                         </linearGradient>
                       </defs>
                       <path fill="url(#shield-tie-A-none)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
@@ -732,8 +739,8 @@ const TieBreakerModal = ({
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
                       <defs>
                         <linearGradient id="shield-tie-B-none" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor={teamB.color || TEAM_COLORS[1]} />
-                          <stop offset="100%" stopColor={teamB.color || TEAM_COLORS[1]} stopOpacity="0.85" />
+                          <stop offset="0%" stopColor={resolvedColorB} />
+                          <stop offset="100%" stopColor={resolvedColorB} stopOpacity="0.85" />
                         </linearGradient>
                       </defs>
                       <path fill="url(#shield-tie-B-none)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
@@ -827,8 +834,8 @@ const TieBreakerModal = ({
                     <svg viewBox="0 0 24 24" stroke="white" strokeWidth="1.5" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
                       <defs>
                         <linearGradient id={`shield-grad-modal-q-A`} x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor={teamA.color || '#2563EB'} />
-                          <stop offset="100%" stopColor={teamA.color || '#1E3A8A'} stopOpacity="0.85" />
+                          <stop offset="0%" stopColor={resolvedColorA} />
+                          <stop offset="100%" stopColor={resolvedColorA} stopOpacity="0.85" />
                         </linearGradient>
                       </defs>
                       <path 
@@ -862,8 +869,8 @@ const TieBreakerModal = ({
                     <svg viewBox="0 0 24 24" stroke="white" strokeWidth="1.5" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
                       <defs>
                         <linearGradient id={`shield-grad-modal-q-B`} x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor={teamB.color || '#2563EB'} />
-                          <stop offset="100%" stopColor={teamB.color || '#1E3A8A'} stopOpacity="0.85" />
+                          <stop offset="0%" stopColor={resolvedColorB} />
+                          <stop offset="100%" stopColor={resolvedColorB} stopOpacity="0.85" />
                         </linearGradient>
                       </defs>
                       <path 
@@ -1990,6 +1997,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     timestamp: number;
     teamAName?: string;
     teamBName?: string;
+    teamAColor?: string;
+    teamBColor?: string;
+    teamAId?: string;
+    teamBId?: string;
   } | null>(() => {
     const saved = safeLocalStorage.getItem(`futquina_last_result_${groupId}`);
     if (saved) {
@@ -2663,8 +2674,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
   const removePlayerFromTeam = (tIndex: number, playerId: string, cascade: boolean = true) => {
     const isWinner = lastMatchResult && (
-      (tIndex === lastMatchResult.teamAIndex && lastMatchResult.scoreA > lastMatchResult.scoreB) ||
-      (tIndex === lastMatchResult.teamBIndex && lastMatchResult.scoreB > lastMatchResult.scoreA)
+      (teams[tIndex]?.id === lastMatchResult.teamAId && lastMatchResult.scoreA > lastMatchResult.scoreB) ||
+      (teams[tIndex]?.id === lastMatchResult.teamBId && lastMatchResult.scoreB > lastMatchResult.scoreA)
     );
 
     if (isWinner && cascade) {
@@ -3004,6 +3015,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       id: generateId(),
       teamAName: teams[teamAIndex]?.name || 'Time A',
       teamBName: teams[teamBIndex]?.name || 'Time B',
+      teamAColor: (fixedColors.enabled && fixedColors.teamA) || teams[teamAIndex]?.color || TEAM_COLORS[0],
+      teamBColor: (fixedColors.enabled && fixedColors.teamB) || teams[teamBIndex]?.color || TEAM_COLORS[1],
+      teamAId: teams[teamAIndex]?.id,
+      teamBId: teams[teamBIndex]?.id,
       scoreA,
       scoreB,
       teamAIndex,
@@ -3307,6 +3322,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       id: generateId(),
       teamAName: teams[teamAIndex]?.name || 'Time A',
       teamBName: teams[teamBIndex]?.name || 'Time B',
+      teamAColor: (fixedColors.enabled && fixedColors.teamA) || teams[teamAIndex]?.color || TEAM_COLORS[0],
+      teamBColor: (fixedColors.enabled && fixedColors.teamB) || teams[teamBIndex]?.color || TEAM_COLORS[1],
+      teamAId: teams[teamAIndex]?.id,
+      teamBId: teams[teamBIndex]?.id,
       scoreA,
       scoreB,
       teamAIndex,
@@ -3633,6 +3652,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         onBothLeave={handleBothLeaveMatch}
         teamA={teams[match.teamAIndex]}
         teamB={teams[match.teamBIndex]}
+        colorA={(fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color}
+        colorB={(fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color}
         players={players}
         queueCount={teams.length - 2}
       />
@@ -4548,8 +4569,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-sm">
                                             <defs>
                                               <linearGradient id="shield-grad-A-last" x1="0%" y1="0%" x2="0%" y2="100%">
-                                                <stop offset="0%" stopColor={teams[lastMatchResult.teamAIndex]?.color || TEAM_COLORS[0]} />
-                                                <stop offset="100%" stopColor={teams[lastMatchResult.teamAIndex]?.color || TEAM_COLORS[0]} stopOpacity="0.85" />
+                                                <stop offset="0%" stopColor={lastMatchResult.teamAColor || teams[lastMatchResult.teamAIndex]?.color || TEAM_COLORS[0]} />
+                                                <stop offset="100%" stopColor={lastMatchResult.teamAColor || teams[lastMatchResult.teamAIndex]?.color || TEAM_COLORS[0]} stopOpacity="0.85" />
                                               </linearGradient>
                                             </defs>
                                             <path fill="url(#shield-grad-A-last)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="white" strokeWidth="1.5" strokeLinejoin="round" />
@@ -4568,8 +4589,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-sm">
                                             <defs>
                                               <linearGradient id="shield-grad-B-last" x1="0%" y1="0%" x2="0%" y2="100%">
-                                                <stop offset="0%" stopColor={teams[lastMatchResult.teamBIndex]?.color || TEAM_COLORS[1]} />
-                                                <stop offset="100%" stopColor={teams[lastMatchResult.teamBIndex]?.color || TEAM_COLORS[1]} stopOpacity="0.85" />
+                                                <stop offset="0%" stopColor={lastMatchResult.teamBColor || teams[lastMatchResult.teamBIndex]?.color || TEAM_COLORS[1]} />
+                                                <stop offset="100%" stopColor={lastMatchResult.teamBColor || teams[lastMatchResult.teamBIndex]?.color || TEAM_COLORS[1]} stopOpacity="0.85" />
                                               </linearGradient>
                                             </defs>
                                             <path fill="url(#shield-grad-B-last)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="white" strokeWidth="1.5" strokeLinejoin="round" />
@@ -4593,9 +4614,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                             key={`last-game-event-${event.id || idx}`} 
                                             className="flex items-center justify-between gap-2 p-1.5 rounded-lg border border-black/5"
                                             style={{ 
-                                              backgroundColor: (event.team === 'A' ? teams[lastMatchResult.teamAIndex]?.color : teams[lastMatchResult.teamBIndex]?.color) === '#1a1a1a' 
+                                              backgroundColor: (event.team === 'A' ? (lastMatchResult.teamAColor || teams[lastMatchResult.teamAIndex]?.color) : (lastMatchResult.teamBColor || teams[lastMatchResult.teamBIndex]?.color)) === '#1a1a1a' 
                                                 ? '#00000010' 
-                                                : (event.team === 'A' ? teams[lastMatchResult.teamAIndex]?.color : teams[lastMatchResult.teamBIndex]?.color || TEAM_COLORS[0]) + '15'
+                                                : (event.team === 'A' ? (lastMatchResult.teamAColor || teams[lastMatchResult.teamAIndex]?.color) : (lastMatchResult.teamBColor || teams[lastMatchResult.teamBIndex]?.color || TEAM_COLORS[0])) + '15'
                                             }}
                                           >
                                             <div className="flex items-center gap-1.5 overflow-hidden">
@@ -5192,7 +5213,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     {t.lastMatchStatus && (
                                       <div className="absolute top-3 right-3 flex items-center gap-1.5 z-20">
                                         {t.lastMatchStatus === 'Vencedor' ? (
-                                          <div className="px-2 py-0.5 rounded-full bg-brand-primary text-black text-[8px] font-black uppercase tracking-widest shadow-sm flex items-center gap-1">
+                                          <div className="px-2 py-0.5 rounded-full bg-[#39FF14] text-black text-[8px] font-black uppercase tracking-widest shadow-sm flex items-center gap-1">
                                             <Trophy size={8} fill="currentColor" />
                                             Venceu
                                           </div>
@@ -6531,11 +6552,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 initial={{ scale: 0.9, y: 30, opacity: 0 }}
                 animate={{ scale: 1, y: 0, opacity: 1 }}
                 exit={{ scale: 0.9, y: 30, opacity: 0 }}
-                className="w-full max-w-[300px] rounded-[32px] shadow-2xl border bg-white border-zinc-200 overflow-hidden"
+                className="w-full max-w-[270px] rounded-[32px] shadow-2xl border bg-white border-zinc-200 overflow-hidden"
                 onClick={e => e.stopPropagation()}
               >
                 {/* Header */}
-                <div className="bg-zinc-50 pt-8 pb-4 px-5 text-center border-b border-zinc-100 relative overflow-hidden">
+                <div className="bg-zinc-50 pt-6 pb-3 px-5 text-center border-b border-zinc-100 relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 via-brand-primary to-amber-500" />
                   
                   <div className="relative inline-block mb-3">
@@ -6571,25 +6592,25 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 </div>
   
                 {/* Actions Section */}
-                <div className="p-4">
+                <div className="p-3">
                   <div className="space-y-1.5">
                     {/* Primary Success Actions (Goal) */}
                     {!swappingPlayerId && (showPlayerActionsModal.teamIndex === match.teamAIndex || showPlayerActionsModal.teamIndex === match.teamBIndex) && (
-                      <button 
-                        onClick={() => {
-                          if (!match.isActive || match.isPaused || match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit) return;
-                          setShowAssistSelection({ teamIndex: showPlayerActionsModal.teamIndex, scorerId: showPlayerActionsModal.playerId });
-                          setShowPlayerActionsModal(null);
-                        }}
-                        disabled={!match.isActive || match.isPaused || match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit}
-                        className="w-full h-12 bg-emerald-600 text-white rounded-xl font-black uppercase text-[10px] flex items-center justify-between px-5 transition-all hover:bg-emerald-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-emerald-500/10 group"
-                      >
-                        <div className="flex items-center gap-2.5">
-                          <Trophy size={16} className="text-emerald-200 group-hover:scale-110 transition-transform" />
-                          <span className="tracking-widest">Registrar Gol</span>
-                        </div>
-                        <Plus size={14} className="opacity-50" />
-                      </button>
+                        <button 
+                          onClick={() => {
+                            if (!match.isActive || match.isPaused || match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit) return;
+                            setShowAssistSelection({ teamIndex: showPlayerActionsModal.teamIndex, scorerId: showPlayerActionsModal.playerId });
+                            setShowPlayerActionsModal(null);
+                          }}
+                          disabled={!match.isActive || match.isPaused || match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit}
+                          className="w-full h-10 bg-emerald-600 text-white rounded-xl font-black uppercase text-[10px] flex items-center justify-between px-4 transition-all hover:bg-emerald-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-emerald-500/10 group"
+                        >
+                          <div className="flex items-center gap-2">
+                            <Trophy size={14} className="text-emerald-200 group-hover:scale-110 transition-transform" />
+                            <span className="tracking-widest">Registrar Gol</span>
+                          </div>
+                          <Plus size={12} className="opacity-50" />
+                        </button>
                     )}
   
                     {/* Swap Confirmation (Contextual) */}
@@ -6607,7 +6628,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             newTeams.forEach((team, idx) => {
                               if (team.playerIds.includes(playerAId)) teamAIdx = idx;
                               if (team.playerIds.includes(playerBId)) teamBIdx = idx;
-                            });
+                           });
   
                             if (teamAIdx !== -1 && teamBIdx !== -1) {
                               if (teamAIdx === teamBIdx) {
@@ -6627,13 +6648,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           setSwappingPlayerId(null);
                           setShowPlayerActionsModal(null);
                         }}
-                        className="w-full h-12 bg-amber-500 text-black rounded-xl font-black uppercase text-[10px] flex items-center justify-between px-5 transition-all hover:bg-amber-600 active:scale-[0.98] shadow-md shadow-amber-500/10 group"
+                        className="w-full h-10 bg-amber-500 text-black rounded-xl font-black uppercase text-[10px] flex items-center justify-between px-4 transition-all hover:bg-amber-600 active:scale-[0.98] shadow-md shadow-amber-500/10 group"
                       >
-                        <div className="flex items-center gap-2.5">
-                          <RefreshCw size={16} className="group-hover:rotate-180 transition-transform duration-500" />
+                        <div className="flex items-center gap-2">
+                          <RefreshCw size={14} className="group-hover:rotate-180 transition-transform duration-500" />
                           <span className="tracking-widest">Confirmar Troca</span>
                         </div>
-                        <Check size={14} className="opacity-50" />
+                        <Check size={12} className="opacity-50" />
                       </button>
                     )}
   
@@ -6648,9 +6669,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             setShowPlayerActionsModal(null);
                             setToast({ message: "Selecione outro jogador para trocar de posição.", type: 'info' });
                           }}
-                          className="py-3 px-2 bg-zinc-50 text-zinc-900 rounded-xl font-black uppercase text-[8px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
+                          className="py-2.5 px-2 bg-zinc-50 text-zinc-900 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
                         >
-                          <ArrowLeftRight size={18} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
+                          <ArrowLeftRight size={14} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
                           Trocar
                         </button>
                       )}
@@ -6665,9 +6686,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             setShowPlayerActionsModal(null);
                             setToast({ message: "Selecione o time de destino (apenas times incompletos).", type: 'info' });
                           }}
-                          className="py-3 px-2 bg-zinc-50 text-zinc-900 rounded-xl font-black uppercase text-[8px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
+                          className="py-2.5 px-2 bg-zinc-50 text-zinc-900 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
                         >
-                          <MoveRight size={18} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
+                          <MoveRight size={14} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
                           Mover
                         </button>
                       )}
@@ -6700,9 +6721,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             
                             setShowPlayerActionsModal(null);
                           }}
-                          className="py-3 px-2 bg-red-50 text-red-600 rounded-xl font-black uppercase text-[8px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-red-100 active:scale-95 border border-red-100 hover:border-red-200 group"
+                          className="py-2.5 px-2 bg-red-50 text-red-600 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-red-100 active:scale-95 border border-red-100 hover:border-red-200 group"
                         >
-                          <LogOut size={18} className="opacity-70 group-hover:opacity-100 transition-opacity" />
+                          <LogOut size={14} className="opacity-70 group-hover:opacity-100 transition-opacity" />
                           Ausente
                         </button>
                       )}
@@ -6714,18 +6735,18 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             setSwappingPlayerId(null);
                             setShowPlayerActionsModal(null);
                           }}
-                          className="py-3 px-2 bg-red-50 text-red-600 rounded-xl font-black uppercase text-[8px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-red-100 active:scale-95 border border-red-100 hover:border-red-200"
+                          className="py-2.5 px-2 bg-red-50 text-red-600 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-red-100 active:scale-95 border border-red-100 hover:border-red-200"
                         >
-                          <X size={18} />
+                          <X size={14} />
                           Cancelar
                         </button>
                       )}
   
                       <button 
                         onClick={() => setShowPlayerActionsModal(null)}
-                        className="py-3 px-2 bg-zinc-100 text-zinc-500 rounded-xl font-black uppercase text-[8px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-zinc-200 active:scale-95"
+                        className="py-2.5 px-2 bg-zinc-100 text-zinc-500 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-zinc-200 active:scale-95"
                       >
-                        <X size={18} />
+                        <X size={14} />
                         Fechar
                       </button>
                     </div>
