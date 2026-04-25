@@ -823,10 +823,34 @@ const TieBreakerModal = ({
                   onClick={() => onBothLeave('A')}
                   className="group w-full flex items-center gap-4 p-5 rounded-[24px] bg-white/5 border border-white/10 hover:bg-white/10 hover:border-brand-primary/30 transition-all duration-400 transform active:scale-95 text-left"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform font-black">A</div>
-                  <div className="flex flex-col">
-                    <span className="font-black uppercase tracking-widest text-xs text-white">{teamA.name} primeiro</span>
-                    <span className="text-[10px] text-white/40 uppercase font-bold tracking-tight mt-0.5">Ficará à frente de {teamB.name}</span>
+                  <div className="w-14 h-14 rounded-2xl bg-brand-primary/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <svg viewBox="0 0 24 24" stroke="white" strokeWidth="1.5" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
+                      <defs>
+                        <linearGradient id={`shield-grad-modal-q-A`} x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor={teamA.color || '#2563EB'} />
+                          <stop offset="100%" stopColor={teamA.color || '#1E3A8A'} stopOpacity="0.85" />
+                        </linearGradient>
+                      </defs>
+                      <path 
+                        fill={`url(#shield-grad-modal-q-A)`}
+                        d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
+                        strokeLinejoin="round"
+                      />
+                      <path 
+                        d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
+                        fill="white" opacity="0.1"
+                      />
+                    </svg>
+                  </div>
+                  <div className="flex flex-col overflow-hidden">
+                    <span className="font-black uppercase tracking-widest text-xs text-white truncate">{teamA.name} primeiro</span>
+                    <div className="flex flex-wrap gap-x-1.5 mt-1">
+                      {(teamA.playerIds || []).map((pid, idx) => (
+                        <span key={pid} className="text-[8px] text-white/30 font-bold uppercase tracking-tight">
+                          {players.find(p => p.id === pid)?.name}{idx < (teamA.playerIds?.length || 0) - 1 ? ' •' : ''}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </button>
 
@@ -834,10 +858,34 @@ const TieBreakerModal = ({
                   onClick={() => onBothLeave('B')}
                   className="group w-full flex items-center gap-4 p-5 rounded-[24px] bg-white/5 border border-white/10 hover:bg-white/10 hover:border-brand-primary/30 transition-all duration-400 transform active:scale-95 text-left"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform font-black">B</div>
-                  <div className="flex flex-col">
-                    <span className="font-black uppercase tracking-widest text-xs text-white">{teamB.name} primeiro</span>
-                    <span className="text-[10px] text-white/40 uppercase font-bold tracking-tight mt-0.5">Ficará à frente de {teamA.name}</span>
+                  <div className="w-14 h-14 rounded-2xl bg-brand-primary/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <svg viewBox="0 0 24 24" stroke="white" strokeWidth="1.5" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
+                      <defs>
+                        <linearGradient id={`shield-grad-modal-q-B`} x1="0%" y1="0%" x2="0%" y2="100%">
+                          <stop offset="0%" stopColor={teamB.color || '#2563EB'} />
+                          <stop offset="100%" stopColor={teamB.color || '#1E3A8A'} stopOpacity="0.85" />
+                        </linearGradient>
+                      </defs>
+                      <path 
+                        fill={`url(#shield-grad-modal-q-B)`}
+                        d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
+                        strokeLinejoin="round"
+                      />
+                      <path 
+                        d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
+                        fill="white" opacity="0.1"
+                      />
+                    </svg>
+                  </div>
+                  <div className="flex flex-col overflow-hidden">
+                    <span className="font-black uppercase tracking-widest text-xs text-white truncate">{teamB.name} primeiro</span>
+                    <div className="flex flex-wrap gap-x-1.5 mt-1">
+                      {(teamB.playerIds || []).map((pid, idx) => (
+                        <span key={pid} className="text-[8px] text-white/30 font-bold uppercase tracking-tight">
+                          {players.find(p => p.id === pid)?.name}{idx < (teamB.playerIds?.length || 0) - 1 ? ' •' : ''}
+                        </span>
+                      ))}
+                    </div>
                   </div>
                 </button>
 
