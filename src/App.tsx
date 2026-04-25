@@ -449,12 +449,12 @@ const AssistModal = ({
                       )}
                     </div>
 
-                    <div className="flex-1 min-w-0">
-                      <div className="text-[9px] font-black uppercase tracking-widest text-brand-primary opacity-60 mb-0.5">Assistente</div>
-                      <div className="text-sm font-black uppercase truncate text-zinc-800 transition-colors group-hover:text-brand-primary">
-                        {player?.name}
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[9px] font-black uppercase tracking-widest text-zinc-400 mb-0.5">Garçom</div>
+                        <div className="text-sm font-black uppercase truncate text-zinc-800 transition-colors group-hover:text-brand-primary">
+                          {player?.name}
+                        </div>
                       </div>
-                    </div>
 
                     <div className="w-8 h-8 rounded-full border border-zinc-100 flex items-center justify-center bg-zinc-50 group-hover:bg-brand-primary/10 group-hover:border-brand-primary/20 text-zinc-300 group-hover:text-brand-primary transition-all">
                       <PiArrowRightBold size={14} />
@@ -6530,7 +6530,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="text-[8px] font-black text-brand-primary/60 uppercase tracking-widest mb-0.5">Garçom</div>
+                            <div className="text-[8px] font-black text-zinc-400 uppercase tracking-widest mb-0.5">Garçom</div>
                             <div className="text-xs font-black uppercase truncate text-zinc-900 group-hover:text-brand-primary">
                               {player?.name}
                             </div>
