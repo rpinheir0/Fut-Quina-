@@ -270,9 +270,6 @@ const TutorialCarousel = () => {
         </motion.div>
       </AnimatePresence>
 
-      {/* Cyberpunk gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#14301F]/90 via-[#14301F]/40 to-transparent pointer-events-none z-10 mix-blend-multiply"></div>
-      
       {/* Inner tech scanline effect */}
       <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none z-10 opacity-30"></div>
 
@@ -3368,7 +3365,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   animate={{ y: 0, opacity: 1, scale: 1 }}
                   exit={{ y: -40, opacity: 0, scale: 0.8 }}
                   transition={{ type: 'spring', damping: 20 }}
-                  className="flex items-center justify-center gap-2 bg-black/40 hover:bg-black/60 px-4 py-1.5 rounded-full border border-white/20 shadow-lg backdrop-blur-md pointer-events-auto transition-colors"
+                  className="flex items-center justify-center gap-2 bg-[#1E3D2F]/95 hover:bg-[#1E3D2F] px-4 py-1.5 rounded-full border border-white/10 shadow-lg backdrop-blur-md pointer-events-auto transition-colors"
                 >
                   {match.teamAIndex !== -1 && match.teamBIndex !== -1 ? (
                     <>
@@ -3416,7 +3413,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   animate={{ y: 0, opacity: 1, scale: 1 }}
                   exit={{ y: -40, opacity: 0, scale: 0.8 }}
                   transition={{ type: 'spring', damping: 20 }}
-                  className="flex items-center justify-center gap-1.5 bg-black/40 hover:bg-black/60 px-3 py-1 rounded-full border border-white/20 shadow-lg backdrop-blur-md pointer-events-auto transition-colors"
+                  className="flex items-center justify-center gap-1.5 bg-[#1E3D2F]/95 hover:bg-[#1E3D2F] px-3 py-1 rounded-full border border-white/10 shadow-lg backdrop-blur-md pointer-events-auto transition-colors"
                 >
                   {match.teamAIndex !== -1 && match.teamBIndex !== -1 ? (
                     <>
@@ -5325,7 +5322,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 }}
               >
                 <div className="flex items-center justify-between pb-2 border-b border-dashed border-zinc-300 mb-4 px-2">
-                  <button onClick={() => setIsPrintMode(true)} className="text-zinc-600 p-2 hover:bg-zinc-200 rounded-full transition-colors">
+                  <button onClick={() => setIsPrintMode(true)} className="text-zinc-600 p-2 hover:text-zinc-900 transition-colors">
                     <GiPodiumWinner size={20} />
                   </button>
                   <div className="text-zinc-500 text-xs font-bold font-mono tracking-tighter uppercase"></div>
@@ -7699,42 +7696,41 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
         {/* Back To Home Confirm Modal */}
         {showBackToHomeConfirm && (
-          <motion.div
+          <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/90 backdrop-blur-md z-[300] flex items-center justify-center p-4"
             onClick={() => setShowBackToHomeConfirm(false)}
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
+              initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-brand-dark border border-orange-500/30 rounded-lg p-6 max-w-sm w-full shadow-2xl shadow-orange-500/20"
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-[#14301F] border border-orange-500/30 rounded-[32px] p-8 max-w-sm w-full shadow-2xl relative overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="text-orange-500 flex justify-center mb-4">
-              </div>
-              <h2 className="text-xl font-black text-center mb-2 uppercase tracking-tighter text-[#464656]">Sair da Partida?</h2>
-              <p className="text-center text-[#464656] mb-6 text-sm opacity-90 lowercase">
+              <div className="absolute inset-0 bg-orange-500/5 pointer-events-none" />
+              <h2 className="text-2xl font-black text-center mb-4 uppercase tracking-tighter text-orange-400 relative z-10">Sair da Partida?</h2>
+              <p className="text-center text-white/70 mb-8 text-sm lowercase first-letter:uppercase leading-relaxed px-2 relative z-10">
                 tem certeza que deseja sair desta partida e voltar para o menu principal?
               </p>
               
-              <div className="flex gap-3">
-                <button 
-                  onClick={() => setShowBackToHomeConfirm(false)}
-                  className="flex-1 py-3 bg-zinc-200 text-zinc-900 rounded-xl font-black uppercase tracking-widest text-xs hover:bg-zinc-300 transition-colors"
-                >
-                  Não
-                </button>
+              <div className="flex flex-col gap-3 relative z-10">
                 <button 
                   onClick={() => {
                     setShowBackToHomeConfirm(false);
                     onBackToHome();
                   }}
-                  className="flex-1 py-3 bg-orange-500 text-white rounded-xl font-black uppercase tracking-widest text-xs hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20"
+                  className="w-full py-5 bg-orange-500 text-white rounded-[20px] font-black uppercase tracking-widest text-xs hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20 active:scale-95"
                 >
                   Sim
+                </button>
+                <button 
+                  onClick={() => setShowBackToHomeConfirm(false)}
+                  className="w-full py-4 rounded-[20px] font-black uppercase tracking-widest text-[10px] transition-all bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
+                >
+                  Não
                 </button>
               </div>
             </motion.div>
@@ -7992,9 +7988,8 @@ export default function App() {
                     >
                       <button
                         onClick={() => setSelectedGroupOptions({ id: group.id, name: group.name })}
-                        className="flex-1 p-6 transition-all duration-400 flex items-center justify-between relative group rounded-[24px] bg-white/5 backdrop-blur-xl border border-[#E3D39E]/20 shadow-[0_15px_35px_rgba(0,0,0,0.3)] hover:-translate-y-1 hover:bg-white/10 hover:border-[#E3D39E]/40 overflow-hidden active:scale-95"
+                        className="flex-1 p-4 transition-all duration-400 flex items-center justify-between relative group rounded-[24px] bg-white/5 backdrop-blur-xl border border-[#E3D39E]/20 shadow-[0_15px_35px_rgba(0,0,0,0.3)] hover:-translate-y-1 hover:bg-white/10 hover:border-[#E3D39E]/40 overflow-hidden active:scale-95"
                       >
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#E3D39E]/5 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
                         <div className="flex flex-col items-start gap-1">
                           <span className="text-xl font-black text-[#E3D39E] drop-shadow-md tracking-tight uppercase" style={{ fontFamily: 'system-ui' }}>{group.name}</span>
                           <span className="text-[9px] font-black text-[#E3D39E]/40 uppercase tracking-widest">{new Date(group.createdAt).toLocaleDateString()}</span>
