@@ -65,7 +65,7 @@ import { IoPersonOutline, IoFootballOutline } from 'react-icons/io5';
 import { IoIosTrophy, IoIosWallet, IoIosFootball } from 'react-icons/io';
 import { PiUserCirclePlusThin, PiUserCirclePlusLight, PiUserCirclePlus } from 'react-icons/pi';
 import { ImSpinner9 } from 'react-icons/im';
-import { GiGoalKeeper, GiSoccerKick, GiSoccerField, GiTrophy } from 'react-icons/gi';
+import { GiGoalKeeper, GiSoccerKick, GiSoccerField, GiTrophy, GiPodiumWinner, GiRunningShoe } from 'react-icons/gi';
 import { 
   PiUsersBold,
   PiUsers,
@@ -5322,12 +5322,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               >
                 <div className="flex items-center justify-between pb-2 border-b border-dashed border-zinc-300 mb-4 px-2">
                   <button onClick={() => setIsPrintMode(true)} className="text-zinc-600 p-2 hover:bg-zinc-200 rounded-full transition-colors">
-                    <Eye size={20} />
+                    <GiPodiumWinner size={20} />
                   </button>
                   <div className="text-zinc-500 text-xs font-bold font-mono tracking-tighter uppercase"></div>
                   <div className={`flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-[#1E3D2F]/60 ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
-                    <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'assistencias' ? '' : 'opacity-0'}`}><Trophy size={14} /> Gols</div>
-                    <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'artilharia' ? '' : 'opacity-0'}`}><Award size={14} /> Ass</div>
+                    <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'assistencias' ? '' : 'opacity-0'}`}><IoFootballOutline size={14} /> Gols</div>
+                    <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'artilharia' ? '' : 'opacity-0'}`}><GiRunningShoe size={14} /> Ass</div>
                   </div>
                 </div>
 
@@ -7995,8 +7995,8 @@ export default function App() {
                           <span className="text-xl font-black text-[#E3D39E] drop-shadow-md tracking-tight uppercase" style={{ fontFamily: 'system-ui' }}>{group.name}</span>
                           <span className="text-[9px] font-black text-[#E3D39E]/40 uppercase tracking-widest">{new Date(group.createdAt).toLocaleDateString()}</span>
                         </div>
-                        <div className="w-10 h-10 rounded-full bg-[#E3D39E]/10 flex items-center justify-center group-hover:bg-brand-primary group-hover:text-black transition-all">
-                          <ChevronRight size={24} className="opacity-70 group-hover:opacity-100" />
+                        <div className="flex items-center justify-center group-hover:text-brand-primary transition-all">
+                          <span className="text-[#E3D39E] opacity-70 group-hover:opacity-100"><GiGoalKeeper size={28} /></span>
                         </div>
                       </button>
                     </motion.div>
@@ -8016,7 +8016,7 @@ export default function App() {
                 className="w-full p-4 rounded-[24px] font-black uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-4 transition-all duration-300 shadow-[0_12px_30px_rgba(183,217,108,0.2)] bg-brand-primary text-black hover:opacity-90 hover:scale-[1.01] active:scale-95 border-b-4 border-black/20"
               >
                 <div className="w-7 h-7 rounded-full bg-black/10 flex items-center justify-center">
-                  <GiGoalKeeper size={18} />
+                  <Plus size={18} strokeWidth={3} />
                 </div>
                 Nova Partida
               </button>
@@ -8051,9 +8051,6 @@ export default function App() {
                 }}
                 className="group w-full flex items-center justify-center gap-4 p-5 rounded-[24px] font-black uppercase tracking-widest text-xs transition-all duration-300 bg-brand-primary text-black hover:scale-[1.02] active:scale-95 shadow-xl shadow-brand-primary/20"
               >
-                <div className="w-8 h-8 rounded-full bg-black/10 flex items-center justify-center">
-                  <Play size={18} fill="currentColor" />
-                </div>
                 Entrar na Partida
               </button>
               
