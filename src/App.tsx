@@ -3321,9 +3321,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         className="h-full flex flex-col overflow-hidden"
       >
         {/* Sticky Header and Tabs Container */}
-        <div className={`sticky top-0 z-50 bg-brand-dark border-b border-brand-border/10 ${isPrintMode ? 'hidden' : ''}`}>
+        <div className={`sticky top-0 z-50 ${(['players', 'teams', 'ranking', 'finance'].includes(currentScreen) && !isPrintMode) ? 'bg-white border-zinc-200' : 'bg-brand-dark border-brand-border/10'} border-b ${isPrintMode ? 'hidden' : ''}`}>
         {/* Header */}
-        <header className="px-6 py-4 flex justify-between items-center bg-[#1E3D2F] relative">
+        <header className={`px-6 py-4 flex justify-between items-center ${(['players', 'teams', 'ranking', 'finance'].includes(currentScreen) && !isPrintMode) ? 'bg-white' : 'bg-[#1E3D2F]'} relative transition-colors duration-300`}>
           <div className="flex items-center gap-3 overflow-hidden relative z-10">
             <motion.div
               initial={false}
@@ -3342,7 +3342,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   exit={{ opacity: 0, x: 20 }}
                   transition={{ duration: 0.4 }}
                 >
-                  <FutQuinaLogo size="md" style={{ color: '#ffffff' }} colorClass="" />
+                  <FutQuinaLogo 
+                    size="md" 
+                    style={{ color: (['players', 'teams', 'ranking', 'finance'].includes(currentScreen) && !isPrintMode) ? '#1E3D2F' : '#ffffff' }} 
+                    colorClass="" 
+                  />
                 </motion.div>
               ) : null}
             </AnimatePresence>
@@ -3441,7 +3445,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
           <button 
             onClick={() => setShowMainMenu(true)}
-            className="p-2 text-white hover:bg-white/10 rounded-full transition-colors relative z-10"
+            className={`p-2 ${(['players', 'teams', 'ranking', 'finance'].includes(currentScreen) && !isPrintMode) ? 'text-zinc-800 hover:bg-zinc-100' : 'text-white hover:bg-white/10'} rounded-full transition-all relative z-10`}
           >
             <PiListBold size={24} />
           </button>
@@ -3450,28 +3454,28 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         {/* Tabs for Teams */}
         {currentScreen === 'teams' && (
           <div className="px-6 pb-4">
-            <div className="flex bg-brand-dark p-1 rounded-[24px] border border-brand-border">
+            <div className="flex bg-gradient-to-br from-zinc-100 to-zinc-200 p-1 rounded-[24px] border border-zinc-300 shadow-sm">
               <button 
                 onClick={() => navigateTeamsTab('configuracao')}
-                className={`w-12 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'configuracao' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
+                className={`w-12 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'configuracao' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-800'}`}
               >
                 <PiGearBold size={18} />
               </button>
               <button 
                 onClick={() => navigateTeamsTab('chegada')}
-                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'chegada' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'chegada' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-800'}`}
               >
                 <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Chegada</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('historico')}
-                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'historico' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'historico' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-800'}`}
               >
                 <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Confrontos</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('proximos')}
-                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'proximos' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'proximos' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-800'}`}
               >
                 <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Próximos</span>
               </button>
@@ -3482,22 +3486,22 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         {/* Tabs for Ranking */}
         {currentScreen === 'ranking' && (
           <div className="px-6 pb-4">
-            <div className="flex bg-brand-dark p-1 rounded-[24px] border border-brand-border">
+            <div className="flex bg-gradient-to-br from-zinc-100 to-zinc-200 p-1 rounded-[24px] border border-zinc-300 shadow-sm">
               <button
                 onClick={() => setRankingTab('geral')}
-                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${rankingTab === 'geral' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${rankingTab === 'geral' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-800'}`}
               >
                 <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Geral</span>
               </button>
               <button
                 onClick={() => setRankingTab('artilharia')}
-                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${rankingTab === 'artilharia' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${rankingTab === 'artilharia' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-800'}`}
               >
                 <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Artilharia</span>
               </button>
               <button
                 onClick={() => setRankingTab('assistencias')}
-                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${rankingTab === 'assistencias' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${rankingTab === 'assistencias' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-800'}`}
               >
                 <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Assistências</span>
               </button>
@@ -3508,16 +3512,16 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         {/* Tabs for Finance */}
         {currentScreen === 'finance' && !isPrintMode && (
           <div className="px-6 pb-4">
-            <div className="flex bg-brand-dark p-1 rounded-[24px] border border-brand-border">
+            <div className="flex bg-gradient-to-br from-zinc-100 to-zinc-200 p-1 rounded-[24px] border border-zinc-300 shadow-sm">
               <button 
                 onClick={() => setFinanceSubScreen('mensalidade')} 
-                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${financeSubScreen === 'mensalidade' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${financeSubScreen === 'mensalidade' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-800'}`}
               >
                 <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Mensalidade</span>
               </button>
               <button 
                 onClick={() => setFinanceSubScreen('balanco')} 
-                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${financeSubScreen === 'balanco' ? 'bg-gradient-to-t from-brand-surface-light to-brand-surface/50 text-brand-text-primary shadow-sm' : 'text-brand-text-secondary hover:text-brand-text-primary'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${financeSubScreen === 'balanco' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-500 hover:text-zinc-800'}`}
               >
                 <span className="text-[10px] font-black uppercase tracking-widest text-center w-full">Balanço</span>
               </button>
@@ -3529,7 +3533,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       {/* Main Content */}
       <main 
         ref={mainRef} 
-        className={`flex-1 overflow-y-auto pb-24 ${isPrintMode ? 'p-0 pb-0 bg-white text-black' : ''}`}
+        className={`flex-1 overflow-y-auto pb-24 ${isPrintMode ? 'p-0 pb-0 bg-white text-black' : (['players', 'teams', 'ranking', 'finance'].includes(currentScreen) ? 'bg-white' : '')}`}
       >
         <AnimatePresence mode="wait">
           {currentScreen === 'players' && !isPrintMode && (
@@ -3577,7 +3581,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     <input 
                       type="text" 
                       placeholder="Nome do jogador..."
-                      className={`flex-1 px-4 py-2 rounded-2xl border-none outline-none transition-all bg-brand-card focus:ring-2 ring-brand-primary/50 text-sm`}
+                      className={`flex-1 px-4 py-2 rounded-2xl border-none outline-none transition-all bg-gradient-to-br from-zinc-100 to-zinc-200 focus:ring-2 ring-brand-primary/50 text-sm border border-zinc-200`}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           addPlayer(e.currentTarget.value);
@@ -3587,7 +3591,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     />
                     <button 
                       onClick={handleImportContacts}
-                      className="p-2 bg-brand-card text-brand-text-primary rounded-2xl shadow hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square"
+                      className="p-2 bg-gradient-to-br from-zinc-100 to-zinc-200 text-brand-text-primary rounded-2xl shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square border border-zinc-200"
                       title="Importar dos Contatos"
                     >
                       <Contact size={18} />
@@ -3608,7 +3612,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <div className="relative">
                   <textarea 
                     placeholder="Cole aqui sua lista do WhatsApp (ex: 1. João, 2. Maria...)"
-                    className={`w-full h-24 px-4 py-3 rounded-2xl border-none outline-none transition-all text-xs resize-none bg-brand-card/50 text-brand-text-secondary focus:ring-2 ring-brand-primary/30`}
+                    className={`w-full h-24 px-4 py-3 rounded-2xl border-none outline-none transition-all text-xs resize-none bg-gradient-to-br from-zinc-50 to-zinc-100 text-brand-text-secondary focus:ring-2 ring-brand-primary/30 border border-zinc-200`}
                     onChange={(e) => {
                       if (e.target.value.includes('\n') || e.target.value.length > 10) {
                         addBulkPlayers(e.target.value);
@@ -3638,7 +3642,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 </div>
               </section>
 
-              <section className="rounded-2xl overflow-hidden bg-brand-card/50 border border-brand-border">
+              <section className="rounded-2xl overflow-hidden bg-gradient-to-br from-zinc-50 to-zinc-100 border border-zinc-200 shadow-sm">
                 {players.length === 0 ? (
                   <div className="text-center py-12 opacity-50 text-brand-text-secondary text-xs normal-case">Nenhum jogador adicionado ainda.</div>
                 ) : (
@@ -3755,12 +3759,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   }
                 }
               }}
-              className="px-6 pb-6 pt-4 space-y-4 min-h-full bg-brand-dark flex flex-col"
+              className="px-6 pb-6 pt-4 space-y-4 min-h-full bg-white flex flex-col"
             >
                   <div id="teams-list-section" className="max-w-5xl mx-auto w-full space-y-4">
                     {teamsTab === 'configuracao' ? (
-                      <div className="space-y-6 bg-zinc-100 p-6 rounded-3xl border border-zinc-200">
-                        <div className="sticky top-[-1px] z-40 bg-zinc-100 py-4 -mx-6 px-6 border-b border-zinc-200 flex justify-between items-center rounded-t-3xl">
+                      <div className="space-y-6 bg-gradient-to-br from-zinc-100 to-zinc-200 p-6 rounded-3xl border border-zinc-300 shadow-sm">
+                        <div className="sticky top-[-1px] z-40 bg-gradient-to-br from-zinc-100 to-zinc-200 py-4 -mx-6 px-6 border-b border-zinc-300 flex justify-between items-center rounded-t-3xl">
                           <h3 className="text-sm font-black uppercase tracking-widest text-zinc-900">Configuração</h3>
                         </div>
                         
@@ -3868,7 +3872,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
                       </div>
                     ) : teamsTab === 'chegada' ? (
-                      <div className="space-y-6 bg-zinc-100 p-6 rounded-3xl border border-zinc-200">
+                      <div className="space-y-6 bg-gradient-to-br from-zinc-100 to-zinc-200 p-6 rounded-3xl border border-zinc-300 shadow-sm">
                         <div className="flex justify-between items-center">
                           <h3 className="text-sm font-black uppercase tracking-widest text-zinc-900">Ordem de Chegada</h3>
                           <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -4072,7 +4076,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
                       </div>
                     ) : teamsTab === 'historico' ? (
-                      <div className="space-y-6 bg-zinc-100 p-6 rounded-3xl border border-zinc-200">
+                      <div className="space-y-6 bg-gradient-to-br from-zinc-100 to-zinc-200 p-6 rounded-3xl border border-zinc-300 shadow-sm">
                         {!match.isActive ? (
                           <div className="py-12 text-center border border-dashed border-white/5 rounded-3xl flex flex-col items-center gap-4">
                             {players.filter(p => p.isAvailable).length === 0 ? (
@@ -4214,7 +4218,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             {match.hasEnded && (
                               <div className="absolute inset-0 z-40 bg-black/10 backdrop-blur-[1px] rounded-2xl pointer-events-auto cursor-default" />
                             )}
-                            <div className="sticky top-[-1px] z-40 bg-zinc-100/95 backdrop-blur-md py-6 -mx-6 px-6 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-[40px] border border-zinc-300 shadow-sm w-full max-w-2xl mx-auto relative overflow-hidden">
+                            <div className="sticky top-[-1px] z-40 bg-gradient-to-br from-zinc-100 to-zinc-200 backdrop-blur-md py-6 -mx-6 px-6 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-[40px] border border-zinc-300 shadow-sm w-full max-w-2xl mx-auto relative overflow-hidden">
                               <div className="flex-1 flex flex-col items-center text-center space-y-2 sm:space-y-4">
                                   <button 
                                     className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm"
@@ -5095,8 +5099,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         whileHover={{ y: -5 }}
                         className={`group p-3 sm:p-4 rounded-xl transition-all relative cursor-pointer flex flex-col border ${
                           match.teamAIndex === tIndex || match.teamBIndex === tIndex
-                            ? 'bg-[#004d1a] border-brand-primary shadow-[0_0_30px_rgba(198,255,0,0.1)]' 
-                            : 'bg-transparent border-white/10 hover:border-brand-primary/50'
+                            ? 'bg-emerald-900 border-brand-primary shadow-[0_0_30px_rgba(163,230,53,0.2)]' 
+                            : 'bg-gradient-to-br from-zinc-50 to-zinc-100 border-zinc-200 hover:border-zinc-400'
                         } ${flashingTeamIds.includes(team.id) ? 'animate-flash' : ''}`}
                         onClick={() => {
                           if (swappingPlayerId) return;
@@ -5143,10 +5147,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               newTeams[tIndex].name = e.target.value;
                               setTeams(newTeams);
                             }}
-                            className={`bg-transparent font-black text-xl uppercase tracking-tight outline-none w-full placeholder:opacity-20 ${
+                            className={`bg-transparent font-black text-xl uppercase tracking-tight outline-none w-full placeholder:opacity-40 ${
                               (match.teamAIndex === tIndex || match.teamBIndex === tIndex)
                                 ? 'text-white'
-                                : 'text-white'
+                                : 'text-zinc-900'
                             }`}
                           />
                         </div>
@@ -5273,14 +5277,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
                       </motion.div>
                     ))}
-                    <button 
-                      onClick={addTeam}
-                      className="p-6 rounded-xl border border-dashed border-white/10 hover:border-brand-primary/50 hover:bg-brand-primary/5 transition-all flex flex-col items-center justify-center gap-3 group"
-                    >
-                      <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-brand-primary group-hover:text-black transition-all">
-                        <Plus size={24} />
-                      </div>
-                    </button>
+                      <button 
+                        onClick={addTeam}
+                        className="p-6 rounded-xl border border-dashed border-zinc-300 hover:border-zinc-500 hover:bg-zinc-100 transition-all flex flex-col items-center justify-center gap-3 group"
+                      >
+                        <div className="w-12 h-12 rounded-full bg-zinc-200 flex items-center justify-center group-hover:bg-brand-primary group-hover:text-black transition-all">
+                          <Plus size={24} />
+                        </div>
+                      </button>
                   </div>
                 )}
               </div>
@@ -5308,7 +5312,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               className="p-6 space-y-6 pb-24"
             >
               <motion.div 
-                className={`bg-zinc-100 p-6 rounded-3xl border border-zinc-200 overflow-hidden shadow-sm`}
+                className={`bg-gradient-to-br from-zinc-100 to-zinc-200 p-6 rounded-3xl border border-zinc-300 overflow-hidden shadow-sm`}
                 drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
                 onDragEnd={(event, info) => {
@@ -5350,12 +5354,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     <div className="relative ml-2 mr-4 shrink-0">
                       {index === 0 && (
                         <>
-                          <div className="absolute inset-0 border-2 border-[#FFD700] rounded-full scale-110 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] opacity-50" />
-                          <div className="absolute inset-0 border-2 border-[#FFD700] shadow-[0_0_15px_#FFD700] rounded-full scale-110" />
+                          <div className="absolute inset-0 border-2 border-[#FFD700] rounded-2xl scale-110 animate-[ping_2s_cubic-bezier(0,0,0.2,1)_infinite] opacity-50" />
+                          <div className="absolute inset-0 border-2 border-[#FFD700] shadow-[0_0_15px_#FFD700] rounded-2xl scale-110" />
                         </>
                       )}
                       
-                      <div className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-zinc-200 border border-zinc-300 relative z-10`}>
+                      <div className={`w-10 h-10 rounded-2xl overflow-hidden flex items-center justify-center bg-zinc-200 border border-zinc-300 relative z-10`}>
                         {player.photo ? (
                           <img src={player.photo} alt={player.name} className="w-full h-full object-cover" />
                         ) : (
@@ -5459,7 +5463,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               setIsEditingTotal(true);
                             }
                           }}
-                          className={`p-5 transition-all ${isPrintMode ? 'bg-white border-zinc-300 border rounded-none' : 'rounded-lg border bg-zinc-100 border-zinc-200 cursor-pointer hover:bg-zinc-200 shadow-sm'}`}>
+                          className={`p-5 transition-all ${isPrintMode ? 'bg-white border-zinc-300 border rounded-none' : 'rounded-[2rem] border bg-gradient-to-br from-zinc-100 to-zinc-200 border-zinc-300 cursor-pointer hover:from-zinc-50 hover:to-zinc-100 shadow-sm'}`}>
                           <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'text-zinc-500'}`}>Arrecadação</p>
                           <div className="flex items-baseline gap-2 mb-4">
                             {isEditingTotal ? (
@@ -5485,7 +5489,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               </div>
                             ) : (
                               <div className="flex flex-col">
-                                <p className={`text-3xl font-black ${isPrintMode ? 'text-black' : 'text-[#1E3D2F]'}`}>
+                                <p className={`text-3xl font-black ${isPrintMode ? 'text-black' : 'text-zinc-900'}`}>
                                   R$ {totalRevenue},00
                                 </p>
                                 {!isPrintMode && (
@@ -5517,7 +5521,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
 
                         {/* Despesas Card */}
-                        <div className={`p-5 transition-all ${isPrintMode ? 'bg-white border-zinc-300 border rounded-none' : 'rounded-lg border bg-red-50/50 border-red-100'}`}>
+                        <div className={`p-5 transition-all ${isPrintMode ? 'bg-white border-zinc-300 border rounded-none' : 'rounded-[2rem] border bg-gradient-to-br from-red-50 to-red-100 border-red-200'}`}>
                           <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'text-zinc-500'}`}>Despesas</p>
                           <p className={`text-3xl font-black mb-4 ${isPrintMode ? 'text-black' : 'text-red-700'}`}>R$ {totalExpenses},00</p>
                           <div className="space-y-1.5">
@@ -5538,8 +5542,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className={`p-5 transition-all ${
                           isPrintMode ? 'bg-white border-zinc-300 border rounded-none' :
                           netBalance >= 0
-                            ? 'rounded-lg border bg-emerald-500/10 border-emerald-500/20'
-                            : 'rounded-lg border bg-red-500/10 border-red-500/20'
+                            ? 'rounded-[2rem] border bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200'
+                            : 'rounded-[2rem] border bg-gradient-to-br from-red-50 to-red-100 border-red-200'
                         }`}>
                           <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'opacity-60'}`}>Saldo em Caixa</p>
                           <p className={`text-3xl font-black mb-4 ${
@@ -5567,8 +5571,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                     {/* Expenses List */}
                     {!isPrintPaymentsOnly && (
-                      <div className={`transition-all overflow-hidden ${isPrintMode ? 'bg-white border border-zinc-300 rounded-none' : 'rounded-lg border bg-white border-zinc-200 shadow-sm'}`}>
-                        <div className={`flex justify-between items-center ${isPrintMode ? 'border-b border-zinc-300 bg-zinc-100 p-2' : 'p-4 border-b bg-zinc-50 border-zinc-200'}`}>
+                      <div className={`transition-all overflow-hidden ${isPrintMode ? 'bg-white border border-zinc-300 rounded-none' : 'rounded-[2rem] border bg-white border-zinc-200 shadow-sm'}`}>
+                        <div className={`flex justify-between items-center ${isPrintMode ? 'border-b border-zinc-300 bg-zinc-100 p-2' : 'p-4 border-b bg-gradient-to-br from-zinc-50 to-zinc-100 border-zinc-200'}`}>
                           <h3 className={`text-[10px] sm:text-xs font-black uppercase tracking-widest flex items-center gap-2 ${isPrintMode ? 'text-zinc-800' : 'text-zinc-500'}`}>
                             {isPrintMode ? 'DESPESAS DETALHADAS' : <><ClipboardPaste size={14} /> Despesas Detalhadas</>}
                           </h3>
@@ -5611,7 +5615,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {/* Em Dia */}
-                      <div className={`transition-all overflow-hidden ${isPrintMode ? 'bg-white border border-zinc-300 rounded-none' : 'p-5 rounded-lg border bg-emerald-50/50 border-emerald-100'}`}>
+                      <div className={`transition-all overflow-hidden ${isPrintMode ? 'bg-white border border-zinc-300 rounded-none' : 'p-5 rounded-[2rem] border bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200'}`}>
                         <div className={`flex justify-between items-center ${isPrintMode ? 'border-b border-zinc-300 bg-zinc-100 p-2 text-zinc-900' : 'mb-4'}`}>
                           <h3 className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${isPrintMode ? 'text-zinc-800' : 'text-emerald-600'}`}>
                             {isPrintMode ? 'PAGOS' : <><CheckCircle2 size={14} /> Jogadores em Dia</>} ({MONTHS[new Date().getMonth()]})
@@ -5648,7 +5652,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </div>
 
                       {/* Em Débito */}
-                      <div className={`transition-all overflow-hidden ${isPrintMode ? 'bg-white border border-zinc-300 rounded-none' : 'p-5 rounded-lg border bg-red-50/50 border-red-100'}`}>
+                      <div className={`transition-all overflow-hidden ${isPrintMode ? 'bg-white border border-zinc-300 rounded-none' : 'p-5 rounded-[2rem] border bg-gradient-to-br from-red-50 to-red-100 border-red-200'}`}>
                         <div className={`flex justify-between items-center ${isPrintMode ? 'border-b border-zinc-300 bg-zinc-100 p-2 text-zinc-900' : 'mb-4'}`}>
                           <h3 className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${isPrintMode ? 'text-zinc-800' : 'text-red-500'}`}>
                             {isPrintMode ? 'DEVENDO' : <><AlertCircle size={14} /> Pendentes</>} ({MONTHS[new Date().getMonth()]})
@@ -5717,9 +5721,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                   {!isPrintMode && (
                     <div className="grid grid-cols-2 gap-2 px-4">
-                      <div className="p-2 rounded-md bg-brand-dark border border-brand-border flex items-center justify-between">
+                      <div className="p-3 shadow-sm rounded-3xl bg-gradient-to-br from-zinc-100 to-zinc-200 border border-zinc-300 flex items-center justify-between">
                         <div className="space-y-0.5">
-                          <span className="text-[8px] font-bold text-brand-text-secondary uppercase tracking-widest">Mensalidade</span>
+                          <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Mensalidade</span>
                           {isEditingFee ? (
                             <input 
                               autoFocus
@@ -5738,7 +5742,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   setIsEditingFee(false);
                                 }
                               }}
-                              className="w-16 bg-brand-dark border border-brand-primary/50 text-brand-primary font-black text-sm rounded px-1 outline-none"
+                              className="w-16 bg-white border border-zinc-300 text-zinc-900 font-black text-sm rounded px-1 outline-none"
                             />
                           ) : (
                             <div 
@@ -5746,34 +5750,34 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 setTempFee(monthlyFee.toString());
                                 setIsEditingFee(true);
                               }}
-                              className="text-base font-black text-[#1E3D2F] cursor-pointer hover:opacity-80 transition-opacity"
+                              className="text-base font-black text-zinc-900 cursor-pointer hover:opacity-80 transition-opacity"
                             >
                               R$ {monthlyFee},00
                             </div>
                           )}
                         </div>
                         <div className="flex flex-col gap-1">
-                          <button onClick={() => setMonthlyFee(prev => prev + 1)} className="p-1 bg-brand-glass rounded hover:bg-brand-surface-light"><Plus size={10} /></button>
-                          <button onClick={() => setMonthlyFee(prev => Math.max(0, prev - 1))} className="p-1 bg-brand-glass rounded hover:bg-brand-surface-light"><Minus size={10} /></button>
+                          <button onClick={() => setMonthlyFee(prev => prev + 1)} className="p-1 bg-white text-zinc-800 border border-zinc-300 rounded shadow-sm hover:bg-zinc-50 transition-all"><Plus size={10} /></button>
+                          <button onClick={() => setMonthlyFee(prev => Math.max(0, prev - 1))} className="p-1 bg-white text-zinc-800 border border-zinc-300 rounded shadow-sm hover:bg-zinc-50 transition-all"><Minus size={10} /></button>
                         </div>
                       </div>
 
-                      <div className="p-2 rounded-md bg-brand-dark border border-brand-border flex items-center justify-between">
+                      <div className="p-3 shadow-sm rounded-3xl bg-gradient-to-br from-zinc-100 to-zinc-200 border border-zinc-300 flex items-center justify-between">
                         <div className="space-y-0.5">
-                          <span className="text-[8px] font-bold text-brand-text-secondary uppercase tracking-widest">Ano Selecionado</span>
+                          <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Ano Selecionado</span>
                           <select 
                             value={selectedYear}
                             onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                            className="bg-transparent text-base font-black text-[#1E3D2F] outline-none cursor-pointer"
+                            className="bg-transparent text-base font-black text-zinc-900 outline-none cursor-pointer"
                           >
                             {availableYears.map(y => (
-                              <option key={y} value={y} className="bg-brand-card text-brand-text-primary">{y}</option>
+                              <option key={y} value={y} className="bg-white text-zinc-900">{y}</option>
                             ))}
                           </select>
                         </div>
                         <button 
                           onClick={addYear}
-                          className="w-7 h-7 rounded-sm bg-[#1E3D2F]/20 text-[#1E3D2F] flex items-center justify-center hover:bg-[#1E3D2F]/30 transition-all active:scale-90"
+                          className="w-7 h-7 rounded-lg bg-[#1E3D2F] text-white flex items-center justify-center hover:bg-[#2F5D4B] transition-all active:scale-90"
                           title="Adicionar Novo Ano"
                         >
                           <Plus size={14} />
@@ -5798,17 +5802,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     <div className={`${isPrintMode ? 'w-full' : 'min-w-[800px]'}`}>
                       <table className={`w-full border-collapse ${isPrintMode ? 'text-[10px]' : 'text-[9px]'}`}>
                         <thead>
-                          <tr className={`${isPrintMode ? 'bg-zinc-100 text-zinc-900' : 'bg-emerald-200 text-emerald-900'} font-black uppercase tracking-tighter`}>
-                            <th className={`p-1.5 text-left border ${isPrintMode ? 'border-zinc-300' : 'border-emerald-300 rounded-tl-xl sticky left-0 z-10 bg-emerald-200'}`}>Nome</th>
-                            <th className={`p-1.5 text-center border ${isPrintMode ? 'border-zinc-300' : 'border-emerald-300'}`} colSpan={12}>{selectedYear} (R$ {monthlyFee},00)</th>
-                            <th className={`p-1.5 text-center border ${isPrintMode ? 'border-zinc-300' : 'border-emerald-300 rounded-tr-xl'}`}>Dívida</th>
+                          <tr className={`${isPrintMode ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-200 text-zinc-900'} font-black uppercase tracking-tighter`}>
+                            <th className={`p-1.5 text-left border ${isPrintMode ? 'border-zinc-300' : 'border-zinc-300 rounded-tl-xl sticky left-0 z-10 bg-zinc-200'}`}>Nome</th>
+                            <th className={`p-1.5 text-center border ${isPrintMode ? 'border-zinc-300' : 'border-zinc-300'}`} colSpan={12}>{selectedYear} (R$ {monthlyFee},00)</th>
+                            <th className={`p-1.5 text-center border ${isPrintMode ? 'border-zinc-300' : 'border-zinc-300 rounded-tr-xl'}`}>Dívida</th>
                           </tr>
-                          <tr className={`${isPrintMode ? 'bg-zinc-50 text-zinc-700' : 'bg-emerald-100 text-emerald-800'} font-bold uppercase tracking-tighter`}>
-                            <th className={`border ${isPrintMode ? 'border-zinc-300' : 'border-emerald-300 sticky left-0 z-10 bg-emerald-100'}`}></th>
+                          <tr className={`${isPrintMode ? 'bg-zinc-50 text-zinc-700' : 'bg-zinc-100 text-zinc-800'} font-bold uppercase tracking-tighter`}>
+                            <th className={`border ${isPrintMode ? 'border-zinc-300' : 'border-zinc-300 sticky left-0 z-10 bg-zinc-100'}`}></th>
                             {MONTHS.map(month => (
-                              <th key={month} className={`p-0.5 border ${isPrintMode ? 'border-zinc-300' : 'border-emerald-300'}`}>{month}</th>
+                              <th key={month} className={`p-0.5 border ${isPrintMode ? 'border-zinc-300' : 'border-zinc-300'}`}>{month}</th>
                             ))}
-                            <th className={`border ${isPrintMode ? 'border-zinc-300' : 'border-emerald-300'}`}></th>
+                            <th className={`border ${isPrintMode ? 'border-zinc-300' : 'border-zinc-300'}`}></th>
                           </tr>
                         </thead>
                         <tbody className={`${isPrintMode ? 'bg-white text-black' : 'bg-white text-zinc-800'}`}>
@@ -7613,10 +7617,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         setCurrentScreen('finance');
                         setFinanceSubScreen('balanco');
                       }}
-                      className="group w-full flex items-center gap-4 p-4 rounded-[24px] bg-gradient-to-br from-white/10 to-white/5 border border-white/10 hover:from-white/15 hover:to-white/10 hover:border-white/20 transition-all duration-400 transform active:scale-95 text-left shadow-xl"
+                      className="group w-full flex items-center gap-4 p-3 rounded-[24px] bg-gradient-to-br from-white/10 to-white/5 border border-white/10 hover:from-white/15 hover:to-white/10 hover:border-white/20 transition-all duration-400 transform active:scale-95 text-left shadow-xl"
                     >
-                      <div className="w-12 h-12 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500 shadow-inner">
-                        <IoIosWallet size={22} />
+                      <div className="w-10 h-10 rounded-2xl bg-white/10 text-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500 shadow-inner">
+                        <IoIosWallet size={20} />
                       </div>
                       <div className="flex flex-col">
                         <span className="font-black uppercase tracking-widest text-xs text-white">Financeiro</span>

@@ -34,9 +34,6 @@
 }
 
 @layer utilities {
-  .text-black {
-    color: var(--brand-text-primary) !important;
-  }
   .glass-3d {
     @apply backdrop-blur-none bg-brand-card border border-brand-border shadow-[1px_1px_0_0_var(--brand-border)] transition-all duration-75 rounded-xl;
   }
