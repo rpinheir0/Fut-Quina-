@@ -4819,7 +4819,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 <motion.div 
                                   initial={{ opacity: 0, y: -10 }}
                                   animate={{ opacity: 1, y: 0 }}
-                                  className="p-4 bg-zinc-900 border border-white/10 rounded-2xl flex items-start gap-3 shadow-xl mb-4"
+                                  className="p-4 bg-zinc-900 border border-white/10 rounded-2xl flex items-start gap-3 shadow-xl mb-4 cursor-pointer hover:bg-zinc-800 transition-colors group"
+                                  onClick={() => {
+                                    setTeams(prev => prev.map(team => team.lastMatchStatus === 'Empate' ? { ...team, lastMatchStatus: undefined } : team));
+                                  }}
                                 >
                                   <div className="w-8 h-8 rounded-xl bg-brand-primary/20 flex items-center justify-center shrink-0">
                                     <Info size={16} className="text-brand-primary" />
@@ -4922,7 +4925,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                         if (isCurrent) {
                                           if (t.lastMatchStatus === 'Empate') {
                                             setTeams(prevTeams => {
-                                                const newTeams = [...prevTeams];
+                                                const newTeams = prevTeams.map(team => ({
+                                                  ...team,
+                                                  lastMatchStatus: team.lastMatchStatus === 'Empate' ? undefined : team.lastMatchStatus
+                                                }));
                                                 const deselectedTeam = newTeams.splice(tIdx, 1)[0];
                                                 newTeams.push(deselectedTeam);
                                                 
