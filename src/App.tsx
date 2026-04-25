@@ -61,6 +61,69 @@ import {
   Rocket
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { IoPersonOutline, IoFootballOutline } from 'react-icons/io5';
+import { IoIosTrophy, IoIosWallet, IoIosFootball } from 'react-icons/io';
+import { PiUserCirclePlusThin, PiUserCirclePlusLight, PiUserCirclePlus } from 'react-icons/pi';
+import { ImSpinner9 } from 'react-icons/im';
+import { GiGoalKeeper, GiSoccerKick, GiSoccerField, GiTrophy } from 'react-icons/gi';
+import { 
+  PiUsersBold,
+  PiUsers,
+  PiSwordBold,
+  PiSword,
+  PiShieldFill,
+  PiTrophyBold,
+  PiTrophy,
+  PiWalletBold,
+  PiWallet,
+  PiPlayBold,
+  PiPlay,
+  PiPauseBold,
+  PiPause,
+  PiPlusBold,
+  PiPlus,
+  PiClockCounterClockwiseBold,
+  PiClockCounterClockwise,
+  PiGearBold,
+  PiGear,
+  PiXBold,
+  PiX,
+  PiListBold,
+  PiCheckCircleBold,
+  PiCheckCircle,
+  PiWarningCircleBold,
+  PiWarningCircle,
+  PiCalendarBlankBold,
+  PiCalendarBlank,
+  PiHouseBold,
+  PiHouse,
+  PiMagnifyingGlassBold,
+  PiMagnifyingGlass,
+  PiFunnelBold,
+  PiFunnel,
+  PiArrowClockwiseBold,
+  PiArrowClockwise,
+  PiChartPieBold,
+  PiChartPie,
+  PiUserPlusBold,
+  PiUserPlus,
+  PiRocketBold,
+  PiRocket,
+  PiArrowLeftBold,
+  PiArrowLeft,
+  PiArrowRightBold,
+  PiArrowRight,
+  PiCaretDownBold,
+  PiCaretDown,
+  PiCaretRightBold,
+  PiCaretRight,
+  PiPencilSimpleBold,
+  PiPencilSimple,
+  PiTrashBold,
+  PiTrash,
+  PiCheckBold,
+  PiCheck
+} from 'react-icons/pi';
 import { supabase } from './lib/supabase';
 import { sounds } from './lib/sounds';
 
@@ -558,7 +621,7 @@ const TieBreakerModal = ({
                   className="group w-full flex items-center gap-4 p-5 rounded-[24px] bg-white/5 border border-white/10 hover:bg-white/10 hover:border-brand-primary/30 transition-all duration-400 transform active:scale-95 text-left"
                 >
                   <div className="w-12 h-12 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <Swords size={24} strokeWidth={2.5} />
+                    <GiSoccerKick size={24} />
                   </div>
                   <div className="flex flex-col">
                     <span className="font-black uppercase tracking-widest text-xs text-white">Disputa de Pênaltis</span>
@@ -643,13 +706,13 @@ const TieBreakerModal = ({
                             onClick={() => onPenaltyToggle('A', idx)}
                             className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === true ? 'bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-zinc-100 text-emerald-600'}`}
                           >
-                            <CheckCircle2 size={16} strokeWidth={3} />
+                            <PiCheckCircleBold size={16} />
                           </button>
                           <button 
                             onClick={() => onPenaltyToggle('A', idx)}
                             className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === false ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'bg-zinc-100 text-red-600'}`}
                           >
-                            <AlertCircle size={16} strokeWidth={3} />
+                            <PiWarningCircleBold size={16} />
                           </button>
                         </div>
                       </div>
@@ -670,13 +733,13 @@ const TieBreakerModal = ({
                             onClick={() => onPenaltyToggle('B', idx)}
                             className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === true ? 'bg-emerald-500 text-white shadow-[0_0_15px_rgba(16,185,129,0.3)]' : 'bg-zinc-100 text-emerald-600'}`}
                           >
-                            <CheckCircle2 size={16} strokeWidth={3} />
+                            <PiCheckCircleBold size={16} />
                           </button>
                           <button 
                             onClick={() => onPenaltyToggle('B', idx)}
                             className={`flex-1 h-8 rounded-lg flex items-center justify-center transition-all ${shot.success === false ? 'bg-red-500 text-white shadow-[0_0_15px_rgba(239,68,68,0.3)]' : 'bg-zinc-100 text-red-600'}`}
                           >
-                            <AlertCircle size={16} strokeWidth={3} />
+                            <PiWarningCircleBold size={16} />
                           </button>
                         </div>
                       </div>
@@ -908,7 +971,7 @@ const GoalCelebration = ({ isOpen, scorerName, teamName, scorerPhoto }: { isOpen
                  alt={scorerName}
                />
              ) : (
-               <User size={40} className="text-zinc-600" />
+               <span className="text-zinc-600 flex items-center shrink-0"><IoPersonOutline size={40} /></span>
              )}
              
              {/* Dynamic Light Sweep */}
@@ -992,7 +1055,7 @@ const PlayerManagementModalComponent = ({
                 <img src={player.photo} alt={player.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               ) : (
                 <div className="flex flex-col items-center justify-center text-brand-text-secondary opacity-40">
-                  <User size={48} />
+                  <IoPersonOutline size={48} />
                   <span className="text-[10px] font-black uppercase mt-1 tracking-widest">Sem Foto</span>
                 </div>
               )}
@@ -3235,10 +3298,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               }`}
             >
               <div className="shrink-0">
-                {toast.type === 'success' && <CheckCircle2 size={18} strokeWidth={3} />}
-                {toast.type === 'warning' && <AlertTriangle size={18} strokeWidth={3} />}
-                {toast.type === 'gray' && <Info size={18} strokeWidth={3} />}
-                {toast.type === 'info' && <Rocket size={18} strokeWidth={3} />}
+                {toast.type === 'success' && <PiCheckCircleBold size={18} />}
+                {toast.type === 'warning' && <PiWarningCircleBold size={18} />}
+                {toast.type === 'gray' && <PiGearBold size={18} />}
+                {toast.type === 'info' && <PiRocketBold size={18} />}
               </div>
               <p className="text-[11px] font-black uppercase tracking-widest leading-none drop-shadow-sm">
                 {toast.message}
@@ -3247,7 +3310,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 onClick={() => setToast(null)}
                 className="ml-2 hover:opacity-70 transition-opacity"
               >
-                <X size={14} strokeWidth={3} />
+                <PiXBold size={16} />
               </button>
             </motion.div>
           </motion.div>
@@ -3307,7 +3370,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     <>
                       <div className="flex items-center gap-1.5">
                         <span className="text-white text-[10px] font-black uppercase truncate max-w-[40px] hidden sm:block">{teams[match.teamAIndex]?.name.substring(0, 3)}</span>
-                        <Shield size={14} style={{ color: teams[match.teamAIndex]?.color || '#ffffff' }} fill="currentColor" className="drop-shadow-sm" />
+                        <div className="drop-shadow-sm" style={{ color: teams[match.teamAIndex]?.color || '#ffffff' }}>
+                          <PiShieldFill size={14} />
+                        </div>
                         <span className="text-brand-primary font-black text-sm ml-1">{match.scoreA}</span>
                       </div>
                       
@@ -3315,7 +3380,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       
                       <div className="flex items-center gap-1.5">
                         <span className="text-brand-primary font-black text-sm mr-1">{match.scoreB}</span>
-                        <Shield size={14} style={{ color: teams[match.teamBIndex]?.color || '#ffffff' }} fill="currentColor" className="drop-shadow-sm" />
+                        <div className="drop-shadow-sm" style={{ color: teams[match.teamBIndex]?.color || '#ffffff' }}>
+                          <PiShieldFill size={14} />
+                        </div>
                         <span className="text-white text-[10px] font-black uppercase truncate max-w-[40px] hidden sm:block">{teams[match.teamBIndex]?.name.substring(0, 3)}</span>
                       </div>
                       
@@ -3350,13 +3417,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   {match.teamAIndex !== -1 && match.teamBIndex !== -1 ? (
                     <>
                       <div className="flex items-center gap-1">
-                        <Shield size={12} style={{ color: teams[match.teamAIndex]?.color || '#ffffff' }} fill="currentColor" className="drop-shadow-sm" />
+                        <div className="drop-shadow-sm" style={{ color: teams[match.teamAIndex]?.color || '#ffffff' }}>
+                          <PiShieldFill size={12} />
+                        </div>
                         <span className="text-brand-primary font-black text-xs ml-0.5">{match.scoreA}</span>
                       </div>
                       <span className="text-white/40 text-[9px] font-bold mx-0.5">x</span>
                       <div className="flex items-center gap-1">
                         <span className="text-brand-primary font-black text-xs mr-0.5">{match.scoreB}</span>
-                        <Shield size={12} style={{ color: teams[match.teamBIndex]?.color || '#ffffff' }} fill="currentColor" className="drop-shadow-sm" />
+                        <div className="drop-shadow-sm" style={{ color: teams[match.teamBIndex]?.color || '#ffffff' }}>
+                          <PiShieldFill size={12} />
+                        </div>
                       </div>
                       <span className={`ml-1.5 flex items-center justify-center text-[9px] font-black tracking-widest bg-black/50 px-1.5 py-0.5 rounded ${match.timeRemaining <= 60 && !match.isPaused ? 'text-red-400 animate-pulse' : 'text-white'}`}>
                         {Math.floor(match.timeRemaining / 60).toString().padStart(2, '0')}:{(match.timeRemaining % 60).toString().padStart(2, '0')}
@@ -3372,7 +3443,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             onClick={() => setShowMainMenu(true)}
             className="p-2 text-white hover:bg-white/10 rounded-full transition-colors relative z-10"
           >
-            <Menu size={24} />
+            <PiListBold size={24} />
           </button>
         </header>
 
@@ -3384,7 +3455,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 onClick={() => navigateTeamsTab('configuracao')}
                 className={`w-12 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'configuracao' ? 'bg-brand-surface-light text-brand-text-primary shadow-sm' : 'text-zinc-500 hover:text-brand-text-primary'}`}
               >
-                <Settings size={14} className="text-zinc-500" />
+                <PiGearBold size={18} />
               </button>
               <button 
                 onClick={() => navigateTeamsTab('chegada')}
@@ -3588,7 +3659,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             {player.photo ? (
                               <img src={player.photo} alt={player.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                             ) : (
-                              <User size={16} />
+                              <IoPersonOutline size={16} />
                             )}
                           </div>
                           {editingPlayerId === player.id ? (
@@ -3987,7 +4058,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   {p.photo ? (
                                     <img src={p.photo} alt="P" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                                   ) : (
-                                    <User size={14} className={p.isAvailable ? 'text-black' : 'text-zinc-600'} />
+                                    <span className={p.isAvailable ? 'text-black' : 'text-zinc-600' + ' flex items-center shrink-0'}><IoPersonOutline size={14} /></span>
                                   )}
                                 </div>
                                 <div className="flex-1 text-left">
@@ -4101,7 +4172,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           >
                                             <div className="flex items-center gap-1.5 overflow-hidden">
                                               <div className="w-4 h-4 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 border border-zinc-300">
-                                                {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <User size={8} className="text-black" />}
+                                                {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <span className="text-black flex items-center shrink-0"><IoPersonOutline size={8} /></span>}
                                               </div>
                                               <span className="text-[9px] font-black uppercase truncate text-zinc-800">{p.name}</span>
                                             </div>
@@ -4348,7 +4419,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       <div className="flex items-center gap-2 ml-auto overflow-hidden">
                                         <span className="text-[11px] sm:text-[10px] font-bold uppercase truncate text-black">{p.name}</span>
                                         <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-300 flex items-center justify-center shrink-0 border border-zinc-400">
-                                          {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <User size={10} className="text-black" />}
+                                          {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <span className="text-black flex items-center shrink-0"><IoPersonOutline size={10} /></span>}
                                         </div>
                                       </div>
                                     </button>
@@ -4467,7 +4538,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                         }}
                                       >
                                       <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-300 flex items-center justify-center shrink-0 border border-zinc-400">
-                                        {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <User size={10} className="text-black" />}
+                                        {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <span className="text-black flex items-center shrink-0"><IoPersonOutline size={10} /></span>}
                                       </div>
                                       <span className="text-[11px] sm:text-[10px] font-bold uppercase truncate text-black">{p.name}</span>
                                       <div className="flex items-center gap-1 ml-auto">
@@ -4567,7 +4638,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
                                 className="p-2 rounded-lg transition-all active:scale-90 hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 bg-white/95 backdrop-blur shadow-sm border border-zinc-200"
                               >
-                                <Shuffle size={20} className="text-brand-text-primary" />
+                                <span className="text-brand-text-primary"><ImSpinner9 size={20} /></span>
                                 <span className="text-[10px] font-black uppercase tracking-widest text-brand-text-primary">Sortear</span>
                               </button>
                               <button
@@ -4583,7 +4654,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                    teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)))}
                                 className="p-2 rounded-lg transition-all active:scale-90 hover:bg-zinc-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1.5 bg-white/95 backdrop-blur shadow-sm border border-zinc-200"
                               >
-                                <Play size={20} fill="currentColor" className="text-brand-text-primary" />
+                                <span className="text-brand-text-primary"><IoFootballOutline size={20} /></span>
                                 <span className="text-[10px] font-black uppercase tracking-widest text-brand-text-primary">Iniciar</span>
                               </button>
                             </div>
@@ -4999,7 +5070,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                 <div className="flex items-center gap-2 ml-auto overflow-hidden">
                                                   <span className="text-sm sm:text-[13px] font-normal truncate text-black capitalize">{p.name.toLowerCase()}</span>
                                                   <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 border border-zinc-300">
-                                                    {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <User size={10} className="text-black" />}
+                                                    {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <span className="text-black flex items-center shrink-0"><IoPersonOutline size={10} /></span>}
                                                   </div>
                                                 </div>
                                                 </button>
@@ -5134,7 +5205,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     {p.photo ? (
                                       <img src={p.photo} alt={p.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                                     ) : (
-                                      <User size={10} className="text-zinc-700" />
+                                      <span className="text-zinc-700 flex items-center shrink-0"><IoPersonOutline size={10} /></span>
                                     )}
                                   </div>
                                   <span className={`text-[11px] sm:text-xs font-bold tracking-tight transition-colors truncate ${
@@ -5288,7 +5359,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         {player.photo ? (
                           <img src={player.photo} alt={player.name} className="w-full h-full object-cover" />
                         ) : (
-                          <User size={20} className="text-zinc-500" />
+                          <span className="text-zinc-500 flex items-center shrink-0"><IoPersonOutline size={20} /></span>
                         )}
                       </div>
                     </div>
@@ -6027,7 +6098,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       referrerPolicy="no-referrer"
                     />
                   ) : (
-                    <User size={32} className="text-brand-primary" />
+                    <span className="text-brand-primary flex items-center shrink-0"><IoPersonOutline size={32} /></span>
                   )}
                 </div>
                 <h3 className="text-lg font-black uppercase tracking-tight text-center text-black">
@@ -6197,7 +6268,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   {players.find(p => p.id === showQueuePlayerModal.playerId)?.photo ? (
                     <img src={players.find(p => p.id === showQueuePlayerModal.playerId)?.photo} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                   ) : (
-                    <User size={32} className="text-brand-primary" />
+                    <span className="text-brand-primary flex items-center shrink-0"><IoPersonOutline size={32} /></span>
                   )}
                 </div>
                 <h3 className="text-xl font-black tracking-tighter text-black capitalize">
@@ -6350,7 +6421,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           {players.find(p => p.id === pid)?.photo ? (
                             <img src={players.find(p => p.id === pid)?.photo} alt="P" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                           ) : (
-                            <User size={10} className="text-zinc-400" />
+                            <span className="text-zinc-400 flex items-center shrink-0"><IoPersonOutline size={10} /></span>
                           )}
                         </div>
                         <div className={`text-xs font-black uppercase transition-colors text-zinc-900 group-hover:text-brand-primary`}>
@@ -7415,7 +7486,15 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               {currentScreen === 'players' && (
                 <motion.div layoutId="nav-glow" className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full" />
               )}
-              <UserCog size={22} strokeWidth={currentScreen === 'players' ? 2.5 : 2} className={`mb-1 transition-transform duration-300 ${currentScreen === 'players' ? '-translate-y-0.5' : ''}`} />
+              {currentScreen === 'players' ? (
+                <div className="mb-1 transition-transform duration-300 -translate-y-0.5">
+                  <PiUserCirclePlusThin size={28} />
+                </div>
+              ) : (
+                <div className="mb-1 transition-transform duration-300">
+                  <PiUserCirclePlusThin size={24} />
+                </div>
+              )}
               <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'players' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Gerenciar</span>
             </button>
             <button 
@@ -7437,7 +7516,15 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               {currentScreen === 'teams' && (
                 <motion.div layoutId="nav-glow" className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full" />
               )}
-              <Swords size={22} strokeWidth={currentScreen === 'teams' ? 2.5 : 2} className={`mb-1 transition-transform duration-300 ${currentScreen === 'teams' ? '-translate-y-0.5' : ''}`} />
+              {currentScreen === 'teams' ? (
+                <div className="mb-1 transition-transform duration-300 -translate-y-0.5 text-brand-primary">
+                  <GiSoccerField size={26} />
+                </div>
+              ) : (
+                <div className="mb-1 transition-transform duration-300">
+                  <GiSoccerField size={22} />
+                </div>
+              )}
               <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'teams' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Partida</span>
             </button>
             <button 
@@ -7457,7 +7544,15 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               {currentScreen === 'ranking' && (
                 <motion.div layoutId="nav-glow" className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full" />
               )}
-              <Trophy size={22} strokeWidth={currentScreen === 'ranking' ? 2.5 : 2} className={`mb-1 transition-transform duration-300 ${currentScreen === 'ranking' ? '-translate-y-0.5' : ''}`} />
+              {currentScreen === 'ranking' ? (
+                <div className="mb-1 transition-transform duration-300 -translate-y-0.5">
+                  <GiTrophy size={26} />
+                </div>
+              ) : (
+                <div className="mb-1 transition-transform duration-300">
+                  <GiTrophy size={22} />
+                </div>
+              )}
               <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'ranking' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Ranking</span>
             </button>
           </nav>
@@ -7521,7 +7616,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       className="group w-full flex items-center gap-4 p-4 rounded-[24px] bg-gradient-to-br from-white/10 to-white/5 border border-white/10 hover:from-white/15 hover:to-white/10 hover:border-white/20 transition-all duration-400 transform active:scale-95 text-left shadow-xl"
                     >
                       <div className="w-12 h-12 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500 shadow-inner">
-                        <Wallet size={22} strokeWidth={2.5} />
+                        <IoIosWallet size={22} />
                       </div>
                       <div className="flex flex-col">
                         <span className="font-black uppercase tracking-widest text-xs text-white">Financeiro</span>
@@ -7921,7 +8016,7 @@ export default function App() {
                 className="w-full p-4 rounded-[24px] font-black uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-4 transition-all duration-300 shadow-[0_12px_30px_rgba(183,217,108,0.2)] bg-brand-primary text-black hover:opacity-90 hover:scale-[1.01] active:scale-95 border-b-4 border-black/20"
               >
                 <div className="w-7 h-7 rounded-full bg-black/10 flex items-center justify-center">
-                  <Plus size={18} strokeWidth={3} />
+                  <GiGoalKeeper size={18} />
                 </div>
                 Nova Partida
               </button>
@@ -8099,8 +8194,8 @@ export default function App() {
             }}></div>
 
             <div className="relative z-10 text-center mb-8">
-              <div className="w-16 h-16 rounded-full bg-brand-primary/10 text-brand-primary flex items-center justify-center mx-auto mb-4 border border-brand-primary/20">
-                <Plus size={32} strokeWidth={2.5} />
+              <div className="w-16 h-16 rounded-full bg-brand-primary/10 text-brand-primary flex items-center justify-center mx-auto mb-4">
+                <GiGoalKeeper size={32} />
               </div>
               <h3 className="text-2xl font-black uppercase tracking-tighter text-[#E3D39E]">Nova Partida</h3>
               <p className="text-[10px] font-black text-[#E3D39E]/40 uppercase tracking-[0.2em] mt-1">Como vai se chamar?</p>
