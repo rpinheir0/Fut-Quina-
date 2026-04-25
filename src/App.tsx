@@ -631,19 +631,25 @@ const TieBreakerModal = ({
   onPenaltyToggle, 
   onLotterySpin, 
   onConfirm,
+  onBothLeave,
   teamA,
   teamB,
-  players
+  players,
+  queueCount = 0
 }: { 
   state: TieBreakerState, 
   onTypeSelect: (type: 'penalties' | 'lottery' | 'none') => void, 
   onPenaltyToggle: (team: 'A' | 'B', index: number) => void,
   onLotterySpin: () => void,
   onConfirm: () => void,
+  onBothLeave: (firstToQueue: 'A' | 'B') => void,
   teamA: Team | undefined,
   teamB: Team | undefined,
-  players: Player[]
+  players: Player[],
+  queueCount?: number
 }) => {
+  const [showQueueOrder, setShowQueueOrder] = useState(false);
+
   if (!state.showSelection || !teamA || !teamB) return null;
 
   const teamAGoals = state.penalties.teamA.filter(p => p.success === true).length;
@@ -692,7 +698,7 @@ const TieBreakerModal = ({
 
         {/* Content Section */}
         <div className="p-8 pt-0 relative z-10">
-          {state.type === 'none' && (
+          {state.type === 'none' && !showQueueOrder && (
             <div className="space-y-4">
               <div className="flex items-center gap-4 bg-white/10 p-6 rounded-[32px] border border-white/10 mb-8 backdrop-blur-sm">
                 <div className="flex-1 flex flex-col items-center">
@@ -749,6 +755,22 @@ const TieBreakerModal = ({
               </div>
 
               <div className="grid grid-cols-1 gap-3">
+                {queueCount >= 2 && (
+                  <button 
+                    onClick={() => setShowQueueOrder(true)}
+                    className="group w-full flex items-center gap-4 p-5 rounded-[24px] bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 hover:border-emerald-500/30 transition-all duration-400 transform active:scale-95 text-left"
+                  >
+                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                      <LogOut size={24} />
+                    </div>
+                    <div className="flex flex-col">
+                      <span className="font-black uppercase tracking-widest text-xs text-emerald-400">Os dois times deixam a partida</span>
+                      <span className="text-[10px] text-emerald-500/60 uppercase font-bold tracking-tight mt-0.5">Ambos vão para o final da fila</span>
+                    </div>
+                    <ChevronRight size={16} className="ml-auto text-emerald-500/40 group-hover:text-emerald-400 transition-colors" />
+                  </button>
+                )}
+
                 <button 
                   onClick={() => onTypeSelect('penalties')}
                   className="group w-full flex items-center gap-4 p-5 rounded-[24px] bg-white/5 border border-white/10 hover:bg-white/10 hover:border-brand-primary/30 transition-all duration-400 transform active:scale-95 text-left"
@@ -785,6 +807,46 @@ const TieBreakerModal = ({
                     Manter o resultado atual
                   </button>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {state.type === 'none' && showQueueOrder && (
+            <div className="space-y-6">
+              <div className="text-center">
+                <h3 className="text-lg font-black text-white uppercase tracking-tighter">Posição na Fila</h3>
+                <p className="text-xs text-white/40 font-bold uppercase tracking-widest mt-1">Quem entra primeiro na fila?</p>
+              </div>
+
+              <div className="grid grid-cols-1 gap-3">
+                <button 
+                  onClick={() => onBothLeave('A')}
+                  className="group w-full flex items-center gap-4 p-5 rounded-[24px] bg-white/5 border border-white/10 hover:bg-white/10 hover:border-brand-primary/30 transition-all duration-400 transform active:scale-95 text-left"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform font-black">A</div>
+                  <div className="flex flex-col">
+                    <span className="font-black uppercase tracking-widest text-xs text-white">{teamA.name} primeiro</span>
+                    <span className="text-[10px] text-white/40 uppercase font-bold tracking-tight mt-0.5">Ficará à frente de {teamB.name}</span>
+                  </div>
+                </button>
+
+                <button 
+                  onClick={() => onBothLeave('B')}
+                  className="group w-full flex items-center gap-4 p-5 rounded-[24px] bg-white/5 border border-white/10 hover:bg-white/10 hover:border-brand-primary/30 transition-all duration-400 transform active:scale-95 text-left"
+                >
+                  <div className="w-12 h-12 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform font-black">B</div>
+                  <div className="flex flex-col">
+                    <span className="font-black uppercase tracking-widest text-xs text-white">{teamB.name} primeiro</span>
+                    <span className="text-[10px] text-white/40 uppercase font-bold tracking-tight mt-0.5">Ficará à frente de {teamA.name}</span>
+                  </div>
+                </button>
+
+                <button 
+                  onClick={() => setShowQueueOrder(false)}
+                  className="w-full p-4 mt-4 rounded-[20px] bg-zinc-800 text-white/60 text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:bg-zinc-700 active:scale-95 text-center"
+                >
+                  Voltar
+                </button>
               </div>
             </div>
           )}
@@ -3181,6 +3243,96 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     finalizeMatch(scoreA, scoreB, teamAIndex, teamBIndex, winnerIndex);
   };
 
+  const handleBothLeaveMatch = (firstToQueue: 'A' | 'B') => {
+    const scoreA = match.scoreA;
+    const scoreB = match.scoreB;
+    const teamAIndex = match.teamAIndex;
+    const teamBIndex = match.teamBIndex;
+
+    const teamAId = teams[teamAIndex]?.id;
+    const teamBId = teams[teamBIndex]?.id;
+
+    if (!teamAId || !teamBId) return;
+
+    // Create draw result
+    const result = {
+      id: generateId(),
+      teamAName: teams[teamAIndex]?.name || 'Time A',
+      teamBName: teams[teamBIndex]?.name || 'Time B',
+      scoreA,
+      scoreB,
+      teamAIndex,
+      teamBIndex,
+      winnerIndex: -1,
+      loserIndex: -1,
+      winnerId: null,
+      loserId: null,
+      events: match.events,
+      timestamp: Date.now(),
+      tieBreakerWinnerId: null
+    };
+
+    setLastMatchResult(result);
+    setMatchHistory(prev => [result, ...prev].slice(0, 10));
+
+    setMatch(prev => ({ 
+      ...prev, 
+      isActive: false, 
+      isPaused: true,
+      hasEnded: true,
+    }));
+
+    setTeams(prevTeams => {
+      let newTeams = [...prevTeams];
+      const tA = newTeams.find(t => t.id === teamAId);
+      const tB = newTeams.find(t => t.id === teamBId);
+      
+      if (!tA || !tB) return prevTeams;
+
+      // Update statuses
+      newTeams = newTeams.map(t => {
+        if (t.id === teamAId || t.id === teamBId) {
+          return { ...t, lastMatchStatus: 'Empate' };
+        }
+        return t;
+      });
+
+      // Remove both
+      newTeams = newTeams.filter(t => t.id !== teamAId && t.id !== teamBId);
+      
+      // Add both to the end in the chosen order
+      if (firstToQueue === 'A') {
+        newTeams.push(tA);
+        newTeams.push(tB);
+      } else {
+        newTeams.push(tB);
+        newTeams.push(tA);
+      }
+
+      // Mark the ones who moved up
+      const joinedTeamAId = newTeams[0]?.id;
+      const joinedTeamBId = newTeams[1]?.id;
+
+      newTeams = newTeams.map(t => {
+        if ((t.id === joinedTeamAId || t.id === joinedTeamBId) && (t.id !== teamAId && t.id !== teamBId)) {
+          return { ...t, lastMatchStatus: 'Subiu' };
+        }
+        return t;
+      });
+
+      return newTeams;
+    });
+
+    setMatch(prev => ({
+      ...prev,
+      teamAIndex: 0,
+      teamBIndex: 1
+    }));
+
+    setTieBreaker(prev => ({ ...prev, showSelection: false }));
+    setToast({ message: "Ambos os times foram para o fim da fila.", type: 'success' });
+  };
+
   const togglePayment = (playerId: string, field: string, amount: number) => {
     setPayments(prev => {
       const existing = prev.find(p => p.playerId === playerId && p.year === selectedYear);
@@ -3430,9 +3582,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         onPenaltyToggle={handlePenaltyToggle}
         onLotterySpin={handleLotterySpin}
         onConfirm={handleTieBreakerConfirm}
+        onBothLeave={handleBothLeaveMatch}
         teamA={teams[match.teamAIndex]}
         teamB={teams[match.teamBIndex]}
         players={players}
+        queueCount={teams.length - 2}
       />
 
       <AnimatePresence>
@@ -6325,215 +6479,213 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             className="fixed inset-0 bg-zinc-950/80 backdrop-blur-xl z-[200] flex items-center justify-center p-4"
             onClick={() => setShowPlayerActionsModal(null)}
           >
-            <motion.div 
-              initial={{ scale: 0.9, y: 30, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.9, y: 30, opacity: 0 }}
-              className="w-full max-w-sm rounded-[40px] shadow-2xl border bg-white border-zinc-200 overflow-hidden"
-              onClick={e => e.stopPropagation()}
-            >
-              {/* Header */}
-              <div className="bg-zinc-50 pt-10 pb-8 px-6 text-center border-b border-zinc-100 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 via-brand-primary to-amber-500" />
-                <div className="absolute -top-12 -right-12 w-32 h-32 bg-emerald-50 rounded-full blur-3xl opacity-50" />
-                <div className="absolute -bottom-12 -left-12 w-24 h-24 bg-amber-50 rounded-full blur-2xl opacity-50" />
-
-                <div className="relative inline-block mb-4">
-                  <div className="w-24 h-24 mx-auto rounded-[32px] bg-white flex items-center justify-center overflow-hidden border-4 border-white shadow-2xl relative z-10">
-                    {players.find(p => p.id === showPlayerActionsModal.playerId)?.photo ? (
-                      <img 
-                        src={players.find(p => p.id === showPlayerActionsModal.playerId)?.photo} 
-                        alt="Player" 
-                        className="w-full h-full object-cover"
-                        referrerPolicy="no-referrer"
-                      />
-                    ) : (
-                      <span className="text-zinc-200 flex items-center shrink-0"><User size={40} /></span>
-                    )}
+              <motion.div 
+                initial={{ scale: 0.9, y: 30, opacity: 0 }}
+                animate={{ scale: 1, y: 0, opacity: 1 }}
+                exit={{ scale: 0.9, y: 30, opacity: 0 }}
+                className="w-full max-w-[300px] rounded-[32px] shadow-2xl border bg-white border-zinc-200 overflow-hidden"
+                onClick={e => e.stopPropagation()}
+              >
+                {/* Header */}
+                <div className="bg-zinc-50 pt-8 pb-4 px-5 text-center border-b border-zinc-100 relative overflow-hidden">
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 via-brand-primary to-amber-500" />
+                  
+                  <div className="relative inline-block mb-3">
+                    <div className="w-16 h-16 mx-auto rounded-[20px] bg-white flex items-center justify-center overflow-hidden border-2 border-white shadow-lg relative z-10">
+                      {players.find(p => p.id === showPlayerActionsModal.playerId)?.photo ? (
+                        <img 
+                          src={players.find(p => p.id === showPlayerActionsModal.playerId)?.photo} 
+                          alt="Player" 
+                          className="w-full h-full object-cover"
+                          referrerPolicy="no-referrer"
+                        />
+                      ) : (
+                        <span className="text-zinc-200 flex items-center shrink-0"><User size={28} /></span>
+                      )}
+                    </div>
+                    {/* Status Ring / Badge */}
+                    <div className="absolute -bottom-1.5 -right-1.5 w-6 h-6 bg-emerald-500 rounded-lg flex items-center justify-center border-2 border-white shadow-md z-20">
+                      <Activity size={10} className="text-white" />
+                    </div>
                   </div>
-                  {/* Status Ring / Badge */}
-                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-emerald-500 rounded-2xl flex items-center justify-center border-4 border-white shadow-lg z-20">
-                    <Activity size={14} className="text-white" />
+  
+                  <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 leading-tight">
+                    {players.find(p => p.id === showPlayerActionsModal.playerId)?.name}
+                  </h3>
+                  <div className="flex items-center justify-center gap-1.5 mt-1.5">
+                    <span className="px-1.5 py-0.5 rounded-md bg-zinc-900 text-white text-[7px] font-black uppercase tracking-widest">
+                      {teams[showPlayerActionsModal.teamIndex]?.name}
+                    </span>
+                    <span className="text-[8px] text-zinc-400 font-bold uppercase tracking-tight">
+                      • Em Campo
+                    </span>
                   </div>
                 </div>
-
-                <h3 className="text-2xl font-black uppercase tracking-tight text-zinc-900 leading-tight">
-                  {players.find(p => p.id === showPlayerActionsModal.playerId)?.name}
-                </h3>
-                <div className="flex items-center justify-center gap-2 mt-2">
-                  <span className="px-2.5 py-1 rounded-lg bg-zinc-900 text-white text-[9px] font-black uppercase tracking-widest">
-                    {teams[showPlayerActionsModal.teamIndex]?.name}
-                  </span>
-                  <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-tight">
-                    • Em Campo
-                  </span>
-                </div>
-              </div>
-
-              {/* Actions Section */}
-              <div className="p-6">
-                <div className="space-y-2">
-                  {/* Primary Success Actions (Goal) */}
-                  {!swappingPlayerId && (showPlayerActionsModal.teamIndex === match.teamAIndex || showPlayerActionsModal.teamIndex === match.teamBIndex) && (
-                    <button 
-                      onClick={() => {
-                        if (!match.isActive || match.isPaused || match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit) return;
-                        setShowAssistSelection({ teamIndex: showPlayerActionsModal.teamIndex, scorerId: showPlayerActionsModal.playerId });
-                        setShowPlayerActionsModal(null);
-                      }}
-                      disabled={!match.isActive || match.isPaused || match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit}
-                      className="w-full h-16 bg-emerald-600 text-white rounded-2xl font-bold uppercase text-sm flex items-center justify-between px-6 transition-all hover:bg-emerald-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-emerald-500/20 group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <Trophy size={20} className="text-emerald-200 group-hover:scale-110 transition-transform" />
-                        <span className="tracking-tight">Registrar Gol</span>
-                      </div>
-                      <Plus size={18} className="opacity-50" />
-                    </button>
-                  )}
-
-                  {/* Swap Confirmation (Contextual) */}
-                  {swappingPlayerId && swappingPlayerId !== showPlayerActionsModal.playerId && (
-                    <button 
-                      onClick={() => {
-                        const playerAId = swappingPlayerId;
-                        const playerBId = showPlayerActionsModal.playerId;
-                        
-                        setTeams(prev => {
-                          const newTeams = prev.map(t => ({ ...t, playerIds: [...t.playerIds] }));
-                          let teamAIdx = -1;
-                          let teamBIdx = -1;
-                          
-                          newTeams.forEach((team, idx) => {
-                            if (team.playerIds.includes(playerAId)) teamAIdx = idx;
-                            if (team.playerIds.includes(playerBId)) teamBIdx = idx;
-                          });
-
-                          if (teamAIdx !== -1 && teamBIdx !== -1) {
-                            if (teamAIdx === teamBIdx) {
-                              newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => {
-                                if (id === playerAId) return playerBId;
-                                if (id === playerBId) return playerAId;
-                                return id;
-                              });
-                            } else {
-                              newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => id === playerAId ? playerBId : id);
-                              newTeams[teamBIdx].playerIds = newTeams[teamBIdx].playerIds.map(id => id === playerBId ? playerAId : id);
-                            }
-                          }
-                          
-                          return newTeams;
-                        });
-                        setSwappingPlayerId(null);
-                        setShowPlayerActionsModal(null);
-                      }}
-                      className="w-full h-16 bg-amber-500 text-black rounded-2xl font-bold uppercase text-sm flex items-center justify-between px-6 transition-all hover:bg-amber-600 active:scale-[0.98] shadow-lg shadow-amber-500/20 group"
-                    >
-                      <div className="flex items-center gap-3">
-                        <RefreshCw size={20} className="group-hover:rotate-180 transition-transform duration-500" />
-                        <span className="tracking-tight">Confirmar Troca</span>
-                      </div>
-                      <Check size={18} className="opacity-50" />
-                    </button>
-                  )}
-
-                  {/* Action Grid */}
-                  <div className="grid grid-cols-2 gap-2">
-                    {/* Substituir */}
-                    {swappingPlayerId !== showPlayerActionsModal.playerId && (
+  
+                {/* Actions Section */}
+                <div className="p-4">
+                  <div className="space-y-1.5">
+                    {/* Primary Success Actions (Goal) */}
+                    {!swappingPlayerId && (showPlayerActionsModal.teamIndex === match.teamAIndex || showPlayerActionsModal.teamIndex === match.teamBIndex) && (
                       <button 
                         onClick={() => {
-                          setSwappingPlayerId(showPlayerActionsModal.playerId);
-                          setTeamsTab('proximos');
+                          if (!match.isActive || match.isPaused || match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit) return;
+                          setShowAssistSelection({ teamIndex: showPlayerActionsModal.teamIndex, scorerId: showPlayerActionsModal.playerId });
                           setShowPlayerActionsModal(null);
-                          setToast({ message: "Selecione outro jogador para trocar de posição.", type: 'info' });
                         }}
-                        className="p-4 bg-zinc-50 text-zinc-900 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
+                        disabled={!match.isActive || match.isPaused || match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit}
+                        className="w-full h-12 bg-emerald-600 text-white rounded-xl font-black uppercase text-[10px] flex items-center justify-between px-5 transition-all hover:bg-emerald-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-emerald-500/10 group"
                       >
-                        <ArrowLeftRight size={22} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
-                        Trocar
+                        <div className="flex items-center gap-2.5">
+                          <Trophy size={16} className="text-emerald-200 group-hover:scale-110 transition-transform" />
+                          <span className="tracking-widest">Registrar Gol</span>
+                        </div>
+                        <Plus size={14} className="opacity-50" />
                       </button>
                     )}
-
-                    {/* Mover */}
-                    {!swappingPlayerId && (
+  
+                    {/* Swap Confirmation (Contextual) */}
+                    {swappingPlayerId && swappingPlayerId !== showPlayerActionsModal.playerId && (
                       <button 
                         onClick={() => {
-                          setMovingPlayers({ teamId: teams[showPlayerActionsModal.teamIndex].id, playerIds: [showPlayerActionsModal.playerId] });
-                          setIsSelectingDestination(true);
-                          setTeamsTab('proximos');
-                          setShowPlayerActionsModal(null);
-                          setToast({ message: "Selecione o time de destino (apenas times incompletos).", type: 'info' });
-                        }}
-                        className="p-4 bg-zinc-50 text-zinc-900 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
-                      >
-                        <MoveRight size={22} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
-                        Mover
-                      </button>
-                    )}
-
-                    {/* Ausente */}
-                    {!swappingPlayerId && (
-                      <button 
-                        onClick={() => {
-                          const isPlayerInActiveMatch = match.isActive && [match.teamAIndex, match.teamBIndex].includes(showPlayerActionsModal.teamIndex);
+                          const playerAId = swappingPlayerId;
+                          const playerBId = showPlayerActionsModal.playerId;
                           
-                          if (isPlayerInActiveMatch && !match.isPaused) {
-                            setMatch(prev => ({ ...prev, isPaused: true }));
-                          }
-
                           setTeams(prev => {
-                            return prev.map(t => ({
-                              ...t,
-                              playerIds: t.playerIds.filter(id => id !== showPlayerActionsModal.playerId)
-                            })).filter(t => t.playerIds.length > 0);
+                            const newTeams = prev.map(t => ({ ...t, playerIds: [...t.playerIds] }));
+                            let teamAIdx = -1;
+                            let teamBIdx = -1;
+                            
+                            newTeams.forEach((team, idx) => {
+                              if (team.playerIds.includes(playerAId)) teamAIdx = idx;
+                              if (team.playerIds.includes(playerBId)) teamBIdx = idx;
+                            });
+  
+                            if (teamAIdx !== -1 && teamBIdx !== -1) {
+                              if (teamAIdx === teamBIdx) {
+                                newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => {
+                                  if (id === playerAId) return playerBId;
+                                  if (id === playerBId) return playerAId;
+                                  return id;
+                                });
+                              } else {
+                                newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => id === playerAId ? playerBId : id);
+                                newTeams[teamBIdx].playerIds = newTeams[teamBIdx].playerIds.map(id => id === playerBId ? playerAId : id);
+                              }
+                            }
+                            
+                            return newTeams;
                           });
-                          setPlayers(prev => prev.map(p => p.id === showPlayerActionsModal.playerId ? { ...p, isAvailable: false, arrivedAt: undefined } : p));
-                          
-                          if (isPlayerInActiveMatch) {
-                            setFillingVacancyForTeam(showPlayerActionsModal.teamIndex);
-                            setTeamsTab('proximos');
-                            setToast({ message: "Selecione o jogador que entrará no lugar.", type: 'info' });
-                          } else {
-                            setToast({ message: "Jogador movido para ausentes.", type: 'info' });
-                          }
-                          
-                          setShowPlayerActionsModal(null);
-                        }}
-                        className="p-4 bg-red-50 text-red-600 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-red-100 active:scale-95 border border-red-100 hover:border-red-200 group"
-                      >
-                        <LogOut size={22} className="opacity-70 group-hover:opacity-100 transition-opacity" />
-                        Ausente
-                      </button>
-                    )}
-
-                    {/* Cancel Swap Call */}
-                    {swappingPlayerId === showPlayerActionsModal.playerId && (
-                      <button 
-                        onClick={() => {
                           setSwappingPlayerId(null);
                           setShowPlayerActionsModal(null);
                         }}
-                        className="p-4 bg-red-50 text-red-600 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-red-100 active:scale-95 border border-red-100 hover:border-red-200"
+                        className="w-full h-12 bg-amber-500 text-black rounded-xl font-black uppercase text-[10px] flex items-center justify-between px-5 transition-all hover:bg-amber-600 active:scale-[0.98] shadow-md shadow-amber-500/10 group"
                       >
-                        <X size={22} />
-                        Cancelar
+                        <div className="flex items-center gap-2.5">
+                          <RefreshCw size={16} className="group-hover:rotate-180 transition-transform duration-500" />
+                          <span className="tracking-widest">Confirmar Troca</span>
+                        </div>
+                        <Check size={14} className="opacity-50" />
                       </button>
                     )}
-
-                    <button 
-                      onClick={() => setShowPlayerActionsModal(null)}
-                      className="p-4 bg-zinc-100 text-zinc-500 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-zinc-200 active:scale-95"
-                    >
-                      <X size={22} />
-                      Fechar
-                    </button>
+  
+                    {/* Action Grid */}
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {/* Substituir */}
+                      {swappingPlayerId !== showPlayerActionsModal.playerId && (
+                        <button 
+                          onClick={() => {
+                            setSwappingPlayerId(showPlayerActionsModal.playerId);
+                            setTeamsTab('proximos');
+                            setShowPlayerActionsModal(null);
+                            setToast({ message: "Selecione outro jogador para trocar de posição.", type: 'info' });
+                          }}
+                          className="py-3 px-2 bg-zinc-50 text-zinc-900 rounded-xl font-black uppercase text-[8px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
+                        >
+                          <ArrowLeftRight size={18} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
+                          Trocar
+                        </button>
+                      )}
+  
+                      {/* Mover */}
+                      {!swappingPlayerId && (
+                        <button 
+                          onClick={() => {
+                            setMovingPlayers({ teamId: teams[showPlayerActionsModal.teamIndex].id, playerIds: [showPlayerActionsModal.playerId] });
+                            setIsSelectingDestination(true);
+                            setTeamsTab('proximos');
+                            setShowPlayerActionsModal(null);
+                            setToast({ message: "Selecione o time de destino (apenas times incompletos).", type: 'info' });
+                          }}
+                          className="py-3 px-2 bg-zinc-50 text-zinc-900 rounded-xl font-black uppercase text-[8px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
+                        >
+                          <MoveRight size={18} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
+                          Mover
+                        </button>
+                      )}
+  
+                      {/* Ausente */}
+                      {!swappingPlayerId && (
+                        <button 
+                          onClick={() => {
+                            const isPlayerInActiveMatch = match.isActive && [match.teamAIndex, match.teamBIndex].includes(showPlayerActionsModal.teamIndex);
+                            
+                            if (isPlayerInActiveMatch && !match.isPaused) {
+                              setMatch(prev => ({ ...prev, isPaused: true }));
+                            }
+  
+                            setTeams(prev => {
+                              return prev.map(t => ({
+                                ...t,
+                                playerIds: t.playerIds.filter(id => id !== showPlayerActionsModal.playerId)
+                              })).filter(t => t.playerIds.length > 0);
+                            });
+                            setPlayers(prev => prev.map(p => p.id === showPlayerActionsModal.playerId ? { ...p, isAvailable: false, arrivedAt: undefined } : p));
+                            
+                            if (isPlayerInActiveMatch) {
+                              setFillingVacancyForTeam(showPlayerActionsModal.teamIndex);
+                              setTeamsTab('proximos');
+                              setToast({ message: "Selecione o jogador que entrará no lugar.", type: 'info' });
+                            } else {
+                              setToast({ message: "Jogador movido para ausentes.", type: 'info' });
+                            }
+                            
+                            setShowPlayerActionsModal(null);
+                          }}
+                          className="py-3 px-2 bg-red-50 text-red-600 rounded-xl font-black uppercase text-[8px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-red-100 active:scale-95 border border-red-100 hover:border-red-200 group"
+                        >
+                          <LogOut size={18} className="opacity-70 group-hover:opacity-100 transition-opacity" />
+                          Ausente
+                        </button>
+                      )}
+  
+                      {/* Cancel Swap Call */}
+                      {swappingPlayerId === showPlayerActionsModal.playerId && (
+                        <button 
+                          onClick={() => {
+                            setSwappingPlayerId(null);
+                            setShowPlayerActionsModal(null);
+                          }}
+                          className="py-3 px-2 bg-red-50 text-red-600 rounded-xl font-black uppercase text-[8px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-red-100 active:scale-95 border border-red-100 hover:border-red-200"
+                        >
+                          <X size={18} />
+                          Cancelar
+                        </button>
+                      )}
+  
+                      <button 
+                        onClick={() => setShowPlayerActionsModal(null)}
+                        className="py-3 px-2 bg-zinc-100 text-zinc-500 rounded-xl font-black uppercase text-[8px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-zinc-200 active:scale-95"
+                      >
+                        <X size={18} />
+                        Fechar
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
-          </motion.div>
-        )}
+          )}
 
         {showQueuePlayerModal && (
           <motion.div 
