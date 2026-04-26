@@ -65,7 +65,7 @@ import { IoPersonOutline, IoFootballOutline } from 'react-icons/io5';
 import { IoIosTrophy, IoIosWallet, IoIosFootball } from 'react-icons/io';
 import { PiUserCirclePlusThin, PiUserCirclePlusLight, PiUserCirclePlus } from 'react-icons/pi';
 import { ImSpinner9 } from 'react-icons/im';
-import { GiGoalKeeper, GiSoccerKick, GiSoccerField, GiTrophy, GiPodiumWinner, GiRunningShoe } from 'react-icons/gi';
+import { GiGoalKeeper, GiSoccerKick, GiSoccerField, GiTrophy, GiPodiumWinner, GiRunningShoe, GiLaurelsTrophy } from 'react-icons/gi';
 import { 
   PiUsersBold,
   PiUsers,
@@ -4089,7 +4089,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
               <section className="rounded-2xl overflow-hidden bg-gradient-to-br from-zinc-50 to-zinc-100 border border-zinc-200 shadow-sm">
                 {players.length === 0 ? (
-                  <div className="text-center py-12 opacity-50 text-brand-text-secondary text-xs normal-case">Nenhum jogador adicionado ainda.</div>
+                  <div className="text-center py-12 opacity-50 text-brand-text-secondary text-xs normal-case flex flex-col items-center justify-center gap-2">
+                    <GiLaurelsTrophy size={48} className="opacity-50 text-brand-text-secondary" />
+                    <span>Nenhum jogador adicionado ainda.</span>
+                  </div>
                 ) : (
                   <div className="divide-y divide-brand-border">
                     {players.map((player) => (
