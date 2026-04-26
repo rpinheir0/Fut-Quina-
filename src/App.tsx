@@ -3828,7 +3828,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <span className="text-emerald-950 text-[10px] font-black uppercase truncate max-w-[40px] hidden sm:block">{teams[match.teamBIndex]?.name.substring(0, 3)}</span>
                       </div>
                       
-                      <span className={`ml-3 flex items-center justify-center text-[10px] sm:text-xs font-black tracking-widest bg-emerald-950 text-white px-2 py-0.5 rounded ${match.timeRemaining <= 60 && !match.isPaused ? 'text-red-400 animate-pulse' : 'text-white'}`}>
+                      <span className={`ml-3 flex items-center justify-center text-[10px] sm:text-xs font-black tracking-widest bg-emerald-950/20 text-emerald-950 px-2 py-0.5 rounded-lg ${match.timeRemaining <= 60 && !match.isPaused ? 'text-red-600 animate-pulse' : ''}`}>
                         {Math.floor(match.timeRemaining / 60).toString().padStart(2, '0')}:{(match.timeRemaining % 60).toString().padStart(2, '0')}
                       </span>
                     </>
@@ -3873,10 +3873,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </div>
                       
                       <div className="w-[1px] h-3 bg-emerald-950/20 mx-0.5" />
-                      <span className={`text-[9px] font-black tabular-nums tracking-tighter ${match.timeRemaining <= 60 && !match.isPaused ? 'text-red-600 animate-pulse' : 'text-emerald-950'}`}>
-                        {Math.floor(match.timeRemaining / 60).toString().padStart(2, '0')}:{(match.timeRemaining % 60).toString().padStart(2, '0')}
-                      </span>
-                      <span className={`ml-1.5 flex items-center justify-center text-[9px] font-black tracking-widest bg-black/50 px-1.5 py-0.5 rounded ${match.timeRemaining <= 60 && !match.isPaused ? 'text-red-400 animate-pulse' : 'text-white'}`}>
+                      <span className={`flex items-center justify-center text-[9px] font-black tracking-widest bg-emerald-950/20 px-2 py-0.5 rounded-lg ${match.timeRemaining <= 60 && !match.isPaused ? 'text-red-600 animate-pulse' : 'text-emerald-950'}`}>
                         {Math.floor(match.timeRemaining / 60).toString().padStart(2, '0')}:{(match.timeRemaining % 60).toString().padStart(2, '0')}
                       </span>
                     </>
@@ -4518,7 +4515,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   )}
                                 </div>
                                 <div className="flex-1 text-left">
-                                  <div className={`text-[11px] sm:text-xs font-black uppercase tracking-tight ${p.isAvailable ? 'text-black' : 'text-zinc-500'}`}>{p.name}</div>
+                                  <div className={`text-[11px] sm:text-xs font-normal capitalize tracking-tight ${p.isAvailable ? 'text-black' : 'text-zinc-500'}`}>{p.name.toLowerCase()}</div>
                                   <div className={`text-[8px] font-bold uppercase ${p.isAvailable ? 'text-black/60' : 'text-zinc-400'}`}>{p.isAvailable ? 'Presente' : 'Ausente'}</div>
                                 </div>
                                 {p.isAvailable && <CheckCircle2 size={16} className="text-black" />}
@@ -4631,12 +4628,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                               <div className="w-4 h-4 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 border border-zinc-300">
                                                 {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <span className="text-black flex items-center shrink-0"><IoPersonOutline size={8} /></span>}
                                               </div>
-                                              <span className="text-[9px] font-black uppercase truncate text-zinc-800">{p.name}</span>
+                                              <span className="text-[9px] font-normal capitalize truncate text-zinc-800">{p.name.toLowerCase()}</span>
                                             </div>
                                             <div className="flex items-center gap-2 shrink-0">
                                               {a && (
-                                                <div className="flex items-center gap-1 text-[8px] font-bold text-emerald-800" title={`Assistência: ${a.name}`}>
-                                                  <Footprints size={8} /> <span>{a.name.split(' ')[0]}</span>
+                                                <div className="flex items-center gap-1 text-[8px] font-normal text-emerald-800" title={`Assistência: ${a.name}`}>
+                                                  <Footprints size={8} /> <span>{a.name.toLowerCase().split(' ')[0]}</span>
                                                 </div>
                                               )}
                                               <div className="px-1.5 py-0.5 rounded-sm bg-black text-white text-[8px] font-black uppercase tracking-widest">GOL</div>
@@ -5801,8 +5798,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               >
                 <div className="flex items-center justify-between pb-2 border-b border-dashed border-zinc-300 mb-4 px-2">
                   <div className="flex items-center gap-1">
-                    <button onClick={() => setIsPrintMode(true)} className="text-zinc-600 p-2 hover:text-zinc-900 transition-colors flex items-center gap-1.5">
-                      <GiPodiumWinner size={20} />
+                    <button 
+                      onClick={() => setIsPrintMode(true)} 
+                      className="flex items-center gap-2 p-2 px-3 rounded-xl border border-zinc-300 bg-white/50 hover:bg-white transition-colors shadow-sm"
+                    >
+                      <GiPodiumWinner size={20} className="text-[#1E3D2F]" />
                       <span className="text-[10px] font-black uppercase tracking-widest text-[#1E3D2F]">Ranking</span>
                     </button>
                   </div>
@@ -5839,8 +5839,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </div>
                     </div>
 
-                    <div className="flex-1 text-xs text-brand-text-primary tracking-tight truncate mr-4">
-                      {player.name}
+                    <div className="flex-1 text-xs text-brand-text-primary tracking-tight truncate mr-4 font-normal capitalize">
+                      {player.name.toLowerCase()}
                     </div>
 
                     <div className={`flex gap-4 sm:gap-8 shrink-0 ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
