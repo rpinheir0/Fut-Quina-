@@ -1,0 +1,20 @@
+46:  Menu,
+1716:  const [financeSubScreen, setFinanceSubScreen] = useState<'mensalidade' | 'balanco' | 'menu'>(() => {
+1718:    return (saved as 'mensalidade' | 'balanco' | 'menu') || 'balanco';
+2030:  const [showConfigMenu, setShowConfigMenu] = useState(false);
+2124:  const [showMainMenu, setShowMainMenu] = useState(false);
+2336:      setFinanceSubScreen('menu');
+3887:            onClick={() => setShowMainMenu(true)}
+7346:        {showConfigMenu && (
+7352:            onClick={() => setShowConfigMenu(false)}
+7364:                    setShowConfigMenu(false);
+7374:                    setShowConfigMenu(false);
+7384:                onClick={() => setShowConfigMenu(false)}
+8226:        {/* Main Menu Modal */}
+8228:          {showMainMenu && (
+8234:              onClick={() => setShowMainMenu(false)}
+8252:                    <h2 className="text-3xl font-black uppercase tracking-tighter text-white drop-shadow-lg">Menu</h2>
+8255:                    onClick={() => setShowMainMenu(false)} 
+8273:                        setShowMainMenu(false);
+8299:                      setShowMainMenu(false);
+8380:                tem certeza que deseja sair desta partida e voltar para o menu principal?

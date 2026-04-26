@@ -1577,7 +1577,7 @@ const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, 
   const shadowClass = '';
 
   return (
-    <span className={`${sizeClasses[size]} uppercase tracking-tighter ${colorClass} ${shadowClass} ${className}`} style={style}>
+    <span className={`${sizeClasses[size]} uppercase tracking-tighter ${colorClass} ${shadowClass} ${className} font-megrim`} style={style}>
       Fut Quina
     </span>
   );
@@ -8249,7 +8249,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 {/* Header Section with Badge */}
                 <div className="pt-12 pb-6 px-8 relative z-10">
                   <div className="flex flex-col gap-1">
-                    <h2 className="text-3xl font-black uppercase tracking-tighter text-white drop-shadow-lg">Menu</h2>
+                    <h2 className="text-3xl font-black uppercase tracking-tighter text-white drop-shadow-lg font-megrim">Menu</h2>
                   </div>
                   <button 
                     onClick={() => setShowMainMenu(false)} 
