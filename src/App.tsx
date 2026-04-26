@@ -8619,7 +8619,7 @@ export default function App() {
             <SpinningBall size="lg" spin={true} />
           </motion.div>
           <div className="flex flex-col items-center">
-            <FutQuinaLogo size="lg" colorClass="" style={{ color: '#E3D39E', fontStyle: 'normal', fontFamily: 'system-ui', fontWeight: '900', letterSpacing: '-0.05em' }} />
+            <FutQuinaLogo size="lg" colorClass="" style={{ color: '#E3D39E', fontStyle: 'normal', fontFamily: 'Megrim', fontWeight: '900', letterSpacing: '-0.05em' }} />
             <div className="h-0.5 w-12 bg-brand-primary mt-2 rounded-full opacity-60" />
           </div>
         </div>
