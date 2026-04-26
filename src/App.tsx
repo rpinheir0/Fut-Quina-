@@ -4842,15 +4842,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           }
                                           setShowPlayerActionsModal({ teamIndex: match.teamAIndex, playerId: pid });
                                         }}
-                  className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
+                  className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br from-zinc-100 to-zinc-200 ${
                     swappingPlayerId === pid
-                      ? 'bg-brand-primary/40 text-black border-2 border-brand-primary shadow-lg scale-105'
-                      : 'text-black border border-black/5 hover:border-black/20 group'
+                      ? 'border-2 border-brand-primary shadow-lg scale-105'
+                      : 'border group'
                   }`}
                   style={{ 
-                    backgroundColor: swappingPlayerId !== pid
-                      ? ((teams[match.teamAIndex]?.color === '#1a1a1a' ? '#00000010' : (teams[match.teamAIndex]?.color || TEAM_COLORS[0]) + '15')) 
-                      : undefined 
+                    borderColor: swappingPlayerId !== pid ? teams[match.teamAIndex]?.color || TEAM_COLORS[0] : undefined,
+                    backgroundColor: swappingPlayerId === pid ? undefined : undefined
                   }}
                 >
                 <div className="flex items-center gap-1">
@@ -4975,15 +4974,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           }
                                           setShowPlayerActionsModal({ teamIndex: match.teamBIndex, playerId: pid });
                                         }}
-                  className={`w-full flex items-center gap-2 p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 text-left disabled:opacity-50 disabled:cursor-not-allowed ${
+                  className={`w-full flex items-center gap-2 p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 text-left disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br from-zinc-100 to-zinc-200 ${
                     swappingPlayerId === pid
-                      ? 'bg-brand-primary/40 text-black border-2 border-brand-primary shadow-lg scale-105'
-                      : 'text-black border border-black/5 hover:border-black/20 group'
+                      ? 'border-2 border-brand-primary shadow-lg scale-105'
+                      : 'border group'
                   }`}
                   style={{ 
-                    backgroundColor: swappingPlayerId !== pid
-                      ? ((teams[match.teamBIndex]?.color === '#1a1a1a' ? '#00000010' : (teams[match.teamBIndex]?.color || TEAM_COLORS[1]) + '15')) 
-                      : undefined 
+                    borderColor: swappingPlayerId !== pid ? teams[match.teamBIndex]?.color || TEAM_COLORS[1] : undefined,
+                    backgroundColor: swappingPlayerId === pid ? undefined : undefined
                   }}
                 >
                 <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 border border-zinc-200">
