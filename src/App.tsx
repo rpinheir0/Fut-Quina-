@@ -4348,10 +4348,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       return newTeams;
                                     });
                                   }}
-                                  className="px-3 py-1.5 text-[8px] sm:px-4 sm:py-2 sm:text-[10px] bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest rounded-full shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center gap-1.5"
+                                  className="p-2 rounded-lg transition-all active:scale-90 hover:bg-zinc-200 flex items-center gap-1.5 bg-white/95 backdrop-blur shadow-sm border border-zinc-200"
                                 >
-                                  <CheckCircle2 size={12} />
-                                  Todos Presentes
+                                  <span className="text-brand-text-primary"><CheckCircle2 size={20} /></span>
+                                  <span className="text-[10px] font-black uppercase tracking-widest text-brand-text-primary">Todos Presentes</span>
                                 </button>
                             )}
                             {players.filter(p => p.isAvailable).length >= match.config.playersPerTeam * 2 && (
@@ -4408,10 +4408,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   
                                   setTeamsTab('proximos');
                                 }}
-                                className="px-4 py-2 bg-gradient-to-b from-green-700 to-green-900 text-white font-black uppercase tracking-widest text-[10px] rounded-full shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center gap-1.5"
+                                className="p-2 rounded-lg transition-all active:scale-90 hover:bg-zinc-200 flex items-center gap-1.5 bg-white/95 backdrop-blur shadow-sm border border-zinc-200"
                               >
-                                <CheckCircle2 size={12} />
-                                Pronto
+                                <span className="text-brand-text-primary"><CheckCircle2 size={20} /></span>
+                                <span className="text-[10px] font-black uppercase tracking-widest text-brand-text-primary">Pronto</span>
                               </button>
                             )}
                           </div>
