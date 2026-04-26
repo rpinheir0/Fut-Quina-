@@ -5205,7 +5205,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       (movingPlayers && isSelectingDestination) ? 'cursor-pointer hover:opacity-90' : 'cursor-default'
                                     } ${
                                       isCurrent 
-                                        ? 'shadow-lg z-10 border-brand-primary bg-brand-primary ring-2 ring-brand-primary/20'
+                                        ? 'shadow-lg z-10 border-brand-primary bg-brand-gradient ring-2 ring-brand-primary/20'
                                         : 'shadow-sm opacity-80 border-zinc-300 bg-transparent'
                                     } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-brand-primary/20 !border-brand-primary' : ''}`}
                                     style={{
