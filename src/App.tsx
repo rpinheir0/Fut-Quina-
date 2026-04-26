@@ -4644,9 +4644,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     </div>
                                   </div>
                                 ) : (
-                                  <p className="text-xs font-medium text-zinc-400">
-                                    Agora você está pronto para iniciar uma partida
-                                  </p>
+                                  <div className="flex flex-col items-center justify-center gap-2">
+                                    <GiSoccerKick size={48} className="opacity-50 text-zinc-400" />
+                                    <p className="text-xs font-medium text-zinc-400">
+                                      Agora você está pronto para iniciar uma partida
+                                    </p>
+                                  </div>
                                 )}
                                 <button
                                   onClick={() => {
