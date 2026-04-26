@@ -4848,7 +4848,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       : 'border group'
                   }`}
                   style={{ 
-                    borderColor: swappingPlayerId !== pid ? teams[match.teamAIndex]?.color || TEAM_COLORS[0] : undefined,
+                    borderColor: swappingPlayerId !== pid ? (teams[match.teamAIndex]?.color || TEAM_COLORS[0]) + '60' : undefined,
                     backgroundColor: swappingPlayerId === pid ? undefined : undefined
                   }}
                 >
@@ -4980,7 +4980,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       : 'border group'
                   }`}
                   style={{ 
-                    borderColor: swappingPlayerId !== pid ? teams[match.teamBIndex]?.color || TEAM_COLORS[1] : undefined,
+                    borderColor: swappingPlayerId !== pid ? (teams[match.teamBIndex]?.color || TEAM_COLORS[1]) + '60' : undefined,
                     backgroundColor: swappingPlayerId === pid ? undefined : undefined
                   }}
                 >
