@@ -233,8 +233,6 @@ const TutorialCarousel = () => {
 
   // Imagens carregadas via URLs públicas (imgur) para não quebrar o build
   const items = [
-    { image: "https://i.imgur.com/MEtEuf4.png", alt: "Crie Suas Partidas" },
-    { image: "https://i.imgur.com/aQg9zs6.png", alt: "Gerencie Jogadores" },
     { image: "https://i.imgur.com/e1fa5xq.png", alt: "Tudo do Seu Jeito" }
   ];
 
@@ -8631,7 +8629,7 @@ export default function App() {
             transition={{ delay: 0.2 }}
             className="transform sm:scale-100 scale-105 origin-center w-full"
           >
-            <TutorialCarousel />
+            
           </motion.div>
           
           <div className="space-y-4">
@@ -8738,7 +8736,7 @@ export default function App() {
                   className="flex items-center justify-center gap-3 p-4 rounded-[20px] bg-red-500/10 text-red-400 font-black uppercase tracking-widest text-[10px] hover:bg-red-500/20 transition-all border border-red-500/20"
                 >
                   <Trash2 size={14} />
-                  Excluir
+                  Exclua
                 </button>
               </div>
             </div>
@@ -8755,7 +8753,7 @@ export default function App() {
             className="bg-[#14301F] border border-red-500/30 rounded-[32px] p-8 max-w-sm w-full shadow-2xl relative overflow-hidden"
           >
             <div className="absolute inset-0 bg-red-500/5 pointer-events-none" />
-            <h3 className="text-2xl font-black uppercase tracking-tighter mb-4 text-red-400 text-center relative z-10">Excluir Partida</h3>
+            <h3 className="text-2xl font-black uppercase tracking-tighter mb-4 text-red-400 text-center relative z-10">Exclua Partida</h3>
             <p className="text-center text-white/70 mb-8 text-sm lowercase first-letter:uppercase leading-relaxed px-2 relative z-10">
               Tem certeza que deseja excluir a partida <strong className="text-white font-black">{groupToDelete.name}</strong>? Todos os dados serão perdidos.
             </p>
