@@ -6559,13 +6559,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 initial={{ scale: 0.9, y: 30, opacity: 0 }}
                 animate={{ scale: 1, y: 0, opacity: 1 }}
                 exit={{ scale: 0.9, y: 30, opacity: 0 }}
-                className="w-full max-w-[290px] rounded-[32px] shadow-2xl border bg-brand-gradient border-brand-primary overflow-hidden"
+                className="w-full max-w-[320px] rounded-[32px] shadow-2xl border bg-brand-gradient border-brand-primary overflow-hidden"
                 onClick={e => e.stopPropagation()}
               >
                 {/* Header */}
                 <div className="bg-transparent pt-6 pb-4 px-5 text-center border-b border-zinc-200 relative overflow-hidden">
-                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 via-brand-primary to-amber-500" />
-                  
+                  {/* Gradient removed */}
                   <div className="relative inline-block mb-3">
                     <div className="w-16 h-16 mx-auto rounded-[20px] bg-white flex items-center justify-center overflow-hidden border-2 border-zinc-100 shadow-lg relative z-10">
                       {players.find(p => p.id === showPlayerActionsModal.playerId)?.photo ? (
