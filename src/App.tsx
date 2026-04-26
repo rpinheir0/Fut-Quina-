@@ -6559,7 +6559,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 initial={{ scale: 0.9, y: 30, opacity: 0 }}
                 animate={{ scale: 1, y: 0, opacity: 1 }}
                 exit={{ scale: 0.9, y: 30, opacity: 0 }}
-                className="w-full max-w-[320px] rounded-[32px] shadow-2xl border bg-brand-gradient border-brand-primary overflow-hidden"
+                className="w-full max-w-[320px] rounded-[32px] overflow-hidden"
                 onClick={e => e.stopPropagation()}
               >
                 {/* Header */}
