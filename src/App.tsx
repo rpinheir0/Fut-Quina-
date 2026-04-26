@@ -6768,7 +6768,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             >
               {/* Header */}
               <div className="bg-transparent pt-8 pb-6 px-5 text-center border-b border-zinc-200 relative overflow-hidden">
-                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500" />
                 <div className="absolute -top-12 -right-12 w-32 h-32 bg-sky-50 rounded-full blur-3xl opacity-50" />
                 <div className="absolute -bottom-12 -left-12 w-24 h-24 bg-blue-50 rounded-full blur-2xl opacity-50" />
 
