@@ -4090,7 +4090,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               <section className="rounded-2xl overflow-hidden bg-gradient-to-br from-zinc-50 to-zinc-100 border border-zinc-200 shadow-sm">
                 {players.length === 0 ? (
                   <div className="text-center py-12 opacity-50 text-brand-text-secondary text-xs normal-case flex flex-col items-center justify-center gap-2">
-                    <GiLaurelsTrophy size={48} className="opacity-50 text-brand-text-secondary" />
+                    <span className="opacity-50 text-brand-text-secondary"><GiLaurelsTrophy size={48} /></span>
                     <span>Nenhum jogador adicionado ainda.</span>
                   </div>
                 ) : (
@@ -4421,7 +4421,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {players.filter(p => sessionPlayerIds.includes(p.id)).length === 0 ? (
                             <div className="col-span-full py-12 text-center border border-dashed border-white/5 rounded-xl flex flex-col items-center gap-4">
-                              <GiSocks size={48} className="opacity-50 text-brand-text-secondary" />
+                              <span className="opacity-50 text-brand-text-secondary"><GiSocks size={48} /></span>
                               <p className="text-base text-brand-text-secondary normal-case">Nenhum jogador na sessão</p>
                               <button 
                                 onClick={() => {
@@ -4530,7 +4530,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           <div className="py-12 text-center border border-dashed border-white/5 rounded-3xl flex flex-col items-center gap-4">
                             {players.filter(p => p.isAvailable).length === 0 ? (
                               <>
-                                <GiAbstract042 size={48} className="opacity-50 text-zinc-500" />
+                                <span className="opacity-50 text-zinc-500"><GiAbstract042 size={48} /></span>
                                 <p className="text-base text-zinc-500 normal-case">
                                   Nenhum jogador presente
                                 </p>
@@ -4644,12 +4644,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     </div>
                                   </div>
                                 ) : (
-                                  <div className="flex flex-col items-center justify-center gap-2">
-                                    <GiSoccerKick size={48} className="opacity-50 text-zinc-400" />
-                                    <p className="text-xs font-medium text-zinc-400">
-                                      Agora você está pronto para iniciar uma partida
-                                    </p>
-                                  </div>
+                                  <p className="text-xs font-medium text-zinc-400">
+                                    Agora você está pronto para iniciar uma partida
+                                  </p>
                                 )}
                                 <button
                                   onClick={() => {
@@ -5119,7 +5116,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="space-y-4">
                           {teams.length < 2 ? (
                             <div className="py-12 text-center border border-dashed border-zinc-200 rounded-xl flex flex-col items-center gap-4">
-                              <GiSoccerBall size={48} className="opacity-50 text-zinc-500" />
+                              <span className="opacity-50 text-zinc-500"><GiSoccerBall size={48} /></span>
                               <p className="text-base text-zinc-500 normal-case">Crie mais times para ver a fila</p>
                               <button
                                 onClick={() => {
@@ -5851,7 +5848,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 ))}
                 {players.length === 0 && (
                   <div className="p-8 text-center text-brand-text-secondary text-sm font-bold normal-case flex flex-col items-center justify-center gap-2">
-                    <GiCrown size={48} className="opacity-50 text-brand-text-secondary" />
+                    <span className="opacity-50 text-brand-text-secondary"><GiCrown size={48} /></span>
                     <span>Nenhum jogador registrado ainda.</span>
                   </div>
                 )}
@@ -6778,17 +6775,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               initial={{ scale: 0.9, y: 30, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.9, y: 30, opacity: 0 }}
-              className="w-full max-w-sm rounded-[40px] shadow-2xl border bg-white border-zinc-200 overflow-hidden"
+              className="w-full max-w-[280px] rounded-[32px] shadow-2xl border bg-white border-zinc-200 overflow-hidden"
               onClick={e => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-zinc-50 pt-10 pb-8 px-6 text-center border-b border-zinc-100 relative overflow-hidden">
+              <div className="bg-zinc-50 pt-8 pb-6 px-5 text-center border-b border-zinc-100 relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500" />
                 <div className="absolute -top-12 -right-12 w-32 h-32 bg-sky-50 rounded-full blur-3xl opacity-50" />
                 <div className="absolute -bottom-12 -left-12 w-24 h-24 bg-blue-50 rounded-full blur-2xl opacity-50" />
 
-                <div className="relative inline-block mb-4">
-                  <div className="w-24 h-24 mx-auto rounded-[32px] bg-white flex items-center justify-center overflow-hidden border-4 border-white shadow-2xl relative z-10">
+                <div className="relative inline-block mb-3">
+                  <div className="w-20 h-20 mx-auto rounded-[24px] bg-white flex items-center justify-center overflow-hidden border-4 border-white shadow-xl relative z-10">
                     {players.find(p => p.id === showQueuePlayerModal.playerId)?.photo ? (
                       <img 
                         src={players.find(p => p.id === showQueuePlayerModal.playerId)?.photo} 
@@ -6797,26 +6794,23 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         referrerPolicy="no-referrer"
                       />
                     ) : (
-                      <span className="text-zinc-200 flex items-center shrink-0"><User size={40} /></span>
+                      <span className="text-zinc-200 flex items-center shrink-0"><User size={32} /></span>
                     )}
-                  </div>
-                  <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-sky-500 rounded-2xl flex items-center justify-center border-4 border-white shadow-lg z-20">
-                    <Clock size={14} className="text-white" />
                   </div>
                 </div>
 
-                <h3 className="text-2xl font-black uppercase tracking-tight text-zinc-900 leading-tight">
+                <h3 className="text-xl font-black uppercase tracking-tight text-zinc-900 leading-tight">
                   {players.find(p => p.id === showQueuePlayerModal.playerId)?.name}
                 </h3>
-                <div className="flex items-center justify-center gap-2 mt-2">
-                  <span className="text-[10px] text-zinc-400 font-bold uppercase tracking-widest leading-none">
+                <div className="flex items-center justify-center gap-2 mt-1.5">
+                  <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-widest leading-none">
                     Ações do Jogador
                   </span>
                 </div>
               </div>
 
-              <div className="p-6">
-                <div className="space-y-3">
+              <div className="p-4">
+                <div className="space-y-2.5">
                   {!showQueuePlayerModal.showMoveOptions ? (
                     <div className="grid grid-cols-2 gap-2">
                       <button 
@@ -6825,9 +6819,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           setShowQueuePlayerModal(null);
                           setToast({ message: "Selecione outro jogador para trocar de posição.", type: 'info' });
                         }}
-                        className="p-5 bg-zinc-50 text-zinc-900 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
+                        className="p-4 bg-zinc-50 text-zinc-900 rounded-2xl font-bold uppercase text-[9px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
                       >
-                        <ArrowLeftRight size={22} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
+                        <ArrowLeftRight size={18} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
                         Substituir
                       </button>
 
@@ -6838,9 +6832,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           setShowQueuePlayerModal(null);
                           setToast({ message: "Selecione o time de destino (apenas times incompletos).", type: 'info' });
                         }}
-                        className="p-5 bg-zinc-50 text-zinc-900 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
+                        className="p-4 bg-zinc-50 text-zinc-900 rounded-2xl font-bold uppercase text-[9px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
                       >
-                        <MoveRight size={22} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
+                        <MoveRight size={18} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
                         Mover
                       </button>
 
@@ -6856,17 +6850,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           setShowQueuePlayerModal(null);
                           setToast({ message: "Jogador movido para ausentes.", type: 'info' });
                         }}
-                        className="p-5 bg-red-50 text-red-600 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-red-100 active:scale-95 border border-red-100 hover:border-red-200 group"
+                        className="p-4 bg-red-50 text-red-600 rounded-2xl font-bold uppercase text-[9px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-red-100 active:scale-95 border border-red-100 hover:border-red-200 group"
                       >
-                        <LogOut size={22} className="opacity-70 group-hover:opacity-100 transition-opacity" />
+                        <LogOut size={18} className="opacity-70 group-hover:opacity-100 transition-opacity" />
                         Ausente
                       </button>
 
                       <button 
                         onClick={() => setShowQueuePlayerModal(null)}
-                        className="p-5 bg-zinc-100 text-zinc-500 rounded-2xl font-bold uppercase text-[10px] flex flex-col items-center justify-center gap-2 transition-all hover:bg-zinc-200 active:scale-95"
+                        className="p-4 bg-zinc-100 text-zinc-500 rounded-2xl font-bold uppercase text-[9px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-zinc-200 active:scale-95"
                       >
-                        <X size={22} />
+                        <X size={18} />
                         Fechar
                       </button>
                     </div>
@@ -8733,7 +8727,7 @@ export default function App() {
                 }}
                 className="group w-full flex items-center justify-center gap-4 p-5 rounded-[24px] font-black uppercase tracking-widest text-xs transition-all duration-300 bg-brand-primary text-black hover:scale-[1.02] active:scale-95 shadow-xl shadow-brand-primary/20"
               >
-                <GiQueenCrown size={20} className="group-hover:scale-110 transition-transform" />
+                <span className="group-hover:scale-110 transition-transform"><GiQueenCrown size={20} /></span>
                 <span className="mt-0.5">Entrar na Partida</span>
               </button>
               
