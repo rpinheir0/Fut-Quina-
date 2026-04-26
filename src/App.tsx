@@ -6563,13 +6563,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 onClick={e => e.stopPropagation()}
               >
                 {/* Header */}
-                <div className="bg-brand-primary p-10 text-center relative overflow-hidden">
+                <div className="bg-gradient-to-b from-zinc-100 to-zinc-300 p-10 text-center relative overflow-hidden">
                   {/* Decorative Elements */}
                   <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                   <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
                   
-                  <div className="relative inline-block mb-3">
-                    <div className="w-16 h-16 mx-auto rounded-full bg-white flex items-center justify-center overflow-hidden border-4 border-black/5 shadow-xl relative z-10">
+                  <div className="w-20 h-20 mx-auto rounded-full bg-white flex items-center justify-center overflow-hidden border-4 border-black/5 shadow-xl relative z-10 mb-6">
                       {players.find(p => p.id === showPlayerActionsModal.playerId)?.photo ? (
                         <img 
                           src={players.find(p => p.id === showPlayerActionsModal.playerId)?.photo} 
@@ -6578,14 +6577,15 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           referrerPolicy="no-referrer"
                         />
                       ) : (
-                        <span className="text-zinc-200 flex items-center shrink-0"><User size={28} /></span>
+                        <span className="text-zinc-200 flex items-center shrink-0"><User size={40} /></span>
                       )}
-                    </div>
                   </div>
 
-                  <h3 className="text-xl font-black uppercase tracking-tighter text-black leading-none">Ações do Jogador</h3>
-                  <p className="text-[10px] text-black/60 font-black mt-2 uppercase tracking-[0.2em]">
+                  <h3 className="text-2xl font-black uppercase tracking-tighter text-black leading-none">
                     {players.find(p => p.id === showPlayerActionsModal.playerId)?.name}
+                  </h3>
+                  <p className="text-[10px] text-black/60 font-black mt-2 uppercase tracking-[0.2em]">
+                    AÇÕES DO JOGADOR
                   </p>
                 </div>
   
@@ -6759,23 +6759,23 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-zinc-950/80 backdrop-blur-xl z-[200] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/0 backdrop-blur-none z-[200] flex items-center justify-center p-4"
             onClick={() => setShowQueuePlayerModal(null)}
           >
             <motion.div 
               initial={{ scale: 0.9, y: 30, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.9, y: 30, opacity: 0 }}
-              className="w-full max-w-[290px] rounded-[32px] shadow-2xl border bg-brand-gradient border-brand-primary overflow-hidden"
+              className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-2xl bg-zinc-50 border border-zinc-200"
               onClick={e => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-transparent pt-8 pb-6 px-5 text-center border-b border-zinc-200 relative overflow-hidden">
-                <div className="absolute -top-12 -right-12 w-32 h-32 bg-sky-50 rounded-full blur-3xl opacity-50" />
-                <div className="absolute -bottom-12 -left-12 w-24 h-24 bg-blue-50 rounded-full blur-2xl opacity-50" />
+              <div className="bg-[#B5E93B] p-10 text-center relative overflow-hidden">
+                {/* Decorative Elements */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
 
-                <div className="relative inline-block mb-3">
-                  <div className="w-20 h-20 mx-auto rounded-[24px] bg-white flex items-center justify-center overflow-hidden border-4 border-white shadow-xl relative z-10">
+                <div className="w-20 h-20 mx-auto rounded-full bg-white flex items-center justify-center overflow-hidden border-4 border-black/5 shadow-xl relative z-10 mb-6">
                     {players.find(p => p.id === showQueuePlayerModal.playerId)?.photo ? (
                       <img 
                         src={players.find(p => p.id === showQueuePlayerModal.playerId)?.photo} 
@@ -6784,19 +6784,16 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         referrerPolicy="no-referrer"
                       />
                     ) : (
-                      <span className="text-zinc-200 flex items-center shrink-0"><User size={32} /></span>
+                      <span className="text-zinc-200 flex items-center shrink-0"><User size={40} /></span>
                     )}
-                  </div>
                 </div>
 
-                <h3 className="text-xl font-black uppercase tracking-tight text-zinc-900 leading-tight">
+                <h3 className="text-2xl font-black uppercase tracking-tighter text-black leading-none">
                   {players.find(p => p.id === showQueuePlayerModal.playerId)?.name}
                 </h3>
-                <div className="flex items-center justify-center gap-2 mt-1.5">
-                  <span className="text-[9px] text-zinc-400 font-bold uppercase tracking-widest leading-none">
-                    Ações do Jogador
-                  </span>
-                </div>
+                <p className="text-[10px] text-black/60 font-black mt-2 uppercase tracking-[0.2em]">
+                  AÇÕES DO JOGADOR
+                </p>
               </div>
 
               <div className="p-4">
