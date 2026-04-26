@@ -6561,7 +6561,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 onClick={e => e.stopPropagation()}
               >
                 {/* Header */}
-                <div className="bg-gradient-to-b from-zinc-100 to-zinc-300 p-10 text-center relative overflow-hidden">
+                <div className="bg-gradient-to-br from-zinc-300 via-zinc-400 to-zinc-600 p-10 text-center relative overflow-hidden">
                   {/* Decorative Elements */}
                   <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                   <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
@@ -6768,7 +6768,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               onClick={e => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-[#B5E93B] p-10 text-center relative overflow-hidden">
+              <div className="bg-gradient-to-br from-zinc-300 via-zinc-400 to-zinc-600 p-10 text-center relative overflow-hidden">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
