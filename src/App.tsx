@@ -4668,10 +4668,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             {match.hasEnded && (
                               <div className="absolute inset-0 z-40 bg-black/10 backdrop-blur-[1px] rounded-2xl pointer-events-auto cursor-default" />
                             )}
-                            <div className="sticky top-[-1px] z-40 bg-brand-primary backdrop-blur-md py-6 -mx-6 px-6 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-[32px] border border-black/5 shadow-sm w-full max-w-2xl mx-auto relative overflow-hidden">
+                            <div className="sticky top-[-1px] z-40 bg-gradient-to-br from-zinc-100 to-zinc-200 backdrop-blur-md py-6 -mx-6 px-6 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-[32px] border border-zinc-300 shadow-sm w-full max-w-2xl mx-auto relative overflow-hidden">
                               <div className="flex-1 flex flex-col items-center text-center space-y-2 sm:space-y-4">
                                   <button 
-                                    className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm bg-white/10 rounded-xl border border-white/10"
+                                    className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm"
                                     disabled={match.hasEnded}
                                     onClick={() => {
                                       if (match.teamAIndex === -1) return;
@@ -4693,11 +4693,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     </svg>
                                   </button>
                                   <div 
-                                    className={`text-4xl sm:text-7xl font-black origin-center text-emerald-950 ${(!match.isActive || match.isPaused) ? 'opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-xl bg-white border-b-4 border-zinc-200 shadow-sm`}
+                                    className={`text-4xl sm:text-7xl font-black origin-center text-zinc-800 ${(!match.isActive || match.isPaused) ? 'opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-xl bg-white border-b-4 border-zinc-200 shadow-sm`}
                                   >
                                     {match.scoreA}
                                   </div>
-                                  <span className="text-[7px] sm:text-[9px] font-black uppercase tracking-widest text-[#1E3D2F] opacity-60 truncate max-w-[80px] sm:max-w-[120px] px-1 text-center">{teams[match.teamAIndex]?.name}</span>
+                                  <span className="text-[7px] sm:text-[9px] font-black uppercase tracking-widest text-zinc-600 truncate max-w-[80px] sm:max-w-[120px] px-1 text-center">{teams[match.teamAIndex]?.name}</span>
                               </div>
                               
                               <div className="flex flex-col items-center justify-center gap-2 sm:gap-6 min-w-[70px] sm:min-w-[140px]">
@@ -4758,7 +4758,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                               <div className="flex-1 flex flex-col items-center text-center space-y-2 sm:space-y-4">
                                   <button 
-                                    className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm bg-white/10 rounded-xl border border-white/10"
+                                    className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm"
                                     disabled={match.hasEnded}
                                     onClick={() => {
                                       if (match.teamBIndex === -1) return;
@@ -4780,11 +4780,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     </svg>
                                   </button>
                                   <div 
-                                    className={`text-4xl sm:text-7xl font-black origin-center text-emerald-950 ${(!match.isActive || match.isPaused) ? 'opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-xl bg-white border-b-4 border-zinc-200 shadow-sm`}
+                                    className={`text-4xl sm:text-7xl font-black origin-center text-zinc-800 ${(!match.isActive || match.isPaused) ? 'opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-xl bg-white border-b-4 border-zinc-200 shadow-sm`}
                                   >
                                     {match.scoreB}
                                   </div>
-                                  <span className="text-[7px] sm:text-[9px] font-black uppercase tracking-widest text-[#1E3D2F] opacity-60 truncate max-w-full px-1">{teams[match.teamBIndex]?.name}</span>
+                                  <span className="text-[7px] sm:text-[9px] font-black uppercase tracking-widest text-zinc-600 truncate max-w-full px-1">{teams[match.teamBIndex]?.name}</span>
                               </div>
                             </div>
                             
