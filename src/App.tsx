@@ -8637,7 +8637,7 @@ export default function App() {
               {groups.length > 0 && (
                 <div className="space-y-4 pt-4 sm:pt-0">
                   <div className="flex items-center gap-3 px-2 mb-2">
-                    <span className="text-[10px] font-black text-[#E3D39E]/40 uppercase tracking-[0.3em]">Minhas Partidas</span>
+                    <span className="text-[10px] font-normal text-[#E3D39E]/40 uppercase tracking-[0.3em]">Minhas Partidas</span>
                     <div className="h-[1px] flex-1 bg-[#E3D39E]/10" />
                   </div>
                   {groups.map((group, index) => (
