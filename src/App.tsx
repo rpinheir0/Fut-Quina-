@@ -6579,23 +6579,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <span className="text-zinc-200 flex items-center shrink-0"><User size={24} /></span>
                       )}
                     </div>
-                    {/* Status Ring / Badge */}
-                    <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-emerald-500 rounded-lg flex items-center justify-center border-2 border-white shadow-md z-20">
-                      <Activity size={8} className="text-white" />
-                    </div>
                   </div>
   
-                  <h3 className="text-base font-black uppercase tracking-tight text-zinc-900 leading-tight">
+                  <h3 className="text-base font-black uppercase tracking-tight text-zinc-900 leading-tight mb-2">
                     {players.find(p => p.id === showPlayerActionsModal.playerId)?.name}
                   </h3>
-                  <div className="flex items-center justify-center gap-1 mt-1">
-                    <span className="px-1.5 py-0.5 rounded-md bg-zinc-900 text-white text-[6px] font-black uppercase tracking-widest">
-                      {teams[showPlayerActionsModal.teamIndex]?.name}
-                    </span>
-                    <span className="text-[7px] text-zinc-400 font-bold uppercase tracking-tight">
-                      • Em Campo
-                    </span>
-                  </div>
                 </div>
   
                 {/* Actions Section */}
