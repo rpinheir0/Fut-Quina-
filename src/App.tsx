@@ -65,7 +65,7 @@ import { IoPersonOutline, IoFootballOutline } from 'react-icons/io5';
 import { IoIosTrophy, IoIosWallet, IoIosFootball } from 'react-icons/io';
 import { PiUserCirclePlusThin, PiUserCirclePlusLight, PiUserCirclePlus } from 'react-icons/pi';
 import { ImSpinner9 } from 'react-icons/im';
-import { GiGoalKeeper, GiSoccerKick, GiSoccerField, GiTrophy, GiPodiumWinner, GiRunningShoe, GiLaurelsTrophy } from 'react-icons/gi';
+import { GiGoalKeeper, GiSoccerKick, GiSoccerField, GiTrophy, GiPodiumWinner, GiRunningShoe, GiLaurelsTrophy, GiSocks, GiAbstract042, GiSoccerBall, GiCrown, GiQueenCrown } from 'react-icons/gi';
 import { 
   PiUsersBold,
   PiUsers,
@@ -4421,6 +4421,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {players.filter(p => sessionPlayerIds.includes(p.id)).length === 0 ? (
                             <div className="col-span-full py-12 text-center border border-dashed border-white/5 rounded-xl flex flex-col items-center gap-4">
+                              <GiSocks size={48} className="opacity-50 text-brand-text-secondary" />
                               <p className="text-base text-brand-text-secondary normal-case">Nenhum jogador na sessão</p>
                               <button 
                                 onClick={() => {
@@ -4529,6 +4530,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           <div className="py-12 text-center border border-dashed border-white/5 rounded-3xl flex flex-col items-center gap-4">
                             {players.filter(p => p.isAvailable).length === 0 ? (
                               <>
+                                <GiAbstract042 size={48} className="opacity-50 text-zinc-500" />
                                 <p className="text-base text-zinc-500 normal-case">
                                   Nenhum jogador presente
                                 </p>
@@ -5114,6 +5116,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="space-y-4">
                           {teams.length < 2 ? (
                             <div className="py-12 text-center border border-dashed border-zinc-200 rounded-xl flex flex-col items-center gap-4">
+                              <GiSoccerBall size={48} className="opacity-50 text-zinc-500" />
                               <p className="text-base text-zinc-500 normal-case">Crie mais times para ver a fila</p>
                               <button
                                 onClick={() => {
@@ -5844,8 +5847,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   </div>
                 ))}
                 {players.length === 0 && (
-                  <div className="p-8 text-center text-brand-text-secondary text-sm font-bold normal-case">
-                    Nenhum jogador registrado ainda.
+                  <div className="p-8 text-center text-brand-text-secondary text-sm font-bold normal-case flex flex-col items-center justify-center gap-2">
+                    <GiCrown size={48} className="opacity-50 text-brand-text-secondary" />
+                    <span>Nenhum jogador registrado ainda.</span>
                   </div>
                 )}
               </motion.div>
@@ -8726,7 +8730,8 @@ export default function App() {
                 }}
                 className="group w-full flex items-center justify-center gap-4 p-5 rounded-[24px] font-black uppercase tracking-widest text-xs transition-all duration-300 bg-brand-primary text-black hover:scale-[1.02] active:scale-95 shadow-xl shadow-brand-primary/20"
               >
-                Entrar na Partida
+                <GiQueenCrown size={20} className="group-hover:scale-110 transition-transform" />
+                <span className="mt-0.5">Entrar na Partida</span>
               </button>
               
               <div className="grid grid-cols-2 gap-4">
