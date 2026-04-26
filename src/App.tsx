@@ -731,7 +731,7 @@ const TieBreakerModal = ({
                     })}
                   </div>
                 </div>
-                <div className="text-white/20 font-black italic text-xl">VS</div>
+                <div className="text-white/20 font-black text-xl">VS</div>
                 <div className="flex-1 flex flex-col items-center">
                   <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center drop-shadow-lg mb-2">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
@@ -922,7 +922,7 @@ const TieBreakerModal = ({
                   </div>
                   <div className="text-4xl font-black text-white tracking-tighter">{teamAGoals}</div>
                 </div>
-                <div className="text-white/10 font-black text-2xl italic tracking-tighter uppercase mx-4">VS</div>
+                <div className="text-white/10 font-black text-2xl tracking-tighter uppercase mx-4">VS</div>
                 <div className="text-center flex-1 flex flex-col items-center">
                   <div className="w-16 h-16 flex items-center justify-center drop-shadow-md mb-3">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
@@ -943,7 +943,7 @@ const TieBreakerModal = ({
               <div className="grid grid-cols-2 gap-4 h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                 {/* Team A Penalties */}
                 <div className="space-y-2">
-                  <div className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#112F24] py-1">Time A</div>
+                  <div className="text-[9px] font-normal text-brand-primary/40 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#112F24] py-1">Time A</div>
                   {state.penalties.teamA.map((shot, idx) => {
                     const p = players.find(player => player.id === shot.playerId);
                     return (
@@ -957,7 +957,7 @@ const TieBreakerModal = ({
                             )}
                           </div>
                           <div className="flex flex-col min-w-0">
-                            <span className="text-[10px] font-black text-white truncate uppercase tracking-tight leading-none">{p?.name}</span>
+                            <span className="text-[10px] font-normal text-brand-primary truncate uppercase tracking-tight leading-none">{p?.name}</span>
                             <span className="text-[7px] text-white/30 font-bold uppercase tracking-widest mt-0.5">Batedor {idx + 1}</span>
                           </div>
                         </div>
@@ -972,7 +972,7 @@ const TieBreakerModal = ({
                             onClick={() => onPenaltyToggle('A', idx)}
                             className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === false ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-white/5 text-red-500/30 hover:bg-white/10'}`}
                           >
-                            <PiWarningCircleBold size={18} />
+                            <X size={18} />
                           </button>
                         </div>
                       </div>
@@ -982,7 +982,7 @@ const TieBreakerModal = ({
 
                 {/* Team B Penalties */}
                 <div className="space-y-2">
-                  <div className="text-[9px] font-black text-white/40 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#112F24] py-1">Time B</div>
+                  <div className="text-[9px] font-normal text-brand-primary/40 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#112F24] py-1">Time B</div>
                   {state.penalties.teamB.map((shot, idx) => {
                     const p = players.find(player => player.id === shot.playerId);
                     return (
@@ -996,7 +996,7 @@ const TieBreakerModal = ({
                             )}
                           </div>
                           <div className="flex flex-col min-w-0">
-                            <span className="text-[10px] font-black text-white truncate uppercase tracking-tight leading-none">{p?.name}</span>
+                            <span className="text-[10px] font-normal text-brand-primary truncate uppercase tracking-tight leading-none">{p?.name}</span>
                             <span className="text-[7px] text-white/30 font-bold uppercase tracking-widest mt-0.5">Batedor {idx + 1}</span>
                           </div>
                         </div>
@@ -1011,7 +1011,7 @@ const TieBreakerModal = ({
                             onClick={() => onPenaltyToggle('B', idx)}
                             className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === false ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-white/5 text-red-500/30 hover:bg-white/10'}`}
                           >
-                            <PiWarningCircleBold size={18} />
+                            <X size={18} />
                           </button>
                         </div>
                       </div>
