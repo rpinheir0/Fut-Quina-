@@ -1108,7 +1108,7 @@ const TieBreakerModal = ({
                         })}
                       </div>
                     </div>
-                    <div className="text-white/10 font-bold italic text-xs uppercase">VS</div>
+                    <div className="text-white/10 font-bold text-xs uppercase">VS</div>
                     <div className="flex-1 flex flex-col items-center">
                       <div className="w-10 h-10 flex items-center justify-center drop-shadow-lg mb-2">
                         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
@@ -3806,29 +3806,29 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   animate={{ y: 0, opacity: 1, scale: 1 }}
                   exit={{ y: -40, opacity: 0, scale: 0.8 }}
                   transition={{ type: 'spring', damping: 20 }}
-                  className="flex items-center justify-center gap-2 bg-[#1E3D2F]/95 hover:bg-[#1E3D2F] px-4 py-1.5 rounded-full border border-white/10 shadow-lg backdrop-blur-md pointer-events-auto transition-colors"
+                  className="flex items-center justify-center gap-2 bg-brand-primary px-4 py-1.5 rounded-full border border-black/10 shadow-lg backdrop-blur-md pointer-events-auto transition-colors"
                 >
                   {match.teamAIndex !== -1 && match.teamBIndex !== -1 ? (
                     <>
                       <div className="flex items-center gap-1.5">
-                        <span className="text-white text-[10px] font-black uppercase truncate max-w-[40px] hidden sm:block">{teams[match.teamAIndex]?.name.substring(0, 3)}</span>
+                        <span className="text-emerald-950 text-[10px] font-black uppercase truncate max-w-[40px] hidden sm:block">{teams[match.teamAIndex]?.name.substring(0, 3)}</span>
                         <div className="drop-shadow-sm" style={{ color: teams[match.teamAIndex]?.color || '#ffffff' }}>
                           <PiShieldFill size={14} />
                         </div>
-                        <span className="text-brand-primary font-black text-sm ml-1">{match.scoreA}</span>
+                        <span className="text-emerald-950 font-black text-sm ml-1">{match.scoreA}</span>
                       </div>
                       
-                      <span className="text-white/40 text-[10px] font-bold mx-1">x</span>
+                      <span className="text-emerald-950/40 text-[10px] font-bold mx-1">x</span>
                       
                       <div className="flex items-center gap-1.5">
-                        <span className="text-brand-primary font-black text-sm mr-1">{match.scoreB}</span>
+                        <span className="text-emerald-950 font-black text-sm mr-1">{match.scoreB}</span>
                         <div className="drop-shadow-sm" style={{ color: teams[match.teamBIndex]?.color || '#ffffff' }}>
                           <PiShieldFill size={14} />
                         </div>
-                        <span className="text-white text-[10px] font-black uppercase truncate max-w-[40px] hidden sm:block">{teams[match.teamBIndex]?.name.substring(0, 3)}</span>
+                        <span className="text-emerald-950 text-[10px] font-black uppercase truncate max-w-[40px] hidden sm:block">{teams[match.teamBIndex]?.name.substring(0, 3)}</span>
                       </div>
                       
-                      <span className={`ml-3 flex items-center justify-center text-[10px] sm:text-xs font-black tracking-widest bg-black/50 px-2 py-0.5 rounded ${match.timeRemaining <= 60 && !match.isPaused ? 'text-red-400 animate-pulse' : 'text-white'}`}>
+                      <span className={`ml-3 flex items-center justify-center text-[10px] sm:text-xs font-black tracking-widest bg-emerald-950 text-white px-2 py-0.5 rounded ${match.timeRemaining <= 60 && !match.isPaused ? 'text-red-400 animate-pulse' : 'text-white'}`}>
                         {Math.floor(match.timeRemaining / 60).toString().padStart(2, '0')}:{(match.timeRemaining % 60).toString().padStart(2, '0')}
                       </span>
                     </>
@@ -3854,7 +3854,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   animate={{ y: 0, opacity: 1, scale: 1 }}
                   exit={{ y: -40, opacity: 0, scale: 0.8 }}
                   transition={{ type: 'spring', damping: 20 }}
-                  className="flex items-center justify-center gap-1.5 bg-[#1E3D2F]/95 hover:bg-[#1E3D2F] px-3 py-1 rounded-full border border-white/10 shadow-lg backdrop-blur-md pointer-events-auto transition-colors"
+                  className="flex items-center justify-center gap-1.5 bg-brand-primary px-3 py-1 rounded-full border border-black/10 shadow-lg backdrop-blur-md pointer-events-auto transition-colors"
                 >
                   {match.teamAIndex !== -1 && match.teamBIndex !== -1 ? (
                     <>
@@ -3862,15 +3862,20 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="drop-shadow-sm" style={{ color: teams[match.teamAIndex]?.color || '#ffffff' }}>
                           <PiShieldFill size={12} />
                         </div>
-                        <span className="text-brand-primary font-black text-xs ml-0.5">{match.scoreA}</span>
+                        <span className="text-emerald-950 font-black text-xs ml-0.5">{match.scoreA}</span>
                       </div>
-                      <span className="text-white/40 text-[9px] font-bold mx-0.5">x</span>
+                      <span className="text-emerald-950/40 text-[9px] font-bold mx-0.5">x</span>
                       <div className="flex items-center gap-1">
-                        <span className="text-brand-primary font-black text-xs mr-0.5">{match.scoreB}</span>
+                        <span className="text-emerald-950 font-black text-xs mr-0.5">{match.scoreB}</span>
                         <div className="drop-shadow-sm" style={{ color: teams[match.teamBIndex]?.color || '#ffffff' }}>
                           <PiShieldFill size={12} />
                         </div>
                       </div>
+                      
+                      <div className="w-[1px] h-3 bg-emerald-950/20 mx-0.5" />
+                      <span className={`text-[9px] font-black tabular-nums tracking-tighter ${match.timeRemaining <= 60 && !match.isPaused ? 'text-red-600 animate-pulse' : 'text-emerald-950'}`}>
+                        {Math.floor(match.timeRemaining / 60).toString().padStart(2, '0')}:{(match.timeRemaining % 60).toString().padStart(2, '0')}
+                      </span>
                       <span className={`ml-1.5 flex items-center justify-center text-[9px] font-black tracking-widest bg-black/50 px-1.5 py-0.5 rounded ${match.timeRemaining <= 60 && !match.isPaused ? 'text-red-400 animate-pulse' : 'text-white'}`}>
                         {Math.floor(match.timeRemaining / 60).toString().padStart(2, '0')}:{(match.timeRemaining % 60).toString().padStart(2, '0')}
                       </span>
@@ -4666,10 +4671,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             {match.hasEnded && (
                               <div className="absolute inset-0 z-40 bg-black/10 backdrop-blur-[1px] rounded-2xl pointer-events-auto cursor-default" />
                             )}
-                            <div className="sticky top-[-1px] z-40 bg-gradient-to-br from-zinc-100 to-zinc-200 backdrop-blur-md py-6 -mx-6 px-6 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-[40px] border border-zinc-300 shadow-sm w-full max-w-2xl mx-auto relative overflow-hidden">
+                            <div className="sticky top-[-1px] z-40 bg-brand-primary backdrop-blur-md py-6 -mx-6 px-6 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-[32px] border border-black/5 shadow-sm w-full max-w-2xl mx-auto relative overflow-hidden">
                               <div className="flex-1 flex flex-col items-center text-center space-y-2 sm:space-y-4">
                                   <button 
-                                    className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm"
+                                    className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm bg-white/10 rounded-xl border border-white/10"
                                     disabled={match.hasEnded}
                                     onClick={() => {
                                       if (match.teamAIndex === -1) return;
@@ -4691,7 +4696,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     </svg>
                                   </button>
                                   <div 
-                                    className={`text-4xl sm:text-7xl font-black origin-center text-black ${(!match.isActive || match.isPaused) ? 'opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-[20px] bg-white border-b-4 border-zinc-300 shadow-sm`}
+                                    className={`text-4xl sm:text-7xl font-black origin-center text-emerald-950 ${(!match.isActive || match.isPaused) ? 'opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-xl bg-white border-b-4 border-zinc-200 shadow-sm`}
                                   >
                                     {match.scoreA}
                                   </div>
@@ -4756,7 +4761,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                               <div className="flex-1 flex flex-col items-center text-center space-y-2 sm:space-y-4">
                                   <button 
-                                    className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm"
+                                    className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm bg-white/10 rounded-xl border border-white/10"
                                     disabled={match.hasEnded}
                                     onClick={() => {
                                       if (match.teamBIndex === -1) return;
@@ -4778,7 +4783,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     </svg>
                                   </button>
                                   <div 
-                                    className={`text-4xl sm:text-7xl font-black origin-center text-black ${(!match.isActive || match.isPaused) ? 'opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-[20px] bg-white border-b-4 border-zinc-300 shadow-sm`}
+                                    className={`text-4xl sm:text-7xl font-black origin-center text-emerald-950 ${(!match.isActive || match.isPaused) ? 'opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-xl bg-white border-b-4 border-zinc-200 shadow-sm`}
                                   >
                                     {match.scoreB}
                                   </div>
@@ -4840,32 +4845,32 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           }
                                           setShowPlayerActionsModal({ teamIndex: match.teamAIndex, playerId: pid });
                                         }}
-                                        className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
-                                          swappingPlayerId === pid
-                                            ? 'bg-brand-primary/40 text-black border-2 border-brand-primary shadow-lg scale-105'
-                                            : 'text-black border border-black/5 hover:border-black/20 group'
-                                        }`}
-                                        style={{ 
-                                          backgroundColor: swappingPlayerId !== pid
-                                            ? ((teams[match.teamAIndex]?.color === '#1a1a1a' ? '#00000010' : (teams[match.teamAIndex]?.color || TEAM_COLORS[0]) + '15')) 
-                                            : undefined 
-                                        }}
-                                      >
-                                      <div className="flex items-center gap-1">
-                                        {matchAssists > 0 && (
-                                          <div className={`flex items-center gap-0.5 text-[10px] font-bold ${theme === 'light' ? 'text-green-800' : 'text-brand-primary'}`}>
-                                            <Footprints size={10} /> {matchAssists}
-                                          </div>
-                                        )}
-                                        {matchGoals > 0 && (
-                                          <div className={`flex items-center gap-0.5 text-[10px] font-bold ${theme === 'light' ? 'text-green-800' : 'text-brand-primary'}`}>
-                                            <CircleDot size={10} /> {matchGoals}
-                                          </div>
-                                        )}
-                                      </div>
-                                      <div className="flex items-center gap-2 ml-auto overflow-hidden">
-                                        <span className="text-[11px] sm:text-[10px] font-bold uppercase truncate text-black">{p.name}</span>
-                                        <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-300 flex items-center justify-center shrink-0 border border-zinc-400">
+                  className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
+                    swappingPlayerId === pid
+                      ? 'bg-brand-primary/40 text-black border-2 border-brand-primary shadow-lg scale-105'
+                      : 'text-black border border-black/5 hover:border-black/20 group'
+                  }`}
+                  style={{ 
+                    backgroundColor: swappingPlayerId !== pid
+                      ? ((teams[match.teamAIndex]?.color === '#1a1a1a' ? '#00000010' : (teams[match.teamAIndex]?.color || TEAM_COLORS[0]) + '15')) 
+                      : undefined 
+                  }}
+                >
+                <div className="flex items-center gap-1">
+                  {matchAssists > 0 && (
+                    <div className={`flex items-center gap-0.5 text-[10px] font-bold ${theme === 'light' ? 'text-green-800' : 'text-brand-primary'}`}>
+                      <Footprints size={10} /> {matchAssists}
+                    </div>
+                  )}
+                  {matchGoals > 0 && (
+                    <div className={`flex items-center gap-0.5 text-[10px] font-bold ${theme === 'light' ? 'text-green-800' : 'text-brand-primary'}`}>
+                      <CircleDot size={10} /> {matchGoals}
+                    </div>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 ml-auto overflow-hidden">
+                  <span className="text-[11px] sm:text-[10px] font-normal capitalize truncate text-black">{p.name.toLowerCase()}</span>
+                  <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 border border-zinc-200">
                                           {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <span className="text-black flex items-center shrink-0"><IoPersonOutline size={10} /></span>}
                                         </div>
                                       </div>
@@ -4973,21 +4978,21 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           }
                                           setShowPlayerActionsModal({ teamIndex: match.teamBIndex, playerId: pid });
                                         }}
-                                        className={`w-full flex items-center gap-2 p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 text-left disabled:opacity-50 disabled:cursor-not-allowed ${
-                                          swappingPlayerId === pid
-                                            ? 'bg-brand-primary/40 text-black border-2 border-brand-primary shadow-lg scale-105'
-                                            : 'text-black border border-black/5 hover:border-black/20 group'
-                                        }`}
-                                        style={{ 
-                                          backgroundColor: swappingPlayerId !== pid
-                                            ? ((teams[match.teamBIndex]?.color === '#1a1a1a' ? '#00000010' : (teams[match.teamBIndex]?.color || TEAM_COLORS[1]) + '15')) 
-                                            : undefined 
-                                        }}
-                                      >
-                                      <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-300 flex items-center justify-center shrink-0 border border-zinc-400">
-                                        {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <span className="text-black flex items-center shrink-0"><IoPersonOutline size={10} /></span>}
-                                      </div>
-                                      <span className="text-[11px] sm:text-[10px] font-bold uppercase truncate text-black">{p.name}</span>
+                  className={`w-full flex items-center gap-2 p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 text-left disabled:opacity-50 disabled:cursor-not-allowed ${
+                    swappingPlayerId === pid
+                      ? 'bg-brand-primary/40 text-black border-2 border-brand-primary shadow-lg scale-105'
+                      : 'text-black border border-black/5 hover:border-black/20 group'
+                  }`}
+                  style={{ 
+                    backgroundColor: swappingPlayerId !== pid
+                      ? ((teams[match.teamBIndex]?.color === '#1a1a1a' ? '#00000010' : (teams[match.teamBIndex]?.color || TEAM_COLORS[1]) + '15')) 
+                      : undefined 
+                  }}
+                >
+                <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 border border-zinc-200">
+                  {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <span className="text-black flex items-center shrink-0"><IoPersonOutline size={10} /></span>}
+                </div>
+                <span className="text-[11px] sm:text-[10px] font-normal capitalize truncate text-black">{p.name.toLowerCase()}</span>
                                       <div className="flex items-center gap-1 ml-auto">
                                         {matchGoals > 0 && (
                                           <div className={`flex items-center gap-0.5 text-[10px] font-bold ${theme === 'light' ? 'text-green-800' : 'text-brand-primary'}`}>
@@ -5675,7 +5680,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     : 'bg-transparent border-transparent'
                               }`}>
                                 <div className="flex items-center gap-2 overflow-hidden">
-                                  <div className={`w-6 h-6 rounded-full bg-zinc-300 flex items-center justify-center overflow-hidden border shrink-0 ${match.teamAIndex === tIndex || match.teamBIndex === tIndex ? 'border-emerald-500 ring-1 ring-emerald-500' : 'border-zinc-400'}`}>
+                                  <div className={`w-6 h-6 rounded-full bg-zinc-100 flex items-center justify-center overflow-hidden border shrink-0 ${match.teamAIndex === tIndex || match.teamBIndex === tIndex ? 'border-emerald-500 ring-1 ring-emerald-500' : 'border-zinc-200'}`}>
                                     {p.photo ? (
                                       <img src={p.photo} alt={p.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                                     ) : (
