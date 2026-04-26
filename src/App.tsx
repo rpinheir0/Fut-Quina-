@@ -682,11 +682,14 @@ const TieBreakerModal = ({
 
         {/* Header Section */}
         <div className="pt-10 pb-4 px-6 relative z-10">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             <div className="flex items-center gap-3">
               <div className="w-2 h-8 bg-brand-primary rounded-full shadow-[0_0_15px_rgba(183,217,108,0.6)]" />
               <span className="text-xs font-black text-brand-primary uppercase tracking-[0.4em]">Desempate</span>
             </div>
+            {state.type === 'penalties' && (
+              <span className="text-white/80 text-xs font-medium ml-5 mt-[-4px]">Disputa de pênaltis</span>
+            )}
           </div>
           {state.type !== 'none' && (
             <button 
@@ -944,9 +947,9 @@ const TieBreakerModal = ({
                   {state.penalties.teamA.map((shot, idx) => {
                     const p = players.find(player => player.id === shot.playerId);
                     return (
-                      <div key={`pen-a-${idx}`} className="p-3 bg-[#1a3a2e] border border-white/5 rounded-3xl space-y-3 relative overflow-hidden group">
+                      <div key={`pen-a-${idx}`} className="p-3 bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 border border-white/5 rounded-2xl space-y-3 relative overflow-hidden group shadow-xl">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center shrink-0 overflow-hidden">
+                          <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0 overflow-hidden">
                             {p?.photo ? (
                               <img src={p.photo} alt={p.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                             ) : (
@@ -958,16 +961,16 @@ const TieBreakerModal = ({
                             <span className="text-[7px] text-white/30 font-bold uppercase tracking-widest mt-0.5">Batedor {idx + 1}</span>
                           </div>
                         </div>
-                        <div className="flex gap-1.5">
+                        <div className="flex gap-2">
                           <button 
                             onClick={() => onPenaltyToggle('A', idx)}
-                            className={`flex-1 h-9 rounded-2xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? 'bg-emerald-500 text-[#112F24] shadow-[0_4px_12px_rgba(16,185,129,0.4)]' : 'bg-white/5 text-emerald-500/60 hover:bg-white/10'}`}
+                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-white/5 text-emerald-500/30 hover:bg-white/10'}`}
                           >
                             <PiCheckCircleBold size={18} />
                           </button>
                           <button 
                             onClick={() => onPenaltyToggle('A', idx)}
-                            className={`flex-1 h-9 rounded-2xl flex items-center justify-center transition-all duration-300 ${shot.success === false ? 'bg-red-500 text-white shadow-[0_4px_12px_rgba(239,68,68,0.4)]' : 'bg-white/5 text-red-500/60 hover:bg-white/10'}`}
+                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === false ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-white/5 text-red-500/30 hover:bg-white/10'}`}
                           >
                             <PiWarningCircleBold size={18} />
                           </button>
@@ -983,9 +986,9 @@ const TieBreakerModal = ({
                   {state.penalties.teamB.map((shot, idx) => {
                     const p = players.find(player => player.id === shot.playerId);
                     return (
-                      <div key={`pen-b-${idx}`} className="p-3 bg-[#1a3a2e] border border-white/5 rounded-3xl space-y-3 relative overflow-hidden group">
+                      <div key={`pen-b-${idx}`} className="p-3 bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 border border-white/5 rounded-2xl space-y-3 relative overflow-hidden group shadow-xl">
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-xl bg-white/10 border border-white/10 flex items-center justify-center shrink-0 overflow-hidden">
+                          <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0 overflow-hidden">
                             {p?.photo ? (
                               <img src={p.photo} alt={p.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                             ) : (
@@ -997,16 +1000,16 @@ const TieBreakerModal = ({
                             <span className="text-[7px] text-white/30 font-bold uppercase tracking-widest mt-0.5">Batedor {idx + 1}</span>
                           </div>
                         </div>
-                        <div className="flex gap-1.5">
+                        <div className="flex gap-2">
                           <button 
                             onClick={() => onPenaltyToggle('B', idx)}
-                            className={`flex-1 h-9 rounded-2xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? 'bg-emerald-500 text-[#112F24] shadow-[0_4px_12px_rgba(16,185,129,0.4)]' : 'bg-white/5 text-emerald-500/60 hover:bg-white/10'}`}
+                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-white/5 text-emerald-500/30 hover:bg-white/10'}`}
                           >
                             <PiCheckCircleBold size={18} />
                           </button>
                           <button 
                             onClick={() => onPenaltyToggle('B', idx)}
-                            className={`flex-1 h-9 rounded-2xl flex items-center justify-center transition-all duration-300 ${shot.success === false ? 'bg-red-500 text-white shadow-[0_4px_12px_rgba(239,68,68,0.4)]' : 'bg-white/5 text-red-500/60 hover:bg-white/10'}`}
+                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === false ? 'bg-red-500/20 text-red-400 border border-red-500/30' : 'bg-white/5 text-red-500/30 hover:bg-white/10'}`}
                           >
                             <PiWarningCircleBold size={18} />
                           </button>
