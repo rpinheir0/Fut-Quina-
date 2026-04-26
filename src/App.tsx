@@ -3799,7 +3799,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 hidden sm:flex items-center justify-center w-full max-w-[200px] cursor-pointer"
           >
             <AnimatePresence mode="popLayout" initial={false}>
-              {(match.isActive && !match.hasEnded) && (
+              {(match.isActive && !match.isPaused && !match.hasEnded) && (
                 <motion.div
                   key="scoreboard"
                   initial={{ y: -40, opacity: 0, scale: 0.8 }}
@@ -3847,7 +3847,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 sm:hidden flex items-center justify-center w-auto pl-6 pr-10 cursor-pointer"
           >
             <AnimatePresence mode="popLayout" initial={false}>
-              {(match.isActive && !match.hasEnded) && (
+              {(match.isActive && !match.isPaused && !match.hasEnded) && (
                 <motion.div
                   key="scoreboard"
                   initial={{ y: -40, opacity: 0, scale: 0.8 }}
