@@ -682,14 +682,11 @@ const TieBreakerModal = ({
 
         {/* Header Section */}
         <div className="pt-10 pb-4 px-6 relative z-10">
-          <div className="flex flex-col gap-1">
-            <div className="flex items-center gap-2">
-              <div className="w-1.5 h-6 bg-brand-primary rounded-full shadow-[0_0_10px_rgba(183,217,108,0.5)]" />
-              <span className="text-[10px] font-black text-brand-primary uppercase tracking-[0.25em]">Desempate</span>
+          <div className="flex flex-col gap-2">
+            <div className="flex items-center gap-3">
+              <div className="w-2 h-8 bg-brand-primary rounded-full shadow-[0_0_15px_rgba(183,217,108,0.6)]" />
+              <span className="text-xs font-black text-brand-primary uppercase tracking-[0.4em]">Desempate</span>
             </div>
-            <h2 className="text-2xl font-black uppercase tracking-tighter text-white drop-shadow-lg">
-              {state.type === 'none' ? 'Empate Detectado' : state.type === 'penalties' ? 'Pênaltis' : 'Sorteio'}
-            </h2>
           </div>
           {state.type !== 'none' && (
             <button 
@@ -763,45 +760,45 @@ const TieBreakerModal = ({
                 {queueCount >= 2 && (
                   <button 
                     onClick={() => setShowQueueOrder(true)}
-                    className="group w-full flex items-center gap-4 p-5 rounded-[24px] bg-emerald-500/10 border border-emerald-500/20 hover:bg-emerald-500/20 hover:border-emerald-500/30 transition-all duration-400 transform active:scale-95 text-left"
+                    className="group w-full flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 transition-all duration-400 transform active:scale-95 text-left border border-white/5 shadow-2xl"
                   >
-                    <div className="w-12 h-12 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                      <LogOut size={24} />
+                    <div className="w-12 h-12 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                      <LogOut size={28} />
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-black uppercase tracking-widest text-xs text-emerald-400">Os dois times deixam a partida</span>
-                      <span className="text-[10px] text-emerald-500/60 uppercase font-bold tracking-tight mt-0.5">Ambos vão para o final da fila</span>
+                      <span className="font-normal uppercase tracking-widest text-[11px] text-brand-primary">Os dois times deixam a partida</span>
+                      <span className="text-[10px] text-brand-primary/60 font-medium tracking-tight mt-0.5">Ambos vão para o final da fila</span>
                     </div>
-                    <ChevronRight size={16} className="ml-auto text-emerald-500/40 group-hover:text-emerald-400 transition-colors" />
+                    <ChevronRight size={18} className="ml-auto text-brand-primary/40 group-hover:text-brand-primary transition-colors" />
                   </button>
                 )}
 
                 <button 
                   onClick={() => onTypeSelect('penalties')}
-                  className="group w-full flex items-center gap-4 p-5 rounded-[24px] bg-white/5 border border-white/10 hover:bg-white/10 hover:border-brand-primary/30 transition-all duration-400 transform active:scale-95 text-left"
+                  className="group w-full flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 transition-all duration-400 transform active:scale-95 text-left border border-white/5 shadow-2xl"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <GiSoccerKick size={24} />
+                  <div className="w-12 h-12 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <GiSoccerKick size={28} />
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-black uppercase tracking-widest text-xs text-white">Disputa de Pênaltis</span>
-                    <span className="text-[10px] text-white/40 uppercase font-bold tracking-tight mt-0.5">Marcar acertos e erros</span>
+                    <span className="font-normal uppercase tracking-widest text-[11px] text-brand-primary">Disputa de Pênaltis</span>
+                    <span className="text-[10px] text-brand-primary/60 font-medium tracking-tight mt-0.5">Marcar acertos e erros</span>
                   </div>
-                  <ChevronRight size={16} className="ml-auto text-white/20 group-hover:text-brand-primary transition-colors" />
+                  <ChevronRight size={18} className="ml-auto text-brand-primary/40 group-hover:text-brand-primary transition-colors" />
                 </button>
 
                 <button 
                   onClick={() => onTypeSelect('lottery')}
-                  className="group w-full flex items-center gap-4 p-5 rounded-[24px] bg-white/5 border border-white/10 hover:bg-white/10 hover:border-brand-primary/30 transition-all duration-400 transform active:scale-95 text-left"
+                  className="group w-full flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 transition-all duration-400 transform active:scale-95 text-left border border-white/5 shadow-2xl"
                 >
-                  <div className="w-12 h-12 rounded-2xl bg-brand-primary/10 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <RefreshCw size={24} strokeWidth={2.5} />
+                  <div className="w-12 h-12 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <RefreshCw size={28} strokeWidth={2} />
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-black uppercase tracking-widest text-xs text-white">Sorteio Aleatório</span>
-                    <span className="text-[10px] text-white/40 uppercase font-bold tracking-tight mt-0.5">Roleta da sorte</span>
+                    <span className="font-normal uppercase tracking-widest text-[11px] text-brand-primary">Sorteio Aleatório</span>
+                    <span className="text-[10px] text-brand-primary/60 font-medium tracking-tight mt-0.5">Roleta da sorte</span>
                   </div>
-                  <ChevronRight size={16} className="ml-auto text-white/20 group-hover:text-brand-primary transition-colors" />
+                  <ChevronRight size={18} className="ml-auto text-brand-primary/40 group-hover:text-brand-primary transition-colors" />
                 </button>
 
                 <div className="pt-4">
@@ -826,9 +823,9 @@ const TieBreakerModal = ({
               <div className="grid grid-cols-1 gap-3">
                 <button 
                   onClick={() => onBothLeave('A')}
-                  className="group w-full flex items-center gap-4 p-5 rounded-[24px] bg-white/5 border border-white/10 hover:bg-white/10 hover:border-brand-primary/30 transition-all duration-400 transform active:scale-95 text-left"
+                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-zinc-500/80 via-zinc-600/80 to-zinc-700/80 hover:scale-[1.01] transition-all duration-400 transform active:scale-95 text-left border border-white/5"
                 >
-                  <div className="w-14 h-14 rounded-2xl bg-brand-primary/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <div className="w-14 h-14 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                     <svg viewBox="0 0 24 24" stroke="white" strokeWidth="1.5" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
                       <defs>
                         <linearGradient id={`shield-grad-modal-q-A`} x1="0%" y1="0%" x2="0%" y2="100%">
@@ -848,10 +845,10 @@ const TieBreakerModal = ({
                     </svg>
                   </div>
                   <div className="flex flex-col overflow-hidden">
-                    <span className="font-black uppercase tracking-widest text-xs text-white truncate">{teamA.name} primeiro</span>
+                    <span className="font-normal uppercase tracking-widest text-xs text-brand-primary truncate">{teamA.name} primeiro</span>
                     <div className="flex flex-wrap gap-x-1.5 mt-1">
                       {(teamA.playerIds || []).map((pid, idx) => (
-                        <span key={pid} className="text-[8px] text-white/30 font-bold uppercase tracking-tight">
+                        <span key={pid} className="text-[8px] text-brand-primary/60 font-bold tracking-tight">
                           {players.find(p => p.id === pid)?.name}{idx < (teamA.playerIds?.length || 0) - 1 ? ' •' : ''}
                         </span>
                       ))}
@@ -861,9 +858,9 @@ const TieBreakerModal = ({
 
                 <button 
                   onClick={() => onBothLeave('B')}
-                  className="group w-full flex items-center gap-4 p-5 rounded-[24px] bg-white/5 border border-white/10 hover:bg-white/10 hover:border-brand-primary/30 transition-all duration-400 transform active:scale-95 text-left"
+                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-zinc-500/80 via-zinc-600/80 to-zinc-700/80 hover:scale-[1.01] transition-all duration-400 transform active:scale-95 text-left border border-white/5"
                 >
-                  <div className="w-14 h-14 rounded-2xl bg-brand-primary/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <div className="w-14 h-14 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                     <svg viewBox="0 0 24 24" stroke="white" strokeWidth="1.5" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
                       <defs>
                         <linearGradient id={`shield-grad-modal-q-B`} x1="0%" y1="0%" x2="0%" y2="100%">
@@ -883,10 +880,10 @@ const TieBreakerModal = ({
                     </svg>
                   </div>
                   <div className="flex flex-col overflow-hidden">
-                    <span className="font-black uppercase tracking-widest text-xs text-white truncate">{teamB.name} primeiro</span>
+                    <span className="font-normal uppercase tracking-widest text-xs text-brand-primary truncate">{teamB.name} primeiro</span>
                     <div className="flex flex-wrap gap-x-1.5 mt-1">
                       {(teamB.playerIds || []).map((pid, idx) => (
-                        <span key={pid} className="text-[8px] text-white/30 font-bold uppercase tracking-tight">
+                        <span key={pid} className="text-[8px] text-brand-primary/60 font-bold tracking-tight">
                           {players.find(p => p.id === pid)?.name}{idx < (teamB.playerIds?.length || 0) - 1 ? ' •' : ''}
                         </span>
                       ))}
