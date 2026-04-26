@@ -6559,15 +6559,15 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 initial={{ scale: 0.9, y: 30, opacity: 0 }}
                 animate={{ scale: 1, y: 0, opacity: 1 }}
                 exit={{ scale: 0.9, y: 30, opacity: 0 }}
-                className="w-full max-w-[240px] rounded-[28px] shadow-2xl border bg-white border-zinc-200 overflow-hidden"
+                className="w-full max-w-[290px] rounded-[32px] shadow-2xl border bg-brand-gradient border-brand-primary overflow-hidden"
                 onClick={e => e.stopPropagation()}
               >
                 {/* Header */}
-                <div className="bg-zinc-50 pt-5 pb-3 px-4 text-center border-b border-zinc-100 relative overflow-hidden">
+                <div className="bg-transparent pt-6 pb-4 px-5 text-center border-b border-zinc-200 relative overflow-hidden">
                   <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 via-brand-primary to-amber-500" />
                   
-                  <div className="relative inline-block mb-2">
-                    <div className="w-14 h-14 mx-auto rounded-[18px] bg-white flex items-center justify-center overflow-hidden border-2 border-white shadow-lg relative z-10">
+                  <div className="relative inline-block mb-3">
+                    <div className="w-16 h-16 mx-auto rounded-[20px] bg-white flex items-center justify-center overflow-hidden border-2 border-zinc-100 shadow-lg relative z-10">
                       {players.find(p => p.id === showPlayerActionsModal.playerId)?.photo ? (
                         <img 
                           src={players.find(p => p.id === showPlayerActionsModal.playerId)?.photo} 
@@ -6576,19 +6576,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           referrerPolicy="no-referrer"
                         />
                       ) : (
-                        <span className="text-zinc-200 flex items-center shrink-0"><User size={24} /></span>
+                        <span className="text-zinc-200 flex items-center shrink-0"><User size={28} /></span>
                       )}
                     </div>
                   </div>
   
-                  <h3 className="text-base font-black uppercase tracking-tight text-zinc-900 leading-tight mb-2">
+                  <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 leading-tight mb-2">
                     {players.find(p => p.id === showPlayerActionsModal.playerId)?.name}
-                  </h3>
-                </div>
+                   </h3>
+                 </div>
   
                 {/* Actions Section */}
-                <div className="p-2.5">
-                  <div className="space-y-1">
+                <div className="p-3">
+                  <div className="space-y-1.5">
                     {/* Primary Success Actions (Goal) */}
                     {!swappingPlayerId && (showPlayerActionsModal.teamIndex === match.teamAIndex || showPlayerActionsModal.teamIndex === match.teamBIndex) && (
                         <button 
@@ -6654,7 +6654,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     )}
   
                     {/* Action Grid */}
-                    <div className="grid grid-cols-2 gap-1.5">
+                    <div className="grid grid-cols-2 gap-1.5 mt-2">
                       {/* Substituir */}
                       {swappingPlayerId !== showPlayerActionsModal.playerId && (
                         <button 
@@ -6664,7 +6664,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             setShowPlayerActionsModal(null);
                             setToast({ message: "Selecione outro jogador para trocar de posição.", type: 'info' });
                           }}
-                          className="py-2.5 px-2 bg-zinc-50 text-zinc-900 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
+                          className="py-2.5 px-2 bg-white text-zinc-900 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-zinc-50 active:scale-95 border border-zinc-200 hover:border-zinc-300 shadow-sm group"
                         >
                           <ArrowLeftRight size={14} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
                           Trocar
@@ -6681,7 +6681,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             setShowPlayerActionsModal(null);
                             setToast({ message: "Selecione o time de destino (apenas times incompletos).", type: 'info' });
                           }}
-                          className="py-2.5 px-2 bg-zinc-50 text-zinc-900 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
+                          className="py-2.5 px-2 bg-white text-zinc-900 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-zinc-50 active:scale-95 border border-zinc-200 hover:border-zinc-300 shadow-sm group"
                         >
                           <MoveRight size={14} className="text-zinc-400 group-hover:text-zinc-900 transition-colors" />
                           Mover
@@ -6716,7 +6716,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             
                             setShowPlayerActionsModal(null);
                           }}
-                          className="py-2.5 px-2 bg-red-50 text-red-600 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-red-100 active:scale-95 border border-red-100 hover:border-red-200 group"
+                          className="py-2.5 px-2 bg-white text-red-600 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-red-50 active:scale-95 border border-red-100 hover:border-red-200 shadow-sm group"
                         >
                           <LogOut size={14} className="opacity-70 group-hover:opacity-100 transition-opacity" />
                           Ausente
@@ -6730,7 +6730,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             setSwappingPlayerId(null);
                             setShowPlayerActionsModal(null);
                           }}
-                          className="py-2.5 px-2 bg-red-50 text-red-600 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-red-100 active:scale-95 border border-red-100 hover:border-red-200"
+                          className="py-2.5 px-2 bg-white text-red-600 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-red-50 active:scale-95 border border-red-100 hover:border-red-200 shadow-sm"
                         >
                           <X size={14} />
                           Cancelar
@@ -6739,7 +6739,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   
                       <button 
                         onClick={() => setShowPlayerActionsModal(null)}
-                        className="py-2.5 px-2 bg-zinc-100 text-zinc-500 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-zinc-200 active:scale-95"
+                        className="py-2.5 px-2 bg-zinc-200 text-zinc-600 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-zinc-300 active:scale-95 border border-transparent shadow-sm"
                       >
                         <X size={14} />
                         Fechar
@@ -6763,7 +6763,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               initial={{ scale: 0.9, y: 30, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.9, y: 30, opacity: 0 }}
-              className="w-full max-w-[280px] rounded-[32px] shadow-2xl border bg-white border-zinc-200 overflow-hidden"
+              className="w-full max-w-[290px] rounded-[32px] shadow-2xl border bg-brand-gradient border-brand-primary overflow-hidden"
               onClick={e => e.stopPropagation()}
             >
               {/* Header */}
