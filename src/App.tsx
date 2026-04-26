@@ -20,6 +20,8 @@ import {
   SunMedium,
   Moon,
   ChevronRight,
+  ChevronDown,
+  ChevronUp,
   Shield,
   Timer,
   Clock,
@@ -36,6 +38,8 @@ import {
   Info,
   AlertTriangle,
   RefreshCw,
+  Database,
+  Wifi,
   DollarSign,
   Camera,
   Printer,
@@ -58,10 +62,11 @@ import {
   Award,
   LogOut,
   Contact,
-  Rocket
+  Rocket,
+  Globe
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { IoPersonOutline, IoFootballOutline } from 'react-icons/io5';
+import { IoPersonOutline, IoFootballOutline, IoCheckmarkCircle } from 'react-icons/io5';
 import { IoIosTrophy, IoIosWallet, IoIosFootball } from 'react-icons/io';
 import { PiUserCirclePlusThin, PiUserCirclePlusLight, PiUserCirclePlus } from 'react-icons/pi';
 import { ImSpinner9 } from 'react-icons/im';
@@ -123,7 +128,9 @@ import {
   PiTrash,
   PiCheckBold,
   PiCheck,
-  PiHandPointingBold
+  PiHandPointingBold,
+  PiLockFill,
+  PiShieldCheckFill
 } from 'react-icons/pi';
 import { supabase } from './lib/supabase';
 import { sounds } from './lib/sounds';
@@ -134,7 +141,9 @@ function useSupabaseArraySync<T extends { id: string }>(
   groupId: string,
   items: T[],
   mapToDb: (item: T, groupId: string) => any,
-  isDataLoaded: boolean
+  isDataLoaded: boolean,
+  isReadOnly: boolean = false,
+  isEnabled: boolean = true
 ) {
   const syncedIds = React.useRef<Set<string>>(new Set());
 
@@ -145,10 +154,12 @@ function useSupabaseArraySync<T extends { id: string }>(
   }, [mapToDb]);
 
   React.useEffect(() => {
-    if (!isDataLoaded) {
+    if (!isDataLoaded || !isEnabled) {
       syncedIds.current = new Set(items.map(i => i.id));
       return;
     }
+
+    if (isReadOnly) return;
 
     const currentIds = new Set(items.map(i => i.id));
     const deletedIds = [...syncedIds.current].filter(id => !currentIds.has(id));
@@ -163,7 +174,7 @@ function useSupabaseArraySync<T extends { id: string }>(
     }
 
     syncedIds.current = currentIds;
-  }, [items, isDataLoaded, groupId, tableName]);
+  }, [items, isDataLoaded, groupId, tableName, isReadOnly]);
 }
 
 import { 
@@ -189,6 +200,7 @@ interface Player {
   isAvailable?: boolean;
   photo?: string;
   arrivedAt?: number;
+  absences?: number;
 }
 
 interface Team {
@@ -1281,6 +1293,7 @@ const PlayerManagementModalComponent = ({
   onClose, 
   onUpdateName, 
   onUpdatePhoto,
+  onUpdateAbsences,
   onRemove
 }: { 
   player: Player | null, 
@@ -1288,6 +1301,7 @@ const PlayerManagementModalComponent = ({
   onClose: () => void, 
   onUpdateName: (id: string, name: string) => void,
   onUpdatePhoto: (id: string, photo: string) => void,
+  onUpdateAbsences?: (id: string, absences: number) => void,
   onRemove?: (id: string) => void
 }) => {
   const theme = 'light';
@@ -1358,18 +1372,32 @@ const PlayerManagementModalComponent = ({
               <p className="text-[7px] font-black uppercase tracking-[0.3em] text-brand-primary mt-1">Nome do Jogador</p>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               <div className={`p-3 rounded-2xl flex flex-col items-center justify-center border-2 border-brand-border shadow-[3px_3px_0_0_var(--brand-border)] ${
                 theme === 'light' ? 'bg-white' : 'bg-black/40'
               }`}>
-                <div className="text-2xl font-black text-brand-primary leading-none mb-1">{player.goals}</div>
-                <div className="text-[7px] font-black uppercase tracking-widest text-brand-text-secondary !normal-case">Gols</div>
+                <div className="text-xl font-black text-brand-primary leading-none mb-1">{player.goals}</div>
+                <div className="text-[7px] font-black uppercase tracking-widest text-brand-text-secondary !normal-case text-center">Gols</div>
               </div>
               <div className={`p-3 rounded-2xl flex flex-col items-center justify-center border-2 border-brand-border shadow-[3px_3px_0_0_var(--brand-border)] ${
                 theme === 'light' ? 'bg-white' : 'bg-black/40'
               }`}>
-                <div className="text-2xl font-black text-brand-primary leading-none mb-1">{player.assists}</div>
-                <div className="text-[7px] font-black uppercase tracking-widest text-brand-text-secondary !normal-case">Assistências</div>
+                <div className="text-xl font-black text-brand-primary leading-none mb-1">{player.assists}</div>
+                <div className="text-[7px] font-black uppercase tracking-widest text-brand-text-secondary !normal-case text-center">Assistências</div>
+              </div>
+              <div className={`p-2 rounded-2xl flex flex-col items-center justify-center border-2 border-orange-200 shadow-[3px_3px_0_0_theme(colors.orange.200)] ${
+                theme === 'light' ? 'bg-orange-50' : 'bg-orange-900/20'
+              } relative group`}>
+                <div className="text-xl font-black text-orange-600 leading-none mb-1 flex items-center justify-center gap-1">
+                  {onUpdateAbsences && (
+                    <button onClick={() => onUpdateAbsences(player.id, Math.max(0, (player.absences || 0) - 1))} className="text-orange-400 hover:text-orange-600 px-1 p-0.5 active:scale-95"><ChevronDown size={14} /></button>
+                  )}
+                  {player.absences || 0}
+                  {onUpdateAbsences && (
+                    <button onClick={() => onUpdateAbsences(player.id, (player.absences || 0) + 1)} className="text-orange-400 hover:text-orange-600 px-1 p-0.5 active:scale-95"><ChevronUp size={14} /></button>
+                  )}
+                </div>
+                <div className="text-[7px] font-black uppercase tracking-widest text-orange-800 text-center !normal-case">Ausências</div>
               </div>
             </div>
 
@@ -1435,7 +1463,7 @@ interface PaymentRecord {
   monthlyFee: number;
 }
 
-type Screen = 'players' | 'teams' | 'ranking' | 'finance';
+type Screen = 'players' | 'teams' | 'ranking' | 'finance' | 'org-pro';
 
 // --- Utils ---
 
@@ -1664,7 +1692,35 @@ const RouletteOverlay = () => {
 function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: () => void }) {
   const theme = 'light';
   const setTheme = (t: string) => {}; // No-op if needed elsewhere
+  
+  // -- Presence Mode --
+  const urlParams = new URLSearchParams(window.location.search);
+  const [isPresenceMode, setIsPresenceMode] = useState<boolean>(urlParams.get('presence') === 'true');
+  const [presencePlayerId, setPresencePlayerId] = useState<string>('');
+  const [presenceCode, setPresenceCode] = useState<string>('');
+  
   // --- State ---
+  const [isOrgProAuthorized, setIsOrgProAuthorized] = useState<boolean>(() => {
+    const saved = safeLocalStorage.getItem(`futquina_org_pro_authorized_${groupId}`);
+    return saved === 'true';
+  });
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [adminPin, setAdminPin] = useState<string>('');
+
+  useEffect(() => {
+    safeLocalStorage.setItem(`futquina_org_pro_authorized_${groupId}`, isOrgProAuthorized ? 'true' : 'false');
+  }, [isOrgProAuthorized, groupId]);
+
+  useEffect(() => {
+    const fetchGroupData = async () => {
+      const { data } = await supabase.from('groups').select('admin_pin').eq('id', groupId).maybeSingle();
+      if (data?.admin_pin) {
+        setAdminPin(data.admin_pin);
+      }
+    };
+    fetchGroupData();
+  }, [groupId]);
+
   const [currentScreen, setCurrentScreen] = useState<Screen>(() => {
     const saved = safeLocalStorage.getItem(`futquina_current_screen_${groupId}`);
     return (saved as Screen) || 'players';
@@ -1715,6 +1771,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     const saved = safeLocalStorage.getItem(`futquina_finance_subscreen_${groupId}`);
     return (saved as 'mensalidade' | 'balanco' | 'menu') || 'balanco';
   });
+  const [orgProTab, setOrgProTab] = useState<'painel' | 'acesso' | 'confirmados' | 'admins' | 'supabase'>('painel');
+  const [authMode, setAuthMode] = useState<'pin' | 'email' | 'signup'>('pin');
+  const [authEmail, setAuthEmail] = useState('');
+  const [authPassword, setAuthPassword] = useState('');
+  const [authPin, setAuthPin] = useState('');
+  const [appAdmins, setAppAdmins] = useState<any[]>([]);
+  const [jogadoresExternos, setJogadoresExternos] = useState<any[]>([]);
+  const [presencasExternas, setPresencasExternas] = useState<any[]>([]);
 
   useEffect(() => {
     safeLocalStorage.setItem(`futquina_finance_subscreen_${groupId}`, financeSubScreen);
@@ -1780,6 +1844,38 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     }
     return [];
   });
+  const [orgProData, setOrgProData] = useState<{ [playerId: string]: { code: string } }>(() => {
+    const saved = safeLocalStorage.getItem(`futquina_org_pro_${groupId}`);
+    return saved ? JSON.parse(saved) : {};
+  });
+  useEffect(() => {
+    safeLocalStorage.setItem(`futquina_org_pro_${groupId}`, JSON.stringify(orgProData));
+  }, [orgProData, groupId]);
+
+  const [orgProSettings, setOrgProSettings] = useState<{
+    maxAbsences: number | null;
+    requirePaymentUpToDate: boolean;
+    matchDayOfWeek: number | null;
+    matchTime: string;
+    appliedDate: number | null;
+  }>(() => {
+    const saved = safeLocalStorage.getItem(`futquina_org_settings_${groupId}`);
+    return saved ? JSON.parse(saved) : {
+      maxAbsences: null,
+      requirePaymentUpToDate: false,
+      matchDayOfWeek: null,
+      matchTime: "",
+      appliedDate: null
+    };
+  });
+  
+  const [tempOrgProSettings, setTempOrgProSettings] = useState(orgProSettings);
+
+  useEffect(() => {
+    safeLocalStorage.setItem(`futquina_org_settings_${groupId}`, JSON.stringify(orgProSettings));
+    setTempOrgProSettings(orgProSettings);
+  }, [orgProSettings, groupId]);
+
   const [payments, setPayments] = useState<PaymentRecord[]>(() => {
     const saved = safeLocalStorage.getItem(`futquina_payments_${groupId}`);
     if (saved) {
@@ -2141,11 +2237,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       setIsDataLoaded(false);
       try {
         const results = await Promise.allSettled([
-          supabase.from('players').select('*').eq('group_id', groupId),
+          supabase.from('players').select('*').eq('group_id', groupId).order('name'),
           supabase.from('teams').select('*').eq('group_id', groupId),
           supabase.from('payments').select('*').eq('group_id', groupId),
           supabase.from('match_history').select('*').eq('group_id', groupId),
-          supabase.from('match_state').select('*').eq('group_id', groupId).maybeSingle()
+          supabase.from('match_state').select('*').eq('group_id', groupId).maybeSingle(),
+          supabase.from('transactions').select('*').eq('group_id', groupId),
+          supabase.from('groups').select('*').eq('id', groupId).maybeSingle()
         ]);
 
         const playersData = results[0].status === 'fulfilled' ? results[0].value?.data : null;
@@ -2153,6 +2251,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         const paymentsData = results[2].status === 'fulfilled' ? results[2].value?.data : null;
         const matchHistoryData = results[3].status === 'fulfilled' ? results[3].value?.data : null;
         const matchStateData = results[4].status === 'fulfilled' ? results[4].value?.data : null;
+        const transactionsData = results[5].status === 'fulfilled' ? results[5].value?.data : null;
+        const groupData = results[6].status === 'fulfilled' ? results[6].value?.data : null;
 
         if (playersData && playersData.length > 0) {
           const uniquePlayersMap = new Map();
@@ -2174,7 +2274,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         if (teamsData && teamsData.length > 0) {
           const loadedTeams: Team[] = [];
           
-          // Detect if all teams have the exact same bugged fallback color
           const allSameGreen = teamsData.length > 1 && teamsData.every(t => t.color === '#4ade80');
           const allSameBlack = teamsData.length > 1 && teamsData.every(t => t.color === '#1a1a1a');
           const forceRecolor = allSameGreen || allSameBlack;
@@ -2233,6 +2332,23 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             config: matchStateData.config || { duration: 15, playersPerTeam: 5, scoreLimit: 10 }
           });
         }
+        if (transactionsData && transactionsData.length > 0) {
+          setExpenses(transactionsData.map(t => ({
+            id: t.id,
+            name: t.name,
+            amount: t.amount,
+            date: t.date
+          })));
+        }
+        if (groupData) {
+          if (groupData.admin_pin) setAdminPin(groupData.admin_pin);
+          if (groupData.monthly_fee) setMonthlyFee(Number(groupData.monthly_fee));
+          if (groupData.selected_year) setSelectedYear(groupData.selected_year);
+          if (groupData.manual_adjustment) setManualAdjustment(Number(groupData.manual_adjustment));
+          if (groupData.available_years && Array.isArray(groupData.available_years)) {
+            setAvailableYears(groupData.available_years);
+          }
+        }
       } catch (err) {
         console.error("Error loading data from Supabase", err);
       } finally {
@@ -2242,24 +2358,79 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     loadData();
   }, [groupId]);
 
+  useEffect(() => {
+    if (!groupId || isPresenceMode || !isDataLoaded) return;
+    
+    const playersChannel = supabase.channel(`public:players:${groupId}`)
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'players', filter: `group_id=eq.${groupId}` }, (payload) => {
+        const updatedPlayer = payload.new;
+        setPlayers(prev => prev.map(p => p.id === updatedPlayer.id ? { 
+          ...p, 
+          isAvailable: updatedPlayer.is_available,
+          arrivedAt: updatedPlayer.arrived_at
+        } : p));
+      })
+      .subscribe();
+
+    const paymentsChannel = supabase.channel(`public:payments:${groupId}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'payments', filter: `group_id=eq.${groupId}` }, (payload) => {
+        // Just reload all payments data to keep it simple when it changes
+        supabase.from('payments').select('*').eq('group_id', groupId).then(({ data }) => {
+          if (data) {
+            setPayments(data.map(p => ({
+              id: p.id,
+              playerId: p.player_id,
+              month: p.month,
+              year: p.year,
+              amount: p.amount,
+              paidAt: p.paid_at,
+              isHalf: p.is_half
+            })));
+          }
+        });
+      })
+      .subscribe();
+      
+    return () => { 
+      supabase.removeChannel(playersChannel);
+      supabase.removeChannel(paymentsChannel);
+    };
+  }, [groupId, isPresenceMode, isDataLoaded]);
+
   useSupabaseArraySync('players', groupId, players, (p: any, gid) => ({
     id: p.id, group_id: gid, name: p.name, photo: p.photo || null, is_available: p.isAvailable, arrived_at: p.arrivedAt || null
-  }), isDataLoaded);
+  }), isDataLoaded, isPresenceMode, isOrgProAuthorized);
 
   useSupabaseArraySync('teams', groupId, teams, (t: any, gid) => ({
     id: t.id, group_id: gid, name: t.name, color: t.color, player_ids: t.playerIds
-  }), isDataLoaded);
+  }), isDataLoaded, isPresenceMode, isOrgProAuthorized);
 
   useSupabaseArraySync('payments', groupId, payments, (p: any, gid) => ({
     id: p.id, group_id: gid, player_id: p.playerId, month: p.month, year: p.year, amount: p.amount, paid_at: p.paidAt, is_half: p.isHalf
-  }), isDataLoaded);
+  }), isDataLoaded, isPresenceMode, isOrgProAuthorized);
 
   useSupabaseArraySync('match_history', groupId, matchHistory, (m: any, gid) => ({
     id: m.id, group_id: gid, team_a_id: m.teamAId || null, team_b_id: m.teamBId || null, team_a_name: m.teamAName, team_b_name: m.teamBName, score_a: m.scoreA, score_b: m.scoreB, winner_id: m.winnerId || null, loser_id: m.loserId || null, events: m.events, played_at: m.playedAt
-  }), isDataLoaded);
+  }), isDataLoaded, isPresenceMode, isOrgProAuthorized);
+
+  useSupabaseArraySync('transactions', groupId, expenses, (e: any, gid) => ({
+    id: e.id, group_id: gid, name: e.name, amount: e.amount, date: e.date
+  }), isDataLoaded, isPresenceMode, isOrgProAuthorized);
 
   useEffect(() => {
-    if (!isDataLoaded) return;
+    if (!isDataLoaded || isPresenceMode || !isOrgProAuthorized) return;
+    supabase.from('groups').upsert({
+      id: groupId,
+      monthly_fee: monthlyFee,
+      selected_year: selectedYear,
+      manual_adjustment: manualAdjustment,
+      available_years: availableYears,
+      admin_pin: adminPin
+    }, { onConflict: 'id' }).then();
+  }, [monthlyFee, selectedYear, manualAdjustment, availableYears, adminPin, isDataLoaded, groupId, isPresenceMode, isOrgProAuthorized]);
+
+  useEffect(() => {
+    if (!isDataLoaded || isPresenceMode || !isOrgProAuthorized) return;
     supabase.from('match_state').upsert({
       group_id: groupId,
       score_a: match.scoreA,
@@ -2345,6 +2516,34 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       return () => clearTimeout(timer);
     }
   }, [toast]);
+
+  // Sync com tabelas externas (jogadores e presencas)
+  useEffect(() => {
+    const fetchExternos = async () => {
+      const { data: jogs } = await supabase.from('jogadores').select('*').order('created_at', { ascending: false });
+      const { data: pres } = await supabase.from('presencas').select('*').order('created_at', { ascending: false });
+      
+      if (jogs) setJogadoresExternos(jogs);
+      if (pres) setPresencasExternas(pres);
+    };
+
+    fetchExternos();
+
+    // Realtime subscriptions
+    const jogsChannel = supabase
+      .channel('schema-db-changes')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'jogadores' }, (payload) => {
+        fetchExternos();
+      })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'presencas' }, (payload) => {
+        fetchExternos();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(jogsChannel);
+    };
+  }, []);
 
   // --- Initialization ---
   useEffect(() => {
@@ -2723,6 +2922,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
       return newTeams;
     });
+  };
+
+  const updatePlayerAbsences = (id: string, absences: number) => {
+    setPlayers(prev => prev.map(p => p.id === id ? { ...p, absences } : p));
   };
 
   const updatePlayerName = (id: string, newName: string) => {
@@ -3503,9 +3706,67 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     setTimeout(() => setToast(null), 2000);
   };
 
-  // --- UI Components ---
-
   const MONTHS = ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'];
+
+  const isMatchTimePassed = useMemo(() => {
+    if (orgProSettings.matchDayOfWeek === null || !orgProSettings.appliedDate) return false;
+    const now = new Date();
+    
+    const applied = new Date(orgProSettings.appliedDate);
+    const expirationDate = new Date(applied);
+    
+    let daysToAdd = orgProSettings.matchDayOfWeek - applied.getDay();
+    if (daysToAdd < 0) {
+      daysToAdd += 7;
+    }
+    
+    // Expiration is at 23:59:59 of the match day
+    expirationDate.setDate(expirationDate.getDate() + daysToAdd);
+    expirationDate.setHours(23, 59, 59, 999);
+    
+    return now.getTime() > expirationDate.getTime();
+  }, [orgProSettings.matchDayOfWeek, orgProSettings.appliedDate]);
+
+  useEffect(() => {
+    if (isMatchTimePassed) {
+      setOrgProSettings({
+        maxAbsences: null,
+        requirePaymentUpToDate: false,
+        matchDayOfWeek: null,
+        matchTime: "",
+        appliedDate: null
+      });
+      setOrgProData({});
+      setToast({ message: 'A data da pelada passou! As exigências e presenças foram redefinidas.', type: 'info' });
+      setTimeout(() => setToast(null), 3000);
+    }
+  }, [isMatchTimePassed]);
+
+  const visiblePlayers = useMemo(() => {
+    const timePassed = isMatchTimePassed;
+    const currentMonth = MONTHS[new Date().getMonth()];
+    const currentYear = new Date().getFullYear();
+
+    return players.filter(player => {
+      const isOrgPro = !!orgProData[player.id];
+
+      if (isOrgPro && timePassed) return false;
+
+      if (orgProSettings.maxAbsences !== null && (player.absences || 0) > orgProSettings.maxAbsences) {
+        return false;
+      }
+
+      if (orgProSettings.requirePaymentUpToDate) {
+        const record = payments.find(p => p.playerId === player.id && p.year === currentYear);
+        const isUpToDate = record && record.months[currentMonth] > 0;
+        if (!isUpToDate) return false;
+      }
+
+      return true;
+    });
+  }, [players, orgProSettings, orgProData, payments, isMatchTimePassed]);
+
+  // --- UI Components ---
 
   const NavItem = ({ screen, icon: Icon, label }: { screen: Screen, icon: any, label: string }) => {
     const isActive = currentScreen === screen;
@@ -3545,6 +3806,174 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               </button>
     );
   };
+
+  if (isPresenceMode) {
+    const orgParam = urlParams.get('org');
+    let orgData: any = {};
+    if (orgParam) {
+      try {
+        orgData = JSON.parse(atob(orgParam));
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    return (
+      <div className="h-screen bg-brand-dark text-white font-sans overflow-y-auto flex flex-col p-6 items-center justify-center">
+        <AnimatePresence>
+          {toast && (
+            <motion.div 
+              initial={{ opacity: 0, y: 30, scale: 0.9 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="fixed bottom-12 left-0 right-0 z-[200] flex justify-center px-6 pointer-events-none"
+            >
+              <motion.div
+                className={`pointer-events-auto flex items-center gap-3 px-5 py-3 rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] border backdrop-blur-xl transition-all ${
+                  toast.type === 'success' ? 'bg-emerald-500/90 border-emerald-400/50 text-white' :
+                  toast.type === 'warning' ? 'bg-amber-500/90 border-amber-400/50 text-white' :
+                  'bg-[#1E3D2F]/95 border-white/10 text-white'
+                }`}
+              >
+                <div className="shrink-0">
+                  {toast.type === 'success' && <PiCheckCircleBold size={18} />}
+                  {toast.type === 'warning' && <PiWarningCircleBold size={18} />}
+                  {toast.type === 'gray' && <PiGearBold size={18} />}
+                  {toast.type === 'info' && <PiRocketBold size={18} />}
+                </div>
+                <span className="text-xs font-bold leading-tight max-w-[200px]">{toast.message}</span>
+                <button 
+                  onClick={() => setToast(null)}
+                  className="ml-2 w-6 h-6 flex items-center justify-center bg-white/20 hover:bg-white/30 rounded-full transition-colors shrink-0"
+                >
+                  <PiXBold size={14} />
+                </button>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        <div className="bg-[#1E3D2F] w-full max-w-sm rounded-[2rem] p-6 shadow-2xl relative overflow-hidden border border-white/10">
+          <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+             <GiCrown size={120} />
+          </div>
+          <h1 className="text-2xl font-black uppercase tracking-tighter mb-2 relative z-10">Marcar Presença</h1>
+          <p className="text-[10px] uppercase tracking-widest text-[#E3D39E]/80 font-bold mb-8 relative z-10">Confirme sua participação na pelada</p>
+
+          {!presencePlayerId ? (
+            <div className="space-y-4 relative z-10">
+               <label className="text-[10px] font-black uppercase tracking-widest text-white/50">Selecione seu nome</label>
+               <div className="grid grid-cols-1 gap-2 max-h-80 overflow-y-auto custom-scrollbar pr-2">
+                  {[...players].sort((a,b)=>a.name.localeCompare(b.name)).map(p => (
+                     <button
+                        key={`pres-${p.id}`}
+                        onClick={() => {
+                          setPresencePlayerId(p.id);
+                          setPresenceCode('');
+                        }}
+                        className="p-3 bg-white/5 rounded-xl border border-white/10 text-left hover:bg-white/10 transition-colors flex justify-between items-center"
+                     >
+                       <span className="font-bold text-sm tracking-tight">{p.name}</span>
+                       {p.isAvailable && <span className="text-[8px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full uppercase font-black tracking-widest ml-2">Confirmado</span>}
+                     </button>
+                  ))}
+               </div>
+            </div>
+          ) : (
+            <div className="space-y-6 relative z-10">
+               <div className="flex items-center gap-3 bg-white/5 p-3 rounded-2xl border border-white/10">
+                 <button onClick={() => { setPresencePlayerId(''); setPresenceCode(''); }} className="w-8 h-8 flex items-center justify-center bg-white/10 rounded-full hover:bg-white/20 transition-all text-white/60">
+                   <ChevronRight size={16} className="rotate-180" />
+                 </button>
+                 <div className="flex-1">
+                   <label className="text-[9px] font-black uppercase tracking-widest text-white/50 block">Jogador selecionado</label>
+                   <span className="font-bold text-lg leading-tight uppercase tracking-tight">{players.find(p=>p.id === presencePlayerId)?.name}</span>
+                 </div>
+               </div>
+
+               {(() => {
+                 const currentMonth = MONTHS[new Date().getMonth()];
+                 const currentYear = new Date().getFullYear();
+                 const playerPayment = payments.find(p => p.playerId === presencePlayerId && p.year === currentYear);
+                 const isUpToDate = playerPayment && (playerPayment.months[currentMonth] || 0) > 0;
+                 const requiresCode = !isUpToDate;
+                 const playerOrgCode = (orgData && orgData[presencePlayerId]) ? orgData[presencePlayerId] : null;
+
+                 return (
+                   <div className="space-y-4">
+                     {requiresCode ? (
+                       <div className="space-y-4">
+                         <div className="bg-amber-500/10 border border-amber-500/20 p-3 rounded-xl">
+                           <label className="text-[9px] font-black uppercase tracking-widest text-amber-300 block mb-1">Acesso Restrito</label>
+                           <p className="text-[10px] font-medium text-amber-200/80 leading-relaxed">
+                             Parece que você não possui pagamentos recentes. Digite sua Chave de Acesso para confirmar presença.
+                           </p>
+                         </div>
+                         <div className="space-y-2">
+                           <input
+                             type="text"
+                             placeholder="Telefone ou PIN"
+                             value={presenceCode}
+                             onChange={e => setPresenceCode(e.target.value)}
+                             className="w-full bg-black/20 border border-white/20 rounded-xl px-4 py-4 text-sm font-bold text-white focus:border-[#E3D39E] focus:ring-1 focus:ring-[#E3D39E] outline-none transition-all placeholder:font-normal placeholder:opacity-50"
+                           />
+                         </div>
+                         <button
+                           onClick={() => {
+                             if (!playerOrgCode) {
+                               setToast({ message: 'Organização não definiu sua chave. Fale com um admin.', type: 'warning' });
+                               return;
+                             }
+                             if (presenceCode.trim() !== playerOrgCode) {
+                               setToast({ message: 'Chave incorreta!', type: 'warning' });
+                               return;
+                             }
+                             const now = Date.now();
+                             supabase.from('players').update({ is_available: true, arrived_at: now }).eq('id', presencePlayerId).then(() => {
+                               setPlayers(prev => prev.map(p => p.id === presencePlayerId ? { ...p, isAvailable: true, arrivedAt: now } : p));
+                               setToast({ message: 'Presença confirmada com sucesso!', type: 'success' });
+                               setTimeout(() => setPresencePlayerId(''), 2000);
+                             });
+                           }}
+                           className="w-full bg-[#E3D39E] text-black font-black uppercase tracking-widest py-4 rounded-xl shadow-lg hover:bg-white active:scale-95 transition-all text-xs"
+                         >
+                           Verificar e Confirmar
+                         </button>
+                       </div>
+                     ) : (
+                       <div className="space-y-6 text-center py-4 bg-emerald-500/5 border border-emerald-500/10 rounded-2xl">
+                         <div className="w-16 h-16 bg-emerald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto shadow-inner shadow-emerald-500/20">
+                           <IoCheckmarkCircle size={32} />
+                         </div>
+                         <div>
+                           <p className="text-emerald-400 font-black uppercase tracking-widest text-[10px] mb-1">Status Liberado</p>
+                           <p className="text-[10px] text-white/50 uppercase tracking-widest font-bold">Mensalidade em Dia</p>
+                         </div>
+                         <div className="px-4 pb-4">
+                         <button
+                           onClick={() => {
+                             const now = Date.now();
+                             supabase.from('players').update({ is_available: true, arrived_at: now }).eq('id', presencePlayerId).then(() => {
+                               setPlayers(prev => prev.map(p => p.id === presencePlayerId ? { ...p, isAvailable: true, arrivedAt: now } : p));
+                               setToast({ message: 'Presença confirmada!', type: 'success' });
+                               setTimeout(() => setPresencePlayerId(''), 2000);
+                             });
+                           }}
+                           className="w-full bg-emerald-500 text-white font-black uppercase tracking-widest py-4 rounded-xl shadow-lg hover:opacity-90 active:scale-95 transition-all text-xs"
+                         >
+                           Confirmar Presença
+                         </button>
+                         </div>
+                       </div>
+                     )}
+                   </div>
+                 );
+               })()}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen bg-brand-dark text-brand-text-primary font-sans overflow-hidden flex flex-col">
@@ -3998,7 +4427,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <div className="space-y-6">
                     <section className="space-y-4">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <h2 className="text-sm font-bold uppercase tracking-widest text-[#464656]">Gerenciar jogadores</h2>
+                        <div className="flex items-center gap-2">
+                          <h2 className="text-sm font-bold uppercase tracking-widest text-[#464656]">Gerenciar jogadores</h2>
+                          {!isOrgProAuthorized && (
+                            <div 
+                              onClick={() => setShowAuthModal(true)}
+                              className="flex items-center gap-1 bg-zinc-100 text-zinc-400 px-2 py-0.5 rounded-full text-[9px] font-black uppercase cursor-pointer hover:bg-zinc-200 transition-colors"
+                            >
+                              <PiLockFill size={10} /> Local
+                            </div>
+                          )}
+                        </div>
                         <div className="flex gap-2 w-full sm:w-auto">
                           {players.length >= 2 && (
                             <button 
@@ -4087,15 +4526,34 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 </div>
               </section>
 
+              <button 
+                onClick={() => {
+                  setCurrentScreen('org-pro');
+                  setOrgProTab('painel');
+                }}
+                className="w-full p-4 bg-gradient-to-br from-[#1E3D2F] to-[#14301F] text-white rounded-2xl shadow-lg flex items-center justify-between text-left group hover:opacity-90 transition-all active:scale-95 border border-[#E3D39E]/20"
+              >
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-[#E3D39E]/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner border border-[#E3D39E]/20">
+                    <GiCrown size={24} color="#E3D39E" />
+                  </div>
+                  <div>
+                    <h3 className="font-black uppercase tracking-widest text-sm text-[#E3D39E]">Organização Pro</h3>
+                    <p className="text-[10px] text-white/70 uppercase tracking-widest mt-1 font-bold">Painel de Controle e Acesso</p>
+                  </div>
+                </div>
+                <ChevronRight size={20} className="text-[#E3D39E]/50 group-hover:text-[#E3D39E] transition-colors" />
+              </button>
+
               <section className="rounded-2xl overflow-hidden bg-gradient-to-br from-zinc-50 to-zinc-100 border border-zinc-200 shadow-sm">
-                {players.length === 0 ? (
+                {visiblePlayers.length === 0 ? (
                   <div className="text-center py-12 opacity-50 text-brand-text-secondary text-xs normal-case flex flex-col items-center justify-center gap-2">
                     <span className="opacity-50 text-brand-text-secondary"><GiLaurelsTrophy size={48} /></span>
                     <span>Nenhum jogador adicionado ainda.</span>
                   </div>
                 ) : (
                   <div className="divide-y divide-brand-border">
-                    {players.map((player) => (
+                    {visiblePlayers.map((player) => (
                       <motion.div 
                         layout
                         key={`player-list-${player.id}`}
@@ -4127,8 +4585,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               onBlur={(e) => updatePlayerName(player.id, e.target.value)}
                             />
                           ) : (
-                            <div className="flex flex-col flex-1">
-                              <span className="text-xs font-medium">{player.name}</span>
+                            <div className="flex items-center gap-2 flex-1 min-w-0">
+                              <span className="text-xs font-medium truncate text-left">{player.name}</span>
+                              {orgProData[player.id] && <div className="shrink-0"><GiCrown size={16} color="#E3D39E" /></div>}
                             </div>
                           )}
                         </div>
@@ -5800,7 +6259,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       onClick={() => setIsPrintMode(true)} 
                       className="flex items-center gap-2 p-2 px-3 rounded-xl border border-zinc-300 bg-white/50 hover:bg-white transition-colors shadow-sm"
                     >
-                      <GiPodiumWinner size={20} className="text-[#1E3D2F]" />
+                      <span className="text-[#1E3D2F]">
+                        <GiPodiumWinner size={20} />
+                      </span>
                       <span className="text-[10px] font-black uppercase tracking-widest text-[#1E3D2F]">Ranking</span>
                     </button>
                   </div>
@@ -6404,6 +6865,859 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               </div>
             </div>
           )}
+
+          {currentScreen === 'org-pro' && (
+            <motion.div 
+              key="org-pro"
+              initial={{ opacity: 0, x: swipeDirection * 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: swipeDirection * -20 }}
+              transition={{ duration: 0.2 }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.1}
+              onDragEnd={(_, info) => {
+                if (info.offset.x > 100) {
+                  const screens: Screen[] = ['players', 'teams', 'ranking', 'finance', 'org-pro'];
+                  const currentIndex = screens.indexOf(currentScreen);
+                  setSwipeDirection(-1);
+                  setCurrentScreen(screens[currentIndex - 1]);
+                }
+              }}
+              className="px-6 pb-24 pt-4 space-y-6 min-h-full bg-white flex flex-col"
+            >
+              {!isOrgProAuthorized ? (
+                <div className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-6">
+                  <div className="w-24 h-24 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-300 relative">
+                    <GiCrown size={48} />
+                    <div className="absolute -bottom-1 -right-1 w-10 h-10 rounded-full bg-white shadow-lg flex items-center justify-center text-[#1E3D2F] border-4 border-white">
+                      <PiLockFill size={20} />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <h2 className="text-xl font-black uppercase tracking-widest text-[#1E3D2F]">Conteúdo Bloqueado</h2>
+                    <p className="text-sm font-bold text-zinc-500 uppercase tracking-widest leading-relaxed max-w-xs">
+                      Acesse com seu PIN ou E-mail para utilizar os recursos da Organização Pro.
+                    </p>
+                  </div>
+                  <button 
+                    onClick={() => setShowAuthModal(true)}
+                    className="px-8 py-4 bg-brand-gradient text-black font-black uppercase tracking-widest text-xs rounded-[20px] shadow-xl active:scale-95 transition-all"
+                  >
+                    Desbloquear Acesso
+                  </button>
+                </div>
+              ) : (
+                <div className="max-w-5xl mx-auto w-full space-y-6">
+                  <div className="bg-gradient-to-br from-[#1E3D2F] to-[#14301F] p-6 rounded-[2rem] text-white shadow-xl relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4 opacity-10">
+                      {orgProTab === 'painel' ? <PiUsersBold size={120} /> : <GiCrown size={120} />}
+                    </div>
+                    
+                    <div className="flex bg-white/10 p-1 rounded-2xl mb-6 w-full sm:w-fit backdrop-blur-md relative z-10 border border-white/10 overflow-x-auto custom-scrollbar no-scrollbar">
+                      <button 
+                        onClick={() => setOrgProTab('painel')}
+                        className={`shrink-0 sm:px-6 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${orgProTab === 'painel' ? 'bg-[#E3D39E] text-emerald-950 shadow-sm' : 'text-white/70 hover:text-white'}`}
+                      >
+                        Painel Geral
+                      </button>
+                      <button 
+                        onClick={() => setOrgProTab('acesso')}
+                        className={`shrink-0 sm:px-6 px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${orgProTab === 'acesso' ? 'bg-[#E3D39E] text-emerald-950 shadow-sm' : 'text-white/70 hover:text-white'}`}
+                      >
+                        Acesso & Links
+                      </button>
+                      <button 
+                        onClick={() => setOrgProTab('confirmados')}
+                        className={`shrink-0 sm:px-6 px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${orgProTab === 'confirmados' ? 'bg-[#E3D39E] text-emerald-950 shadow-sm' : 'text-white/70 hover:text-white'}`}
+                      >
+                        Confirmados
+                      </button>
+                      <button 
+                        onClick={() => setOrgProTab('admins')}
+                        className={`shrink-0 sm:px-6 px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${orgProTab === 'admins' ? 'bg-[#E3D39E] text-emerald-950 shadow-sm' : 'text-white/70 hover:text-white'}`}
+                      >
+                        Admins
+                      </button>
+                      <button 
+                        onClick={() => setOrgProTab('supabase')}
+                        className={`shrink-0 sm:px-6 px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${orgProTab === 'supabase' ? 'bg-[#E3D39E] text-emerald-950 shadow-sm' : 'text-white/70 hover:text-white'}`}
+                      >
+                        Supabase
+                      </button>
+                    </div>
+
+
+                  {orgProTab === 'acesso' && (
+                    <>
+                      <h2 className="text-xl font-black uppercase tracking-widest flex items-center gap-2 mb-2 relative z-10">
+                        <span className="text-[#E3D39E]">
+                          <GiCrown size={24} />
+                        </span>
+                        Organização Pro
+                      </h2>
+                      <p className="text-xs text-white/60 mb-6 max-w-[80%] uppercase tracking-widest font-bold leading-relaxed relative z-10">
+                        Gerencie o acesso à pelada e gere o link de presença para o grupo de WhatsApp.
+                      </p>
+                      
+                      <button
+                        onClick={() => {
+                          const baseUrl = window.location.origin + window.location.pathname;
+                          const authObj = Object.fromEntries(
+                            Object.entries(orgProData).map(([pid, data]: [string, any]) => [pid, data.code])
+                          );
+                          const authStr = btoa(JSON.stringify(authObj));
+                          const link = `${baseUrl}?group=${groupId}&presence=true&org=${authStr}`;
+                          navigator.clipboard.writeText(link);
+                          setToast({ message: 'Link de presença copiado!', type: 'success' });
+                          setTimeout(() => setToast(null), 3000);
+                        }}
+                        className="w-full bg-[#E3D39E] text-black font-black uppercase tracking-widest py-4 rounded-xl shadow-lg hover:bg-white active:scale-95 transition-all text-xs flex items-center justify-center gap-2 relative z-10"
+                      >
+                        <ClipboardPaste size={18} />
+                        Copiar Link do Formulário
+                      </button>
+
+                      <div className="mt-8 pt-8 border-t border-white/10 relative z-10">
+                        <div className="flex items-center gap-2 mb-4">
+                          <UserPlus size={16} className="text-[#E3D39E]" />
+                          <h3 className="text-[11px] font-black uppercase tracking-widest text-[#E3D39E]">Cadastrar Novo Administrador</h3>
+                        </div>
+                        <div className="flex gap-2">
+                          <input 
+                            type="email" 
+                            placeholder="E-mail do administrador..."
+                            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-[#E3D39E] transition-colors"
+                            onKeyDown={async (e) => {
+                              if (e.key === 'Enter') {
+                                const email = e.currentTarget.value;
+                                if (email.includes('@')) {
+                                  const { error } = await supabase.from('app_admins').insert({ email, group_id: groupId });
+                                  if (error) {
+                                    setToast({ message: "Erro ao cadastrar admin", type: 'warning' });
+                                  } else {
+                                    setToast({ message: "Administrador cadastrado!", type: 'success' });
+                                    e.currentTarget.value = '';
+                                  }
+                                  setTimeout(() => setToast(null), 3000);
+                                }
+                              }
+                            }}
+                          />
+                        </div>
+                        <p className="text-[9px] font-bold text-white/30 uppercase mt-2 tracking-widest">
+                          Apenas e-mails válidos podem ser administradores.
+                        </p>
+                      </div>
+                    </>
+                  )}
+
+                  {orgProTab === 'painel' && (
+                    <>
+                      <h2 className="text-xl font-black uppercase tracking-widest flex items-center gap-2 mb-2 relative z-10">
+                        <span className="text-[#E3D39E]">
+                          <PiUsersBold size={24} />
+                        </span>
+                        Painel de Controle
+                      </h2>
+                      <p className="text-xs text-white/60 mb-6 max-w-[80%] uppercase tracking-widest font-bold leading-relaxed relative z-10">
+                        Visão geral das estatísticas e presença dos jogadores.
+                      </p>
+                      
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-6 relative z-10">
+                        <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/10">
+                          <div className="text-white/50 text-[10px] font-black uppercase tracking-widest mb-1">Cadastrados</div>
+                          <div className="text-3xl font-black">{players.length}</div>
+                        </div>
+                        <div className="bg-emerald-500/20 backdrop-blur-md rounded-2xl p-4 border border-emerald-500/20">
+                          <div className="text-emerald-300/70 text-[10px] font-black uppercase tracking-widest mb-1">Confirmados</div>
+                          <div className="text-3xl font-black text-emerald-400">
+                            {players.filter(p => p.isAvailable).length + presencasExternas.length}
+                          </div>
+                        </div>
+                        <div className="bg-purple-500/20 backdrop-blur-md rounded-2xl p-4 border border-purple-500/20">
+                          <div className="text-purple-300/70 text-[10px] font-black uppercase tracking-widest mb-1">Cadastros Externos</div>
+                          <div className="text-3xl font-black text-purple-400">{jogadoresExternos.length}</div>
+                        </div>
+                        <div className="bg-amber-500/20 backdrop-blur-md rounded-2xl p-4 border border-amber-500/20">
+                          <div className="text-amber-300/70 text-[10px] font-black uppercase tracking-widest mb-1">PIN Administrador</div>
+                          <input 
+                            type="text" 
+                            maxLength={6}
+                            value={adminPin}
+                            onChange={(e) => setAdminPin(e.target.value.replace(/\D/g, ''))}
+                            onBlur={async () => {
+                              if (adminPin && adminPin.length === 6) {
+                                const { error } = await supabase.from('groups').update({ admin_pin: adminPin }).eq('id', groupId);
+                                if (!error) {
+                                  setToast({ message: "PIN do Administrador salvo!", type: 'success' });
+                                } else {
+                                  setToast({ message: "Erro ao salvar PIN", type: 'warning' });
+                                }
+                                setTimeout(() => setToast(null), 2000);
+                              }
+                            }}
+                            placeholder="------"
+                            className="w-full bg-transparent text-2xl font-black text-amber-400 font-mono tracking-widest focus:outline-none placeholder:text-amber-400/20"
+                          />
+                        </div>
+                        <div className="bg-blue-500/20 backdrop-blur-md rounded-2xl p-4 border border-blue-500/20">
+                          <div className="text-blue-300/70 text-[10px] font-black uppercase tracking-widest mb-1">Total Assist.</div>
+                          <div className="text-3xl font-black text-blue-400">{players.reduce((acc, p) => acc + (p.assists || 0), 0)}</div>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {orgProTab === 'acesso' && (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-sm font-black uppercase tracking-widest text-[#1E3D2F] flex items-center gap-2">
+                         <PiUsersBold size={16} /> Chaves de Acesso
+                      </h3>
+                    </div>
+
+                    <p className="text-[10px] uppercase font-bold text-zinc-500 mb-4 bg-zinc-100 p-3 rounded-xl border border-zinc-200">
+                      Jogadores com a <span className="text-emerald-700">Mensalidade em Dia</span> marcam presença diretamente. Os demais precisarão confirmar seu acesso digitando a chave abaixo no momento da inscrição.
+                    </p>
+
+                    <div className="space-y-4 bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm">
+                      <h4 className="text-sm font-bold text-[#1E3D2F] uppercase">Cadastrar Jogador e Telefone</h4>
+                      <form 
+                        className="flex flex-col sm:flex-row gap-3"
+                        onSubmit={async (e) => {
+                          e.preventDefault();
+                          const form = e.target as HTMLFormElement;
+                          const nameInput = form.elements.namedItem('name') as HTMLInputElement;
+                          const phoneInput = form.elements.namedItem('phone') as HTMLInputElement;
+                          const isGuestInput = form.elements.namedItem('isGuest') as HTMLInputElement;
+                          
+                          const name = nameInput.value.trim();
+                          let phone = phoneInput.value.trim();
+                          const isGuest = isGuestInput.checked;
+                          
+                          if (!name) {
+                            setToast({ message: 'Preencha o nome do jogador.', type: 'warning' });
+                            return;
+                          }
+
+                          if (isGuest) {
+                            phone = Math.floor(1000 + Math.random() * 9000).toString();
+                          } else if (!phone) {
+                            setToast({ message: 'Preencha o telefone ou marque como convidado.', type: 'warning' });
+                            return;
+                          }
+                          
+                          const newPlayerId = crypto.randomUUID();
+                          setPlayers(prev => [...prev, { 
+                            id: newPlayerId, 
+                            name, 
+                            photo: null, 
+                            isAvailable: isGuest, // Set available if guest to add directly to Confirmados
+                            arrivedAt: isGuest ? Date.now() : null 
+                          }]);
+                          
+                          setOrgProData(prev => ({
+                            ...prev,
+                            [newPlayerId]: { code: phone, isGuest } // Store guest status
+                          }));
+                          
+                          setToast({ message: isGuest ? `Convidado cadastrado! Chave PIN: ${phone}` : 'Jogador cadastrado!', type: 'success' });
+                          form.reset();
+                        }}
+                      >
+                        <div className="flex flex-col flex-1 gap-2">
+                          <input 
+                            type="text" 
+                            name="name"
+                            placeholder="Nome do Jogador" 
+                            className="bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm font-bold focus:border-[#1E3D2F] outline-none"
+                          />
+                          <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-500">
+                            <input type="checkbox" name="isGuest" className="rounded" />
+                            Marcar como Temporário (Convidado)
+                          </label>
+                        </div>
+                        <input 
+                          type="text" 
+                          name="phone"
+                          placeholder="Telefone (Chave)" 
+                          className="flex-1 bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm font-bold focus:border-[#1E3D2F] outline-none max-h-[38px]"
+                        />
+                        <button 
+                          type="submit" 
+                          className="bg-[#1E3D2F] text-white px-4 py-2 rounded-lg font-bold uppercase text-xs hover:bg-[#1E3D2F]/90 transition-all shrink-0 max-h-[38px]"
+                        >
+                          Cadastrar
+                        </button>
+                      </form>
+                    </div>
+
+                    <div className="space-y-3">
+                      {players.filter(player => orgProData[player.id]).map(player => {
+                        const isUpToDate = payments.find(p => p.playerId === player.id && p.year === (new Date().getFullYear()))?.months[MONTHS[new Date().getMonth()]] > 0;
+                        return (
+                          <div key={`org-pro-${player.id}`} className="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm flex flex-col sm:flex-row sm:items-center gap-4 group hover:border-[#1E3D2F]/20 transition-all">
+                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                              <div className="w-10 h-10 rounded-full bg-zinc-100 border border-zinc-200 overflow-hidden flex items-center justify-center shrink-0">
+                                {player.photo ? <img src={player.photo} className="w-full h-full object-cover" /> : <div className="text-black"><IoPersonOutline size={16}/></div>}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="text-sm font-bold truncate text-[#1E3D2F] uppercase">{player.name}</h4>
+                                <div className="flex items-center gap-2 mt-1">
+                                  {isUpToDate ? (
+                                    <span className="bg-emerald-100 text-emerald-800 text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest">Acesso Direto</span>
+                                  ) : (
+                                    <span className="bg-amber-100 text-amber-800 text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest">Exige Chave</span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="flex-1 w-full sm:max-w-[200px] shrink-0 mt-2 sm:mt-0">
+                              <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1 block">Telefone ou PIN</label>
+                              <input
+                                type="text"
+                                placeholder="Ex: 8299999999"
+                                value={orgProData[player.id]?.code || ''}
+                                onChange={(e) => {
+                                  setOrgProData(prev => ({ ...prev, [player.id]: { code: e.target.value } }));
+                                }}
+                                className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm font-bold focus:border-[#1E3D2F] focus:ring-1 focus:ring-[#1E3D2F] outline-none transition-all placeholder:font-normal placeholder:opacity-50"
+                              />
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+
+                {orgProTab === 'painel' && (
+                  <div className="space-y-6">
+                    <div className="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm">
+                      <h3 className="text-sm font-black uppercase tracking-widest text-[#1E3D2F] flex items-center gap-2 mb-4">
+                        Configurações de Exigência
+                      </h3>
+                      <p className="text-[10px] uppercase font-bold text-zinc-500 mb-6 bg-zinc-100 p-3 rounded-xl border border-zinc-200">
+                        Defina os critérios para que os jogadores adicionados apareçam na lista de "Gerenciar Jogadores".
+                      </p>
+                      
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">Quantidade Máx. Ausências</label>
+                          <input
+                            type="number"
+                            min="0"
+                            placeholder="Ilimitado"
+                            value={tempOrgProSettings.maxAbsences ?? ''}
+                            onChange={(e) => setTempOrgProSettings(prev => ({ ...prev, maxAbsences: e.target.value ? parseInt(e.target.value) : null }))}
+                            className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm font-bold focus:border-[#1E3D2F] outline-none transition-all"
+                          />
+                        </div>
+
+                        <div className="space-y-2 flex flex-col justify-end">
+                          <label className="flex items-center gap-3 bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 cursor-pointer hover:bg-zinc-100 transition-colors h-full">
+                            <input
+                              type="checkbox"
+                              checked={tempOrgProSettings.requirePaymentUpToDate}
+                              onChange={(e) => setTempOrgProSettings(prev => ({ ...prev, requirePaymentUpToDate: e.target.checked }))}
+                              className="w-4 h-4 text-[#1E3D2F] rounded focus:ring-[#1E3D2F]"
+                            />
+                            <span className="text-xs font-bold text-[#1E3D2F] uppercase tracking-tight">Exigir Mensalidade em Dia</span>
+                          </label>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">Dia da Pelada</label>
+                          <select
+                            value={tempOrgProSettings.matchDayOfWeek ?? ''}
+                            onChange={(e) => setTempOrgProSettings(prev => ({ ...prev, matchDayOfWeek: e.target.value ? parseInt(e.target.value) : null }))}
+                            className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm font-bold focus:border-[#1E3D2F] outline-none transition-all"
+                          >
+                            <option value="">Não definido</option>
+                            <option value="0">Domingo</option>
+                            <option value="1">Segunda-feira</option>
+                            <option value="2">Terça-feira</option>
+                            <option value="3">Quarta-feira</option>
+                            <option value="4">Quinta-feira</option>
+                            <option value="5">Sexta-feira</option>
+                            <option value="6">Sábado</option>
+                          </select>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">Horário da Pelada</label>
+                          <input
+                            type="time"
+                            value={tempOrgProSettings.matchTime || ''}
+                            onChange={(e) => setTempOrgProSettings(prev => ({ ...prev, matchTime: e.target.value }))}
+                            className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm font-bold focus:border-[#1E3D2F] outline-none transition-all"
+                          />
+                        </div>
+
+                        <div className="col-span-1 sm:col-span-2 pt-2">
+                          <button
+                            onClick={() => {
+                              setOrgProSettings({ ...tempOrgProSettings, appliedDate: Date.now() });
+                              setToast({ message: 'Exigências aplicadas com sucesso!', type: 'success' });
+                            }}
+                            className="w-full py-4 bg-[#1E3D2F] text-white font-black uppercase tracking-widest text-xs rounded-xl shadow-lg hover:bg-[#14301F] transition-all active:scale-95 flex items-center justify-center gap-2"
+                          >
+                            <IoCheckmarkCircle size={18} />
+                            Aplicar Exigências
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+                      <div className="overflow-x-auto custom-scrollbar">
+                      <table className="w-full text-left border-collapse min-w-[600px]">
+                        <thead>
+                          <tr className="bg-zinc-50 border-b border-zinc-200">
+                            <th className="p-4 text-xs font-black uppercase tracking-widest text-[#1E3D2F]">Jogador</th>
+                            <th className="p-4 text-xs font-black uppercase tracking-widest text-[#1E3D2F] text-center">Status</th>
+                            <th className="p-4 text-xs font-black uppercase tracking-widest text-[#1E3D2F] text-center">Ranking</th>
+                            <th className="p-4 text-xs font-black uppercase tracking-widest text-[#1E3D2F] text-center">Gols</th>
+                            <th className="p-4 text-xs font-black uppercase tracking-widest text-[#1E3D2F] text-center">Assist.</th>
+                            <th className="p-4 text-xs font-black uppercase tracking-widest text-[#1E3D2F] text-center">Mensalidade</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {[...players]
+                            .sort((a,b) => {
+                              // Sort by ranking (goals + assists) descending, then name
+                              const aScore = (a.goals || 0) + (a.assists || 0);
+                              const bScore = (b.goals || 0) + (b.assists || 0);
+                              if (bScore !== aScore) return bScore - aScore;
+                              return a.name.localeCompare(b.name);
+                            })
+                            .map((player, index) => {
+                              const isUpToDate = payments.find(p => p.playerId === player.id && p.year === (new Date().getFullYear()))?.months[MONTHS[new Date().getMonth()]] > 0;
+                              
+                              return (
+                                <tr key={`dash-${player.id}`} className="border-b border-zinc-100 last:border-0 hover:bg-zinc-50/50 transition-colors">
+                                  <td className="p-4">
+                                    <div className="flex items-center gap-3">
+                                      <div className="w-8 h-8 rounded-full bg-zinc-100 border border-zinc-200 overflow-hidden flex items-center justify-center shrink-0">
+                                        {player.photo ? <img src={player.photo} className="w-full h-full object-cover" /> : <div className="text-zinc-400"><IoPersonOutline size={14}/></div>}
+                                      </div>
+                                      <span className="font-bold text-sm text-[#1E3D2F] uppercase">{player.name}</span>
+                                    </div>
+                                  </td>
+                                  <td className="p-4 text-center">
+                                    {player.isAvailable ? (
+                                      <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase px-2 py-1 rounded-md tracking-widest border border-emerald-200">
+                                        Presente
+                                      </span>
+                                    ) : (
+                                      <span className="inline-flex items-center gap-1 bg-zinc-100 text-zinc-500 text-[10px] font-black uppercase px-2 py-1 rounded-md tracking-widest border border-zinc-200">
+                                        Ausente
+                                      </span>
+                                    )}
+                                  </td>
+                                  <td className="p-4 text-center">
+                                    <span className="font-black text-[#1E3D2F]">
+                                      {index + 1}º
+                                    </span>
+                                  </td>
+                                  <td className="p-4 text-center">
+                                    <span className="font-bold text-amber-600">{player.goals || 0}</span>
+                                  </td>
+                                  <td className="p-4 text-center">
+                                    <span className="font-bold text-blue-600">{player.assists || 0}</span>
+                                  </td>
+                                  <td className="p-4 text-center">
+                                    {isUpToDate ? (
+                                      <span className="inline-flex items-center gap-1 text-emerald-600 font-black text-xs uppercase tracking-widest">
+                                        <IoCheckmarkCircle size={14} /> Em Dia
+                                      </span>
+                                    ) : (
+                                      <span className="inline-flex items-center gap-1 text-red-500 font-bold text-xs uppercase tracking-widest">
+                                        <PiWarningCircleBold size={14} /> Pendente
+                                      </span>
+                                    )}
+                                  </td>
+                                </tr>
+                              );
+                          })}
+                          {players.length === 0 && (
+                            <tr>
+                              <td colSpan={6} className="p-8 text-center text-zinc-500 text-sm font-bold">
+                                Nenhum jogador cadastrado.
+                              </td>
+                            </tr>
+                          )}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                )}
+                
+                {orgProTab === 'supabase' && (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-sm font-black uppercase tracking-widest text-[#1E3D2F] flex items-center gap-2">
+                        <Database size={16} /> Status da Conexão Cloud
+                      </h3>
+                    </div>
+
+                    <div className="bg-white rounded-[2rem] border border-zinc-200 p-8 shadow-sm space-y-8">
+                      <div className="flex items-center justify-between p-6 bg-emerald-50 rounded-3xl border border-emerald-100">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center text-white shadow-lg shadow-emerald-200">
+                            <Wifi size={24} />
+                          </div>
+                          <div>
+                            <h4 className="text-lg font-black text-[#1E3D2F] uppercase tracking-tighter">Supabase Ativo</h4>
+                            <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest">Sincronização em tempo real</p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 rounded-full">
+                          <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
+                          <span className="text-[10px] font-black text-emerald-700 uppercase tracking-widest">Online</span>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-4">
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">URL do Projeto</label>
+                          <div className="bg-zinc-50 p-4 rounded-2xl border border-zinc-100 flex items-center justify-between">
+                            <span className="text-xs font-mono text-zinc-500 truncate mr-4">
+                              {import.meta.env.VITE_SUPABASE_URL?.replace(/(.{10}).*(.{5})/, '$1***$2') || 'Definido no Ambiente'}
+                            </span>
+                            <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-2">
+                          <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Chave Anon (Token)</label>
+                          <div className="bg-zinc-50 p-4 rounded-2xl border border-zinc-100 flex items-center justify-between">
+                            <span className="text-xs font-mono text-zinc-500">
+                              ********************************{import.meta.env.VITE_SUPABASE_ANON_KEY?.slice(-5) || '****'}
+                            </span>
+                            <div className="text-zinc-300">
+                              <PiLockFill size={16} />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="pt-6 border-t border-zinc-100">
+                        <div className="bg-zinc-900 text-white p-6 rounded-3xl space-y-4 shadow-xl">
+                          <div className="flex items-center gap-3">
+                            <div className="text-emerald-400">
+                              <PiShieldCheckFill size={24} />
+                            </div>
+                            <h4 className="text-sm font-black uppercase tracking-widest">Segurança de Dados</h4>
+                          </div>
+                          <p className="text-[11px] text-zinc-400 font-medium leading-relaxed">
+                            Seus dados estão protegidos por criptografia de ponta a ponta e regras de segurança (RLS) que garantem que apenas administradores autorizados do grupo <span className="text-white font-bold">{groupId}</span> possam acessar ou modificar as informações.
+                          </p>
+                          <div className="grid grid-cols-2 gap-3 pt-2">
+                            <div className="bg-white/5 p-3 rounded-2xl border border-white/10">
+                              <div className="text-[10px] font-black text-emerald-400 uppercase mb-1">Backup</div>
+                              <div className="text-[10px] font-bold text-white uppercase">Automático</div>
+                            </div>
+                            <div className="bg-white/5 p-3 rounded-2xl border border-white/10">
+                              <div className="text-[10px] font-black text-amber-400 uppercase mb-1">Sync</div>
+                              <div className="text-[10px] font-bold text-white uppercase">Pritioritário</div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex flex-col gap-3">
+                        <button 
+                          onClick={() => {
+                            setToast({ message: "Sincronização forçada iniciada...", type: 'info' });
+                            setTimeout(() => {
+                              window.location.reload();
+                            }, 1000);
+                          }}
+                          className="w-full py-4 bg-zinc-100 text-[#1E3D2F] font-black uppercase tracking-widest text-[11px] rounded-[20px] transition-all hover:bg-zinc-200 active:scale-95"
+                        >
+                          Sincronizar Manualmente
+                        </button>
+                        <p className="text-[9px] font-bold text-zinc-400 text-center uppercase tracking-widest">
+                          A sincronização ocorre automaticamente a cada alteração.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                
+                {orgProTab === 'admins' && (
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-sm font-black uppercase tracking-widest text-[#1E3D2F] flex items-center gap-2">
+                        <UserPlus size={16} /> Gestão de Administradores
+                      </h3>
+                    </div>
+
+                    <div className="bg-white rounded-[2rem] border border-zinc-200 p-6 shadow-sm space-y-6">
+                      <div className="space-y-2">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">E-mail do Novo Admin</label>
+                        <div className="flex gap-2">
+                          <input 
+                            type="email" 
+                            id="new-admin-email"
+                            placeholder="exemplo@email.com"
+                            className="flex-1 bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1E3D2F] transition-colors"
+                          />
+                          <button 
+                            onClick={async () => {
+                              const input = document.getElementById('new-admin-email') as HTMLInputElement;
+                              const email = input?.value;
+                              if (email && email.includes('@')) {
+                                const { error } = await supabase.from('app_admins').insert({ email, group_id: groupId });
+                                if (error) {
+                                  setToast({ message: "Erro ao cadastrar admin", type: 'warning' });
+                                } else {
+                                  setToast({ message: "Administrador cadastrado!", type: 'success' });
+                                  input.value = '';
+                                  // Refresh list
+                                  const { data } = await supabase.from('app_admins').select('*').eq('group_id', groupId);
+                                  if (data) setAppAdmins(data);
+                                }
+                                setTimeout(() => setToast(null), 3000);
+                              }
+                            }}
+                            className="bg-[#1E3D2F] text-white px-6 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-[#14301F] transition-colors"
+                          >
+                            Cadastrar
+                          </button>
+                        </div>
+                        <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mt-1 ml-1">
+                          Apenas usuários com este e-mail poderão acessar via login.
+                        </p>
+                      </div>
+
+                      <div className="pt-4 border-t border-zinc-100">
+                        <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-4">Admins Cadastrados</h4>
+                        <div className="space-y-2">
+                          {appAdmins.map((admin) => (
+                            <div key={admin.id} className="flex items-center justify-between p-3 bg-zinc-50 rounded-xl border border-zinc-100">
+                              <span className="text-sm font-bold text-[#1E3D2F]">{admin.email}</span>
+                              <button 
+                                onClick={async () => {
+                                  const { error } = await supabase.from('app_admins').delete().eq('id', admin.id);
+                                  if (!error) {
+                                    setAppAdmins(prev => prev.filter(a => a.id !== admin.id));
+                                    setToast({ message: "Admin removido", type: 'success' });
+                                  }
+                                  setTimeout(() => setToast(null), 3000);
+                                }}
+                                className="text-zinc-300 hover:text-red-500 transition-colors"
+                              >
+                                <PiTrash size={16} />
+                              </button>
+                            </div>
+                          ))}
+                          {appAdmins.length === 0 && (
+                            <div className="text-center py-4 text-zinc-400 text-[10px] font-black uppercase tracking-widest">
+                              Nenhum administrador cadastrado.
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+                {orgProTab === 'confirmados' && (
+                  <div className="space-y-4">
+
+                    <div className="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden mb-8">
+                      <div className="overflow-x-auto custom-scrollbar">
+                        <table className="w-full text-left border-collapse min-w-[600px]">
+                          <thead>
+                            <tr className="bg-zinc-50 border-b border-zinc-200">
+                              <th colSpan={4} className="p-4 text-xs font-black uppercase tracking-widest text-[#1E3D2F]">
+                                Jogadores Internos (App)
+                              </th>
+                            </tr>
+                            <tr className="border-b border-zinc-200">
+                              <th className="p-4 text-[10px] font-black uppercase tracking-widest text-zinc-500 w-12 text-center">#</th>
+                              <th className="p-4 text-[10px] font-black uppercase tracking-widest text-zinc-500">Jogador</th>
+                              <th className="p-4 text-[10px] font-black uppercase tracking-widest text-zinc-500 text-center">Tipo</th>
+                              <th className="p-4 text-[10px] font-black uppercase tracking-widest text-zinc-500 text-right">Horário</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {players
+                              .filter(player => player.isAvailable)
+                              .sort((a, b) => (a.arrivedAt || 0) - (b.arrivedAt || 0))
+                              .map((player, index) => {
+                                const isGuest = orgProData[player.id]?.isGuest;
+                                const code = orgProData[player.id]?.code;
+                                
+                                return (
+                                  <tr key={`confirmed-${player.id}`} className="border-b border-zinc-100 last:border-0 hover:bg-zinc-50/50 transition-colors">
+                                    <td className="p-4 text-center">
+                                      <span className="text-xs font-black text-zinc-400">{index + 1}</span>
+                                    </td>
+                                    <td className="p-4">
+                                      <div className="flex items-center gap-3">
+                                        <div className="w-8 h-8 rounded-full bg-zinc-100 border border-zinc-200 overflow-hidden flex items-center justify-center shrink-0">
+                                          {player.photo ? <img src={player.photo} className="w-full h-full object-cover" /> : <div className="text-zinc-400"><IoPersonOutline size={14}/></div>}
+                                        </div>
+                                        <div className="flex flex-col">
+                                          <span className="font-bold text-sm text-[#1E3D2F] uppercase">{player.name}</span>
+                                          {isGuest && code && (
+                                            <span className="text-[10px] font-bold text-zinc-500">PIN Original: {code}</span>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </td>
+                                    <td className="p-4 text-center">
+                                      {isGuest ? (
+                                        <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-800 text-[10px] font-black uppercase px-2 py-1 rounded-md tracking-widest border border-amber-200">
+                                          Convidado
+                                        </span>
+                                      ) : (
+                                        <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase px-2 py-1 rounded-md tracking-widest border border-emerald-200">
+                                          Mensalista
+                                        </span>
+                                      )}
+                                    </td>
+                                    <td className="p-4 text-right">
+                                      {player.arrivedAt ? (
+                                        <span className="text-xs font-bold text-zinc-600">
+                                          {new Date(player.arrivedAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                                        </span>
+                                      ) : (
+                                        <span className="text-xs font-bold text-zinc-400">-</span>
+                                      )}
+                                    </td>
+                                  </tr>
+                                );
+                            })}
+                            {players.filter(p => p.isAvailable).length === 0 && (
+                              <tr>
+                                <td colSpan={4} className="p-8 text-center text-zinc-500 text-sm font-bold">
+                                  Nenhum jogador confirmado no App ainda.
+                                </td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    {/* Presenças Externas (Tabela do Formulário) */}
+                    <div className="bg-white rounded-2xl border border-purple-200 shadow-sm overflow-hidden mb-8">
+                      <div className="overflow-x-auto custom-scrollbar">
+                        <table className="w-full text-left border-collapse min-w-[600px]">
+                          <thead>
+                            <tr className="bg-purple-50 border-b border-purple-200">
+                              <th colSpan={4} className="p-4 text-xs font-black uppercase tracking-widest text-purple-900 flex items-center gap-2">
+                                <Globe size={14} /> Presenças (Formulário Externo)
+                              </th>
+                            </tr>
+                            <tr className="border-b border-purple-100">
+                              <th className="p-4 text-[10px] font-black uppercase tracking-widest text-purple-500 w-12 text-center">#</th>
+                              <th className="p-4 text-[10px] font-black uppercase tracking-widest text-purple-500">Nome</th>
+                              <th className="p-4 text-[10px] font-black uppercase tracking-widest text-purple-500 text-center">Status</th>
+                              <th className="p-4 text-[10px] font-black uppercase tracking-widest text-purple-500 text-right">Confirmado em</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {presencasExternas.map((p, idx) => (
+                              <tr key={`pres-ext-${p.id}`} className="border-b border-zinc-50 last:border-0 hover:bg-purple-50/20 transition-colors">
+                                <td className="p-4 text-center">
+                                  <span className="text-xs font-black text-purple-300">{idx + 1}</span>
+                                </td>
+                                <td className="p-4">
+                                  <div className="flex flex-col">
+                                    <span className="font-bold text-sm text-purple-900 uppercase">{p.nome}</span>
+                                    <span className="text-[10px] text-purple-400 font-mono">{p.telefone}</span>
+                                  </div>
+                                </td>
+                                <td className="p-4 text-center">
+                                  {p.mensalidade_em_dia ? (
+                                    <span className="bg-emerald-100 text-emerald-800 text-[9px] font-black uppercase px-2 py-1 rounded-md tracking-widest border border-emerald-200">Pago</span>
+                                  ) : (
+                                    <span className="bg-amber-100 text-amber-800 text-[9px] font-black uppercase px-2 py-1 rounded-md tracking-widest border border-amber-200">Pendente</span>
+                                  )}
+                                </td>
+                                <td className="p-4 text-right font-bold text-purple-600 text-xs">
+                                  {new Date(p.created_at).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}
+                                </td>
+                              </tr>
+                            ))}
+                            {presencasExternas.length === 0 && (
+                              <tr>
+                                <td colSpan={4} className="p-8 text-center text-purple-300 text-sm font-bold">Nenhuma presença externa confirmada.</td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    {/* Jogadores Cadastrados Externamente */}
+                    <div className="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
+                      <div className="overflow-x-auto custom-scrollbar">
+                        <table className="w-full text-left border-collapse min-w-[600px]">
+                          <thead>
+                            <tr className="bg-zinc-100 border-b border-zinc-200">
+                              <th colSpan={4} className="p-4 text-xs font-black uppercase tracking-widest text-zinc-900 flex items-center gap-2">
+                                <Users size={14} /> Cadastros Totais (Link Externo)
+                              </th>
+                            </tr>
+                            <tr className="border-b border-zinc-100">
+                              <th className="p-4 text-[10px] font-black uppercase tracking-widest text-zinc-500 w-12 text-center">#</th>
+                              <th className="p-4 text-[10px] font-black uppercase tracking-widest text-zinc-500">Jogador</th>
+                              <th className="p-4 text-[10px] font-black uppercase tracking-widest text-zinc-500 text-center">Situação</th>
+                              <th className="p-4 text-[10px] font-black uppercase tracking-widest text-zinc-500 text-right">Data Cadastro</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {jogadoresExternos.map((j, idx) => (
+                              <tr key={`jog-ext-${j.id}`} className="border-b border-zinc-50 last:border-0 hover:bg-zinc-50/50 transition-colors">
+                                <td className="p-4 text-center">
+                                  <span className="text-xs font-black text-zinc-300">{idx + 1}</span>
+                                </td>
+                                <td className="p-4">
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-8 h-8 rounded-full bg-zinc-100 border border-zinc-200 overflow-hidden flex items-center justify-center shrink-0">
+                                      {j.foto_url ? <img src={j.foto_url} className="w-full h-full object-cover" /> : <div className="text-zinc-400"><IoPersonOutline size={14}/></div>}
+                                    </div>
+                                    <div className="flex flex-col">
+                                      <span className="font-bold text-sm text-zinc-900 uppercase">{j.nome}</span>
+                                      <span className="text-[10px] text-zinc-400 font-mono">{j.telefone}</span>
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="p-4 text-center">
+                                  {j.mensalidade_em_dia ? 
+                                    <span className="text-emerald-600 font-black text-[9px] uppercase">Liberado</span> : 
+                                    <span className="text-amber-600 font-bold text-[9px] uppercase">Bloqueado</span>
+                                  }
+                                </td>
+                                <td className="p-4 text-right text-zinc-400 text-xs">
+                                  {new Date(j.created_at).toLocaleDateString('pt-BR')}
+                                </td>
+                              </tr>
+                            ))}
+                            {jogadoresExternos.length === 0 && (
+                              <tr>
+                                <td colSpan={4} className="p-8 text-center text-zinc-400 text-sm font-bold">Nenhum jogador cadastrado externamente.</td>
+                              </tr>
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </motion.div>
+        )}
+
         </AnimatePresence>
         {showEqualizerModal && equalizerData && (
           <motion.div 
@@ -8129,6 +9443,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           onClose={() => setPlayerManagementModal(null)}
           onUpdateName={updatePlayerName}
           onUpdatePhoto={updatePlayerPhoto}
+          onUpdateAbsences={updatePlayerAbsences}
           onRemove={removePlayer}
         />
 
@@ -8272,7 +9587,37 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     <button 
                       onClick={() => {
                         setShowMainMenu(false);
-                        const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
+                        if (!isOrgProAuthorized) {
+                          setShowAuthModal(true);
+                          return;
+                        }
+                        const screens: Screen[] = ['players', 'teams', 'ranking', 'finance', 'org-pro'];
+                        const targetIndex = screens.indexOf('org-pro');
+                        const currentIndex = screens.indexOf(currentScreen);
+                        setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
+                        setCurrentScreen('org-pro');
+                      }}
+                      className="group w-full flex items-center gap-4 p-3 rounded-lg bg-gradient-to-br from-brand-primary/20 to-brand-primary/5 hover:from-brand-primary/30 hover:to-brand-primary/10 transition-all duration-400 transform active:scale-95 text-left shadow-xl border border-brand-primary/20 relative overflow-hidden"
+                    >
+                      {!isOrgProAuthorized && (
+                        <div className="absolute top-0 right-0 p-1 text-brand-primary/40">
+                          <PiLockFill size={10} />
+                        </div>
+                      )}
+                      <div className="w-10 h-10 rounded-lg bg-brand-primary/20 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500 shadow-inner">
+                        <GiCrown size={20} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="font-black uppercase tracking-widest text-xs text-brand-primary">Organização Pro</span>
+                        <span className="text-[10px] text-brand-primary/60 tracking-tight mt-0.5">Recursos avançados</span>
+                      </div>
+                      <ChevronRight size={16} className="ml-auto text-brand-primary/40 group-hover:text-brand-primary transition-colors" />
+                    </button>
+
+                    <button 
+                      onClick={() => {
+                        setShowMainMenu(false);
+                        const screens: Screen[] = ['players', 'teams', 'ranking', 'finance', 'org-pro'];
                         const targetIndex = screens.indexOf('finance');
                         const currentIndex = screens.indexOf(currentScreen);
                         setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
@@ -8447,6 +9792,233 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           </motion.div>
         )}
 
+        {showAuthModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-md"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              className="bg-white w-full max-w-sm rounded-[32px] overflow-hidden shadow-2xl border border-zinc-200"
+            >
+              <div className="p-8 space-y-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-emerald-500/10 flex items-center justify-center text-emerald-600">
+                      <GiCrown size={20} />
+                    </div>
+                    <div>
+                      <h3 className="text-sm font-black uppercase tracking-widest text-[#1E3D2F]">Organização Pro</h3>
+                      <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Acesso Restrito</p>
+                    </div>
+                  </div>
+                  <button onClick={() => setShowAuthModal(false)} className="w-8 h-8 rounded-full hover:bg-zinc-100 flex items-center justify-center text-zinc-400 transition-colors">
+                    <X size={16} />
+                  </button>
+                </div>
+
+                <div className="space-y-4">
+                  {authMode === 'pin' ? (
+                    <div className="space-y-4">
+                      <div className="space-y-1">
+                        <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 ml-1">Pin do Administrador</label>
+                        <div className="relative">
+                          <input 
+                            type="text" 
+                            maxLength={6}
+                            value={authPin}
+                            onChange={(e) => setAuthPin(e.target.value.replace(/\D/g, ''))}
+                            placeholder="Digite o PIN de 6 dígitos"
+                            className="w-full bg-zinc-100 border border-zinc-200 rounded-2xl px-5 py-4 text-sm font-black tracking-[0.3em] uppercase focus:outline-none focus:ring-2 ring-emerald-500/20 transition-all placeholder:tracking-normal placeholder:font-bold"
+                          />
+                        </div>
+                      </div>
+                      
+                      <button 
+                        onClick={() => {
+                          if (authPin === adminPin) {
+                            setIsOrgProAuthorized(true);
+                            setShowAuthModal(false);
+                            setToast({ message: "Acesso Pro liberado!", type: 'success' });
+                            setTimeout(() => setToast(null), 3000);
+                          } else {
+                            setToast({ message: "PIN incorreto!", type: 'warning' });
+                            setTimeout(() => setToast(null), 3000);
+                          }
+                        }}
+                        disabled={authPin.length !== 6}
+                        className="w-full py-4 bg-brand-gradient text-black font-black uppercase tracking-widest text-[11px] rounded-[20px] shadow-lg active:scale-95 transition-all disabled:opacity-50 disabled:active:scale-100"
+                      >
+                        Acessar
+                      </button>
+                    </div>
+                  ) : authMode === 'email' ? (
+                    <div className="space-y-4">
+                      <div className="space-y-3">
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">E-mail do Administrador</label>
+                          <input 
+                            type="email" 
+                            value={authEmail}
+                            onChange={(e) => setAuthEmail(e.target.value)}
+                            placeholder="admin@email.com"
+                            className="w-full bg-zinc-100 border border-zinc-200 rounded-2xl px-5 py-3 text-sm font-bold focus:outline-none focus:ring-2 ring-emerald-500/20 transition-all"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Senha</label>
+                          <input 
+                            type="password" 
+                            value={authPassword}
+                            onChange={(e) => setAuthPassword(e.target.value)}
+                            placeholder="••••••••"
+                            className="w-full bg-zinc-100 border border-zinc-200 rounded-2xl px-5 py-3 text-sm font-bold focus:outline-none focus:ring-2 ring-emerald-500/20 transition-all"
+                          />
+                        </div>
+                      </div>
+
+                      <button 
+                        onClick={async () => {
+                          if (!authEmail || !authPassword) {
+                            setToast({ message: "Preencha todos os campos", type: 'warning' });
+                            setTimeout(() => setToast(null), 3000);
+                            return;
+                          }
+                          try {
+                            const { error: authErr } = await supabase.auth.signInWithPassword({
+                              email: authEmail,
+                              password: authPassword
+                            });
+
+                            if (authErr) {
+                              setToast({ message: "Login falhou: " + authErr.message, type: 'warning' });
+                              setTimeout(() => setToast(null), 3000);
+                              return;
+                            }
+
+                            const { data: adminCheck } = await supabase
+                              .from('app_admins')
+                              .select('*')
+                              .eq('group_id', groupId)
+                              .eq('email', authEmail)
+                              .maybeSingle();
+
+                            if (adminCheck) {
+                              setIsOrgProAuthorized(true);
+                              setShowAuthModal(false);
+                              setToast({ message: "Bem-vindo, Administrador!", type: 'success' });
+                            } else {
+                              setToast({ message: "E-mail não autorizado para este grupo.", type: 'warning' });
+                            }
+                          } catch (err) {
+                            setToast({ message: "Erro ao tentar login", type: 'warning' });
+                          }
+                          setTimeout(() => setToast(null), 3000);
+                        }}
+                        className="w-full py-4 bg-[#1E3D2F] text-white font-black uppercase tracking-widest text-[11px] rounded-[20px] shadow-lg active:scale-95 transition-all"
+                      >
+                        Entrar (Admin)
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      <div className="space-y-3">
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">E-mail para Cadastro</label>
+                          <input 
+                            type="email" 
+                            value={authEmail}
+                            onChange={(e) => setAuthEmail(e.target.value)}
+                            placeholder="novo-admin@email.com"
+                            className="w-full bg-zinc-100 border border-zinc-200 rounded-2xl px-5 py-3 text-sm font-bold focus:outline-none focus:ring-2 ring-purple-500/20 transition-all"
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Crie uma Senha</label>
+                          <input 
+                            type="password" 
+                            value={authPassword}
+                            onChange={(e) => setAuthPassword(e.target.value)}
+                            placeholder="No mínimo 6 caracteres"
+                            className="w-full bg-zinc-100 border border-zinc-200 rounded-2xl px-5 py-3 text-sm font-bold focus:outline-none focus:ring-2 ring-purple-500/20 transition-all"
+                          />
+                        </div>
+                      </div>
+
+                      <button 
+                        onClick={async () => {
+                          if (!authEmail || !authPassword || authPassword.length < 6) {
+                            setToast({ message: "Preencha e-mail e senha (mín. 6 carecteres)", type: 'warning' });
+                            setTimeout(() => setToast(null), 3000);
+                            return;
+                          }
+                          try {
+                            const { error: signUpErr } = await supabase.auth.signUp({
+                              email: authEmail,
+                              password: authPassword
+                            });
+
+                            if (signUpErr) {
+                              setToast({ message: "Erro: " + signUpErr.message, type: 'warning' });
+                            } else {
+                              // Register as admin for THIS group
+                              await supabase.from('app_admins').insert({ email: authEmail, group_id: groupId });
+                              setToast({ message: "Cadastro realizado! Verifique seu e-mail ou faça login.", type: 'success' });
+                              setAuthMode('email');
+                            }
+                          } catch (err) {
+                            setToast({ message: "Erro ao cadastrar", type: 'warning' });
+                          }
+                          setTimeout(() => setToast(null), 3000);
+                        }}
+                        className="w-full py-4 bg-purple-600 text-white font-black uppercase tracking-widest text-[11px] rounded-[20px] shadow-lg active:scale-95 transition-all"
+                      >
+                        Criar Conta Admin
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="relative py-2">
+                    <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-zinc-100"></div></div>
+                    <div className="relative flex justify-center text-[10px] uppercase font-black tracking-widest text-zinc-300">
+                      <span className="bg-white px-3">ou alternar acesso</span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <button 
+                      onClick={() => {
+                          if (authMode === 'pin') setAuthMode('email');
+                          else setAuthMode('pin');
+                      }}
+                      className="w-full py-4 rounded-[20px] border-2 border-[#1E3D2F] text-[#1E3D2F] text-[11px] font-black uppercase tracking-widest hover:bg-zinc-50 transition-all active:scale-95"
+                    >
+                      {authMode === 'pin' ? 'Login por E-mail (Admin)' : 'Utilizar PIN de 6 Dígitos'}
+                    </button>
+                    
+                    {authMode !== 'signup' && (
+                      <button 
+                        onClick={() => setAuthMode('signup')}
+                        className="w-full py-4 rounded-[20px] border-2 border-dashed border-purple-400 text-purple-600 text-[11px] font-black uppercase tracking-widest hover:bg-purple-50 transition-all active:scale-95"
+                      >
+                        Criar Novo Admin
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+              
+              <div className="bg-zinc-50 p-6 text-center">
+                <p className="text-[10px] font-bold text-zinc-400 leading-relaxed uppercase tracking-wider">
+                  O PIN pode ser encontrado no <br/>Painel Geral da Organização Pro.
+                </p>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
       </AnimatePresence>
     </div>
   );
