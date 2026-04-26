@@ -8251,7 +8251,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   </div>
                   <button 
                     onClick={() => setShowMainMenu(false)} 
-                    className="absolute top-10 right-8 p-3 bg-white/5 text-white/40 hover:text-white hover:bg-white/10 rounded-2xl transition-all duration-300 border border-white/5"
+                    className="absolute top-10 right-8 p-3 bg-white/5 text-white/40 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300"
                   >
                     <X size={20} />
                   </button>
@@ -8276,14 +8276,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         setCurrentScreen('finance');
                         setFinanceSubScreen('balanco');
                       }}
-                      className="group w-full flex items-center gap-4 p-3 rounded-[24px] bg-gradient-to-br from-white/10 to-white/5 border border-white/10 hover:from-white/15 hover:to-white/10 hover:border-white/20 transition-all duration-400 transform active:scale-95 text-left shadow-xl"
+                      className="group w-full flex items-center gap-4 p-3 rounded-lg bg-gradient-to-br from-white/10 to-white/5 hover:from-white/15 hover:to-white/10 transition-all duration-400 transform active:scale-95 text-left shadow-xl"
                     >
-                      <div className="w-10 h-10 rounded-2xl bg-white/10 text-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500 shadow-inner">
+                      <div className="w-10 h-10 rounded-lg bg-white/10 text-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500 shadow-inner">
                         <IoIosWallet size={20} />
                       </div>
                       <div className="flex flex-col">
                         <span className="font-black uppercase tracking-widest text-xs text-white">Financeiro</span>
-                        <span className="text-[10px] text-white/40 uppercase font-bold tracking-tight mt-0.5">Gestão de Caixa</span>
+                        <span className="text-[10px] text-white/40 tracking-tight mt-0.5">Gestão de caixa</span>
                       </div>
                       <ChevronRight size={16} className="ml-auto text-white/20 group-hover:text-brand-primary transition-colors" />
                     </button>
@@ -8297,17 +8297,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       setShowMainMenu(false);
                       setShowBackToHomeConfirm(true);
                     }}
-                    className="group w-full flex items-center justify-center gap-3 py-4 rounded-[24px] bg-white text-[#1E3D2F] font-black uppercase tracking-[0.15em] text-[11px] hover:bg-zinc-100 transition-all duration-300 shadow-2xl active:scale-95"
+                    className="group w-full flex items-center justify-center gap-3 py-4 rounded-[24px] bg-white text-[#1E3D2F] font-normal uppercase tracking-[0.15em] text-[11px] hover:bg-zinc-100 transition-all duration-300 shadow-2xl active:scale-95"
                   >
                     <LogOut size={18} strokeWidth={3} className="group-hover:-translate-x-1 transition-transform" />
                     <span>Sair da Partida</span>
                   </button>
-                  <div className="mt-6 flex flex-col items-center gap-1">
-                    <div className="flex items-center gap-2">
-                      <div className="w-1 h-1 rounded-full bg-brand-primary animate-pulse" />
-                      <span className="text-[9px] font-black text-white/30 uppercase tracking-[0.4em]">FutQuina v2.5</span>
-                    </div>
-                  </div>
+                  
                 </div>
               </motion.div>
             </motion.div>
