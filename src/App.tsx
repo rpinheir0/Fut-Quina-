@@ -4744,6 +4744,52 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             </div>
                           </div>
 
+                          <div className="p-5 bg-white rounded-2xl border border-zinc-200 space-y-4">
+                            <div className="flex items-center justify-between">
+                              <div className="flex flex-col">
+                                <span className="text-[11px] font-black uppercase tracking-widest text-zinc-900">Fixar Cores nos Confrontos?</span>
+                                <p className="text-[9px] text-zinc-500 font-bold uppercase tracking-wider mt-0.5">Define cores permanentes para o Time A e Time B</p>
+                              </div>
+                              <button 
+                                onClick={() => setFixedColors(prev => ({ ...prev, enabled: !prev.enabled }))}
+                                className={`w-12 h-6 rounded-full p-1 transition-colors relative ${fixedColors.enabled ? 'bg-brand-primary' : 'bg-zinc-300'}`}
+                              >
+                                <div className={`w-4 h-4 bg-white rounded-full transition-transform ${fixedColors.enabled ? 'translate-x-6' : 'translate-x-0'} shadow-sm`} />
+                              </button>
+                            </div>
+
+                            {fixedColors.enabled && (
+                              <div className="grid grid-cols-2 gap-4 pt-2 animate-in fade-in slide-in-from-top-1 duration-300">
+                                <div className="space-y-2">
+                                  <label className="text-[9px] font-black uppercase tracking-widest text-zinc-400">Cor Time A</label>
+                                  <button
+                                    onClick={() => setShowColorPicker({ teamIdx: -1, color: fixedColors.teamA || TEAM_COLORS[0] })}
+                                    className="w-full h-12 rounded-xl flex items-center justify-between px-4 bg-zinc-50 border border-zinc-100 hover:border-zinc-300 transition-all"
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-5 h-5 rounded-md shadow-sm border border-black/5" style={{ backgroundColor: fixedColors.teamA || TEAM_COLORS[0] }} />
+                                      <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Escudo A</span>
+                                    </div>
+                                    <PenLine size={14} className="text-zinc-400" />
+                                  </button>
+                                </div>
+                                <div className="space-y-2">
+                                  <label className="text-[9px] font-black uppercase tracking-widest text-zinc-400">Cor Time B</label>
+                                  <button
+                                    onClick={() => setShowColorPicker({ teamIdx: -2, color: fixedColors.teamB || TEAM_COLORS[1] })}
+                                    className="w-full h-12 rounded-xl flex items-center justify-between px-4 bg-zinc-50 border border-zinc-100 hover:border-zinc-300 transition-all"
+                                  >
+                                    <div className="flex items-center gap-2">
+                                      <div className="w-5 h-5 rounded-md shadow-sm border border-black/5" style={{ backgroundColor: fixedColors.teamB || TEAM_COLORS[1] }} />
+                                      <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Escudo B</span>
+                                    </div>
+                                    <PenLine size={14} className="text-zinc-400" />
+                                  </button>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+
                           <button 
                             onClick={() => {
                               const duration = parseInt((document.getElementById('tab-match-duration') as HTMLInputElement).value) || 10;
@@ -9577,12 +9623,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           isOpen={!!showColorPicker}
           onClose={() => setShowColorPicker(null)}
           currentColor={showColorPicker?.color || ''}
-          teamName={showColorPicker ? teams[showColorPicker.teamIdx]?.name || '' : ''}
+          teamName={
+            showColorPicker 
+              ? showColorPicker.teamIdx === -1 ? 'Time A (Fixo)' 
+              : showColorPicker.teamIdx === -2 ? 'Time B (Fixo)' 
+              : teams[showColorPicker.teamIdx]?.name || '' 
+              : ''
+          }
           isFixed={fixedColors.enabled}
           onToggleFixed={(enabled) => {
             setFixedColors(prev => {
               if (enabled && showColorPicker) {
-                const isTeamA = showColorPicker.teamIdx === match.teamAIndex;
+                const idx = showColorPicker.teamIdx;
+                const isTeamA = idx === -1 || idx === match.teamAIndex;
                 return {
                   ...prev,
                   enabled,
@@ -9595,24 +9648,32 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           }}
           onSelect={(color) => {
             if (!showColorPicker) return;
-            const isTeamA = showColorPicker.teamIdx === match.teamAIndex;
+            const idx = showColorPicker.teamIdx;
+            const isTeamA = idx === -1 || idx === match.teamAIndex;
+            const isTeamB = idx === -2 || idx === match.teamBIndex;
             
-            if (fixedColors.enabled) {
+            if (idx === -1) {
+              setFixedColors(prev => ({ ...prev, teamA: color }));
+            } else if (idx === -2) {
+              setFixedColors(prev => ({ ...prev, teamB: color }));
+            } else if (fixedColors.enabled) {
               setFixedColors(prev => ({
                 ...prev,
                 teamA: isTeamA ? color : prev.teamA,
-                teamB: !isTeamA ? color : prev.teamB
+                teamB: isTeamB ? color : prev.teamB
               }));
+              // Also update specific team if needed, but fixed takes precedence usually
+              setTeams(prev => prev.map((t, i) => i === idx ? { ...t, color } : t));
             } else {
               setTeams(prev => {
                 const newTeams = [...prev];
-                if (newTeams[showColorPicker.teamIdx]) {
-                  newTeams[showColorPicker.teamIdx].color = color;
+                if (newTeams[idx]) {
+                  newTeams[idx].color = color;
                 }
                 return newTeams;
               });
             }
-            setShowColorPicker(prev => prev ? { ...prev, color } : null);
+            setShowColorPicker(null);
           }}
         />
 
