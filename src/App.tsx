@@ -758,7 +758,7 @@ const TieBreakerModal = ({
                 <div className="flex-1 flex flex-col items-center">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center drop-shadow-lg mb-2" style={{ color: resolvedColorA }}>
                     {(() => {
-                      const IconA = TEAM_ICONS[teamA.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)];
+                      const IconA = TEAM_ICONS[teamA.iconIdx ?? 0];
                       return <IconA size={48} />;
                     })()}
                   </div>
@@ -778,7 +778,7 @@ const TieBreakerModal = ({
                 <div className="flex-1 flex flex-col items-center">
                   <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center drop-shadow-lg mb-2" style={{ color: resolvedColorB }}>
                     {(() => {
-                      const IconB = TEAM_ICONS[teamB.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                      const IconB = TEAM_ICONS[teamB.iconIdx ?? 1];
                       return <IconB size={48} />;
                     })()}
                   </div>
@@ -867,7 +867,7 @@ const TieBreakerModal = ({
                 >
                   <div className="w-12 h-12 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform drop-shadow-lg" style={{ color: resolvedColorA }}>
                     {(() => {
-                      const IconA = TEAM_ICONS[teamA.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)];
+                      const IconA = TEAM_ICONS[teamA.iconIdx ?? 0];
                       return <IconA size={32} />;
                     })()}
                   </div>
@@ -889,7 +889,7 @@ const TieBreakerModal = ({
                 >
                   <div className="w-12 h-12 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform drop-shadow-lg" style={{ color: resolvedColorB }}>
                     {(() => {
-                      const IconB = TEAM_ICONS[teamB.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                      const IconB = TEAM_ICONS[teamB.iconIdx ?? 1];
                       return <IconB size={32} />;
                     })()}
                   </div>
@@ -921,7 +921,7 @@ const TieBreakerModal = ({
                 <div className="text-center flex-1 flex flex-col items-center">
                   <div className="w-14 h-14 flex items-center justify-center drop-shadow-md mb-3" style={{ color: teamA.color || TEAM_COLORS[0] }}>
                     {(() => {
-                      const IconA = TEAM_ICONS[teamA.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)];
+                      const IconA = TEAM_ICONS[teamA.iconIdx ?? 0];
                       return <IconA size={48} />;
                     })()}
                   </div>
@@ -931,7 +931,7 @@ const TieBreakerModal = ({
                 <div className="text-center flex-1 flex flex-col items-center">
                   <div className="w-14 h-14 flex items-center justify-center drop-shadow-md mb-3" style={{ color: teamB.color || TEAM_COLORS[1] }}>
                     {(() => {
-                      const IconB = TEAM_ICONS[teamB.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                      const IconB = TEAM_ICONS[teamB.iconIdx ?? 1];
                       return <IconB size={48} />;
                     })()}
                   </div>
@@ -1046,13 +1046,13 @@ const TieBreakerModal = ({
                   {/* Result Indicators */}
                   <div className="absolute top-6 left-1/2 -translate-x-1/2 w-10 h-10 drop-shadow-md flex items-center justify-center" style={{ color: teamA.color || TEAM_COLORS[0] }}>
                     {(() => {
-                      const IconA = TEAM_ICONS[teamA.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)];
+                      const IconA = TEAM_ICONS[teamA.iconIdx ?? 0];
                       return <IconA size={32} />;
                     })()}
                   </div>
                   <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-10 h-10 rotate-180 drop-shadow-md flex items-center justify-center" style={{ color: teamB.color || TEAM_COLORS[1] }}>
                     {(() => {
-                      const IconB = TEAM_ICONS[teamB.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                      const IconB = TEAM_ICONS[teamB.iconIdx ?? 1];
                       return <IconB size={32} />;
                     })()}
                   </div>
@@ -1076,7 +1076,7 @@ const TieBreakerModal = ({
                     <div className="flex-1 flex flex-col items-center">
                       <div className="w-10 h-10 flex items-center justify-center drop-shadow-lg mb-2" style={{ color: teamA.color || TEAM_COLORS[0] }}>
                         {(() => {
-                          const IconA = TEAM_ICONS[teamA.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)];
+                          const IconA = TEAM_ICONS[teamA.iconIdx ?? 0];
                           return <IconA size={32} />;
                         })()}
                       </div>
@@ -1096,7 +1096,7 @@ const TieBreakerModal = ({
                     <div className="flex-1 flex flex-col items-center">
                       <div className="w-10 h-10 flex items-center justify-center drop-shadow-lg mb-2" style={{ color: teamB.color || TEAM_COLORS[1] }}>
                         {(() => {
-                          const IconB = TEAM_ICONS[teamB.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                          const IconB = TEAM_ICONS[teamB.iconIdx ?? 1];
                           return <IconB size={32} />;
                         })()}
                       </div>
@@ -1130,7 +1130,7 @@ const TieBreakerModal = ({
                       <div className="w-20 h-20 flex items-center justify-center drop-shadow-xl" style={{ color: (state.lottery.winnerId === teamA.id ? teamA.color : teamB.color) || TEAM_COLORS[0] }}>
                         {(() => {
                           const isTeamA = state.lottery.winnerId === teamA.id;
-                          const IconWinner = isTeamA ? TEAM_ICONS[teamA.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)] : TEAM_ICONS[teamB.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                          const IconWinner = isTeamA ? TEAM_ICONS[teamA.iconIdx ?? 0] : TEAM_ICONS[teamB.iconIdx ?? 1];
                           return <IconWinner size={64} />;
                         })()}
                       </div>
@@ -4265,7 +4265,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="drop-shadow-sm" style={{ color: (fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color || '#ffffff' }}>
                           {(() => {
                             const team = teams[match.teamAIndex];
-                            const Icon = TEAM_ICONS[team?.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)];
+                            const Icon = TEAM_ICONS[team?.iconIdx ?? 0];
                             return <Icon size={14} />;
                           })()}
                         </div>
@@ -4279,7 +4279,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="drop-shadow-sm" style={{ color: (fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color || '#ffffff' }}>
                           {(() => {
                             const team = teams[match.teamBIndex];
-                            const Icon = TEAM_ICONS[team?.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                            const Icon = TEAM_ICONS[team?.iconIdx ?? 1];
                             return <Icon size={14} />;
                           })()}
                         </div>
@@ -4320,7 +4320,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="drop-shadow-sm" style={{ color: (fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color || '#ffffff' }}>
                           {(() => {
                             const team = teams[match.teamAIndex];
-                            const Icon = TEAM_ICONS[team?.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)];
+                            const Icon = TEAM_ICONS[team?.iconIdx ?? 0];
                             return <Icon size={12} />;
                           })()}
                         </div>
@@ -4332,7 +4332,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="drop-shadow-sm" style={{ color: (fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color || '#ffffff' }}>
                           {(() => {
                             const team = teams[match.teamBIndex];
-                            const Icon = TEAM_ICONS[team?.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                            const Icon = TEAM_ICONS[team?.iconIdx ?? 1];
                             return <Icon size={12} />;
                           })()}
                         </div>
@@ -4360,10 +4360,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         {/* Tabs for Teams */}
         {currentScreen === 'teams' && (
           <div className="px-6 pb-4" style={{ backgroundColor: 'transparent' }}>
-            <div className="flex bg-[#1E3D2F]/80 backdrop-blur-md p-1 rounded-[24px] border border-white/5">
+            <div className="flex gap-2">
               <button 
                 onClick={() => navigateTeamsTab('configuracao')}
-                className={`w-12 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'configuracao' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/20' : 'text-white/40 hover:text-white/80'}`}
+                className={`w-12 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'configuracao' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80'}`}
               >
                 <motion.div
                   animate={{ rotate: teamsTab === 'configuracao' ? [0, 180] : 0 }}
@@ -4380,19 +4380,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               </button>
               <button 
                 onClick={() => navigateTeamsTab('chegada')}
-                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'chegada' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/20' : 'text-white/40 hover:text-white/80 font-medium'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'chegada' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'chegada' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Chegada</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('historico')}
-                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'historico' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/20' : 'text-white/40 hover:text-white/80 font-medium'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'historico' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'historico' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Confrontos</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('proximos')}
-                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${teamsTab === 'proximos' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/20' : 'text-white/40 hover:text-white/80 font-medium'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'proximos' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'proximos' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Próximos</span>
               </button>
@@ -4583,7 +4583,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               >
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-[#1E3D2F]/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner border border-[#1E3D2F]/20">
-                    <GiCrown size={24} className="text-[#1E3D2F]" />
+                    <GiCrown size={24} color="#1E3D2F" />
                   </div>
                   <div>
                     <h3 className="font-black uppercase tracking-widest text-sm text-[#1E3D2F]">Organização Pro</h3>
@@ -5256,7 +5256,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     {(() => {
                                       const team = teams[match.teamAIndex];
                                       if (!team) return null;
-                                      const Icon = TEAM_ICONS[team.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)];
+                                      const Icon = TEAM_ICONS[team.iconIdx ?? 0];
                                       const color = (fixedColors.enabled && fixedColors.teamA) || team.color || TEAM_COLORS[0];
                                       return (
                                         <div className="w-full h-full drop-shadow-md flex items-center justify-center" style={{ color }}>
@@ -5344,7 +5344,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     {(() => {
                                       const team = teams[match.teamBIndex];
                                       if (!team) return null;
-                                      const Icon = TEAM_ICONS[team.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                                      const Icon = TEAM_ICONS[team.iconIdx ?? 1];
                                       const color = (fixedColors.enabled && fixedColors.teamB) || team.color || TEAM_COLORS[1];
                                       return (
                                         <div className="w-full h-full drop-shadow-md flex items-center justify-center" style={{ color }}>
