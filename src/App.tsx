@@ -1282,41 +1282,41 @@ const PlayerManagementModalComponent = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={onClose}>
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick={onClose}>
       <motion.div 
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        className="w-full max-w-[300px] rounded-3xl p-6 shadow-[2px_2px_0_0_rgba(0,0,0,1)] border-2 relative bg-zinc-100 border-black"
+        className="w-full max-w-[300px] bg-white rounded-[24px] shadow-2xl relative overflow-hidden flex flex-col"
         onClick={e => e.stopPropagation()}
       >
-        <button 
-          onClick={onClose}
-          className="absolute top-4 right-4 p-1.5 bg-brand-glass border border-brand-border rounded-xl text-zinc-500 hover:text-brand-primary active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all shadow-[1px_1px_0_0_var(--brand-border)]"
-        >
-          <Plus size={16} className="rotate-45" />
-        </button>
+        <div className="bg-zinc-50 border-b border-zinc-100 p-6 flex flex-col items-center gap-4 relative">
+          <button 
+            onClick={onClose}
+            className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-sm text-zinc-400 hover:text-black transition-all"
+          >
+            <X size={16} />
+          </button>
 
-        <div className="flex flex-col items-center gap-4">
-          <div className="relative group">
-            <div className="w-24 h-24 rounded-3xl overflow-hidden border-2 flex items-center justify-center relative bg-zinc-200 border-black">
+          <div className="relative group mt-4">
+            <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md bg-zinc-200 flex items-center justify-center relative">
               {player.photo ? (
                 <img src={player.photo} alt={player.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
               ) : (
-                <div className="flex flex-col items-center justify-center text-brand-text-secondary opacity-40">
+                <div className="flex flex-col items-center justify-center text-zinc-400">
                   <IoPersonOutline size={40} />
                   <span className="text-[9px] font-black uppercase mt-1 tracking-widest">Sem Foto</span>
                 </div>
               )}
             </div>
             
-            <label className="absolute -bottom-1 -right-1 w-10 h-10 bg-white text-black rounded-2xl flex items-center justify-center cursor-pointer shadow-[1px_1px_0_0_rgba(0,0,0,1)] hover:scale-105 active:translate-x-[0.5px] active:translate-y-[0.5px] active:shadow-none transition-all border-2 border-black">
-              <Camera size={16} />
+            <label className="absolute bottom-0 right-0 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center cursor-pointer shadow-md hover:scale-105 active:scale-95 transition-all">
+              <Camera size={14} />
               <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
             </label>
           </div>
 
-          <div className="w-full space-y-4">
-            <div className="text-center group relative">
+          <div className="w-full mt-2">
+            <div className="text-center w-full">
               <input 
                 type="text" 
                 defaultValue={player.name}
@@ -1327,68 +1327,62 @@ const PlayerManagementModalComponent = ({
                     e.currentTarget.blur();
                   }
                 }}
-                className={`w-full bg-transparent text-xl font-black uppercase tracking-tighter text-center outline-none border-b-2 border-transparent focus:border-brand-primary pb-1 transition-all ${
-                  theme === 'light' ? 'text-black' : 'text-white'
-                }`}
+                className={`w-full bg-transparent text-2xl font-black uppercase tracking-tighter text-black leading-none text-center outline-none border-b border-transparent focus:border-zinc-300 transition-all placeholder:text-zinc-300 py-1`}
               />
-              <p className="text-[7px] font-black uppercase tracking-[0.3em] text-brand-primary mt-1">Nome do Jogador</p>
+              <p className="text-[10px] text-[#B7D96C] font-black mt-2 uppercase tracking-[0.2em]">NOME DO JOGADOR</p>
             </div>
+          </div>
+        </div>
 
-            <div className="grid grid-cols-3 gap-3">
-              <div className={`p-3 rounded-2xl flex flex-col items-center justify-center border-2 border-brand-border shadow-[3px_3px_0_0_var(--brand-border)] ${
-                theme === 'light' ? 'bg-white' : 'bg-black/40'
-              }`}>
-                <div className="text-xl font-black text-brand-primary leading-none mb-1">{player.goals}</div>
-                <div className="text-[7px] font-black uppercase tracking-widest text-brand-text-secondary !normal-case text-center">Gols</div>
-              </div>
-              <div className={`p-3 rounded-2xl flex flex-col items-center justify-center border-2 border-brand-border shadow-[3px_3px_0_0_var(--brand-border)] ${
-                theme === 'light' ? 'bg-white' : 'bg-black/40'
-              }`}>
-                <div className="text-xl font-black text-brand-primary leading-none mb-1">{player.assists}</div>
-                <div className="text-[7px] font-black uppercase tracking-widest text-brand-text-secondary !normal-case text-center">Assistências</div>
-              </div>
-              <div className={`p-2 rounded-2xl flex flex-col items-center justify-center border-2 border-orange-200 shadow-[3px_3px_0_0_theme(colors.orange.200)] ${
-                theme === 'light' ? 'bg-orange-50' : 'bg-orange-900/20'
-              } relative group transition-all`}>
-                <div className="flex items-center justify-center gap-0.5 mb-1">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      onClick={() => onUpdateStars && onUpdateStars(player.id, star)}
-                      className="transition-all active:scale-95"
-                    >
-                      <Star 
-                        size={12} 
-                        className={`${(player.stars || 0) >= star ? 'fill-yellow-400 text-yellow-400' : 'text-zinc-300'}`} 
-                      />
-                    </button>
-                  ))}
-                </div>
-                <div className="text-[7px] font-black uppercase tracking-widest text-orange-800 text-center !normal-case">Nível</div>
-              </div>
+        <div className="p-4 space-y-4">
+          <div className="grid grid-cols-3 gap-2">
+            <div className="p-3 bg-zinc-50 rounded-2xl border border-zinc-100 flex flex-col items-center justify-center shadow-sm">
+              <div className="text-xl font-black text-[#B7D96C] leading-none mb-1">{player.goals}</div>
+              <div className="text-[8px] font-bold uppercase tracking-widest text-zinc-500">Gols</div>
             </div>
+            <div className="p-3 bg-zinc-50 rounded-2xl border border-zinc-100 flex flex-col items-center justify-center shadow-sm">
+              <div className="text-xl font-black text-[#B7D96C] leading-none mb-1">{player.assists}</div>
+              <div className="text-[8px] font-bold uppercase tracking-widest text-zinc-500">Assistências</div>
+            </div>
+            <div className="p-2 bg-orange-50 rounded-2xl flex flex-col items-center justify-center border border-orange-100 shadow-sm relative transition-all">
+              <div className="flex flex-wrap items-center justify-center gap-[1px] mb-1 px-1">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    onClick={() => onUpdateStars && onUpdateStars(player.id, star)}
+                    className="transition-all active:scale-95 p-0.5"
+                  >
+                    <Star 
+                      size={10} 
+                      className={`${(player.stars || 0) >= star ? 'fill-yellow-400 text-yellow-400' : 'text-orange-200'}`} 
+                    />
+                  </button>
+                ))}
+              </div>
+              <div className="text-[8px] font-bold uppercase tracking-widest text-orange-600">Nível</div>
+            </div>
+          </div>
 
-            <div className="pt-2 flex flex-col gap-2">
+          <div className="flex flex-col gap-2 pt-2">
+            <button 
+              onClick={onClose}
+              className="w-full py-3.5 bg-[#B7D96C] text-[#1E3D2F] rounded-2xl font-black uppercase tracking-widest shadow-md hover:shadow-lg active:scale-95 transition-all text-[11px]"
+            >
+              Confirmar
+            </button>
+
+            {onRemove && (
               <button 
-                onClick={onClose}
-                className="w-full py-3 bg-brand-gradient text-black rounded-2xl font-black uppercase tracking-widest shadow-[1.5px_1.5px_0_0_rgba(0,0,0,1)] active:translate-x-[1px] active:translate-y-[1px] active:shadow-none transition-all text-[10px] glass-3d border border-black"
+                onClick={() => {
+                  onRemove(player.id);
+                  onClose();
+                }}
+                className="w-full py-3 flex items-center justify-center gap-2 text-red-500 bg-red-50 hover:bg-red-100 rounded-2xl font-black uppercase tracking-widest text-[9px] transition-all border border-red-100 active:scale-95"
               >
-                Confirmar
+                <Trash2 size={12} />
+                Remover
               </button>
-
-              {onRemove && (
-                <button 
-                  onClick={() => {
-                    onRemove(player.id);
-                    onClose();
-                  }}
-                  className="w-full py-2.5 flex items-center justify-center gap-2 text-orange-600 bg-orange-900/10 hover:bg-orange-900/20 rounded-2xl font-black uppercase tracking-widest text-[8px] transition-all border border-orange-600/30 active:scale-95"
-                >
-                  <Trash2 size={10} />
-                  Remover
-                </button>
-              )}
-            </div>
+            )}
           </div>
         </div>
       </motion.div>
