@@ -71,7 +71,7 @@ import { IoPersonOutline, IoFootballOutline, IoCheckmarkCircle } from 'react-ico
 import { IoIosTrophy, IoIosWallet, IoIosFootball } from 'react-icons/io';
 import { PiUserCirclePlusThin, PiUserCirclePlusLight, PiUserCirclePlus } from 'react-icons/pi';
 import { ImSpinner9 } from 'react-icons/im';
-import { GiGoalKeeper, GiSoccerKick, GiSoccerField, GiTrophy, GiPodiumWinner, GiRunningShoe, GiLaurelsTrophy, GiSocks, GiAbstract042, GiSoccerBall, GiCrown, GiQueenCrown } from 'react-icons/gi';
+import { GiGoalKeeper, GiSoccerKick, GiSoccerField, GiTrophy, GiPodiumWinner, GiRunningShoe, GiLaurelsTrophy, GiSocks, GiAbstract042, GiSoccerBall, GiCrown, GiQueenCrown, GiCrossShield, GiDragonShield, GiEdgedShield, GiRank3, GiBoltShield, GiBorderedShield, GiCrownedSkull } from 'react-icons/gi';
 import { 
   PiUsersBold,
   PiUsers,
@@ -216,8 +216,8 @@ interface Team {
   id: string;
   name: string;
   playerIds: string[];
-  emoji?: string;
-  color?: string;
+  iconIdx: number;
+  color: string;
   lastMatchStatus?: 'Vencedor' | 'Empate' | 'Derrota' | 'Subiu';
 }
 
@@ -241,7 +241,7 @@ interface TieBreakerState {
   };
 }
 
-const TEAM_EMOJIS = ['🛡️', '⚔️', '🔰', '⚜️', '🔱', '🎖️', '🏅', '🥇', '🦅', '🦁', '⭐', '🔥', '🐉', '🌪️', '⚡', '🏆', '⚓', '👑', '🦈', '🐺'];
+const TEAM_ICONS = [GiCrossShield, GiDragonShield, GiEdgedShield, GiRank3, GiBoltShield, GiBorderedShield, GiCrownedSkull];
 const TEAM_COLORS = [
   '#2563EB', '#DC2626', '#16A34A', '#EA580C', 
   '#CA8A04', '#0D9488', '#65A30D', '#0284C7', 
@@ -319,12 +319,22 @@ const getNextTeamColor = (existingTeams: Team[]) => {
   const availableColors = TEAM_COLORS.filter(c => !usedColors.includes(c));
   
   if (availableColors.length > 0) {
-    // Pick the first available color to ensure stable, sequential variety
-    return availableColors[0];
+    // Pick random available color
+    return availableColors[Math.floor(Math.random() * availableColors.length)];
   }
   
-  // If no colors are available, pick sequentially based on length
-  return TEAM_COLORS[existingTeams.length % TEAM_COLORS.length];
+  // If no colors are available, pick randomly from all
+  return TEAM_COLORS[Math.floor(Math.random() * TEAM_COLORS.length)];
+};
+
+const getNextTeamIconIdx = (existingTeams: Team[]) => {
+  const usedIcons = existingTeams.map(t => t.iconIdx).filter(idx => idx !== undefined);
+  const availableIndices = TEAM_ICONS.map((_, i) => i).filter(i => !usedIcons.includes(i));
+  
+  if (availableIndices.length > 0) {
+    return availableIndices[Math.floor(Math.random() * availableIndices.length)];
+  }
+  return Math.floor(Math.random() * TEAM_ICONS.length);
 };
 
 const FlipDigit = ({ value, size = 'normal', clockId = '', digitId = '' }: { value: string, size?: 'normal' | 'small' | 'xs', clockId?: string, digitId?: string }) => {
@@ -350,7 +360,7 @@ const FlipDigit = ({ value, size = 'normal', clockId = '', digitId = '' }: { val
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -25, opacity: 0 }}
           transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-          className={`${textSizes[size]} font-black text-black tracking-tighter`}
+          className={`${textSizes[size]} font-black text-black/90`}
         >
           {value}
         </motion.span>
@@ -366,13 +376,13 @@ const FlipClock = ({ time, size = 'normal', clockId = 'default' }: { time: numbe
   const seconds = (time % 60).toString().padStart(2, '0');
   
   return (
-    <div className={`flex items-center ${size === 'xs' ? 'gap-0.5 p-1' : 'gap-1 p-2'} rounded-full border border-black/10`}>
-      <div className="flex gap-0.5">
+    <div className={`flex items-center ${size === 'xs' ? 'gap-2.5 p-2 px-4' : 'gap-1 p-2'} rounded-2xl border border-white/10 bg-gradient-to-b from-zinc-100 via-zinc-200 to-zinc-300 shadow-inner`}>
+      <div className={`flex ${size === 'xs' ? 'gap-1.5' : 'gap-0.5'}`}>
         <FlipDigit value={minutes[0]} size={size} clockId={clockId} digitId="min0" />
         <FlipDigit value={minutes[1]} size={size} clockId={clockId} digitId="min1" />
       </div>
-      <span className={`${size === 'xs' ? 'text-sm' : size === 'small' ? 'text-lg' : 'text-2xl'} font-black text-black animate-pulse mx-0.5`}>:</span>
-      <div className="flex gap-0.5">
+      <span className={`${size === 'xs' ? 'text-sm' : size === 'small' ? 'text-lg' : 'text-2xl'} font-black text-black/60 mx-1`}>:</span>
+      <div className={`flex ${size === 'xs' ? 'gap-1.5' : 'gap-0.5'}`}>
         <FlipDigit value={seconds[0]} size={size} clockId={clockId} digitId="sec0" />
         <FlipDigit value={seconds[1]} size={size} clockId={clockId} digitId="sec1" />
       </div>
@@ -1980,8 +1990,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       }
     }
     return [
-      { id: generateId(), name: 'Time A', playerIds: [], emoji: '⚽', color: TEAM_COLORS[0] },
-      { id: generateId(), name: 'Time B', playerIds: [], emoji: '🏆', color: TEAM_COLORS[1] }
+      { id: generateId(), name: 'Time A', playerIds: [], iconIdx: 0, color: TEAM_COLORS[0] },
+      { id: generateId(), name: 'Time B', playerIds: [], iconIdx: 1, color: TEAM_COLORS[1] }
     ];
   });
 
@@ -2171,7 +2181,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
   const [showEventModal, setShowEventModal] = useState<{ team: 'A' | 'B' | number } | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'info' | 'warning' | 'gray' | 'success' } | null>(null);
-  const [showEmojiPicker, setShowEmojiPicker] = useState<number | null>(null);
+  const [showIconPicker, setShowIconPicker] = useState<number | null>(null);
   const [selectedScorerId, setSelectedScorerId] = useState<string | null>(null);
   const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
   const [swappingPlayerId, setSwappingPlayerId] = useState<string | null>(null);
@@ -2357,7 +2367,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               id: t.id,
               name: t.name,
               color: parsedColor,
-              playerIds: t.player_ids || []
+              playerIds: t.player_ids || [],
+              iconIdx: t.iconIdx ?? getNextTeamIconIdx(loadedTeams)
             });
           }
           setTeams(loadedTeams);
@@ -2822,8 +2833,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     const team = teams[teamIndex];
     if (team && team.playerIds.length >= match.config.playersPerTeam) {
       const nextLetter = String.fromCharCode(65 + teams.length);
-      const emoji = TEAM_EMOJIS[teams.length % TEAM_EMOJIS.length];
-      const newTeam = { id: generateId(), name: `Time ${nextLetter}`, playerIds: [newPlayer.id], emoji, color: getNextTeamColor(teams) };
+      const iconIdx = getNextTeamIconIdx(teams);
+      const newTeam = { id: generateId(), name: `Time ${nextLetter}`, playerIds: [newPlayer.id], iconIdx, color: getNextTeamColor(teams) };
       setTeams(prev => [...prev, newTeam]);
       setToast({ message: `✅ Time formado! Próximo: ${newTeam.name}`, type: 'info' });
       setShowQuickAddPlayerModal(teams.length);
@@ -2868,8 +2879,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     const team = teams[teamIndex];
     if (team && team.playerIds.length >= match.config.playersPerTeam) {
       const nextLetter = String.fromCharCode(65 + teams.length);
-      const emoji = TEAM_EMOJIS[teams.length % TEAM_EMOJIS.length];
-    const newTeam = { id: generateId(), name: `Time ${nextLetter}`, playerIds: [playerId], emoji, color: getNextTeamColor(teams) };
+      const iconIdx = getNextTeamIconIdx(teams);
+    const newTeam = { id: generateId(), name: `Time ${nextLetter}`, playerIds: [playerId], iconIdx, color: getNextTeamColor(teams) };
     setTeams(prev => [...prev, newTeam]);
       setToast({ message: `✅ Time formado! Próximo: ${newTeam.name}`, type: 'info' });
       setShowQuickAddPlayerModal(teams.length);
@@ -2928,8 +2939,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           id: existingTeam?.id || `team-regrouped-${teamIndex}-${generateId()}`,
           name: `Time ${String.fromCharCode(65 + teamIndex)}`,
           playerIds: chunk,
-          emoji: existingTeam?.emoji || TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length],
-          color: existingTeam?.color || TEAM_COLORS[teamIndex % TEAM_COLORS.length]
+          iconIdx: existingTeam?.iconIdx ?? getNextTeamIconIdx(newTeams),
+          color: existingTeam?.color ?? getNextTeamColor(newTeams)
         });
       }
 
@@ -2983,8 +2994,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           id: existingTeam?.id || `team-cascade-${teamIndex}-${generateId()}`,
           name: `Time ${String.fromCharCode(65 + teamIndex)}`,
           playerIds: chunk,
-          emoji: existingTeam?.emoji || TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length],
-          color: existingTeam?.color || TEAM_COLORS[teamIndex % TEAM_COLORS.length]
+          iconIdx: existingTeam?.iconIdx ?? getNextTeamIconIdx(newTeams),
+          color: existingTeam?.color ?? getNextTeamColor(newTeams)
         });
       }
 
@@ -3052,12 +3063,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           lastTeam.playerIds.push(player.id);
         } else {
           const nextLetter = String.fromCharCode(65 + currentTeams.length);
-          const emoji = TEAM_EMOJIS[currentTeams.length % TEAM_EMOJIS.length];
+          const iconIdx = getNextTeamIconIdx(currentTeams);
+          const color = getNextTeamColor(currentTeams);
           currentTeams.push({
             id: generateId(),
             name: `Time ${nextLetter}`,
             playerIds: [player.id],
-            emoji
+            iconIdx,
+            color
           });
         }
       });
@@ -3069,8 +3082,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
   const addTeam = () => {
     const nextLetter = String.fromCharCode(65 + teams.length);
-    const emoji = TEAM_EMOJIS[teams.length % TEAM_EMOJIS.length];
-    setTeams([...teams, { id: generateId(), name: `Time ${nextLetter}`, playerIds: [], emoji, color: getNextTeamColor(teams) }]);
+    const iconIdx = getNextTeamIconIdx(teams);
+    setTeams([...teams, { id: generateId(), name: `Time ${nextLetter}`, playerIds: [], iconIdx, color: getNextTeamColor(teams) }]);
     
     setToast({ message: `Novo time criado: Time ${nextLetter}`, type: 'info' });
 
@@ -3144,12 +3157,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     while (currentIndex + playersPerTeam <= shuffled.length) {
       const teamPlayers = shuffled.slice(currentIndex, currentIndex + playersPerTeam);
       const teamLetter = String.fromCharCode(65 + teamCount);
-      const emoji = TEAM_EMOJIS[teamCount % TEAM_EMOJIS.length];
+      const iconIdx = getNextTeamIconIdx(newTeams);
       newTeams.push({
         id: generateId(),
         name: `Time ${teamLetter}`,
         playerIds: teamPlayers.map(p => p.id),
-        emoji,
+        iconIdx,
         color: getNextTeamColor(newTeams)
       });
       currentIndex += playersPerTeam;
@@ -3160,12 +3173,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     if (currentIndex < shuffled.length) {
       const leftoverPlayers = shuffled.slice(currentIndex);
       const teamLetter = String.fromCharCode(65 + teamCount);
-      const emoji = TEAM_EMOJIS[teamCount % TEAM_EMOJIS.length];
+      const iconIdx = getNextTeamIconIdx(newTeams);
       newTeams.push({
         id: generateId(),
         name: `Time ${teamLetter}`,
         playerIds: leftoverPlayers.map(p => p.id),
-        emoji,
+        iconIdx,
         color: getNextTeamColor(newTeams)
       });
     }
@@ -3173,12 +3186,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     // Ensure at least 2 teams for the match
     while (newTeams.length < 2) {
       const teamLetter = String.fromCharCode(65 + newTeams.length);
-      const emoji = TEAM_EMOJIS[newTeams.length % TEAM_EMOJIS.length];
+      const iconIdx = getNextTeamIconIdx(newTeams);
       newTeams.push({
         id: generateId(),
         name: `Time ${teamLetter}`,
         playerIds: [],
-        emoji,
+        iconIdx,
         color: getNextTeamColor(newTeams)
       });
     }
@@ -4324,8 +4337,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     <>
                       <div className="flex items-center gap-1.5">
                         <span className="text-emerald-950 text-[10px] font-black uppercase truncate max-w-[40px] hidden sm:block">{teams[match.teamAIndex]?.name.substring(0, 3)}</span>
-                        <div className="drop-shadow-sm" style={{ color: teams[match.teamAIndex]?.color || '#ffffff' }}>
-                          <PiShieldFill size={14} />
+                        <div className="drop-shadow-sm" style={{ color: (fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color || '#ffffff' }}>
+                          {(() => {
+                            const team = teams[match.teamAIndex];
+                            const Icon = TEAM_ICONS[team?.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)];
+                            return <Icon size={14} />;
+                          })()}
                         </div>
                         <span className="text-emerald-950 font-black text-sm ml-1">{match.scoreA}</span>
                       </div>
@@ -4334,8 +4351,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       
                       <div className="flex items-center gap-1.5">
                         <span className="text-emerald-950 font-black text-sm mr-1">{match.scoreB}</span>
-                        <div className="drop-shadow-sm" style={{ color: teams[match.teamBIndex]?.color || '#ffffff' }}>
-                          <PiShieldFill size={14} />
+                        <div className="drop-shadow-sm" style={{ color: (fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color || '#ffffff' }}>
+                          {(() => {
+                            const team = teams[match.teamBIndex];
+                            const Icon = TEAM_ICONS[team?.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                            return <Icon size={14} />;
+                          })()}
                         </div>
                         <span className="text-emerald-950 text-[10px] font-black uppercase truncate max-w-[40px] hidden sm:block">{teams[match.teamBIndex]?.name.substring(0, 3)}</span>
                       </div>
@@ -4371,16 +4392,24 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   {match.teamAIndex !== -1 && match.teamBIndex !== -1 ? (
                     <>
                       <div className="flex items-center gap-1">
-                        <div className="drop-shadow-sm" style={{ color: teams[match.teamAIndex]?.color || '#ffffff' }}>
-                          <PiShieldFill size={12} />
+                        <div className="drop-shadow-sm" style={{ color: (fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color || '#ffffff' }}>
+                          {(() => {
+                            const team = teams[match.teamAIndex];
+                            const Icon = TEAM_ICONS[team?.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)];
+                            return <Icon size={12} />;
+                          })()}
                         </div>
                         <span className="text-emerald-950 font-black text-xs ml-0.5">{match.scoreA}</span>
                       </div>
                       <span className="text-emerald-950/40 text-[9px] font-bold mx-0.5">x</span>
                       <div className="flex items-center gap-1">
                         <span className="text-emerald-950 font-black text-xs mr-0.5">{match.scoreB}</span>
-                        <div className="drop-shadow-sm" style={{ color: teams[match.teamBIndex]?.color || '#ffffff' }}>
-                          <PiShieldFill size={12} />
+                        <div className="drop-shadow-sm" style={{ color: (fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color || '#ffffff' }}>
+                          {(() => {
+                            const team = teams[match.teamBIndex];
+                            const Icon = TEAM_ICONS[team?.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                            return <Icon size={12} />;
+                          })()}
                         </div>
                       </div>
                       
@@ -4953,8 +4982,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           id: generateId(),
                                           name: `Time ${teamLetter}`,
                                           playerIds: teamPlayers,
-                                          emoji: TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length],
-                                          color: TEAM_COLORS[teamIndex % TEAM_COLORS.length]
+                                          iconIdx: getNextTeamIconIdx(newTeams),
+                                          color: getNextTeamColor(newTeams)
                                         });
                                       }
                                       return newTeams;
@@ -4995,8 +5024,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                         id: generateId(),
                                         name: `Time ${teamLetter}`,
                                         playerIds: teamPlayers,
-                                        emoji: TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length],
-                                        color: TEAM_COLORS[teamIndex % TEAM_COLORS.length]
+                                        iconIdx: getNextTeamIconIdx(newTeams),
+                                        color: getNextTeamColor(newTeams)
                                       });
                                     }
                                     
@@ -5080,8 +5109,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           id: generateId(),
                                           name: `Time ${teamLetter}`,
                                           playerIds: teamPlayers,
-                                          emoji: TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length],
-                                          color: TEAM_COLORS[teamIndex % TEAM_COLORS.length]
+                                          iconIdx: getNextTeamIconIdx(newTeams),
+                                          color: getNextTeamColor(newTeams)
                                         });
                                       }
                                       return newTeams;
@@ -5103,8 +5132,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           id: generateId(),
                                           name: `Time ${teamLetter}`,
                                           playerIds: teamPlayers,
-                                          emoji: TEAM_EMOJIS[teamIndex % TEAM_EMOJIS.length],
-                                          color: TEAM_COLORS[teamIndex % TEAM_COLORS.length]
+                                          iconIdx: getNextTeamIconIdx(newTeams),
+                                          color: getNextTeamColor(newTeams)
                                         });
                                       }
                                       return newTeams;
@@ -5311,16 +5340,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       });
                                     }}
                                   >
-                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md" style={{ borderRadius: '40px', borderWidth: '1px' }}>
-                                      <defs>
-                                        <linearGradient id="shield-grad-A-main" x1="0%" y1="0%" x2="0%" y2="100%">
-                                          <stop offset="0%" stopColor={(fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color || TEAM_COLORS[0]} />
-                                          <stop offset="100%" stopColor={(fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color || TEAM_COLORS[0]} stopOpacity="0.85" />
-                                        </linearGradient>
-                                      </defs>
-                                      <path fill="url(#shield-grad-A-main)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(0,0,0,0.1)" strokeWidth="1" strokeLinejoin="round" />
-                                      <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.15" />
-                                    </svg>
+                                    {(() => {
+                                      const team = teams[match.teamAIndex];
+                                      if (!team) return null;
+                                      const Icon = TEAM_ICONS[team.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)];
+                                      const color = (fixedColors.enabled && fixedColors.teamA) || team.color || TEAM_COLORS[0];
+                                      return (
+                                        <div className="w-full h-full drop-shadow-md flex items-center justify-center" style={{ color }}>
+                                          <Icon size={70} />
+                                        </div>
+                                      );
+                                    })()}
                                   </button>
                                   <div 
                                     className={`text-4xl sm:text-7xl font-black origin-center text-white ${(!match.isActive || match.isPaused) ? 'opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-xl bg-black/20 border-b-4 border-white/5 shadow-inner`}
@@ -5398,16 +5428,17 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       });
                                     }}
                                   >
-                                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md" style={{ borderRadius: '40px' }}>
-                                      <defs>
-                                        <linearGradient id="shield-grad-B-main" x1="0%" y1="0%" x2="0%" y2="100%">
-                                          <stop offset="0%" stopColor={(fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color || TEAM_COLORS[1]} />
-                                          <stop offset="100%" stopColor={(fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color || TEAM_COLORS[1]} stopOpacity="0.85" />
-                                        </linearGradient>
-                                      </defs>
-                                      <path fill="url(#shield-grad-B-main)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(0,0,0,0.1)" strokeWidth="1" strokeLinejoin="round" />
-                                      <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.15" />
-                                    </svg>
+                                    {(() => {
+                                      const team = teams[match.teamBIndex];
+                                      if (!team) return null;
+                                      const Icon = TEAM_ICONS[team.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                                      const color = (fixedColors.enabled && fixedColors.teamB) || team.color || TEAM_COLORS[1];
+                                      return (
+                                        <div className="w-full h-full drop-shadow-md flex items-center justify-center" style={{ color }}>
+                                          <Icon size={70} />
+                                        </div>
+                                      );
+                                    })()}
                                   </button>
                                   <div 
                                     className={`text-4xl sm:text-7xl font-black origin-center text-white ${(!match.isActive || match.isPaused) ? 'opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-xl bg-black/20 border-b-4 border-white/5 shadow-inner`}
@@ -5472,7 +5503,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           }
                                           setShowPlayerActionsModal({ teamIndex: match.teamAIndex, playerId: pid });
                                         }}
-                  className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 ${
+                  className={`w-full flex flex-row-reverse items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 ${
                     swappingPlayerId === pid
                       ? 'border-2 border-brand-primary shadow-lg scale-105'
                       : 'border group'
@@ -5482,34 +5513,34 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     backgroundColor: swappingPlayerId === pid ? undefined : undefined
                   }}
                 >
-                <div className="flex items-center gap-1">
-                  {matchAssists > 0 && (
-                    <div className={`flex items-center gap-0.5 text-[10px] font-bold ${theme === 'light' ? 'text-green-800' : 'text-brand-primary'}`}>
-                      <Footprints size={10} /> {matchAssists}
-                    </div>
-                  )}
-                  {matchGoals > 0 && (
-                    <div className={`flex items-center gap-0.5 text-[10px] font-bold ${theme === 'light' ? 'text-green-800' : 'text-brand-primary'}`}>
-                      <CircleDot size={10} /> {matchGoals}
-                    </div>
-                  )}
+                <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-white/10 flex items-center justify-center shrink-0 border border-white/10 overflow-hidden ml-3">
+                  {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <span className="text-white/40 flex items-center shrink-0"><IoPersonOutline size={10} /></span>}
                 </div>
-                <div className="flex flex-col items-end gap-0.5 ml-auto overflow-hidden">
-                  <span className="text-[11px] sm:text-[10px] font-bold capitalize truncate text-black leading-none">{p.name.toLowerCase()}</span>
-                  <div className="flex gap-0.5">
+                <div className="flex flex-col items-end gap-0.5 overflow-hidden">
+                  <span className="text-[11px] sm:text-[10px] font-bold capitalize truncate text-white/90 leading-none text-right">{p.name.toLowerCase()}</span>
+                  <div className="flex flex-row-reverse gap-0.5">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star 
                         key={`star-${p.id}-${star}`}
                         size={6} 
-                        className={`${(p.stars || 3) >= star ? 'fill-yellow-400 text-yellow-400' : 'text-zinc-300'}`} 
+                        className={`${(p.stars || 3) >= star ? 'fill-[#B7D96C] text-[#B7D96C]' : 'text-white/10'}`} 
                       />
                     ))}
                   </div>
                 </div>
-                <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 border border-zinc-200">
-                                          {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <span className="text-black flex items-center shrink-0"><IoPersonOutline size={10} /></span>}
-                                        </div>
-                                    </button>
+                <div className="flex items-center gap-1 mr-auto">
+                  {matchAssists > 0 && (
+                    <div className="flex items-center gap-0.5 text-[10px] font-bold text-white/50">
+                      <Footprints size={10} /> {matchAssists}
+                    </div>
+                  )}
+                  {matchGoals > 0 && (
+                    <div className="flex items-center gap-0.5 text-[10px] font-bold text-white/50">
+                      <CircleDot size={10} /> {matchGoals}
+                    </div>
+                  )}
+                </div>
+              </button>
                                   );
                                 })}
                                 {Array.from({ length: Math.max(0, match.config.playersPerTeam - (teams[match.teamAIndex]?.playerIds?.length || 0)) }).map((_, i) => (
@@ -5613,7 +5644,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           }
                                           setShowPlayerActionsModal({ teamIndex: match.teamBIndex, playerId: pid });
                                         }}
-                  className={`w-full flex items-center gap-2 p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 text-left disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br from-zinc-100 to-zinc-200 ${
+                  className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 ${
                     swappingPlayerId === pid
                       ? 'border-2 border-brand-primary shadow-lg scale-105'
                       : 'border group'
@@ -5623,34 +5654,34 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     backgroundColor: swappingPlayerId === pid ? undefined : undefined
                   }}
                 >
-                <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-zinc-100 flex items-center justify-center shrink-0 border border-zinc-200">
-                  {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <span className="text-black flex items-center shrink-0"><IoPersonOutline size={10} /></span>}
+                <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-white/10 flex items-center justify-center shrink-0 border border-white/10 overflow-hidden mr-3">
+                  {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <span className="text-white/40 flex items-center shrink-0"><IoPersonOutline size={10} /></span>}
                 </div>
                 <div className="flex flex-col gap-0.5 overflow-hidden">
-                  <span className="text-[11px] sm:text-[10px] font-bold capitalize truncate text-black leading-none">{p.name.toLowerCase()}</span>
+                  <span className="text-[11px] sm:text-[10px] font-bold capitalize truncate text-white/90 leading-none">{p.name.toLowerCase()}</span>
                   <div className="flex gap-0.5">
                     {[1, 2, 3, 4, 5].map((star) => (
                       <Star 
                         key={`star-b-${p.id}-${star}`}
                         size={6} 
-                        className={`${(p.stars || 3) >= star ? 'fill-yellow-400 text-yellow-400' : 'text-zinc-300'}`} 
+                        className={`${(p.stars || 3) >= star ? 'fill-[#B7D96C] text-[#B7D96C]' : 'text-white/10'}`} 
                       />
                     ))}
                   </div>
                 </div>
-                                      <div className="flex items-center gap-1 ml-auto">
-                                        {matchGoals > 0 && (
-                                          <div className={`flex items-center gap-0.5 text-[10px] font-bold ${theme === 'light' ? 'text-green-800' : 'text-brand-primary'}`}>
-                                            <CircleDot size={10} /> {matchGoals}
-                                          </div>
-                                        )}
-                                        {matchAssists > 0 && (
-                                          <div className={`flex items-center gap-0.5 text-[10px] font-bold ${theme === 'light' ? 'text-green-800' : 'text-brand-primary'}`}>
-                                            <Footprints size={10} /> {matchAssists}
-                                          </div>
-                                        )}
-                                      </div>
-                                    </button>
+                <div className="flex items-center gap-1 ml-auto">
+                  {matchGoals > 0 && (
+                    <div className="flex items-center gap-0.5 text-[10px] font-bold text-white/50">
+                      <CircleDot size={10} /> {matchGoals}
+                    </div>
+                  )}
+                  {matchAssists > 0 && (
+                    <div className="flex items-center gap-0.5 text-[10px] font-bold text-white/50">
+                      <Footprints size={10} /> {matchAssists}
+                    </div>
+                  )}
+                </div>
+              </button>
                                   );
                                 })}
                                 {Array.from({ length: Math.max(0, match.config.playersPerTeam - (teams[match.teamBIndex]?.playerIds?.length || 0)) }).map((_, i) => (
@@ -6016,28 +6047,32 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     >
                                       {(() => {
                                         const strokeColor = teamColor === '#000000' || teamColor === '#1a1a1a' ? '#ffffff40' : (teamColor === '#ffffff' ? '#e4e4e7' : 'white');
+                                        const Icon = TEAM_ICONS[t.iconIdx ?? (tIdx % TEAM_ICONS.length)];
                                         return (
-                                          <svg viewBox="0 0 24 24" stroke={strokeColor} strokeWidth="0.5" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6">
-                                            <defs>
-                                              <linearGradient id={`shield-grad-${t.id}`} x1="0%" y1="0%" x2="0%" y2="100%">
-                                                <stop offset="0%" stopColor={teamColor || '#2563EB'} />
-                                                <stop offset="100%" stopColor={teamColor || '#1E3A8A'} stopOpacity="0.85" />
-                                              </linearGradient>
-                                            </defs>
-                                            <path 
-                                              fill={`url(#shield-grad-${t.id})`}
-                                              d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
-                                              stroke={isCurrent ? '#E3D39E' : (strokeColor === '#ffffff40' ? '#ffffff' : (strokeColor === '#e4e4e7' ? '#000000' : strokeColor))}
-                                              strokeWidth="1.5"
-                                              strokeLinejoin="round"
-                                            />
-                                            {/* Subtle texture overlay */}
-                                            <path 
-                                              d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
-                                              fill="white" opacity="0.15"
-                                            />
-
-                                          </svg>
+                                          <div className="relative w-8 h-8 flex items-center justify-center">
+                                            <svg viewBox="0 0 24 24" stroke={strokeColor} strokeWidth="0.5" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 w-full h-full">
+                                              <defs>
+                                                <linearGradient id={`shield-grad-${t.id}`} x1="0%" y1="0%" x2="0%" y2="100%">
+                                                  <stop offset="0%" stopColor={teamColor || '#2563EB'} />
+                                                  <stop offset="100%" stopColor={teamColor || '#1E3A8A'} stopOpacity="0.85" />
+                                                </linearGradient>
+                                              </defs>
+                                              <path 
+                                                fill={`url(#shield-grad-${t.id})`}
+                                                d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
+                                                stroke={isCurrent ? '#E3D39E' : (strokeColor === '#ffffff40' ? '#ffffff' : (strokeColor === '#e4e4e7' ? '#000000' : strokeColor))}
+                                                strokeWidth="1.5"
+                                                strokeLinejoin="round"
+                                              />
+                                              <path 
+                                                d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
+                                                fill="white" opacity="0.15"
+                                              />
+                                            </svg>
+                                            <div className="relative z-10 flex items-center justify-center text-white/90 drop-shadow-sm mt-[-1px]">
+                                              <Icon size={16} />
+                                            </div>
+                                          </div>
                                         );
                                       })()}
                                     </div>
@@ -8859,6 +8894,16 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         >
                           <div className="flex items-center justify-between mb-3">
                             <div className="flex items-center gap-2">
+                              <button 
+                                onClick={() => setShowIconPicker(tIdx)}
+                                className="w-8 h-8 rounded-lg bg-black/10 flex items-center justify-center hover:bg-black/20 transition-all active:scale-95 border border-black/5"
+                                style={{ color: team.color }}
+                              >
+                                {(() => {
+                                  const Icon = TEAM_ICONS[team.iconIdx ?? (tIdx % TEAM_ICONS.length)];
+                                  return <Icon size={18} />;
+                                })()}
+                              </button>
                               <span className="text-sm font-black uppercase tracking-widest text-[#0D0D0D]">{team.name}</span>
                             </div>
                             <div className="flex items-center gap-2">
@@ -9170,13 +9215,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           </motion.div>
         )}
 
-        {showEmojiPicker !== null && (
+        {showIconPicker !== null && (
           <motion.div 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-6"
-            onClick={() => setShowEmojiPicker(null)}
+            onClick={() => setShowIconPicker(null)}
           >
             <motion.div 
               initial={{ scale: 0.9, y: 20 }}
@@ -9184,25 +9229,25 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               className={`w-full max-w-sm p-6 rounded-lg bg-brand-card space-y-6`}
               onClick={e => e.stopPropagation()}
             >
-              <h3 className="text-xl font-black uppercase tracking-tighter text-center">Escolher Emoji</h3>
-              <div className="grid grid-cols-5 gap-3">
-                {TEAM_EMOJIS.map(emoji => (
+              <h3 className="text-xl font-black uppercase tracking-tighter text-center">Escolher Escudo</h3>
+              <div className="grid grid-cols-4 gap-3">
+                {TEAM_ICONS.map((Icon, idx) => (
                   <button 
-                    key={`emoji-${emoji}`}
+                    key={`team-icon-${idx}`}
                     onClick={() => {
                       const newTeams = [...teams];
-                      newTeams[showEmojiPicker].emoji = emoji;
+                      newTeams[showIconPicker].iconIdx = idx;
                       setTeams(newTeams);
-                      setShowEmojiPicker(null);
+                      setShowIconPicker(null);
                     }}
-                    className={`text-2xl p-3 rounded-lg transition-all hover:scale-110 active:scale-90 bg-brand-dark hover:bg-brand-primary/20`}
+                    className={`flex items-center justify-center p-3 rounded-lg transition-all hover:scale-110 active:scale-90 bg-brand-dark hover:bg-brand-primary/20`}
                   >
-                    {emoji}
+                    <Icon size={24} color={teams[showIconPicker]?.color} />
                   </button>
                 ))}
               </div>
               <button 
-                onClick={() => setShowEmojiPicker(null)}
+                onClick={() => setShowIconPicker(null)}
                 className={`w-full py-4 rounded-md font-bold glass-3d bg-brand-dark text-brand-text-secondary`}
               >
                 Cancelar
@@ -9443,8 +9488,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             if (currentTeam.playerIds.length >= match.config.playersPerTeam) {
                               // Team is full, create new team
                               const nextLetter = String.fromCharCode(65 + teams.length);
-                              const emoji = TEAM_EMOJIS[teams.length % TEAM_EMOJIS.length];
-          const newTeam: Team = { id: generateId(), name: `Time ${nextLetter}`, playerIds: [player.id], emoji, color: getNextTeamColor(teams) };
+                              const iconIdx = getNextTeamIconIdx(teams);
+          const newTeam: Team = { id: generateId(), name: `Time ${nextLetter}`, playerIds: [player.id], iconIdx, color: getNextTeamColor(teams) };
                               
                               setTeams([...teams, newTeam]);
                               setToast({ 
