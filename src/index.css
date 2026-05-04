@@ -1,9 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Silkscreen&family=VT323&family=Megrim&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Silkscreen&family=VT323&family=Megrim&family=Julius+Sans+One&display=swap');
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Roboto", ui-sans-serif, system-ui, sans-serif;
   --font-megrim: "Megrim", serif;
+  --font-julius: "Julius Sans One", sans-serif;
   --color-brand-primary: var(--brand-primary);
   --color-brand-primary-hover: var(--brand-primary-hover);
   --color-brand-dark: var(--brand-dark);

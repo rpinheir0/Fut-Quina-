@@ -1571,8 +1571,8 @@ const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, 
   const shadowClass = '';
 
   return (
-    <span className={`${sizeClasses[size]} uppercase tracking-tighter ${colorClass} ${shadowClass} ${className} font-megrim`} style={style}>
-      Fut Quina
+    <span className={`${sizeClasses[size]} uppercase tracking-tighter ${colorClass} ${shadowClass} ${className} font-julius`} style={style}>
+      FutQuina
     </span>
   );
 };
@@ -4403,24 +4403,24 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         {/* Tabs for Ranking */}
         {currentScreen === 'ranking' && (
           <div className="px-6 pb-4" style={{ backgroundColor: 'transparent' }}>
-            <div className="flex bg-black/20 backdrop-blur-md p-1 rounded-[24px]">
+            <div className="flex gap-2">
               <button
                 onClick={() => setRankingTab('geral')}
-                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${rankingTab === 'geral' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-900/40 hover:text-zinc-900/80'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'geral' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
-                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'geral' ? 'text-zinc-900' : 'text-zinc-900/70'}`}>Geral</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'geral' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Geral</span>
               </button>
               <button
                 onClick={() => setRankingTab('artilharia')}
-                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${rankingTab === 'artilharia' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-900/40 hover:text-zinc-900/80'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'artilharia' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
-                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'artilharia' ? 'text-zinc-900' : 'text-zinc-900/70'}`}>Artilharia</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'artilharia' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Artilharia</span>
               </button>
               <button
                 onClick={() => setRankingTab('assistencias')}
-                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${rankingTab === 'assistencias' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-900/40 hover:text-zinc-900/80'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'assistencias' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
-                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'assistencias' ? 'text-zinc-900' : 'text-zinc-900/70'}`}>Assistências</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'assistencias' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Assistências</span>
               </button>
             </div>
           </div>
@@ -4429,18 +4429,18 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         {/* Tabs for Finance */}
         {currentScreen === 'finance' && !isPrintMode && (
           <div className="px-6 pb-4" style={{ backgroundColor: 'transparent' }}>
-            <div className="flex bg-black/20 backdrop-blur-md p-1 rounded-[24px]">
+            <div className="flex gap-2">
               <button 
                 onClick={() => setFinanceSubScreen('mensalidade')} 
-                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${financeSubScreen === 'mensalidade' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-900/40 hover:text-zinc-900/80'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all border ${financeSubScreen === 'mensalidade' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
-                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'mensalidade' ? 'text-zinc-900' : 'text-zinc-900/70'}`}>Mensalidade</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'mensalidade' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Mensalidade</span>
               </button>
               <button 
                 onClick={() => setFinanceSubScreen('balanco')} 
-                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all ${financeSubScreen === 'balanco' ? 'bg-white text-zinc-900 shadow-sm' : 'text-zinc-900/40 hover:text-zinc-900/80'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all border ${financeSubScreen === 'balanco' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
-                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'balanco' ? 'text-zinc-900' : 'text-zinc-900/70'}`}>Balanço</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'balanco' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Balanço</span>
               </button>
             </div>
           </div>
@@ -7034,7 +7034,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               </div>
               
               <div className="text-[8px] text-center opacity-50 uppercase font-bold">
-                Gerado em {new Date().toLocaleDateString('pt-BR')} • Fut Quina App
+                Gerado em {new Date().toLocaleDateString('pt-BR')} • FutQuina App
               </div>
             </div>
           )}
