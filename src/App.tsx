@@ -756,17 +756,11 @@ const TieBreakerModal = ({
             <div className="space-y-4">
               <div className="flex items-center gap-4 bg-white/10 p-5 rounded-[28px] border border-white/10 mb-6 backdrop-blur-sm">
                 <div className="flex-1 flex flex-col items-center">
-                  <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center drop-shadow-lg mb-2">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
-                      <defs>
-                        <linearGradient id="shield-tie-A-none" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor={resolvedColorA} />
-                          <stop offset="100%" stopColor={resolvedColorA} stopOpacity="0.85" />
-                        </linearGradient>
-                      </defs>
-                      <path fill="url(#shield-tie-A-none)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
-                      <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.1" />
-                    </svg>
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center drop-shadow-lg mb-2" style={{ color: resolvedColorA }}>
+                    {(() => {
+                      const IconA = TEAM_ICONS[teamA.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)];
+                      return <IconA size={48} />;
+                    })()}
                   </div>
                   <div className="text-[10px] font-black text-white/40 uppercase tracking-widest">{teamA.name}</div>
                   <div className="mt-2 flex flex-wrap justify-center gap-1 px-2">
@@ -782,17 +776,11 @@ const TieBreakerModal = ({
                 </div>
                 <div className="text-white/20 font-black text-xl">VS</div>
                 <div className="flex-1 flex flex-col items-center">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center drop-shadow-lg mb-2">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
-                      <defs>
-                        <linearGradient id="shield-tie-B-none" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor={resolvedColorB} />
-                          <stop offset="100%" stopColor={resolvedColorB} stopOpacity="0.85" />
-                        </linearGradient>
-                      </defs>
-                      <path fill="url(#shield-tie-B-none)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
-                      <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.1" />
-                    </svg>
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center drop-shadow-lg mb-2" style={{ color: resolvedColorB }}>
+                    {(() => {
+                      const IconB = TEAM_ICONS[teamB.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                      return <IconB size={48} />;
+                    })()}
                   </div>
                   <div className="text-[10px] font-black text-white/40 uppercase tracking-widest">{teamB.name}</div>
                   <div className="mt-2 flex flex-wrap justify-center gap-1 px-2">
@@ -877,24 +865,11 @@ const TieBreakerModal = ({
                   onClick={() => onBothLeave('A')}
                   className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-zinc-500/80 via-zinc-600/80 to-zinc-700/80 hover:scale-[1.01] transition-all duration-400 transform active:scale-95 text-left border border-white/5"
                 >
-                  <div className="w-14 h-14 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <svg viewBox="0 0 24 24" stroke="white" strokeWidth="1.5" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
-                      <defs>
-                        <linearGradient id={`shield-grad-modal-q-A`} x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor={resolvedColorA} />
-                          <stop offset="100%" stopColor={resolvedColorA} stopOpacity="0.85" />
-                        </linearGradient>
-                      </defs>
-                      <path 
-                        fill={`url(#shield-grad-modal-q-A)`}
-                        d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
-                        strokeLinejoin="round"
-                      />
-                      <path 
-                        d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
-                        fill="white" opacity="0.1"
-                      />
-                    </svg>
+                  <div className="w-12 h-12 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform drop-shadow-lg" style={{ color: resolvedColorA }}>
+                    {(() => {
+                      const IconA = TEAM_ICONS[teamA.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)];
+                      return <IconA size={32} />;
+                    })()}
                   </div>
                   <div className="flex flex-col overflow-hidden">
                     <span className="font-normal uppercase tracking-widest text-xs text-brand-primary truncate">{teamA.name} primeiro</span>
@@ -912,24 +887,11 @@ const TieBreakerModal = ({
                   onClick={() => onBothLeave('B')}
                   className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-zinc-500/80 via-zinc-600/80 to-zinc-700/80 hover:scale-[1.01] transition-all duration-400 transform active:scale-95 text-left border border-white/5"
                 >
-                  <div className="w-14 h-14 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <svg viewBox="0 0 24 24" stroke="white" strokeWidth="1.5" xmlns="http://www.w3.org/2000/svg" className="w-8 h-8">
-                      <defs>
-                        <linearGradient id={`shield-grad-modal-q-B`} x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor={resolvedColorB} />
-                          <stop offset="100%" stopColor={resolvedColorB} stopOpacity="0.85" />
-                        </linearGradient>
-                      </defs>
-                      <path 
-                        fill={`url(#shield-grad-modal-q-B)`}
-                        d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
-                        strokeLinejoin="round"
-                      />
-                      <path 
-                        d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
-                        fill="white" opacity="0.1"
-                      />
-                    </svg>
+                  <div className="w-12 h-12 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform drop-shadow-lg" style={{ color: resolvedColorB }}>
+                    {(() => {
+                      const IconB = TEAM_ICONS[teamB.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                      return <IconB size={32} />;
+                    })()}
                   </div>
                   <div className="flex flex-col overflow-hidden">
                     <span className="font-normal uppercase tracking-widest text-xs text-brand-primary truncate">{teamB.name} primeiro</span>
@@ -957,33 +919,21 @@ const TieBreakerModal = ({
             <div className="space-y-6">
               <div className="flex justify-between items-center bg-white/10 p-6 rounded-[32px] border border-white/10 backdrop-blur-sm">
                 <div className="text-center flex-1 flex flex-col items-center">
-                  <div className="w-16 h-16 flex items-center justify-center drop-shadow-md mb-3">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
-                      <defs>
-                        <linearGradient id="shield-tie-A-pen" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor={teamA.color || TEAM_COLORS[0]} />
-                          <stop offset="100%" stopColor={teamA.color || TEAM_COLORS[0]} stopOpacity="0.85" />
-                        </linearGradient>
-                      </defs>
-                      <path fill="url(#shield-tie-A-pen)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
-                      <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.1" />
-                    </svg>
+                  <div className="w-14 h-14 flex items-center justify-center drop-shadow-md mb-3" style={{ color: teamA.color || TEAM_COLORS[0] }}>
+                    {(() => {
+                      const IconA = TEAM_ICONS[teamA.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)];
+                      return <IconA size={48} />;
+                    })()}
                   </div>
                   <div className="text-4xl font-black text-white tracking-tighter">{teamAGoals}</div>
                 </div>
                 <div className="text-white/10 font-black text-2xl tracking-tighter uppercase mx-4">VS</div>
                 <div className="text-center flex-1 flex flex-col items-center">
-                  <div className="w-16 h-16 flex items-center justify-center drop-shadow-md mb-3">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
-                      <defs>
-                        <linearGradient id="shield-tie-B-pen" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor={teamB.color || TEAM_COLORS[1]} />
-                          <stop offset="100%" stopColor={teamB.color || TEAM_COLORS[1]} stopOpacity="0.85" />
-                        </linearGradient>
-                      </defs>
-                      <path fill="url(#shield-tie-B-pen)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
-                      <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.1" />
-                    </svg>
+                  <div className="w-14 h-14 flex items-center justify-center drop-shadow-md mb-3" style={{ color: teamB.color || TEAM_COLORS[1] }}>
+                    {(() => {
+                      const IconB = TEAM_ICONS[teamB.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                      return <IconB size={48} />;
+                    })()}
                   </div>
                   <div className="text-4xl font-black text-white tracking-tighter">{teamBGoals}</div>
                 </div>
@@ -1094,27 +1044,17 @@ const TieBreakerModal = ({
                   <div className="absolute top-0 bottom-0 left-1/2 w-[2px] bg-white/10 -translate-x-1/2" />
                   
                   {/* Result Indicators */}
-                  <div className="absolute top-6 left-1/2 -translate-x-1/2 w-12 h-12">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
-                      <defs>
-                        <linearGradient id="shield-tie-A-lot" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor={teamA.color || TEAM_COLORS[0]} />
-                          <stop offset="100%" stopColor={teamA.color || TEAM_COLORS[0]} stopOpacity="0.85" />
-                        </linearGradient>
-                      </defs>
-                      <path fill="url(#shield-tie-A-lot)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
-                    </svg>
+                  <div className="absolute top-6 left-1/2 -translate-x-1/2 w-10 h-10 drop-shadow-md flex items-center justify-center" style={{ color: teamA.color || TEAM_COLORS[0] }}>
+                    {(() => {
+                      const IconA = TEAM_ICONS[teamA.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)];
+                      return <IconA size={32} />;
+                    })()}
                   </div>
-                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-12 h-12 rotate-180">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-md">
-                      <defs>
-                        <linearGradient id="shield-tie-B-lot" x1="0%" y1="0%" x2="0%" y2="100%">
-                          <stop offset="0%" stopColor={teamB.color || TEAM_COLORS[1]} />
-                          <stop offset="100%" stopColor={teamB.color || TEAM_COLORS[1]} stopOpacity="0.85" />
-                        </linearGradient>
-                      </defs>
-                      <path fill="url(#shield-tie-B-lot)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
-                    </svg>
+                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 w-10 h-10 rotate-180 drop-shadow-md flex items-center justify-center" style={{ color: teamB.color || TEAM_COLORS[1] }}>
+                    {(() => {
+                      const IconB = TEAM_ICONS[teamB.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                      return <IconB size={32} />;
+                    })()}
                   </div>
 
                   {/* Marker */}
@@ -1134,16 +1074,11 @@ const TieBreakerModal = ({
                 <div className="w-full space-y-6">
                   <div className="flex items-center gap-4 bg-white/10 p-5 rounded-[24px] border border-white/10 backdrop-blur-sm">
                     <div className="flex-1 flex flex-col items-center">
-                      <div className="w-10 h-10 flex items-center justify-center drop-shadow-lg mb-2">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                          <defs>
-                            <linearGradient id="shield-lot-A" x1="0%" y1="0%" x2="0%" y2="100%">
-                              <stop offset="0%" stopColor={teamA.color || TEAM_COLORS[0]} />
-                              <stop offset="100%" stopColor={teamA.color || TEAM_COLORS[0]} stopOpacity="0.85" />
-                            </linearGradient>
-                          </defs>
-                          <path fill="url(#shield-lot-A)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
-                        </svg>
+                      <div className="w-10 h-10 flex items-center justify-center drop-shadow-lg mb-2" style={{ color: teamA.color || TEAM_COLORS[0] }}>
+                        {(() => {
+                          const IconA = TEAM_ICONS[teamA.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)];
+                          return <IconA size={32} />;
+                        })()}
                       </div>
                       <div className="text-[8px] font-black text-white/40 uppercase tracking-widest">{teamA.name}</div>
                       <div className="mt-1 flex flex-wrap justify-center gap-0.5">
@@ -1159,16 +1094,11 @@ const TieBreakerModal = ({
                     </div>
                     <div className="text-white/10 font-bold text-xs uppercase">VS</div>
                     <div className="flex-1 flex flex-col items-center">
-                      <div className="w-10 h-10 flex items-center justify-center drop-shadow-lg mb-2">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                          <defs>
-                            <linearGradient id="shield-lot-B" x1="0%" y1="0%" x2="0%" y2="100%">
-                              <stop offset="0%" stopColor={teamB.color || TEAM_COLORS[1]} />
-                              <stop offset="100%" stopColor={teamB.color || TEAM_COLORS[1]} stopOpacity="0.85" />
-                            </linearGradient>
-                          </defs>
-                          <path fill="url(#shield-lot-B)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1" strokeLinejoin="round" />
-                        </svg>
+                      <div className="w-10 h-10 flex items-center justify-center drop-shadow-lg mb-2" style={{ color: teamB.color || TEAM_COLORS[1] }}>
+                        {(() => {
+                          const IconB = TEAM_ICONS[teamB.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                          return <IconB size={32} />;
+                        })()}
                       </div>
                       <div className="text-[8px] font-black text-white/40 uppercase tracking-widest">{teamB.name}</div>
                       <div className="mt-1 flex flex-wrap justify-center gap-0.5">
@@ -1197,17 +1127,12 @@ const TieBreakerModal = ({
                   <div className="bg-white/10 p-6 rounded-[32px] border border-white/10 animate-in fade-in zoom-in duration-500 backdrop-blur-sm">
                     <div className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em] mb-4">Vencedor Sorteado</div>
                     <div className="flex flex-col items-center gap-3">
-                      <div className="w-20 h-20 flex items-center justify-center drop-shadow-xl">
-                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-                          <defs>
-                            <linearGradient id="shield-tie-winner-lot" x1="0%" y1="0%" x2="0%" y2="100%">
-                              <stop offset="0%" stopColor={(state.lottery.winnerId === teamA.id ? teamA.color : teamB.color) || TEAM_COLORS[0]} />
-                              <stop offset="100%" stopColor={(state.lottery.winnerId === teamA.id ? teamA.color : teamB.color) || TEAM_COLORS[0]} stopOpacity="0.85" />
-                            </linearGradient>
-                          </defs>
-                          <path fill="url(#shield-tie-winner-lot)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" strokeLinejoin="round" />
-                          <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.1" />
-                        </svg>
+                      <div className="w-20 h-20 flex items-center justify-center drop-shadow-xl" style={{ color: (state.lottery.winnerId === teamA.id ? teamA.color : teamB.color) || TEAM_COLORS[0] }}>
+                        {(() => {
+                          const isTeamA = state.lottery.winnerId === teamA.id;
+                          const IconWinner = isTeamA ? TEAM_ICONS[teamA.iconIdx ?? (match.teamAIndex % TEAM_ICONS.length)] : TEAM_ICONS[teamB.iconIdx ?? (match.teamBIndex % TEAM_ICONS.length)];
+                          return <IconWinner size={64} />;
+                        })()}
                       </div>
                       <div className="text-xl font-black text-white uppercase tracking-tighter">
                         {state.lottery.winnerId === teamA.id ? teamA.name : teamB.name}
@@ -4583,7 +4508,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     <input 
                       type="text" 
                       placeholder="Nome do jogador..."
-                      className={`flex-1 px-4 py-2 rounded-2xl border-none outline-none transition-all bg-white/5 text-white border border-white/10 focus:border-[#B7D96C]/50 text-sm`}
+                      className={`flex-1 px-4 py-2 rounded-2xl border-none outline-none transition-all bg-gradient-to-br from-zinc-200 to-zinc-300 text-[#1E3D2F] placeholder-[#1E3D2F]/50 focus:ring-2 focus:ring-[#1E3D2F]/20 text-sm`}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           addPlayer(e.currentTarget.value);
@@ -4593,7 +4518,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     />
                     <button 
                       onClick={handleImportContacts}
-                      className="p-2 bg-white/5 text-white/70 rounded-2xl shadow-sm hover:bg-white/10 transition-all active:scale-95 flex items-center justify-center aspect-square border border-white/10"
+                      className="p-2 bg-gradient-to-br from-zinc-200 to-zinc-300 text-[#1E3D2F] rounded-2xl shadow-sm hover:from-zinc-300 hover:to-zinc-400 transition-all active:scale-95 flex items-center justify-center aspect-square border-none"
                       title="Importar dos Contatos"
                     >
                       <Contact size={18} />
@@ -4604,7 +4529,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         addPlayer(input.value);
                         input.value = '';
                       }}
-                      className="p-2 bg-brand-gradient text-black rounded-2xl shadow hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square"
+                      className="p-2 bg-brand-gradient text-[#1E3D2F] rounded-2xl shadow hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square"
                     >
                       <Plus size={18} />
                     </button>
@@ -4614,7 +4539,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <div className="relative">
                   <textarea 
                     placeholder=" "
-                    className={`w-full h-24 px-4 py-3 rounded-2xl border-none outline-none transition-all text-xs resize-none bg-white/5 text-white focus:border-[#B7D96C]/30 border border-white/10 peer`}
+                    className={`w-full h-24 px-4 py-3 rounded-2xl border-none outline-none transition-all text-sm resize-none bg-gradient-to-br from-zinc-200 to-zinc-300 text-[#1E3D2F] focus:ring-2 focus:ring-[#1E3D2F]/20 peer`}
                     onChange={(e) => {
                       if (e.target.value.includes('\n') || e.target.value.length > 10) {
                         addBulkPlayers(e.target.value);
@@ -4623,12 +4548,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     }}
                   />
                   <div className="absolute top-3 left-4 pointer-events-none transition-all peer-focus:hidden peer-[:not(:placeholder-shown)]:hidden">
-                    <span className="text-xs bg-[#B7D96C] bg-clip-text text-transparent opacity-50">
+                    <span className="text-sm font-medium text-[#1E3D2F]/50">
                       Cole aqui sua lista do WhatsApp (ex: 1. João, 2. Maria...)
                     </span>
                   </div>
                   <div 
-                    className={`absolute right-4 bottom-3 text-brand-text-secondary cursor-pointer hover:text-brand-primary transition-colors flex items-center gap-1`}
+                    className={`absolute right-4 bottom-3 text-[#1E3D2F]/40 cursor-pointer hover:text-[#1E3D2F] transition-colors flex items-center gap-1`}
                     onClick={async () => {
                       try {
                         const text = await navigator.clipboard.readText();
@@ -4654,18 +4579,18 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   setCurrentScreen('org-pro');
                   setOrgProTab('painel');
                 }}
-                className="w-full p-4 bg-gradient-to-br from-[#1E3D2F] to-[#14301F] text-white rounded-2xl shadow-lg flex items-center justify-between text-left group hover:opacity-90 transition-all active:scale-95 border border-[#E3D39E]/20"
+                className="w-full p-4 bg-gradient-to-br from-zinc-200 to-zinc-300 rounded-2xl shadow-lg flex items-center justify-between text-left group hover:from-zinc-300 hover:to-zinc-400 transition-all active:scale-95 border border-[#1E3D2F]/10"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-[#E3D39E]/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner border border-[#E3D39E]/20">
-                    <GiCrown size={24} color="#E3D39E" />
+                  <div className="w-12 h-12 bg-[#1E3D2F]/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner border border-[#1E3D2F]/20">
+                    <GiCrown size={24} className="text-[#1E3D2F]" />
                   </div>
                   <div>
-                    <h3 className="font-black uppercase tracking-widest text-sm text-[#E3D39E]">Organização Pro</h3>
-                    <p className="text-[10px] text-white/70 uppercase tracking-widest mt-1 font-bold">Painel de Controle e Acesso</p>
+                    <h3 className="font-black uppercase tracking-widest text-sm text-[#1E3D2F]">Organização Pro</h3>
+                    <p className="text-[10px] text-[#1E3D2F]/70 uppercase tracking-widest mt-1 font-bold">Painel de Controle e Acesso</p>
                   </div>
                 </div>
-                <ChevronRight size={20} className="text-[#E3D39E]/50 group-hover:text-[#E3D39E] transition-colors" />
+                <ChevronRight size={20} className="text-[#1E3D2F]/50 group-hover:text-[#1E3D2F] transition-colors" />
               </button>
 
               <section className="rounded-2xl overflow-hidden bg-[#1E3D2F]/90 backdrop-blur-xl border border-white/10 shadow-2xl relative">
@@ -5218,17 +5143,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em]">Última Partida</p>
                                     <div className="flex items-center justify-between gap-4 px-2 py-2 w-full">
                                       <div className="flex-1 flex flex-col items-center text-center space-y-1">
-                                        <div className="w-10 h-10 flex items-center justify-center shrink-0">
-                                          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-sm">
-                                            <defs>
-                                              <linearGradient id="shield-grad-A-last" x1="0%" y1="0%" x2="0%" y2="100%">
-                                                <stop offset="0%" stopColor={lastMatchResult.teamAColor || teams[lastMatchResult.teamAIndex]?.color || TEAM_COLORS[0]} />
-                                                <stop offset="100%" stopColor={lastMatchResult.teamAColor || teams[lastMatchResult.teamAIndex]?.color || TEAM_COLORS[0]} stopOpacity="0.85" />
-                                              </linearGradient>
-                                            </defs>
-                                            <path fill="url(#shield-grad-A-last)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="white" strokeWidth="1.5" strokeLinejoin="round" />
-                                            <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.15" />
-                                          </svg>
+                                        <div className="w-10 h-10 flex items-center justify-center shrink-0 drop-shadow-sm" style={{ color: lastMatchResult.teamAColor || teams[lastMatchResult.teamAIndex]?.color || TEAM_COLORS[0] }}>
+                                          {(() => {
+                                            const IconA = TEAM_ICONS[teams[lastMatchResult.teamAIndex]?.iconIdx ?? (lastMatchResult.teamAIndex % TEAM_ICONS.length)];
+                                            return <IconA size={24} />;
+                                          })()}
                                         </div>
                                     <div className="text-4xl font-black text-white tabular-nums tracking-tighter leading-none mt-2">
                                           {lastMatchResult.scoreA}
@@ -5238,17 +5157,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       <div className="text-sm font-black text-white/40 uppercase tracking-widest">vs</div>
                                       
                                       <div className="flex-1 flex flex-col items-center text-center space-y-1">
-                                        <div className="w-10 h-10 flex items-center justify-center shrink-0">
-                                          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-sm">
-                                            <defs>
-                                              <linearGradient id="shield-grad-B-last" x1="0%" y1="0%" x2="0%" y2="100%">
-                                                <stop offset="0%" stopColor={lastMatchResult.teamBColor || teams[lastMatchResult.teamBIndex]?.color || TEAM_COLORS[1]} />
-                                                <stop offset="100%" stopColor={lastMatchResult.teamBColor || teams[lastMatchResult.teamBIndex]?.color || TEAM_COLORS[1]} stopOpacity="0.85" />
-                                              </linearGradient>
-                                            </defs>
-                                            <path fill="url(#shield-grad-B-last)" d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" stroke="white" strokeWidth="1.5" strokeLinejoin="round" />
-                                            <path d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z" fill="white" opacity="0.15" />
-                                          </svg>
+                                        <div className="w-10 h-10 flex items-center justify-center shrink-0 drop-shadow-sm" style={{ color: lastMatchResult.teamBColor || teams[lastMatchResult.teamBIndex]?.color || TEAM_COLORS[1] }}>
+                                          {(() => {
+                                            const IconB = TEAM_ICONS[teams[lastMatchResult.teamBIndex]?.iconIdx ?? (lastMatchResult.teamBIndex % TEAM_ICONS.length)];
+                                            return <IconB size={24} />;
+                                          })()}
                                         </div>
                                         <div className="text-4xl font-black text-white tabular-nums tracking-tighter leading-none mt-2">
                                           {lastMatchResult.scoreB}
@@ -6046,32 +5959,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       }}
                                     >
                                       {(() => {
-                                        const strokeColor = teamColor === '#000000' || teamColor === '#1a1a1a' ? '#ffffff40' : (teamColor === '#ffffff' ? '#e4e4e7' : 'white');
                                         const Icon = TEAM_ICONS[t.iconIdx ?? (tIdx % TEAM_ICONS.length)];
                                         return (
-                                          <div className="relative w-8 h-8 flex items-center justify-center">
-                                            <svg viewBox="0 0 24 24" stroke={strokeColor} strokeWidth="0.5" xmlns="http://www.w3.org/2000/svg" className="absolute inset-0 w-full h-full">
-                                              <defs>
-                                                <linearGradient id={`shield-grad-${t.id}`} x1="0%" y1="0%" x2="0%" y2="100%">
-                                                  <stop offset="0%" stopColor={teamColor || '#2563EB'} />
-                                                  <stop offset="100%" stopColor={teamColor || '#1E3A8A'} stopOpacity="0.85" />
-                                                </linearGradient>
-                                              </defs>
-                                              <path 
-                                                fill={`url(#shield-grad-${t.id})`}
-                                                d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
-                                                stroke={isCurrent ? '#E3D39E' : (strokeColor === '#ffffff40' ? '#ffffff' : (strokeColor === '#e4e4e7' ? '#000000' : strokeColor))}
-                                                strokeWidth="1.5"
-                                                strokeLinejoin="round"
-                                              />
-                                              <path 
-                                                d="M12 2L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-3z"
-                                                fill="white" opacity="0.15"
-                                              />
-                                            </svg>
-                                            <div className="relative z-10 flex items-center justify-center text-white/90 drop-shadow-sm mt-[-1px]">
-                                              <Icon size={16} />
-                                            </div>
+                                          <div className="relative w-10 h-10 flex items-center justify-center transition-transform hover:scale-110 drop-shadow-lg" style={{ color: teamColor }}>
+                                            <Icon size={36} />
                                           </div>
                                         );
                                       })()}
