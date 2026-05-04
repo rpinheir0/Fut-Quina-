@@ -5650,10 +5650,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </div>
                     ) : teamsTab === 'proximos' ? (
                       <div className="space-y-6 relative overflow-hidden bg-[#1E3D2F]/95 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-white/10 ring-1 ring-white/5">
-                        <div className="absolute inset-0 pointer-events-none opacity-[0.03] z-0" style={{
-                          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 15px, #ffffff 15px, #ffffff 16px), repeating-linear-gradient(-45deg, transparent, transparent 15px, #ffffff 15px, #ffffff 16px)`,
-                        }}></div>
-                        
                         <div className="flex justify-between items-center relative z-10">
                           <button 
                             onClick={() => setTeamsTab('configuracao')}
