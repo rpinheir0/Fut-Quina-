@@ -1,0 +1,79 @@
+                                                   onPointerDown={(e) => {
+                                                     const startTouchY = e.clientY;
+                                                     const onPointerUp = (upEvent: PointerEvent) => {
+                                                       const endTouchY = upEvent.clientY;
+                                                       if (Math.abs(startTouchY - endTouchY) < 10) {
+                                                         e.stopPropagation();
+                                                         if (movingPlayers && movingPlayers.teamId === t.id) {
+                                                           setMovingPlayers(prev => {
+                                                             if (!prev) return null;
+                                                             const pIds = prev.playerIds.includes(pid) 
+                                                               ? prev.playerIds.filter(id => id !== pid)
+                                                               : [...prev.playerIds, pid];
+                                                             if (pIds.length === 0) return null;
+                                                             return { ...prev, playerIds: pIds };
+                                                           });
+                                                         } else if (swappingPlayerId) {
+                                                           if (swappingPlayerId === pid) {
+                                                             setSwappingPlayerId(null);
+                                                             setToast({ message: "Troca cancelada.", type: 'info' });
+                                                           } else {
+                                                             setTeams(prev => {
+                                                               const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+                                                               let swapTeamIdx = -1;
+                                                               let currentTeamIdx = -1;
+                                                               for (let i = 0; i < newTeams.length; i++) {
+                                                                 if (newTeams[i].playerIds.includes(swappingPlayerId)) swapTeamIdx = i;
+                                                                 if (newTeams[i].playerIds.includes(pid)) currentTeamIdx = i;
+                                                               }
+                                                               if (swapTeamIdx !== -1 && currentTeamIdx !== -1) {
+                                                                 const pAId = swappingPlayerId;
+                                                                 const pBId = pid;
+                                                                 if (swapTeamIdx === currentTeamIdx) {
+                                                                   newTeams[swapTeamIdx].playerIds = newTeams[swapTeamIdx].playerIds.map(id => id === pAId ? pBId : id === pBId ? pAId : id);
+                                                                 } else {
+                                                                   newTeams[swapTeamIdx].playerIds = newTeams[swapTeamIdx].playerIds.map(id => id === pAId ? pBId : id);
+                                                                   newTeams[currentTeamIdx].playerIds = newTeams[currentTeamIdx].playerIds.map(id => id === pBId ? pAId : id);
+                                                                 }
+                                                               }
+                                                               return newTeams;
+                                                             });
+                                                             setSwappingPlayerId(null);
+                                                             setToast({ message: "Jogadores trocados com sucesso!", type: 'success' });
+                                                           }
+                                                         } else if (fillingVacancyForTeam !== null) {
+                                                           setTeams(prev => {
+                                                             const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+                                                             newTeams[tIdx].playerIds = newTeams[tIdx].playerIds.filter(id => id !== pid);
+                                                             newTeams[fillingVacancyForTeam].playerIds.push(pid);
+                                                             return newTeams;
+                                                           });
+                                                           const isMatchActive = match.isActive && (fillingVacancyForTeam === match.teamAIndex || fillingVacancyForTeam === match.teamBIndex);
+                                                           setFillingVacancyForTeam(null);
+                                                           if (isMatchActive) {
+                                                             setTeamsTab('historico');
+                                                             setToast({ message: "✅ Jogador substituído! A partida pode continuar.", type: 'success' });
+                                                           } else {
+                                                             setToast({ message: "Jogador movido com sucesso!", type: 'success' });
+                                                           }
+                                                         } else {
+                                                           const incompleteSelectedTeamIdx = [match.teamAIndex, match.teamBIndex].find(teamIdx => 
+                                                             teamIdx !== -1 && teamIdx !== tIdx && (teams[teamIdx]?.playerIds?.length || 0) < match.config.playersPerTeam
+                                                           );
+                                                           if (incompleteSelectedTeamIdx !== undefined) {
+                                                             setTeams(prev => {
+                                                               const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+                                                               newTeams[tIdx].playerIds = newTeams[tIdx].playerIds.filter(id => id !== pid);
+                                                               newTeams[incompleteSelectedTeamIdx].playerIds.push(pid);
+                                                               return newTeams.filter(team => team.playerIds.length > 0);
+                                                             });
+                                                             setToast({ message: `Jogador movido para o ${teams[incompleteSelectedTeamIdx].name}`, type: 'success' });
+                                                           } else {
+                                                             setShowQueuePlayerModal({ teamIndex: tIdx, playerId: pid });
+                                                           }
+                                                         }
+                                                       }
+                                                       window.removeEventListener('pointerup', onPointerUp);
+                                                     };
+                                                     window.addEventListener('pointerup', onPointerUp);
+                                                   }}

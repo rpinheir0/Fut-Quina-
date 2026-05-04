@@ -170,10 +170,10 @@
   }
   
   input, select, textarea {
-    @apply bg-brand-dark border border-brand-border px-3 py-2 text-lg focus:outline-none focus:bg-brand-primary/10 transition-none shadow-[1px_1px_0_0_var(--brand-border)];
+    @apply bg-brand-dark px-3 py-2 text-lg focus:outline-none focus:bg-brand-primary/10 transition-none;
   }
 
   button {
-    @apply border border-brand-border transition-none active:translate-x-[0.5px] active:translate-y-[0.5px] active:shadow-[0px_0px_0_0_var(--brand-border)] shadow-[1px_1px_0_0_var(--brand-border)];
+    @apply transition-none active:translate-x-[0.5px] active:translate-y-[0.5px] active:shadow-none;
   }
 }
