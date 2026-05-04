@@ -4700,7 +4700,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
           {currentScreen === 'teams' && !isPrintMode && (
             <motion.div 
-              key={`teams-${teamsTab}`}
+              key="teams"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
