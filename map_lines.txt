@@ -1,0 +1,165 @@
+160:        syncedIds.current = new Set(items.map(i => i.id));
+172:    const currentIds = new Set(items.map(i => i.id));
+180:      const payload = items.map(item => mapToDbRef.current(item, groupId));
+297:        {items.map((_, i) => (
+318:  const usedColors = existingTeams.map(t => t.color).filter(Boolean);
+331:  const usedIcons = existingTeams.map(t => t.iconIdx).filter(idx => idx !== undefined);
+332:  const availableIndices = TEAM_ICONS.map((_, i) => i).filter(i => !usedIcons.includes(i));
+440:          {TEAM_COLORS.map((color) => (
+549:              .map((pid, idx) => {
+578:                          {[1, 2, 3, 4, 5].map((star) => (
+644:          {teamPlayers.map((pid, idx) => (
+659:                {[1, 2, 3, 4, 5].map((star) => (
+767:                    {teamA.playerIds.map((pid, idx) => {
+787:                    {teamB.playerIds.map((pid, idx) => {
+877:                      {(teamA.playerIds || []).map((pid, idx) => (
+899:                      {(teamB.playerIds || []).map((pid, idx) => (
+946:                  {state.penalties.teamA.map((shot, idx) => {
+985:                  {state.penalties.teamB.map((shot, idx) => {
+1085:                        {teamA.playerIds.map((pid, idx) => {
+1105:                        {teamB.playerIds.map((pid, idx) => {
+1143:                        {(state.lottery.winnerId === teamA.id ? teamA.playerIds : teamB.playerIds).map((pid, idx, arr) => {
+1349:                {[1, 2, 3, 4, 5].map((star) => (
+1590:            {Array.from({ length: 64 }).map((_, i) => (
+1598:          {Array.from({ length: 12 }).map((_, i) => (
+2034:        events: prev.events.map(e => 
+2296:          setPayments(paymentsData.map(p => ({
+2305:          setMatchHistory(matchHistoryData.map(h => ({
+2334:          setExpenses(transactionsData.map(t => ({
+2365:        setPlayers(prev => prev.map(p => p.id === updatedPlayer.id ? { 
+2378:            setPayments(data.map(p => ({
+2709:    const existingNames = new Set(players.map(p => p.name.toLowerCase()));
+2761:      setTeams(prev => prev.map((t, idx) => 
+2807:      setTeams(prev => prev.map((t, idx) => 
+2892:        const newTeams = [...prev].map(t => ({ ...t, playerIds: [...t.playerIds] }));
+2935:    setPlayers(prev => prev.map(p => p.id === id ? { ...p, absences } : p));
+2949:          setPlayers(prev => prev.map(p => p.id === id ? { ...p, name: finalName.trim() } : p));
+2955:    setPlayers(prev => prev.map(p => p.id === id ? { ...p, name: trimmedName } : p));
+2960:    setPlayers(prev => prev.map(p => p.id === id ? { ...p, stars } : p));
+2964:    setPlayers(prev => prev.map(p => p.id === id ? { ...p, photo } : p));
+2976:      let currentTeams = [...prevTeams].map(t => ({ ...t, playerIds: [...t.playerIds] }));
+3062:    setPlayers(prev => prev.map(p => {
+3083:        playerIds: teamPlayers.map(p => p.id),
+3099:        playerIds: leftoverPlayers.map(p => p.id),
+3128:    setPlayers(prev => prev.map(p => ({ ...p, goals: 0, assists: 0 })));
+3162:    setPlayers(prev => prev.map(p => {
+3266:        newTeams = newTeams.map(t => {
+3276:           newTeams = newTeams.map(t => {
+3292:          newTeams = newTeams.map(t => {
+3319:        newTeams = newTeams.map(t => {
+3376:          teamA: (teams[teamAIndex]?.playerIds || []).map(pid => ({ playerId: pid, success: null })),
+3377:          teamB: (teams[teamBIndex]?.playerIds || []).map(pid => ({ playerId: pid, success: null })),
+3436:    setTeams(prev => prev.map(team => {
+3574:      newTeams = newTeams.map(t => {
+3597:      newTeams = newTeams.map(t => {
+3881:                  {[...players].sort((a,b)=>a.name.localeCompare(b.name)).map(p => (
+3947:                               setPlayers(prev => prev.map(p => p.id === presencePlayerId ? { ...p, isAvailable: true, arrivedAt: now } : p));
+3971:                               setPlayers(prev => prev.map(p => p.id === presencePlayerId ? { ...p, isAvailable: true, arrivedAt: now } : p));
+4598:                    {visiblePlayers.map((player) => (
+4636:                                {[1, 2, 3, 4, 5].map((star) => (
+4833:                                  setPlayers(prev => prev.map(p => ({ ...p, isAvailable: false, arrivedAt: undefined })));
+4872:                              setSessionPlayerIds(players.map(p => p.id));
+4889:                                    setPlayers(prev => prev.map((pl, idx) => ({ ...pl, isAvailable: true, arrivedAt: now + idx })));
+4893:                                      const allPlayerIds = players.filter(p => sessionPlayerIds.includes(p.id)).map(p => p.id);
+4925:                                    const updatedPlayerIds = availablePlayers.map(p => p.id);
+5005:                            }).map((p) => (
+5010:                                  setPlayers(prev => prev.map(pl => pl.id === p.id ? { ...pl, isAvailable: isNowAvailable, arrivedAt: isNowAvailable ? Date.now() : undefined } : pl));
+5078:                                    {[1, 2, 3, 4, 5].map((star) => (
+5168:                                      {(lastMatchResult.events || []).map((event, idx) => {
+5189:                                                  {[1, 2, 3, 4, 5].map((star) => (
+5365:                                }).map((pid, idx) => {
+5383:                                              const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+5395:                                                  newTeams[swapTeamIdx].playerIds = newTeams[swapTeamIdx].playerIds.map(id => {
+5401:                                                  newTeams[swapTeamIdx].playerIds = newTeams[swapTeamIdx].playerIds.map(id => id === pAId ? pBId : id);
+5402:                                                  newTeams[currentTeamIdx].playerIds = newTeams[currentTeamIdx].playerIds.map(id => id === pBId ? pAId : id);
+5429:                    {[1, 2, 3, 4, 5].map((star) => (
+5453:                                {Array.from({ length: Math.max(0, match.config.playersPerTeam - (teams[match.teamAIndex]?.playerIds?.length || 0)) }).map((_, i) => (
+5472:                                          const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+5506:                                }).map((pid, idx) => {
+5524:                                              const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+5536:                                                  newTeams[swapTeamIdx].playerIds = newTeams[swapTeamIdx].playerIds.map(id => {
+5542:                                                  newTeams[swapTeamIdx].playerIds = newTeams[swapTeamIdx].playerIds.map(id => id === pAId ? pBId : id);
+5543:                                                  newTeams[currentTeamIdx].playerIds = newTeams[currentTeamIdx].playerIds.map(id => id === pBId ? pAId : id);
+5570:                    {[1, 2, 3, 4, 5].map((star) => (
+5594:                                {Array.from({ length: Math.max(0, match.config.playersPerTeam - (teams[match.teamBIndex]?.playerIds?.length || 0)) }).map((_, i) => (
+5613:                                          const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+5743:                                    setTeams(prev => prev.map(team => team.lastMatchStatus === 'Empate' ? { ...team, lastMatchStatus: undefined } : team));
+5758:                              {teams.map((t, tIdx) => {
+5783:                                          const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+5859:                                                const newTeams = prevTeams.map(team => ({
+5986:                                        }).map((pid, idx) => {
+6047:                                                        const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+6062:                                                            newTeams[swapTeamIdx].playerIds = newTeams[swapTeamIdx].playerIds.map(id => {
+6068:                                                            newTeams[swapTeamIdx].playerIds = newTeams[swapTeamIdx].playerIds.map(id => id === pAId ? pBId : id);
+6069:                                                            newTeams[currentTeamIdx].playerIds = newTeams[currentTeamIdx].playerIds.map(id => id === pBId ? pAId : id);
+6079:                                                        const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+6104:                                                          const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+6142:                                                    {[1, 2, 3, 4, 5].map((star) => (
+6165:                        {teams.map((team, tIndex) => (
+6230:                          {team.playerIds.map((pid, idx) => {
+6240:                                      const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+6253:                                          newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => {
+6259:                                          newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => id === pAId ? pBId : id);
+6260:                                          newTeams[teamBIdx].playerIds = newTeams[teamBIdx].playerIds.map(id => id === pBId ? pAId : id);
+6293:                                      {[1, 2, 3, 4, 5].map((star) => (
+6435:                  .map((player, index) => (
+6457:                        {[1, 2, 3, 4, 5].map((star) => (
+6686:                            [...(expenses || [])].sort((a, b) => b.date - a.date).map((expense) => (
+6735:                          }) || []).map((p) => (
+6772:                          }) || []).map((p) => (
+6867:                            {availableYears.map(y => (
+6906:                            {MONTHS.map(month => (
+6913:                          {players.map((player, index) => {
+6925:                                {MONTHS.map(month => {
+7012:                        .map((player, index) => (
+7108:                            Object.entries(orgProData).map(([pid, data]: [string, any]) => [pid, data.code])
+7205:                                  {panelModal === 'cadastrados' && players.map(p => (
+7217:                                  {panelModal === 'externos' && jogadoresExternos.map(item => (
+7228:                                  {panelModal === 'assist' && [...players].sort((a, b) => (b.assists || 0) - (a.assists || 0)).map((p, idx) => (
+7243:                                      {players.filter(p => p.isAvailable).map(p => (
+7256:                                          {presencasExternas.map(p => (
+7270:                                  {panelModal === 'admins' && appAdmins.map(admin => (
+7469:                      {players.filter(player => orgProData[player.id]).map(player => {
+7607:                            .map((player, index) => {
+7812:                          {appAdmins.map((admin) => (
+7863:                              .map((player, index) => {
+7938:                            {presencasExternas.map((p, idx) => (
+7989:                            {jogadoresExternos.map((j, idx) => (
+8067:                  .map(player => {
+8213:                    {[1, 2, 3, 4, 5].map((star) => (
+8256:                            const newTeams = prev.map(t => ({ ...t, playerIds: [...t.playerIds] }));
+8267:                                newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => {
+8273:                                newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => id === playerAId ? playerBId : id);
+8274:                                newTeams[teamBIdx].playerIds = newTeams[teamBIdx].playerIds.map(id => id === playerBId ? playerAId : id);
+8339:                              return prev.map(t => ({
+8344:                            setPlayers(prev => prev.map(p => p.id === showPlayerActionsModal.playerId ? { ...p, isAvailable: false, arrivedAt: undefined } : p));
+8465:                            return prev.map(t => ({
+8470:                          setPlayers(prev => prev.map(p => p.id === showQueuePlayerModal.playerId ? { ...p, isAvailable: false, arrivedAt: undefined } : p));
+8492:                        {teams.map((t, idx) => {
+8499:                                  const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
+8592:                    .map((pid, idx) => {
+8708:                    {teams.map((t, idx) => (
+8745:                            {t.playerIds.slice(0, 3).map((pid, pidx) => (
+8762:                      {teams.map((team, tIdx) => (
+8819:                            {team.playerIds.map((pid, idx) => {
+8867:                                            const newTeams = prev.map(t => ({ ...t, playerIds: [...t.playerIds] }));
+8878:                                                newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => {
+8884:                                                newTeams[teamAIdx].playerIds = newTeams[teamAIdx].playerIds.map(id => id === playerAId ? playerBId : id);
+8885:                                                newTeams[teamBIdx].playerIds = newTeams[teamBIdx].playerIds.map(id => id === playerBId ? playerAId : id);
+8903:                                          const newTeams = prev.map(t => ({ ...t, playerIds: [...t.playerIds] }));
+8930:                      players.filter(p => p.isAvailable && !teams.some(t => t.playerIds.includes(p.id))).map((player) => (
+8941:                                    const newTeams = prev.map(t => ({ ...t, playerIds: [...t.playerIds] }));
+8945:                                      newTeams[teamIdx].playerIds = newTeams[teamIdx].playerIds.map(id => 
+9115:                {TEAM_ICONS.map((Icon, idx) => (
+9362:                      .map((player) => (
+9404:                        {(showEventModal.team === 'A' ? (teams[match.teamAIndex]?.playerIds || []) : (teams[match.teamBIndex]?.playerIds || [])).map((pid) => {
+9432:                          .map((aid) => {
+9559:                      players.filter(p => p.isAvailable && !teams.flatMap(t => t.playerIds).includes(p.id)).map((p) => (
+9664:                {teams.map((t, tIdx) => (
+9668:                      {t.playerIds.map((pid, idx) => (
+9673:                              const newTeams = prev.map(team => ({ ...team, playerIds: [...team.playerIds] }));
+9677:                              newTeams[replacingPlayer.teamIndex].playerIds = newTeams[replacingPlayer.teamIndex].playerIds.map(id => 
+9699:                    const newTeams = prev.map(team => ({ ...team, playerIds: [...team.playerIds] }));
+9757:              setTeams(prev => prev.map((t, i) => i === idx ? { ...t, color } : t));
+10341:                  {groups.map((group, index) => (
+10517:                    setGroups(prev => prev.map(g => g.id === groupToRename.id ? { ...g, name: renameValue.trim() } : g));
