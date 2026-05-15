@@ -6398,57 +6398,66 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   </div>
                 </div>
 
-                {[...players]
-                  .sort((a, b) => {
-                    if (rankingTab === 'geral') return (b.goals + b.assists) - (a.goals + a.assists);
-                    if (rankingTab === 'artilharia') return b.goals - a.goals;
-                    if (rankingTab === 'assistencias') return b.assists - a.assists;
-                    return 0;
-                  })
-                  .map((player, index) => (
-                  <div 
-                    key={`ranking-player-${player.id}`}
-                    className={`flex items-center py-3 px-2 transition-colors rounded-xl ${index !== 0 ? `border-t border-black/5` : ''}`}
-                  >
-                    <div className="w-8 text-sm font-black text-zinc-800/40 text-center shrink-0">
-                      {index + 1}
-                    </div>
-                    
-                    <div className="relative ml-2 mr-4 shrink-0">
-                      <div className={`w-10 h-10 rounded-3xl overflow-hidden flex items-center justify-center bg-black/10 border border-black/10 relative z-10`}>
-                        {player.photo ? (
-                          <img src={player.photo} alt={player.name} className="w-full h-full object-cover" />
-                        ) : (
-                          <span className="text-zinc-800/40 flex items-center shrink-0"><IoPersonOutline size={20} /></span>
-                        )}
+                <div className="flex flex-col gap-1">
+                  {[...players]
+                    .sort((a, b) => {
+                      if (rankingTab === 'geral') return (b.goals + b.assists) - (a.goals + a.assists);
+                      if (rankingTab === 'artilharia') return b.goals - a.goals;
+                      if (rankingTab === 'assistencias') return b.assists - a.assists;
+                      return 0;
+                    })
+                    .map((player, index) => (
+                    <motion.div 
+                      layout
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ 
+                        layout: { type: "spring", stiffness: 300, damping: 25 },
+                        opacity: { duration: 0.2 }
+                      }}
+                      key={player.id}
+                      className="flex items-center py-3 px-2 transition-colors rounded-xl bg-white border border-black/5 shadow-sm"
+                    >
+                      <div className="w-8 text-sm font-black text-zinc-800/40 text-center shrink-0">
+                        {index + 1}
                       </div>
-                    </div>
-
-                    <div className="flex-1 text-xs text-zinc-800/90 tracking-tight truncate mr-4 font-normal capitalize flex flex-col gap-0.5">
-                      <span className="leading-none">{player.name.toLowerCase()}</span>
-                      <div className="flex gap-0.5">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star 
-                            key={`star-rank-${player.id}-${star}`}
-                            size={8} 
-                            className={`${(player.stars || 3) >= star ? 'fill-[#00FF00] text-zinc-800' : 'text-zinc-800/10'}`} 
-                          />
-                        ))}
+                      
+                      <div className="relative ml-2 mr-4 shrink-0">
+                        <div className={`w-10 h-10 rounded-3xl overflow-hidden flex items-center justify-center bg-black/10 border border-black/10 relative z-10`}>
+                          {player.photo ? (
+                            <img src={player.photo} alt={player.name} className="w-full h-full object-cover" />
+                          ) : (
+                            <span className="text-zinc-800/40 flex items-center shrink-0"><IoPersonOutline size={20} /></span>
+                          )}
+                        </div>
                       </div>
-                    </div>
 
-                    <div className={`flex gap-4 sm:gap-8 shrink-0 ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
-                      <div className={`w-12 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'assistencias' ? 'opacity-0' : ''}`}>{player.goals}</div>
-                      <div className={`w-12 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'artilharia' ? 'opacity-0' : ''}`}>{player.assists}</div>
+                      <div className="flex-1 text-xs text-zinc-800/90 tracking-tight truncate mr-4 font-normal capitalize flex flex-col gap-0.5">
+                        <span className="leading-none">{player.name.toLowerCase()}</span>
+                        <div className="flex gap-0.5">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <Star 
+                              key={`star-rank-${player.id}-${star}`}
+                              size={8} 
+                              className={`${(player.stars || 3) >= star ? 'fill-[#00FF00] text-zinc-800' : 'text-zinc-800/10'}`} 
+                            />
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className={`flex gap-4 sm:gap-8 shrink-0 ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
+                        <div className={`w-12 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'assistencias' ? 'opacity-0' : ''}`}>{player.goals}</div>
+                        <div className={`w-12 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'artilharia' ? 'opacity-0' : ''}`}>{player.assists}</div>
+                      </div>
+                    </motion.div>
+                  ))}
+                  {players.length === 0 && (
+                    <div className="p-8 text-center text-brand-text-secondary text-sm font-bold normal-case flex flex-col items-center justify-center gap-2">
+                      <span className="opacity-50 text-brand-text-secondary"><GiCrown size={48} /></span>
+                      <span>Nenhum jogador registrado ainda.</span>
                     </div>
-                  </div>
-                ))}
-                {players.length === 0 && (
-                  <div className="p-8 text-center text-brand-text-secondary text-sm font-bold normal-case flex flex-col items-center justify-center gap-2">
-                    <span className="opacity-50 text-brand-text-secondary"><GiCrown size={48} /></span>
-                    <span>Nenhum jogador registrado ainda.</span>
-                  </div>
-                )}
+                  )}
+                </div>
               </motion.div>
             </motion.div>
           )}
