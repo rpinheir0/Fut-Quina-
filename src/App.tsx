@@ -4384,7 +4384,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             <div className="flex gap-2 justify-center">
               <button 
                 onClick={() => navigateTeamsTab('configuracao')}
-                className={`w-12 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'configuracao' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white/40 hover:text-white/80'}`}
+                className={`w-12 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'configuracao' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80'}`}
               >
                 <motion.div
                   animate={{ rotate: teamsTab === 'configuracao' ? [0, 180] : 0 }}
@@ -4394,28 +4394,28 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     repeatDelay: 8.5,
                     ease: "easeInOut"
                   }}
-                  className={teamsTab === 'configuracao' ? 'text-[#1E3D2F]' : 'text-white/40'}
+                  className={teamsTab === 'configuracao' ? 'text-[#1E3D2F]' : 'text-white'}
                 >
                   <PiGearBold size={18} />
                 </motion.div>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('chegada')}
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'chegada' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'chegada' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
               >
-                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'chegada' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Chegada</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'chegada' ? 'text-[#1E3D2F]' : 'text-white'}`}>Chegada</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('historico')}
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'historico' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'historico' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
               >
-                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'historico' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Confrontos</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'historico' ? 'text-[#1E3D2F]' : 'text-white'}`}>Confrontos</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('proximos')}
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'proximos' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'proximos' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
               >
-                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'proximos' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Próximos</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'proximos' ? 'text-[#1E3D2F]' : 'text-white'}`}>Próximos</span>
               </button>
             </div>
           </div>
