@@ -713,18 +713,14 @@ const TieBreakerModal = ({
   const isLotteryOngoing = state.type === 'lottery';
 
   return (
-    <div className="fixed inset-0 z-[2500] flex items-center justify-center p-0 sm:p-4 bg-brand-dark/20 backdrop-blur-xl">
+    <div className="fixed inset-0 z-[2500] flex items-center justify-center p-4 bg-brand-dark/20 backdrop-blur-xl">
       <motion.div 
-        initial={{ y: "100%" }}
-        animate={{ y: 0 }}
-        exit={{ y: "100%" }}
+        initial={{ scale: 0.95, opacity: 0, y: 20 }}
+        animate={{ scale: 1, opacity: 1, y: 0 }}
+        exit={{ scale: 0.95, opacity: 0, y: 20 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="w-full h-full sm:h-auto sm:max-w-md bg-[#112F24] sm:rounded-[40px] overflow-hidden border-t sm:border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative"
+        className="w-full max-w-md h-auto max-h-[90vh] flex flex-col bg-[#112F24] rounded-[40px] overflow-x-hidden overflow-y-auto border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative"
       >
-        <div className="absolute inset-0 pointer-events-none opacity-10 z-0" style={{
-          backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 21px), repeating-linear-gradient(-45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 21px)`,
-        }}></div>
-
         {/* Background Decorative Elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-[100px] -mr-32 -mt-32" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/20 rounded-full blur-[80px] -ml-32 -mb-32" />
@@ -802,14 +798,14 @@ const TieBreakerModal = ({
                     onClick={() => setShowQueueOrder(true)}
                     className="group w-full flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 transition-all duration-400 transform active:scale-95 text-left border border-white/5 shadow-2xl"
                   >
-                    <div className="w-12 h-12 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 text-[#00FF00] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                       <LogOut size={28} />
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-normal uppercase tracking-widest text-[11px] text-brand-primary">Os dois times deixam a partida</span>
-                      <span className="text-[10px] text-brand-primary/60 font-medium tracking-tight mt-0.5">Ambos vão para o final da fila</span>
+                      <span className="font-normal uppercase tracking-widest text-[11px] text-white">Os dois times deixam a partida</span>
+                      <span className="text-[10px] text-white/50 font-medium tracking-tight mt-0.5">Ambos vão para o final da fila</span>
                     </div>
-                    <ChevronRight size={18} className="ml-auto text-brand-primary/40 group-hover:text-brand-primary transition-colors" />
+                    <ChevronRight size={18} className="ml-auto text-white/20 group-hover:text-white transition-colors" />
                   </button>
                 )}
 
@@ -817,28 +813,28 @@ const TieBreakerModal = ({
                   onClick={() => onTypeSelect('penalties')}
                   className="group w-full flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 transition-all duration-400 transform active:scale-95 text-left border border-white/5 shadow-2xl"
                 >
-                  <div className="w-12 h-12 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 text-[#00FF00] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                     <GiSoccerKick size={28} />
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-normal uppercase tracking-widest text-[11px] text-brand-primary">Disputa de Pênaltis</span>
-                    <span className="text-[10px] text-brand-primary/60 font-medium tracking-tight mt-0.5">Marcar acertos e erros</span>
+                    <span className="font-normal uppercase tracking-widest text-[11px] text-white">Disputa de Pênaltis</span>
+                    <span className="text-[10px] text-white/50 font-medium tracking-tight mt-0.5">Marcar acertos e erros</span>
                   </div>
-                  <ChevronRight size={18} className="ml-auto text-brand-primary/40 group-hover:text-brand-primary transition-colors" />
+                  <ChevronRight size={18} className="ml-auto text-white/20 group-hover:text-white transition-colors" />
                 </button>
 
                 <button 
                   onClick={() => onTypeSelect('lottery')}
                   className="group w-full flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 transition-all duration-400 transform active:scale-95 text-left border border-white/5 shadow-2xl"
                 >
-                  <div className="w-12 h-12 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 text-[#00FF00] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                     <RefreshCw size={28} strokeWidth={2} />
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-normal uppercase tracking-widest text-[11px] text-brand-primary">Sorteio Aleatório</span>
-                    <span className="text-[10px] text-brand-primary/60 font-medium tracking-tight mt-0.5">Roleta da sorte</span>
+                    <span className="font-normal uppercase tracking-widest text-[11px] text-white">Sorteio Aleatório</span>
+                    <span className="text-[10px] text-white/50 font-medium tracking-tight mt-0.5">Roleta da sorte</span>
                   </div>
-                  <ChevronRight size={18} className="ml-auto text-brand-primary/40 group-hover:text-brand-primary transition-colors" />
+                  <ChevronRight size={18} className="ml-auto text-white/20 group-hover:text-white transition-colors" />
                 </button>
 
                 <div className="pt-4">
