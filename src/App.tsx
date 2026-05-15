@@ -5204,11 +5204,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                             </div>
                                             <div className="flex items-center gap-2 shrink-0">
                                               {a && (
-                                                <div className="flex items-center gap-1 text-[8px] font-normal text-brand-primary" title={`Assistência: ${a.name}`}>
+                                                <div className="flex items-center gap-1 text-[8px] font-normal text-zinc-400" title={`Assistência: ${a.name}`}>
                                                   <Footprints size={8} /> <span>{a.name.toLowerCase().split(' ')[0]}</span>
                                                 </div>
                                               )}
-                                              <div className="px-1.5 py-0.5 rounded-sm bg-black text-black text-[8px] font-black uppercase tracking-widest">GOL</div>
+                                              <div className="px-1.5 py-0.5 rounded-sm bg-black text-white text-[8px] font-black uppercase tracking-widest">GOL</div>
                                             </div>
                                           </div>
                                         );
@@ -5770,8 +5770,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 }
 
                                 return (
-                                  <div 
-                                    key={`team-card-${t.id}-${tIdx}`} 
+                                  <motion.div 
+                                    layout="position"
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                    key={`team-card-${t.id}`} 
                                     id={`team-card-${tIdx}`}
                                     onClick={(e) => {
                                       if (swappingPlayerId) return;
@@ -6157,7 +6161,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                         })}
                                       </div>
                                     </div>
-                                  </div>
+                                  </motion.div>
                                 );
                               })}
                             </div>
