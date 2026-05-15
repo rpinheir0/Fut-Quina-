@@ -131,9 +131,7 @@ import {
   PiCheck,
   PiHandPointingBold,
   PiLockFill,
-  PiShieldCheckFill,
-  PiBell,
-  PiCurrencyDollar
+  PiShieldCheckFill
 } from 'react-icons/pi';
 import { supabase } from './lib/supabase';
 import { sounds } from './lib/sounds';
@@ -3993,7 +3991,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   }
 
   return (
-    <div className="h-screen bg-brand-bg text-brand-text font-sans overflow-hidden flex flex-col">
+    <div className="h-screen bg-brand-dark text-brand-text-primary font-sans overflow-hidden flex flex-col">
       
       {/* Logo Animation Overlay */}
       <AnimatePresence>
@@ -4205,89 +4203,153 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         className="h-full flex flex-col overflow-hidden"
       >
         {/* Sticky Header and Tabs Container */}
-        <div className={`sticky top-0 z-50 ${isPrintMode ? 'hidden' : ''}`}>
+        <div className={`sticky top-0 z-50 bg-[#1E3D2F]/95 backdrop-blur-2xl ${isPrintMode ? 'hidden' : ''}`}>
         {/* Header */}
-        <header className="px-6 pt-8 pb-4 flex justify-between items-center bg-transparent relative transition-colors duration-300">
-          <div className="flex items-center gap-4 relative z-10">
-            <div className="relative">
-              <div className="w-14 h-14 rounded-full border-2 border-brand-primary p-0.5 overflow-hidden shadow-[0_0_15px_rgba(193,255,114,0.3)]">
-                <img 
-                  src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jhon" 
-                  alt="Profile" 
-                  className="w-full h-full object-cover rounded-full bg-brand-surface"
-                />
-              </div>
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-brand-primary rounded-full border-2 border-brand-bg flex items-center justify-center">
-                <div className="w-2 h-2 bg-black rounded-full animate-pulse" />
-              </div>
-            </div>
-            <div className="flex flex-col">
-              <span className="text-white/40 text-[10px] font-bold uppercase tracking-widest">Seja bem vindo,</span>
-              <h1 className="text-xl font-display font-bold text-white tracking-tight -mt-0.5">FutQuina Player</h1>
-            </div>
+        <header className="px-6 py-4 flex justify-between items-center bg-transparent relative transition-colors duration-300">
+          <div className="flex items-center gap-3 overflow-hidden relative z-10">
+            <motion.div
+              initial={false}
+              animate={{ rotate: match.isActive ? 360 : 0 }}
+              transition={{ duration: 0.6, ease: "easeInOut" }}
+            >
+              <SpinningBall size="sm" spin={match.isActive && !match.isPaused} />
+            </motion.div>
+            
+            <AnimatePresence mode="popLayout" initial={false}>
+              {!match.isActive || match.hasEnded ? (
+                <motion.div
+                  key="logo"
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 20 }}
+                  transition={{ duration: 0.4 }}
+                >
+                  <FutQuinaLogo 
+                    size="md" 
+                    style={{ color: '#E2E8F0' }} 
+                    colorClass="" 
+                  />
+                </motion.div>
+              ) : null}
+            </AnimatePresence>
           </div>
           
-          <div className="flex items-center gap-3 relative z-10">
-            <button 
-              onClick={() => setShowMainMenu(true)}
-              className="btn-icon w-11 h-11"
-            >
-              <PiBell size={20} />
-            </button>
-            <button 
-              onClick={() => setShowMainMenu(true)}
-              className="btn-icon w-11 h-11 border-brand-primary/20 bg-brand-primary/10 text-brand-primary"
-            >
-              <PiGearBold size={20} />
-            </button>
+          {/* Centralized Scoreboard */}
+          <div 
+            onClick={() => {
+              setCurrentScreen('teams');
+              setTeamsTab('historico');
+            }}
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 hidden sm:flex items-center justify-center w-full max-w-[200px] cursor-pointer"
+          >
+            <AnimatePresence mode="popLayout" initial={false}>
+              {(match.isActive && !match.isPaused && !match.hasEnded) && (
+                <motion.div
+                  key="scoreboard-desktop"
+                  initial={{ y: -40, opacity: 0, scale: 0.8 }}
+                  animate={{ y: 0, opacity: 1, scale: 1 }}
+                  exit={{ y: -40, opacity: 0, scale: 0.8 }}
+                  transition={{ type: 'spring', damping: 20 }}
+                  className="flex items-center justify-center gap-2 bg-brand-primary px-4 py-1.5 rounded-full border border-black/10 shadow-lg backdrop-blur-md pointer-events-auto transition-colors"
+                >
+                  {match.teamAIndex !== -1 && match.teamBIndex !== -1 ? (
+                    <>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-emerald-950 text-[10px] font-black uppercase truncate max-w-[40px] hidden sm:block">{teams[match.teamAIndex]?.name.substring(0, 3)}</span>
+                        <div className="drop-shadow-sm" style={{ color: (fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color || '#ffffff' }}>
+                          {(() => {
+                            const team = teams[match.teamAIndex];
+                            const Icon = TEAM_ICONS[team?.iconIdx ?? 0];
+                            return <Icon size={14} />;
+                          })()}
+                        </div>
+                        <span className="text-emerald-950 font-black text-sm ml-1">{match.scoreA}</span>
+                      </div>
+                      
+                      <span className="text-emerald-950/40 text-[10px] font-bold mx-1">x</span>
+                      
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-emerald-950 font-black text-sm mr-1">{match.scoreB}</span>
+                        <div className="drop-shadow-sm" style={{ color: (fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color || '#ffffff' }}>
+                          {(() => {
+                            const team = teams[match.teamBIndex];
+                            const Icon = TEAM_ICONS[team?.iconIdx ?? 1];
+                            return <Icon size={14} />;
+                          })()}
+                        </div>
+                        <span className="text-emerald-950 text-[10px] font-black uppercase truncate max-w-[40px] hidden sm:block">{teams[match.teamBIndex]?.name.substring(0, 3)}</span>
+                      </div>
+                      
+                      <span className={`ml-3 flex items-center justify-center text-[10px] sm:text-xs font-black tracking-widest bg-emerald-950/20 text-emerald-950 px-2 py-0.5 rounded-lg ${match.timeRemaining <= 60 && !match.isPaused ? 'text-red-600 animate-pulse' : ''}`}>
+                        {Math.floor(match.timeRemaining / 60).toString().padStart(2, '0')}:{(match.timeRemaining % 60).toString().padStart(2, '0')}
+                      </span>
+                    </>
+                  ) : null}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
-        </header>
 
-        {/* Centralized Scoreboard For All Screens - Floating */}
-        <AnimatePresence mode="popLayout" initial={false}>
-          {(match.isActive && !match.isPaused && !match.hasEnded) && (
-            <motion.div
-              initial={{ y: -60, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -60, opacity: 0 }}
-              className="px-6 pb-2 flex justify-center"
-            >
-              <div 
-                onClick={() => {
-                  setCurrentScreen('teams');
-                  setTeamsTab('historico');
-                }}
-                className="flex items-center gap-4 bg-brand-primary text-black px-6 py-2.5 rounded-2xl shadow-[0_10px_30px_rgba(193,255,114,0.3)] cursor-pointer"
-              >
-                <div className="flex items-center gap-2">
-                  <span className="font-black text-lg">{match.scoreA}</span>
-                  <div style={{ color: (fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color || '#000000' }}>
-                    {(() => {
-                      const team = teams[match.teamAIndex];
-                      const Icon = TEAM_ICONS[team?.iconIdx ?? 0];
-                      return <Icon size={16} />;
-                    })()}
-                  </div>
-                </div>
-                <div className="w-[1px] h-4 bg-black/10" />
-                <span className="font-display font-black text-sm tracking-tighter">
-                   {Math.floor(match.timeRemaining / 60).toString().padStart(2, '0')}:{(match.timeRemaining % 60).toString().padStart(2, '0')}
-                </span>
-                <div className="w-[1px] h-4 bg-black/10" />
-                <div className="flex items-center gap-2">
-                  <div style={{ color: (fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color || '#000000' }}>
-                    {(() => {
-                      const team = teams[match.teamBIndex];
-                      const Icon = TEAM_ICONS[team?.iconIdx ?? 1];
-                      return <Icon size={16} />;
-                    })()}
-                  </div>
-                  <span className="font-black text-lg">{match.scoreB}</span>
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+          {/* Centralized Scoreboard For Mobile */}
+          <div 
+            onClick={() => {
+              setCurrentScreen('teams');
+              setTeamsTab('historico');
+            }}
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 sm:hidden flex items-center justify-center w-auto pl-6 pr-10 cursor-pointer"
+          >
+            <AnimatePresence mode="popLayout" initial={false}>
+              {(match.isActive && !match.isPaused && !match.hasEnded) && (
+                <motion.div
+                  key="scoreboard-mobile"
+                  initial={{ y: -40, opacity: 0, scale: 0.8 }}
+                  animate={{ y: 0, opacity: 1, scale: 1 }}
+                  exit={{ y: -40, opacity: 0, scale: 0.8 }}
+                  transition={{ type: 'spring', damping: 20 }}
+                  className="flex items-center justify-center gap-1.5 bg-brand-primary px-3 py-1 rounded-full border border-black/10 shadow-lg backdrop-blur-md pointer-events-auto transition-colors"
+                >
+                  {match.teamAIndex !== -1 && match.teamBIndex !== -1 ? (
+                    <>
+                      <div className="flex items-center gap-1">
+                        <div className="drop-shadow-sm" style={{ color: (fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color || '#ffffff' }}>
+                          {(() => {
+                            const team = teams[match.teamAIndex];
+                            const Icon = TEAM_ICONS[team?.iconIdx ?? 0];
+                            return <Icon size={12} />;
+                          })()}
+                        </div>
+                        <span className="text-emerald-950 font-black text-xs ml-0.5">{match.scoreA}</span>
+                      </div>
+                      <span className="text-emerald-950/40 text-[9px] font-bold mx-0.5">x</span>
+                      <div className="flex items-center gap-1">
+                        <span className="text-emerald-950 font-black text-xs mr-0.5">{match.scoreB}</span>
+                        <div className="drop-shadow-sm" style={{ color: (fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color || '#ffffff' }}>
+                          {(() => {
+                            const team = teams[match.teamBIndex];
+                            const Icon = TEAM_ICONS[team?.iconIdx ?? 1];
+                            return <Icon size={12} />;
+                          })()}
+                        </div>
+                      </div>
+                      
+                      <div className="w-[1px] h-3 bg-emerald-950/20 mx-0.5" />
+                      <span className={`flex items-center justify-center text-[9px] font-black tracking-widest bg-emerald-950/20 px-2 py-0.5 rounded-lg ${match.timeRemaining <= 60 && !match.isPaused ? 'text-red-600 animate-pulse' : 'text-emerald-950'}`}>
+                        {Math.floor(match.timeRemaining / 60).toString().padStart(2, '0')}:{(match.timeRemaining % 60).toString().padStart(2, '0')}
+                      </span>
+                    </>
+                  ) : null}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
+          <button 
+            onClick={() => setShowMainMenu(true)}
+            className="p-2 text-white/90 hover:bg-white/10 rounded-full transition-all relative z-10"
+          >
+            <PiListBold size={24} />
+          </button>
+        </header>
 
         {/* Tabs for Teams */}
         {currentScreen === 'teams' && (
@@ -4295,32 +4357,38 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             <div className="flex gap-2">
               <button 
                 onClick={() => navigateTeamsTab('configuracao')}
-                className={`w-12 h-10 flex items-center justify-center rounded-2xl transition-all ${teamsTab === 'configuracao' ? 'bg-brand-primary text-black' : 'bg-white/5 text-white/40 border border-white/5'}`}
+                className={`w-12 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'configuracao' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80'}`}
               >
                 <motion.div
                   animate={{ rotate: teamsTab === 'configuracao' ? [0, 180] : 0 }}
-                  transition={{ duration: 0.5 }}
+                  transition={{
+                    duration: 1.5,
+                    repeat: teamsTab === 'configuracao' ? Infinity : 0,
+                    repeatDelay: 8.5,
+                    ease: "easeInOut"
+                  }}
+                  className={teamsTab === 'configuracao' ? 'text-[#1E3D2F]' : 'text-white/40'}
                 >
-                  <PiGearBold size={20} />
+                  <PiGearBold size={18} />
                 </motion.div>
               </button>
               <button 
-                onClick={() => navigateTeamsTab('proximos')}
-                className={`flex-1 h-10 flex items-center justify-center rounded-2xl transition-all ${teamsTab === 'proximos' ? 'bg-brand-primary text-black' : 'bg-white/5 text-white/40 border border-white/5'}`}
+                onClick={() => navigateTeamsTab('chegada')}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'chegada' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Próximos</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'chegada' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Chegada</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('historico')}
-                className={`flex-1 h-10 flex items-center justify-center rounded-2xl transition-all ${teamsTab === 'historico' ? 'bg-brand-primary text-black' : 'bg-white/5 text-white/40 border border-white/5'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'historico' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Partida</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'historico' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Confrontos</span>
               </button>
               <button 
-                onClick={() => navigateTeamsTab('chegada')}
-                className={`flex-1 h-10 flex items-center justify-center rounded-2xl transition-all ${teamsTab === 'chegada' ? 'bg-brand-primary text-black' : 'bg-white/5 text-white/40 border border-white/5'}`}
+                onClick={() => navigateTeamsTab('proximos')}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'proximos' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Confirmar</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'proximos' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Próximos</span>
               </button>
             </div>
           </div>
@@ -4332,21 +4400,21 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             <div className="flex gap-2">
               <button
                 onClick={() => setRankingTab('geral')}
-                className={`flex-1 h-10 flex items-center justify-center rounded-2xl transition-all ${rankingTab === 'geral' ? 'bg-brand-primary text-black' : 'bg-white/5 text-white/40 border border-white/5'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'geral' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Geral</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'geral' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Geral</span>
               </button>
               <button
                 onClick={() => setRankingTab('artilharia')}
-                className={`flex-1 h-10 flex items-center justify-center rounded-2xl transition-all ${rankingTab === 'artilharia' ? 'bg-brand-primary text-black' : 'bg-white/5 text-white/40 border border-white/5'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'artilharia' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Artilharia</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'artilharia' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Artilharia</span>
               </button>
               <button
                 onClick={() => setRankingTab('assistencias')}
-                className={`flex-1 h-10 flex items-center justify-center rounded-2xl transition-all ${rankingTab === 'assistencias' ? 'bg-brand-primary text-black' : 'bg-white/5 text-white/40 border border-white/5'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'assistencias' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Assistências</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'assistencias' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Assistências</span>
               </button>
             </div>
           </div>
@@ -4358,15 +4426,15 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             <div className="flex gap-2">
               <button 
                 onClick={() => setFinanceSubScreen('mensalidade')} 
-                className={`flex-1 h-10 flex items-center justify-center rounded-2xl transition-all ${financeSubScreen === 'mensalidade' ? 'bg-brand-primary text-black' : 'bg-white/5 text-white/40 border border-white/5'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all border ${financeSubScreen === 'mensalidade' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Mensalidade</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'mensalidade' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Mensalidade</span>
               </button>
               <button 
                 onClick={() => setFinanceSubScreen('balanco')} 
-                className={`flex-1 h-10 flex items-center justify-center rounded-2xl transition-all ${financeSubScreen === 'balanco' ? 'bg-brand-primary text-black' : 'bg-white/5 text-white/40 border border-white/5'}`}
+                className={`flex-1 py-2 flex items-center justify-center rounded-[20px] transition-all border ${financeSubScreen === 'balanco' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
-                <span className="text-[10px] font-black uppercase tracking-[0.2em]">Balanço</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'balanco' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Balanço</span>
               </button>
             </div>
           </div>
@@ -4376,7 +4444,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       {/* Main Content */}
       <main 
         ref={mainRef} 
-        className={`flex-1 overflow-y-auto pb-24 ${isPrintMode ? 'p-0 pb-0 bg-white text-black' : ''}`}
+        className={`flex-1 overflow-y-auto pb-24 ${isPrintMode ? 'p-0 pb-0 bg-white text-black' : (['players', 'teams', 'ranking', 'finance'].includes(currentScreen) ? 'bg-white' : '')}`}
       >
         <AnimatePresence mode="wait">
           {currentScreen === 'players' && !isPrintMode && (
@@ -4434,7 +4502,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     <input 
                       type="text" 
                       placeholder="Nome do jogador..."
-                      className="flex-1 p-4 bg-white/5 border border-white/5 rounded-2xl outline-none focus:ring-1 focus:ring-brand-primary/30 text-brand-text font-bold text-sm placeholder:text-white/20"
+                      className={`flex-1 px-4 py-2 rounded-2xl border-none outline-none transition-all bg-gradient-to-br from-zinc-200 to-zinc-300 text-[#1E3D2F] placeholder-[#1E3D2F]/50 focus:ring-2 focus:ring-[#1E3D2F]/20 text-sm`}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           addPlayer(e.currentTarget.value);
@@ -4444,7 +4512,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     />
                     <button 
                       onClick={handleImportContacts}
-                      className="w-12 h-12 bg-white/5 text-white/60 rounded-2xl border border-white/10 hover:bg-white/10 transition-all active:scale-95 flex items-center justify-center shrink-0"
+                      className="p-2 bg-gradient-to-br from-zinc-200 to-zinc-300 text-[#1E3D2F] rounded-2xl shadow-sm hover:from-zinc-300 hover:to-zinc-400 transition-all active:scale-95 flex items-center justify-center aspect-square border-none"
                       title="Importar dos Contatos"
                     >
                       <Contact size={18} />
@@ -4455,9 +4523,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         addPlayer(input.value);
                         input.value = '';
                       }}
-                      className="w-12 h-12 bg-brand-primary text-black rounded-2xl shadow-[0_5px_15px_rgba(193,255,114,0.3)] hover:opacity-90 transition-all active:scale-95 flex items-center justify-center shrink-0"
+                      className="p-2 bg-brand-gradient text-[#1E3D2F] rounded-2xl shadow hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square"
                     >
-                      <Plus size={20} strokeWidth={3} />
+                      <Plus size={18} />
                     </button>
                   </div>
                 </div>
@@ -4465,7 +4533,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <div className="relative">
                   <textarea 
                     placeholder=" "
-                    className="w-full h-24 px-4 py-3 rounded-2xl border border-white/5 outline-none transition-all text-sm resize-none bg-white/5 text-brand-text focus:ring-1 focus:ring-brand-primary/30 peer"
+                    className={`w-full h-24 px-4 py-3 rounded-2xl border-none outline-none transition-all text-sm resize-none bg-gradient-to-br from-zinc-200 to-zinc-300 text-[#1E3D2F] focus:ring-2 focus:ring-[#1E3D2F]/20 peer`}
                     onChange={(e) => {
                       if (e.target.value.includes('\n') || e.target.value.length > 10) {
                         addBulkPlayers(e.target.value);
@@ -4474,26 +4542,28 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     }}
                   />
                   <div className="absolute top-3 left-4 pointer-events-none transition-all peer-focus:hidden peer-[:not(:placeholder-shown)]:hidden">
-                    <span className="text-xs font-medium text-white/20 font-display">
+                    <span className="text-sm font-medium text-[#1E3D2F]/50">
                       Cole aqui sua lista do WhatsApp (ex: 1. João, 2. Maria...)
                     </span>
                   </div>
                   <div 
-                    className="absolute right-4 bottom-3 text-brand-primary/40 cursor-pointer hover:text-brand-primary/60 transition-colors flex items-center gap-1"
+                    className={`absolute right-4 bottom-3 text-[#1E3D2F]/40 cursor-pointer hover:text-[#1E3D2F] transition-colors flex items-center gap-1`}
                     onClick={async () => {
                       try {
                         const text = await navigator.clipboard.readText();
                         if (text) {
                           addBulkPlayers(text);
-                          setToast({ message: "Lista colada!", type: 'success' });
+                          setToast({ message: "Lista colada com sucesso!", type: 'success' });
+                          setTimeout(() => setToast(null), 2000);
                         }
                       } catch (err) {
-                        setToast({ message: "Sem permissão para colar.", type: 'warning' });
+                        setToast({ message: "Permissão de área de transferência negada.", type: 'warning' });
+                        setTimeout(() => setToast(null), 3000);
                       }
                     }}
                   >
                     <ClipboardPaste size={14} />
-                    <span className="text-[10px] font-black uppercase tracking-widest font-display">Colar Lista</span>
+                    <span className="text-[10px] font-bold uppercase">Caixa Inteligente</span>
                   </div>
                 </div>
               </section>
@@ -4503,33 +4573,33 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   setCurrentScreen('org-pro');
                   setOrgProTab('painel');
                 }}
-                className="w-full p-5 glass-card border-brand-primary/10 flex items-center justify-between text-left group hover:scale-[1.02] transition-all active:scale-95"
+                className="w-full p-4 bg-gradient-to-br from-zinc-200 to-zinc-300 rounded-2xl shadow-lg flex items-center justify-between text-left group hover:from-zinc-300 hover:to-zinc-400 transition-all active:scale-95 border border-[#1E3D2F]/10"
               >
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-brand-primary/10 border border-brand-primary/20 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <span className="text-brand-primary"><GiCrown size={24} /></span>
+                  <div className="w-12 h-12 bg-[#1E3D2F]/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner border border-[#1E3D2F]/20">
+                    <GiCrown size={24} color="#1E3D2F" />
                   </div>
                   <div>
-                    <h3 className="font-bold uppercase tracking-widest text-xs text-white">Organização Pro</h3>
-                    <p className="text-[9px] text-white/40 uppercase tracking-widest mt-1 font-black">Gerenciador de Acesso</p>
+                    <h3 className="font-black uppercase tracking-widest text-sm text-[#1E3D2F]">Organização Pro</h3>
+                    <p className="text-[10px] text-[#1E3D2F]/70 uppercase tracking-widest mt-1 font-bold">Painel de Controle e Acesso</p>
                   </div>
                 </div>
-                <ChevronRight size={18} className="text-white/20 group-hover:text-brand-primary transition-colors" />
+                <ChevronRight size={20} className="text-[#1E3D2F]/50 group-hover:text-[#1E3D2F] transition-colors" />
               </button>
 
-              <section className="glass-card-sm overflow-hidden py-2">
+              <section className="rounded-2xl overflow-hidden bg-[#1E3D2F]/90 backdrop-blur-xl border border-white/10 shadow-2xl relative">
                 {visiblePlayers.length === 0 ? (
-                  <div className="text-center py-12 opacity-30 text-white text-xs normal-case flex flex-col items-center justify-center gap-2">
-                    <GiLaurelsTrophy size={48} />
-                    <span className="font-display">Nenhum jogador ainda</span>
+                  <div className="text-center py-12 opacity-50 text-white/50 text-xs normal-case flex flex-col items-center justify-center gap-2">
+                    <span className="opacity-30 text-white"><GiLaurelsTrophy size={48} /></span>
+                    <span>Nenhum jogador adicionado ainda.</span>
                   </div>
                 ) : (
-                  <div className="divide-y divide-white/5 px-2">
+                  <div className="divide-y divide-white/5">
                     {visiblePlayers.map((player) => (
                       <motion.div 
                         layout
                         key={`player-list-${player.id}`}
-                        className="flex items-center justify-between p-3 transition-all cursor-pointer hover:bg-white/5 rounded-xl group"
+                        className={`flex items-center justify-between p-4 transition-all cursor-pointer hover:bg-white/5 active:bg-white/10 bg-transparent`}
                         onClick={() => {
                           if (editingPlayerId !== player.id) {
                             setPlayerManagementModal(player);
@@ -4537,18 +4607,18 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         }}
                       >
                         <div className="flex items-center gap-3 flex-1">
-                          <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-white/5 text-white/40 border border-white/5 overflow-hidden ring-1 ring-white/10 group-hover:ring-brand-primary/20 transition-all">
+                          <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-white/10 text-white/80 border border-white/10 overflow-hidden">
                             {player.photo ? (
                               <img src={player.photo} alt={player.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                             ) : (
-                              <PiUserCirclePlus size={20} />
+                              <IoPersonOutline size={16} />
                             )}
                           </div>
                           {editingPlayerId === player.id ? (
                             <input 
                               autoFocus
                               defaultValue={player.name}
-                              className="flex-1 bg-white/10 border-b border-brand-primary outline-none text-sm font-bold py-1 px-2 rounded-t-lg text-white"
+                              className={`flex-1 bg-white/10 border-b border-[#B7D96C] outline-none text-sm font-medium py-1 px-2 rounded-t-sm text-white`}
                               onClick={(e) => e.stopPropagation()}
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') updatePlayerName(player.id, e.currentTarget.value);
@@ -4559,15 +4629,15 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           ) : (
                             <div className="flex flex-col gap-0.5 flex-1 min-w-0">
                               <div className="flex items-center gap-2">
-                                <span className="text-sm font-bold truncate text-left text-white group-hover:text-brand-primary transition-colors">{player.name}</span>
-                                {orgProData[player.id] && <div className="shrink-0"><span className="text-brand-primary"><GiCrown size={14} /></span></div>}
+                                <span className="text-xs font-bold truncate text-left leading-none text-white">{player.name}</span>
+                                {orgProData[player.id] && <div className="shrink-0"><GiCrown size={16} color="#B7D96C" /></div>}
                               </div>
                               <div className="flex gap-0.5">
                                 {[1, 2, 3, 4, 5].map((star) => (
                                   <Star 
                                     key={`star-m-${player.id}-${star}`}
-                                    size={10} 
-                                    className={`${(player.stars || 3) >= star ? 'fill-brand-primary text-brand-primary' : 'text-white/5'}`} 
+                                    size={8} 
+                                    className={`${(player.stars || 3) >= star ? 'fill-[#B7D96C] text-[#B7D96C]' : 'text-white/10'}`} 
                                   />
                                 ))}
                               </div>
@@ -4575,8 +4645,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           )}
                         </div>
                         {editingPlayerId !== player.id && (
-                          <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 text-brand-primary transition-all pr-2">
-                            <Plus size={16} />
+                          <div className="flex items-center gap-1 opacity-20 text-white">
+                            <ChevronRight size={16} />
                           </div>
                         )}
                       </motion.div>
@@ -4590,13 +4660,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   {!showClearConfirm ? (
                     <button 
                       onClick={() => setShowClearConfirm(true)}
-                      className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-red-500/10 text-red-500 rounded-2xl border border-red-500/20 hover:bg-red-500/20 transition-all active:scale-95 text-[10px] font-black uppercase tracking-widest mb-12"
+                      className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-orange-900/20 text-orange-600 rounded-2xl border border-orange-600/30 hover:bg-orange-900/30 transition-all active:scale-95 text-[10px] font-black uppercase tracking-widest glass-3d"
                     >
-                      <Trash2 size={16} />
-                      Zerar todos os jogadores
+                      <Trash2 size={14} className="text-orange-600" />
+                      Apagar todos os jogadores
                     </button>
                   ) : (
-                    <div className="flex flex-col sm:flex-row items-center gap-2 w-full mb-12">
+                    <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto animate-in fade-in zoom-in duration-200">
                       <button 
                         onClick={() => {
                           setPlayers([]);
@@ -4729,9 +4799,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   >
                                     <div className="flex items-center gap-2">
                                       <div className="w-5 h-5 rounded-md shadow-sm border border-black/5" style={{ backgroundColor: fixedColors.teamB || TEAM_COLORS[1] }} />
-                                      <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">Escudo B</span>
+                                      <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Escudo B</span>
                                     </div>
-                                    <PenLine size={14} className="text-white/40" />
+                                    <PenLine size={14} className="text-zinc-400" />
                                   </button>
                                 </div>
                               </div>
@@ -5002,8 +5072,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     <span className={p.isAvailable ? 'text-black' : 'text-white/40' + ' flex items-center shrink-0'}><IoPersonOutline size={16} /></span>
                                   )}
                                 </div>
-                                <div className="flex-1 text-left flex flex-col gap-0.5 min-w-0">
-                                  <div className={`text-xs font-black capitalize tracking-widest leading-none truncate ${p.isAvailable ? 'text-black' : 'text-white/60'}`}>{p.name.toLowerCase()}</div>
+                                <div className="flex-1 text-left flex flex-col gap-0.5">
+                                  <div className={`text-xs font-black capitalize tracking-widest leading-none ${p.isAvailable ? 'text-black' : 'text-white/60'}`}>{p.name.toLowerCase()}</div>
                                   <div className="flex gap-0.5">
                                     {[1, 2, 3, 4, 5].map((star) => (
                                       <Star 
@@ -5015,50 +5085,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   </div>
                                   <div className={`text-[8px] font-bold uppercase ${p.isAvailable ? 'text-black/60' : 'text-white/30'}`}>{p.isAvailable ? 'Confirmado' : 'Aguardando'}</div>
                                 </div>
-                                {p.isAvailable && (
-                                  <div className="flex flex-col gap-1 items-center justify-center mr-1">
-                                    <button 
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        const availablePlayers = players.filter(pl => pl.isAvailable).sort((a, b) => (a.arrivedAt || 0) - (b.arrivedAt || 0));
-                                        const idx = availablePlayers.findIndex(pl => pl.id === p.id);
-                                        if (idx > 0) {
-                                          const prevPlayer = availablePlayers[idx - 1];
-                                          const currentArrivedAt = p.arrivedAt || 0;
-                                          const prevArrivedAt = prevPlayer.arrivedAt || 0;
-                                          setPlayers(prev => prev.map(pl => {
-                                            if (pl.id === p.id) return { ...pl, arrivedAt: prevArrivedAt };
-                                            if (pl.id === prevPlayer.id) return { ...pl, arrivedAt: currentArrivedAt };
-                                            return pl;
-                                          }));
-                                        }
-                                      }}
-                                      className="p-1 rounded-md hover:bg-black/10 transition-colors"
-                                    >
-                                      <ChevronUp size={12} className={p.isAvailable ? 'text-black' : 'text-white'} />
-                                    </button>
-                                    <button 
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        const availablePlayers = players.filter(pl => pl.isAvailable).sort((a, b) => (a.arrivedAt || 0) - (b.arrivedAt || 0));
-                                        const idx = availablePlayers.findIndex(pl => pl.id === p.id);
-                                        if (idx < availablePlayers.length - 1) {
-                                          const nextPlayer = availablePlayers[idx + 1];
-                                          const currentArrivedAt = p.arrivedAt || 0;
-                                          const nextArrivedAt = nextPlayer.arrivedAt || 0;
-                                          setPlayers(prev => prev.map(pl => {
-                                            if (pl.id === p.id) return { ...pl, arrivedAt: nextArrivedAt };
-                                            if (pl.id === nextPlayer.id) return { ...pl, arrivedAt: currentArrivedAt };
-                                            return pl;
-                                          }));
-                                        }
-                                      }}
-                                      className="p-1 rounded-md hover:bg-black/10 transition-colors"
-                                    >
-                                      <ChevronDown size={12} className={p.isAvailable ? 'text-black' : 'text-white'} />
-                                    </button>
-                                  </div>
-                                )}
                                 {p.isAvailable && <CheckCircle2 size={16} className="text-black" />}
                               </button>
                             ))
@@ -5617,89 +5643,73 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         )}
                       </div>
                     ) : teamsTab === 'proximos' ? (
-                      <div className="space-y-6 relative overflow-hidden glass-card p-6 min-h-[60vh]">
+                      <div className="space-y-6 relative overflow-hidden bg-[#1E3D2F]/95 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-white/10 ring-1 ring-white/5">
                         <div className="flex justify-between items-center relative z-10">
                           <button 
                             onClick={() => setTeamsTab('configuracao')}
-                            className="btn-icon w-11 h-11"
+                            className="p-2 rounded-xl transition-all active:scale-90 hover:bg-white/10 bg-white/5 backdrop-blur shadow-sm border border-white/10"
                             title="Configurações"
                           >
                             <motion.div
-                              animate={{ rotate: teamsTab === 'configuracao' ? [0, 180] : 0 }}
-                              transition={{ duration: 0.5 }}
+                              animate={{ rotate: [0, 180, 0] }}
+                              transition={{
+                                duration: 1.5,
+                                repeat: Infinity,
+                                repeatDelay: 8.5,
+                                ease: "easeInOut"
+                              }}
                             >
-                              <Settings size={20} className={teamsTab === 'configuracao' ? 'text-brand-primary' : 'text-white/60'} />
+                              <Settings size={20} className="text-brand-primary" />
                             </motion.div>
                           </button>
-                              <div className="flex gap-2">
-                                <button
-                                  onClick={() => {
-                                    if (match.isActive && !match.hasEnded) return;
-                                    if (teams.length === 0) return;
-                                    if (confirm("Deseja realmente limpar toda a fila de times?")) {
-                                      setTeams([]);
-                                      setMatch(prev => ({ ...prev, teamAIndex: -1, teamBIndex: -1 }));
-                                      setToast({ message: "Fila limpa com sucesso!", type: 'info' });
-                                    }
-                                  }}
-                                  disabled={match.isActive && !match.hasEnded}
-                                  className="flex items-center justify-center w-11 h-11 bg-red-500/10 text-red-500 rounded-xl border border-red-500/20 hover:bg-red-500/20 disabled:opacity-20 transition-all font-bold text-[10px] uppercase tracking-widest"
-                                  title="Limpar Fila"
-                                >
-                                  <Trash2 size={18} />
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    if (match.isActive && !match.hasEnded) return;
-                                    if (teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2) return;
-                                    
-                                    setShowLogoAnimation(true);
-                                    setTimeout(() => {
-                                      randomizeTeams(match.config.playersPerTeam);
-                                      setShowLogoAnimation(false);
-                                      sounds.playDrawFinished();
-                                      setToast({ message: "Times sorteados!", type: 'success' });
-                                    }, 3000);
-                                  }}
-                                  disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
-                                  className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl border border-white/10 text-brand-primary hover:bg-white/10 disabled:opacity-20 transition-all font-bold text-[10px] uppercase tracking-widest"
-                                >
-                                  <ImSpinner9 size={18} />
-                                  Sortear
-                                </button>
-                                <button
-                                  onClick={() => {
-                                    if (match.isActive && !match.hasEnded) {
-                                      setShowStartMatchConfirm(true);
-                                      return;
-                                    }
+                            <div className="flex gap-2">
+                              <button
+                                onClick={() => {
+                                  if (match.isActive && !match.hasEnded) return;
+                                  if (teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2) return;
+                                  
+                                  setShowLogoAnimation(true);
+                                  setTimeout(() => {
+                                  randomizeTeams(match.config.playersPerTeam);
+                                    setShowLogoAnimation(false);
+                                    sounds.playDrawFinished();
+                                    setToast({ message: "Times sorteados com sucesso!", type: 'success' });
+                                  }, 3000);
+                                }}
+                                disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
+                                className="p-2 rounded-xl transition-all active:scale-90 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5 bg-white/5 backdrop-blur shadow-sm border border-white/10"
+                              >
+                                <span className="text-brand-primary"><ImSpinner9 size={20} /></span>
+                                <span className="text-[10px] font-black uppercase tracking-widest text-brand-primary">Sortear</span>
+                              </button>
+                              <button
+                                onClick={() => {
+                                  if (match.isActive && !match.hasEnded) {
+                                    setShowStartMatchConfirm(true);
+                                    return;
+                                  }
 
-                                    if (match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
-                                        (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
-                                        teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) {
-                                      startNextMatch(match.teamAIndex, match.teamBIndex);
-                                    }
-                                  }}
-                                  disabled={!((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
-                                    (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
-                                     teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)))}
-                                  className="flex items-center gap-2 px-4 py-2 bg-brand-primary rounded-xl text-black shadow-[0_5px_15px_rgba(193,255,114,0.3)] hover:opacity-90 disabled:opacity-20 transition-all font-black text-[10px] uppercase tracking-widest"
-                                >
-                                  <IoFootballOutline size={18} />
-                                  Iniciar
-                                </button>
-                              </div>
+                                  if (match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
+                                      (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
+                                      teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) {
+                                    startNextMatch(match.teamAIndex, match.teamBIndex);
+                                  }
+                                }}
+                                disabled={!((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
+                                  (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
+                                   teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)))}
+                                className="p-2 rounded-xl transition-all active:scale-90 hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5 bg-white/5 backdrop-blur shadow-sm border border-white/10"
+                              >
+                                <span className="text-brand-primary"><IoFootballOutline size={20} /></span>
+                                <span className="text-[10px] font-black uppercase tracking-widest text-brand-primary">Iniciar</span>
+                              </button>
+                            </div>
                         </div>
                         <div className="space-y-4">
                           {teams.length < 2 ? (
-                            <div className="py-20 text-center border border-dashed border-white/5 rounded-3xl flex flex-col items-center gap-6">
-                              <div className="w-20 h-20 bg-white/5 rounded-full flex items-center justify-center opacity-30">
-                                <GiSoccerBall size={48} />
-                              </div>
-                              <div className="space-y-1">
-                                <p className="text-sm text-white/50 font-display">Sem times na fila</p>
-                                <p className="text-[10px] text-white/30 uppercase tracking-widest font-black">Crie times para começar</p>
-                              </div>
+                            <div className="py-12 text-center border border-dashed border-white/10 rounded-2xl flex flex-col items-center gap-4">
+                              <span className="opacity-30 text-white"><GiSoccerBall size={48} /></span>
+                              <p className="text-base text-white/50 normal-case">Crie mais times para ver a fila</p>
                               <button
                                 onClick={() => {
                                   if (players.filter(p => sessionPlayerIds.includes(p.id)).length > 0) {
@@ -5714,7 +5724,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     }
                                   }
                                 }}
-                                className="btn-primary"
+                                className="px-5 py-2.5 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded-xl shadow-xl hover:opacity-90 transition-all active:scale-95"
                               >
                                 {players.filter(p => sessionPlayerIds.includes(p.id)).length > 0 
                                   ? 'Confirmar Chegada'
@@ -5756,8 +5766,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 }
 
                                 return (
-                                  <motion.div 
-                                    layout
+                                  <div 
                                     key={`team-card-${t.id}-${tIdx}`} 
                                     id={`team-card-${tIdx}`}
                                     onClick={(e) => {
@@ -5766,130 +5775,187 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                         e.stopPropagation();
                                         const availableSlots = match.config.playersPerTeam - t.playerIds.length;
                                         if (availableSlots <= 0) {
-                                          setToast({ message: "Time completo.", type: 'warning' });
+                                          setToast({ message: "Este time já está completo.", type: 'warning' });
                                           return;
                                         }
                                         const playersToMove = movingPlayers.playerIds.slice(0, availableSlots);
                                         setTeams(prev => {
                                           const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
                                           const sourceTeam = newTeams.find(team => team.id === movingPlayers.teamId);
-                                          if (sourceTeam) sourceTeam.playerIds = sourceTeam.playerIds.filter(id => !playersToMove.includes(id));
+                                          if (sourceTeam) {
+                                            sourceTeam.playerIds = sourceTeam.playerIds.filter(id => !playersToMove.includes(id));
+                                          }
                                           const targetTeam = newTeams.find(team => team.id === t.id);
-                                          if (targetTeam) targetTeam.playerIds.push(...playersToMove);
+                                          if (targetTeam) {
+                                            targetTeam.playerIds.push(...playersToMove);
+                                          }
                                           return newTeams.filter(team => team.playerIds.length > 0);
                                         });
                                         if (playersToMove.length < movingPlayers.playerIds.length) {
                                           setMovingPlayers(prev => prev ? { ...prev, playerIds: prev.playerIds.slice(availableSlots) } : null);
+                                          setToast({ message: `Apenas ${availableSlots} jogador(es) movido(s). Selecione outro time para o(s) restante(s).`, type: 'info' });
                                         } else {
                                           setMovingPlayers(null);
                                           setIsSelectingDestination(false);
+                                          setToast({ message: "Jogador(es) movido(s) com sucesso!", type: 'success' });
                                         }
                                         return;
                                       }
                                     }}
-                                    className={`p-5 rounded-[2rem] border transition-all relative overflow-hidden group ${
+                                    className={`p-4 rounded-[1.5rem] border-2 transition-all relative min-h-[110px] flex flex-col justify-center overflow-hidden ${
+                                      (movingPlayers && isSelectingDestination) ? 'cursor-pointer hover:opacity-90' : 'cursor-default'
+                                    } ${
                                       isCurrent 
-                                        ? 'bg-white/10 border-brand-primary/30 shadow-[0_10px_30px_rgba(193,255,114,0.1)] ring-1 ring-brand-primary/10'
-                                        : 'bg-white/5 border-white/5 opacity-60 grayscale scale-[0.98]'
-                                    } ${isFlashing ? 'animate-pulse bg-brand-primary/10 !border-brand-primary' : ''}`}
+                                        ? 'shadow-2xl z-10 border-brand-primary/50 bg-white/10 backdrop-blur-md ring-4 ring-brand-primary/10'
+                                        : 'shadow-sm opacity-60 border-white/5 bg-white/5'
+                                    } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-brand-primary/10 !border-brand-primary' : ''}`}
+                                    style={{
+                                      borderColor: (movingPlayers?.teamId === t.id || (swappingPlayerId && t.playerIds.includes(swappingPlayerId))) ? 'var(--brand-primary)' : undefined
+                                    }}
                                   >
-                                    {/* Team Color Accent */}
+                                    {/* Team Color Top Bar */}
                                     <div 
-                                      className="absolute right-0 top-0 bottom-0 w-1" 
+                                      className="absolute top-0 left-0 right-0 h-1.5 z-10" 
                                       style={{ backgroundColor: teamColor }}
                                     />
                                     
-                                    <div className="flex justify-between items-start mb-6">
-                                      <div className="flex items-center gap-4 flex-1">
-                                        <div 
-                                          className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all cursor-pointer shadow-lg border-2 ${isCurrent ? 'border-brand-primary/40 bg-brand-primary/10' : 'border-white/10 bg-white/5'}`}
-                                          style={{ color: teamColor }}
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            if (match.isActive && !match.hasEnded && !match.isPaused) {
-                                              setToast({ message: "Não é possível trocar durante a partida.", type: 'warning' });
-                                              return;
-                                            }
-                                            
-                                            if (isCurrent) {
-                                              if (match.teamAIndex === tIdx) setMatch(prev => ({ ...prev, teamAIndex: -1 }));
-                                              else if (match.teamBIndex === tIdx) setMatch(prev => ({ ...prev, teamBIndex: -1 }));
-                                            } else {
-                                              if (match.teamAIndex === -1) {
-                                                setMatch(prev => ({ ...prev, teamAIndex: tIdx }));
-                                              } else if (match.teamBIndex === -1) {
-                                                const teamA = teams[match.teamAIndex];
-                                                const teamB = teams[tIdx];
-                                                if (teamA && teamB && teamA.playerIds.some(id => teamB.playerIds.includes(id))) {
-                                                  setToast({ message: "Jogadores em comum.", type: 'warning' });
-                                                  return;
-                                                }
-                                                setMatch(prev => ({ ...prev, teamBIndex: tIdx }));
-                                              }
-                                            }
-                                            setMatch(prev => ({ ...prev, scoreA: 0, scoreB: 0, timeRemaining: prev.config.duration * 60, isActive: false, isPaused: true, hasEnded: false, events: [] }));
-                                          }}
-                                        >
-                                          {(() => {
-                                            const Icon = TEAM_ICONS[t.iconIdx ?? (tIdx % TEAM_ICONS.length)];
-                                            return <Icon size={32} />;
-                                          })()}
-                                        </div>
-                                        <div className="flex flex-col min-w-0">
-                                          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 mb-0.5">Time {String.fromCharCode(65 + tIdx)}</span>
-                                          <input 
-                                            value={t.name}
-                                            placeholder="NOME DO TIME"
-                                            onClick={(e) => e.stopPropagation()}
-                                            onChange={(e) => {
-                                              const newTeams = [...teams];
-                                              newTeams[tIdx].name = e.target.value;
-                                              setTeams(newTeams);
-                                            }}
-                                            className="text-lg font-display font-bold text-white tracking-tight bg-transparent border-none outline-none w-full placeholder:text-white/20"
-                                          />
-                                        </div>
-                                      </div>
-                                      
-                                      <div className="flex items-center gap-1.5 shrink-0 z-20">
-                                        {/* Queue Controls */}
-                                        <div className="flex flex-col gap-1 mr-2 invisible group-hover:visible transition-all">
-                                          <button 
-                                            onClick={(e) => { e.stopPropagation(); moveTeam(tIdx, 'up'); }}
-                                            disabled={tIdx === 0}
-                                            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/40 hover:text-white disabled:opacity-0 transition-all"
-                                          >
-                                            <ChevronUp size={14} />
-                                          </button>
-                                          <button 
-                                            onClick={(e) => { e.stopPropagation(); moveTeam(tIdx, 'down'); }}
-                                            disabled={tIdx === teams.length - 1}
-                                            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/40 hover:text-white disabled:opacity-0 transition-all"
-                                          >
-                                            <ChevronDown size={14} />
-                                          </button>
-                                        </div>
-
-                                        {t.lastMatchStatus && (
-                                          <div className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest shadow-sm mr-2 ${
-                                            t.lastMatchStatus === 'Vencedor' ? 'bg-brand-primary text-black' :
-                                            t.lastMatchStatus === 'Empate' ? 'bg-white/20 text-white' :
-                                            'bg-red-500/20 text-red-400'
-                                          }`}>
-                                            {t.lastMatchStatus === 'Vencedor' ? 'Venceu' : t.lastMatchStatus}
+                                    {/* Status Top Right (Winner/Loser/Draw) */}
+                                    {t.lastMatchStatus && (
+                                      <div className="absolute top-3 right-3 flex items-center gap-1.5 z-20">
+                                        {t.lastMatchStatus === 'Vencedor' ? (
+                                          <div className="px-2 py-0.5 rounded-full bg-[#39FF14] text-black text-[8px] font-black uppercase tracking-widest shadow-sm flex items-center gap-1">
+                                            <Trophy size={8} fill="currentColor" />
+                                            Venceu
+                                          </div>
+                                        ) : t.lastMatchStatus === 'Empate' ? (
+                                          <div className="px-2 py-0.5 rounded-full bg-zinc-500 text-white text-[8px] font-black uppercase tracking-widest shadow-sm">
+                                            Empate
+                                          </div>
+                                        ) : t.lastMatchStatus === 'Derrota' ? (
+                                          <div className="px-2 py-0.5 rounded-full bg-red-500 text-white text-[8px] font-black uppercase tracking-widest shadow-sm">
+                                            Perdeu
+                                          </div>
+                                        ) : (
+                                          <div className="px-2 py-0.5 rounded-full bg-sky-500 text-white text-[8px] font-black uppercase tracking-widest shadow-sm animate-bounce">
+                                            Subiu
                                           </div>
                                         )}
-
-                                        <button 
-                                          onClick={(e) => { 
-                                            e.stopPropagation(); 
-                                            if (confirm(`Deseja remover o ${t.name}?`)) removeTeam(tIdx); 
-                                          }}
-                                          className="p-2.5 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all scale-75 group-hover:scale-100 opacity-0 group-hover:opacity-100"
-                                        >
-                                          <Trash2 size={16} />
-                                        </button>
                                       </div>
+                                    )}
+
+                                    {/* Jersey Icon Top Left */}
+                                    <div 
+                                      className={`absolute top-2 left-2 w-10 h-10 rounded-xl border flex items-center justify-center transition-all cursor-pointer z-50 ${isCurrent ? 'border-brand-primary/50 bg-white/20 shadow-[0_0_8px_rgba(183,217,108,0.3)]' : 'border-white/10 bg-white/5 hover:bg-white/10 hover:border-white/20 hover:scale-110'}`}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (match.isActive && !match.hasEnded && !match.isPaused) {
+                                          setToast({ message: "Não é possível trocar times durante uma partida ativa.", type: 'warning' });
+                                          return;
+                                        }
+                                        
+                                        if (isCurrent) {
+                                          if (t.lastMatchStatus === 'Empate') {
+                                            setTeams(prevTeams => {
+                                                const newTeams = prevTeams.map(team => ({
+                                                  ...team,
+                                                  lastMatchStatus: team.lastMatchStatus === 'Empate' ? undefined : team.lastMatchStatus
+                                                }));
+                                                const deselectedTeam = newTeams.splice(tIdx, 1)[0];
+                                                newTeams.push(deselectedTeam);
+                                                
+                                                setMatch(prevMatch => {
+                                                  let newTeamAIndex = prevMatch.teamAIndex;
+                                                  let newTeamBIndex = prevMatch.teamBIndex;
+                                                  
+                                                  if (prevMatch.teamAIndex === tIdx) {
+                                                    newTeamAIndex = -1;
+                                                  } else if (prevMatch.teamAIndex > tIdx) {
+                                                    newTeamAIndex--;
+                                                  }
+                                                  
+                                                  if (prevMatch.teamBIndex === tIdx) {
+                                                    newTeamBIndex = -1;
+                                                  } else if (prevMatch.teamBIndex > tIdx) {
+                                                    newTeamBIndex--;
+                                                  }
+                                                  
+                                                  return {
+                                                    ...prevMatch,
+                                                    teamAIndex: newTeamAIndex,
+                                                    teamBIndex: newTeamBIndex
+                                                  };
+                                                });
+                                                return newTeams;
+                                            });
+                                          } else {
+                                            // Deselect normally
+                                            if (match.teamAIndex === tIdx) setMatch(prev => ({ ...prev, teamAIndex: -1 }));
+                                            else if (match.teamBIndex === tIdx) setMatch(prev => ({ ...prev, teamBIndex: -1 }));
+                                          }
+                                        } else {
+                                          // Select
+                                          if (match.teamAIndex === -1) {
+                                            setMatch(prev => ({ ...prev, teamAIndex: tIdx }));
+                                          } else if (match.teamBIndex === -1) {
+                                            const teamA = teams[match.teamAIndex];
+                                            const teamB = teams[tIdx];
+                                            if (teamA && teamB && teamA.playerIds.some(id => teamB.playerIds.includes(id))) {
+                                              setToast({ message: "Estes times possuem jogadores em comum.", type: 'warning' });
+                                              return;
+                                            }
+                                            setMatch(prev => ({ ...prev, teamBIndex: tIdx }));
+                                          } else {
+                                            // Both selected, prioritize keeping the winner and removing the loser
+                                            const isTeamALoser = lastMatchResult && teams[match.teamAIndex]?.id === lastMatchResult.loserId;
+                                            const isTeamBLoser = lastMatchResult && teams[match.teamBIndex]?.id === lastMatchResult.loserId;
+                                            
+                                            let teamToReplaceIndex = match.teamAIndex;
+                                            if (isTeamBLoser) {
+                                              teamToReplaceIndex = match.teamBIndex;
+                                            } else if (isTeamALoser) {
+                                              teamToReplaceIndex = match.teamAIndex;
+                                            }
+                                            
+                                            setTeams(prevTeams => {
+                                              const newTeams = [...prevTeams];
+                                              const replacedTeam = newTeams[teamToReplaceIndex];
+                                              const selectedTeam = newTeams[tIdx];
+                                              
+                                              const filteredTeams = newTeams.filter((_, i) => i !== teamToReplaceIndex && i !== tIdx);
+                                              filteredTeams.splice(teamToReplaceIndex, 0, selectedTeam);
+                                              filteredTeams.push(replacedTeam);
+                                              
+                                              const otherTeamIndex = teamToReplaceIndex === match.teamAIndex ? match.teamBIndex : match.teamAIndex;
+                                              const otherTeam = prevTeams[otherTeamIndex];
+                                              
+                                              const newSelectedTeamIndex = filteredTeams.findIndex(team => team.id === selectedTeam.id);
+                                              const newOtherTeamIndex = filteredTeams.findIndex(team => team.id === otherTeam.id);
+                                              
+                                              setMatch(prev => ({
+                                                ...prev,
+                                                teamAIndex: teamToReplaceIndex === match.teamAIndex ? newSelectedTeamIndex : newOtherTeamIndex,
+                                                teamBIndex: teamToReplaceIndex === match.teamBIndex ? newSelectedTeamIndex : newOtherTeamIndex,
+                                                scoreA: 0, scoreB: 0, timeRemaining: prev.config.duration * 60, isActive: false, isPaused: true, hasEnded: false, events: []
+                                              }));
+                                              
+                                              return filteredTeams;
+                                            });
+                                          }
+                                        }
+                                        // Reset match state when changing teams (handled inside setTeams for the replacement case)
+                                        if (match.teamAIndex === -1 || match.teamBIndex === -1 || isCurrent) {
+                                          setMatch(prev => ({ ...prev, scoreA: 0, scoreB: 0, timeRemaining: prev.config.duration * 60, isActive: false, isPaused: true, hasEnded: false, events: [] }));
+                                        }
+                                      }}
+                                    >
+                                      {(() => {
+                                        const Icon = TEAM_ICONS[t.iconIdx ?? (tIdx % TEAM_ICONS.length)];
+                                        return (
+                                          <div className="relative w-10 h-10 flex items-center justify-center transition-transform hover:scale-110 drop-shadow-lg" style={{ color: teamColor }}>
+                                            <Icon size={36} />
+                                          </div>
+                                        );
+                                      })()}
                                     </div>
 
                                     {/* Status Top Right removed */}
@@ -6050,29 +6116,34 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                     };
                                                     window.addEventListener('pointerup', onPointerUp);
                                                   }}
-                                                  className={`w-full flex items-center justify-start gap-3 p-3 rounded-2xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed border ${
+                                                  className={`w-full flex items-center justify-start gap-2 p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
                                                     swappingPlayerId === pid || movingPlayers?.playerIds.includes(pid)
-                                                      ? 'bg-brand-primary text-black border-brand-primary shadow-[0_5px_15px_rgba(193,255,114,0.3)] scale-105 z-10'
+                                                      ? 'bg-brand-primary/20 text-white border-2 border-brand-primary shadow-lg scale-105'
                                                       : (swappingPlayerId && swappingPlayerId !== pid) || fillingVacancyForTeam !== null || ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < match.config.playersPerTeam))
-                                                        ? 'bg-brand-primary/10 text-brand-primary border-brand-primary/30 animate-pulse shadow-sm shadow-brand-primary/10'
-                                                        : 'text-white border-white/5 bg-white/5 hover:bg-white/10 active:bg-white/20'
+                                                        ? 'bg-brand-primary/10 text-brand-primary animate-pulse shadow-sm shadow-brand-primary/10'
+                                                        : `text-white border group bg-white/5 shadow-sm ${isCurrent ? 'border-brand-primary/50 ring-1 ring-brand-primary/30' : 'border-white/5 hover:border-white/10'}`
                                                   }`}
+                                                  style={{ 
+                                                    backgroundColor: !((swappingPlayerId && swappingPlayerId !== pid) || 
+                                                                       fillingVacancyForTeam !== null || 
+                                                                       (movingPlayers?.playerIds.includes(pid)) ||
+                                                                       ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < match.config.playersPerTeam)) ||
+                                                                       swappingPlayerId === pid)
+                                                      ? undefined 
+                                                      : undefined 
+                                                  }}
                                                 >
-                                                <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 border overflow-hidden ${
-                                                  swappingPlayerId === pid || movingPlayers?.playerIds.includes(pid) ? 'bg-black/20 border-black/20 text-black' : 'bg-white/10 border-white/10 text-white/40'
-                                                }`}>
-                                                  {p.photo ? <img src={p.photo} className="w-full h-full object-cover" referrerPolicy="no-referrer" /> : <IoPersonOutline size={14} />}
+                                                <div className="w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-white/10 flex items-center justify-center shrink-0 border border-white/10 overflow-hidden">
+                                                  {p.photo ? <img src={p.photo} className="w-full h-full object-cover" referrerPolicy="no-referrer" /> : <span className="text-white flex items-center shrink-0"><IoPersonOutline size={12} /></span>}
                                                 </div>
-                                                <div className="flex flex-col items-start gap-0.5 overflow-hidden">
-                                                  <span className={`text-sm font-bold truncate leading-none ${swappingPlayerId === pid || movingPlayers?.playerIds.includes(pid) ? 'text-black' : 'text-white'}`}>{p.name}</span>
+                                                <div className="flex flex-col items-start gap-1 overflow-hidden">
+                                                  <span className="text-sm sm:text-[13px] truncate text-white capitalize leading-none">{p.name.toLowerCase()}</span>
                                                   <div className="flex gap-0.5">
-                                                    {[1, 2, 3].map((star) => (
+                                                    {[1, 2, 3, 4, 5].map((star) => (
                                                       <Star 
                                                         key={`star-q-${p.id}-${star}`}
                                                         size={8} 
-                                                        className={`${(p.stars || 3) >= star 
-                                                          ? (swappingPlayerId === pid || movingPlayers?.playerIds.includes(pid) ? 'fill-black text-black' : 'fill-brand-primary text-brand-primary') 
-                                                          : (swappingPlayerId === pid || movingPlayers?.playerIds.includes(pid) ? 'text-black/20' : 'text-white/10')}`} 
+                                                        className={`${(p.stars || 3) >= star ? 'fill-[#B7D96C] text-[#B7D96C]' : 'text-white/20'}`} 
                                                       />
                                                     ))}
                                                   </div>
@@ -6082,7 +6153,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                         })}
                                       </div>
                                     </div>
-                                  </motion.div>
+                                  </div>
                                 );
                               })}
                             </div>
@@ -6311,28 +6382,49 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.1}
+              onDragEnd={(_, info) => {
+                if (info.offset.x > 100) {
+                  setCurrentScreen('teams');
+                  setTeamsTab(match.isActive ? 'historico' : 'proximos');
+                }
+              }}
               className="p-6 space-y-6 pb-24"
             >
-              <div 
-                className="glass-card p-6 overflow-hidden min-h-[60vh]"
+              <motion.div 
+                className={`bg-[#1E3D2F]/90 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-white/10 ring-1 ring-white/5 overflow-hidden`}
+                drag="x"
+                dragConstraints={{ left: 0, right: 0 }}
+                onDragEnd={(event, info) => {
+                  if (Math.abs(info.offset.x) > 50) {
+                    const tabs = ['geral', 'artilharia', 'assistencias'];
+                    const currentIndex = tabs.indexOf(rankingTab);
+                    if (info.offset.x > 0 && currentIndex > 0) setRankingTab(tabs[currentIndex - 1]);
+                    else if (info.offset.x < 0 && currentIndex < tabs.length - 1) setRankingTab(tabs[currentIndex + 1]);
+                  }
+                }}
               >
-                <div className="flex items-center justify-between pb-4 border-b border-white/5 mb-6 px-2">
+                <div className="flex items-center justify-between pb-2 border-b border-dashed border-white/10 mb-4 px-2">
                   <div className="flex items-center gap-1">
                     <button 
                       onClick={() => setIsPrintMode(true)} 
-                      className="flex items-center gap-2 p-2 px-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors"
+                      className="flex items-center gap-2 p-2 px-3 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-colors shadow-sm"
                     >
-                      <span className="text-brand-primary"><GiPodiumWinner size={20} /></span>
-                      <span className="text-[10px] font-black uppercase tracking-widest text-brand-primary">Ranking</span>
+                      <span className="text-[#B7D96C]">
+                        <GiPodiumWinner size={20} />
+                      </span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-[#B7D96C]">Ranking</span>
                     </button>
                   </div>
-                  <div className="flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-white/30 font-display">
-                    <div className="w-12 text-center flex items-center justify-center gap-1">Gols</div>
-                    <div className="w-12 text-center flex items-center justify-center gap-1">Ass</div>
+                  <div className="text-white/30 text-xs font-bold font-mono tracking-tighter uppercase"></div>
+                  <div className={`flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-white/50 ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
+                    <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'assistencias' ? '' : 'opacity-0'}`}><IoFootballOutline size={14} /> Gols</div>
+                    <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'artilharia' ? '' : 'opacity-0'}`}><GiRunningShoe size={14} /> Ass</div>
                   </div>
                 </div>
 
-                <div className="space-y-2">
                 {[...players]
                   .sort((a, b) => {
                     if (rankingTab === 'geral') return (b.goals + b.assists) - (a.goals + a.assists);
@@ -6341,53 +6433,50 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     return 0;
                   })
                   .map((player, index) => (
-                  <motion.div 
-                    layout
+                  <div 
                     key={`ranking-player-${player.id}`}
-                    className="flex items-center p-3 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 transition-all group"
+                    className={`flex items-center py-3 px-2 transition-colors rounded-xl ${index !== 0 ? `border-t border-white/5` : ''}`}
                   >
-                    <div className="w-8 text-xs font-black text-white/20 text-center shrink-0 font-display">
+                    <div className="w-8 text-sm font-black text-white/40 text-center shrink-0">
                       {index + 1}
                     </div>
                     
-                    <div className="ml-2 mr-4 shrink-0">
-                      <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-white/5 border border-white/10 ring-1 ring-white/10">
+                    <div className="relative ml-2 mr-4 shrink-0">
+                      <div className={`w-10 h-10 rounded-3xl overflow-hidden flex items-center justify-center bg-white/10 border border-white/10 relative z-10`}>
                         {player.photo ? (
                           <img src={player.photo} alt={player.name} className="w-full h-full object-cover" />
                         ) : (
-                          <span className="text-white/20"><PiUserCirclePlus size={20} /></span>
+                          <span className="text-white/40 flex items-center shrink-0"><IoPersonOutline size={20} /></span>
                         )}
                       </div>
                     </div>
 
-                    <div className="flex-1 min-w-0 mr-4 space-y-0.5">
-                      <span className="text-sm font-bold text-white group-hover:text-brand-primary transition-colors truncate block">{player.name}</span>
+                    <div className="flex-1 text-xs text-white/90 tracking-tight truncate mr-4 font-normal capitalize flex flex-col gap-0.5">
+                      <span className="leading-none">{player.name.toLowerCase()}</span>
                       <div className="flex gap-0.5">
-                        {[1, 2, 3].map((star) => (
+                        {[1, 2, 3, 4, 5].map((star) => (
                           <Star 
                             key={`star-rank-${player.id}-${star}`}
                             size={8} 
-                            className={`${(player.stars || 3) >= star ? 'fill-brand-primary text-brand-primary' : 'text-white/10'}`} 
+                            className={`${(player.stars || 3) >= star ? 'fill-[#B7D96C] text-[#B7D96C]' : 'text-white/10'}`} 
                           />
                         ))}
                       </div>
                     </div>
 
-                    <div className="flex gap-4 sm:gap-8 shrink-0">
-                      <div className="w-12 text-center text-sm font-black text-brand-primary">{player.goals}</div>
-                      <div className="w-12 text-center text-sm font-black text-white/60">{player.assists}</div>
+                    <div className={`flex gap-4 sm:gap-8 shrink-0 ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
+                      <div className={`w-12 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'assistencias' ? 'opacity-0' : ''}`}>{player.goals}</div>
+                      <div className={`w-12 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'artilharia' ? 'opacity-0' : ''}`}>{player.assists}</div>
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
-                </div>
-
                 {players.length === 0 && (
-                  <div className="py-20 text-center opacity-30 text-white flex flex-col items-center justify-center gap-4">
-                    <GiCrown size={48} />
-                    <span className="text-xs uppercase tracking-widest font-black">Nenhum registro</span>
+                  <div className="p-8 text-center text-brand-text-secondary text-sm font-bold normal-case flex flex-col items-center justify-center gap-2">
+                    <span className="opacity-50 text-brand-text-secondary"><GiCrown size={48} /></span>
+                    <span>Nenhum jogador registrado ainda.</span>
                   </div>
                 )}
-              </div>
+              </motion.div>
             </motion.div>
           )}
 
@@ -6398,27 +6487,16 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="space-y-6 pb-24"
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.1}
+              onDragEnd={(_, info) => {
+                if (info.offset.x > 100) {
+                  setCurrentScreen('ranking');
+                }
+              }}
+              className={`space-y-4 ${isPrintMode ? 'space-y-0' : ''}`}
             >
-              {!isPrintMode && (
-                <div className="px-6 flex justify-center sticky top-0 z-50 pt-2">
-                  <div className="flex bg-white/5 backdrop-blur-xl p-1 rounded-[2rem] border border-white/5 shadow-2xl">
-                    <button 
-                      onClick={() => setFinanceSubScreen('balanco')}
-                      className={`px-6 py-2.5 rounded-[1.8rem] text-[10px] font-black uppercase tracking-widest transition-all ${financeSubScreen === 'balanco' ? 'bg-brand-primary text-black shadow-lg shadow-brand-primary/20' : 'text-white/40 hover:text-white/60'}`}
-                    >
-                      Balanço
-                    </button>
-                    <button 
-                      onClick={() => setFinanceSubScreen('mensalidade')}
-                      className={`px-6 py-2.5 rounded-[1.8rem] text-[10px] font-black uppercase tracking-widest transition-all ${financeSubScreen === 'mensalidade' ? 'bg-brand-primary text-black shadow-lg shadow-brand-primary/20' : 'text-white/40 hover:text-white/60'}`}
-                    >
-                      Mensalidades
-                    </button>
-                  </div>
-                </div>
-              )}
-
               {financeSubScreen === 'balanco' && (() => {
                 const totalRevenue = (payments || []).reduce((acc: number, p: PaymentRecord) => acc + Object.values(p?.months || {}).reduce((mAcc: number, mVal) => mAcc + Number(mVal || 0), 0), 0) + manualAdjustment;
                 const totalExpenses = (expenses || []).reduce((acc: number, e) => acc + (e.amount || 0), 0);
@@ -6431,16 +6509,16 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     onDragEnd={(event, info) => {
                       if (info.offset.x < -50) setFinanceSubScreen('mensalidade');
                     }}
-                    className={`space-y-6 ${isPrintMode ? 'bg-white min-h-screen text-black p-4 pb-12' : ''}`}
+                    className={`space-y-6 ${isPrintMode ? 'bg-white min-h-screen text-black p-4 pb-12 font-mono' : 'font-mono'}`}
                   >
                     {!isPrintMode && (
                       <div className="flex justify-end px-4">
                         <button 
                           onClick={() => setIsPrintMode(true)}
-                          className="btn-icon w-10 h-10"
+                          className="text-zinc-400 p-2 hover:bg-zinc-800 rounded-full transition-colors"
                           title="Gerar Print"
                         >
-                          <Eye size={18} />
+                          <Eye size={20} />
                         </button>
                       </div>
                     )}
@@ -6478,12 +6556,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               setIsEditingTotal(true);
                             }
                           }}
-                          className={`p-6 transition-all ${isPrintMode ? 'bg-white border-zinc-300 border text-black' : 'glass-card border-white/10 cursor-pointer hover:scale-[1.02] active:scale-[0.98]'}`}>
-                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'text-white/30'}`}>Arrecadação</p>
+                          className={`p-5 transition-all ${isPrintMode ? 'bg-white border-zinc-300 border rounded-none text-black' : 'rounded-[2rem] border bg-[#1E3D2F]/70 backdrop-blur-md border-white/10 cursor-pointer hover:bg-[#1E3D2F]/90 shadow-xl overflow-hidden relative'}`}>
+                          {!isPrintMode && <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />}
+                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'text-white/40'}`}>Arrecadação</p>
                           <div className="flex items-baseline gap-2 mb-4">
                             {isEditingTotal ? (
-                              <div className="flex items-center gap-2 w-full">
-                                <span className="text-sm font-bold opacity-30">R$</span>
+                              <div className="flex items-center gap-1 w-full">
+                                <span className="text-sm font-bold opacity-60">R$</span>
                                 <input 
                                   autoFocus
                                   type="number"
@@ -6499,12 +6578,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       setIsEditingTotal(false);
                                     }
                                   }}
-                                  className="w-full bg-white/5 border-b border-brand-primary outline-none text-2xl font-bold text-white p-1 rounded-t-lg"
+                                  className={`w-full bg-transparent border-b-2 border-brand-primary outline-none text-2xl font-black text-zinc-900`}
                                 />
                               </div>
                             ) : (
                               <div className="flex flex-col">
-                                <p className={`text-3xl font-display font-black tracking-tight ${isPrintMode ? 'text-black' : 'text-brand-primary'}`}>
+                                <p className={`text-3xl font-black ${isPrintMode ? 'text-black' : 'text-zinc-900'}`}>
                                   R$ {totalRevenue},00
                                 </p>
                                 {!isPrintMode && (
@@ -6513,22 +6592,22 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       setTotalInput(manualAdjustment.toString());
                                       setIsEditingTotal(true);
                                     }}
-                                    className="text-[8px] font-black uppercase tracking-[0.2em] text-white/20 flex items-center gap-1 hover:text-brand-primary transition-colors mt-2"
+                                    className="text-[8px] font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-1 hover:underline w-fit mt-1"
                                   >
-                                    <Plus size={10} /> Ajuste Manual
+                                    Ajustar Manual (R$ {manualAdjustment})
                                   </button>
                                 )}
                               </div>
                             )}
                           </div>
                           <div className="space-y-1.5">
-                            <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                            <div className="h-2 w-full bg-zinc-200/50 rounded-full overflow-hidden">
                               <div 
-                                className="h-full bg-brand-primary transition-all duration-1000 shadow-[0_0_8px_rgba(193,255,114,0.5)]" 
+                                className="h-full bg-emerald-500 transition-all duration-1000" 
                                 style={{ width: `${Math.min(100, (totalRevenue / Math.max(1, (players.length * (monthlyFee || 30)))) * 100)}%` }}
                               />
                             </div>
-                            <div className="flex justify-between text-[8px] font-black uppercase tracking-widest text-white/20">
+                            <div className="flex justify-between text-[8px] font-bold uppercase tracking-wider opacity-60">
                               <span>Meta {players.length} jogs</span>
                               <span>R$ {players.length * (monthlyFee || 30)},00</span>
                             </div>
@@ -6536,47 +6615,47 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
 
                         {/* Despesas Card */}
-                        <div className={`p-6 transition-all ${isPrintMode ? 'bg-white border-zinc-300 border' : 'glass-card-sm bg-red-500/5 border-red-500/10'}`}>
-                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'text-red-400/40'}`}>Despesas</p>
-                          <p className={`text-3xl font-display font-black tracking-tight ${isPrintMode ? 'text-black' : 'text-red-400'}`}>R$ {totalExpenses},00</p>
+                        <div className={`p-5 transition-all ${isPrintMode ? 'bg-white border-zinc-300 border rounded-none' : 'rounded-[2rem] border bg-gradient-to-br from-red-50 to-red-100 border-red-200'}`}>
+                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'text-zinc-500'}`}>Despesas</p>
+                          <p className={`text-3xl font-black mb-4 ${isPrintMode ? 'text-black' : 'text-red-700'}`}>R$ {totalExpenses},00</p>
                           <div className="space-y-1.5">
-                            <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                            <div className="h-2 w-full bg-zinc-200/50 rounded-full overflow-hidden">
                               <div 
                                 className="h-full bg-red-500 transition-all duration-1000" 
                                 style={{ width: `${Math.min(100, (totalExpenses / Math.max(1, totalRevenue)) * 100)}%` }}
                               />
                             </div>
-                            <div className="flex justify-between text-[8px] font-black uppercase tracking-widest text-red-400/20">
-                              <span>Saída</span>
+                            <div className="flex justify-between text-[8px] font-bold uppercase tracking-wider opacity-60">
+                              <span>Gasto Total</span>
                               <span>{totalRevenue > 0 ? Math.round((totalExpenses / totalRevenue) * 100) : 0}%</span>
                             </div>
                           </div>
                         </div>
 
                         {/* Saldo Líquido Card */}
-                        <div className={`p-6 transition-all ${
-                          isPrintMode ? 'bg-white border-zinc-300 border' :
+                        <div className={`p-5 transition-all ${
+                          isPrintMode ? 'bg-white border-zinc-300 border rounded-none' :
                           netBalance >= 0
-                            ? 'glass-card shadow-[0_10px_30px_rgba(193,255,114,0.05)] border-brand-primary/10'
-                            : 'glass-card-sm bg-red-500/5 border-red-500/10'
+                            ? 'rounded-[2rem] border bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200'
+                            : 'rounded-[2rem] border bg-gradient-to-br from-red-50 to-red-100 border-red-200'
                         }`}>
-                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'opacity-30'}`}>Saldo Atual</p>
-                          <p className={`text-3xl font-display font-black tracking-tight ${
+                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'opacity-60'}`}>Saldo em Caixa</p>
+                          <p className={`text-3xl font-black mb-4 ${
                             isPrintMode ? 'text-black' :
                             netBalance >= 0
-                              ? 'text-white'
-                              : 'text-red-400'
+                              ? 'text-emerald-700'
+                              : 'text-red-700'
                           }`}>R$ {netBalance},00</p>
 
                           <div className="space-y-1.5">
-                            <div className="h-1 w-full bg-white/5 rounded-full overflow-hidden">
+                            <div className="h-2 w-full bg-zinc-200/50 rounded-full overflow-hidden">
                               <div 
-                                className={`h-full transition-all duration-1000 ${netBalance >= 0 ? 'bg-white/40' : 'bg-red-500'}`} 
+                                className={`h-full transition-all duration-1000 ${netBalance >= 0 ? 'bg-emerald-500' : 'bg-red-500'}`} 
                                 style={{ width: `${Math.min(100, (Math.abs(netBalance) / Math.max(1, totalRevenue)) * 100)}%` }}
                               />
                             </div>
-                            <div className="flex justify-between text-[8px] font-black uppercase tracking-widest opacity-20">
-                              <span>{netBalance >= 0 ? 'Líquido' : 'Déficit'}</span>
+                            <div className="flex justify-between text-[8px] font-bold uppercase tracking-wider opacity-60">
+                              <span>{netBalance >= 0 ? 'Lucro' : 'Prejuízo'}</span>
                               <span>{totalRevenue > 0 ? Math.round((Math.abs(netBalance) / totalRevenue) * 100) : 0}%</span>
                             </div>
                           </div>
@@ -6600,22 +6679,22 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             </button>
                           )}
                         </div>
-                        <div className={`space-y-2 ${isPrintMode ? 'divide-y divide-zinc-100' : ''}`}>
+                        <div className={`divide-y ${isPrintMode ? 'divide-zinc-200' : 'divide-zinc-100'}`}>
                           {(expenses || []).length === 0 ? (
-                            <div className={`text-center text-white/20 text-[10px] font-black uppercase tracking-widest ${isPrintMode ? 'p-2' : 'py-12'}`}>Nenhuma despesa</div>
+                            <div className={`text-center text-zinc-400 text-xs uppercase tracking-widest ${isPrintMode ? 'p-2' : 'p-8'}`}>Nenhuma despesa registrada</div>
                           ) : (
                             [...(expenses || [])].sort((a, b) => b.date - a.date).map((expense) => (
-                              <div key={`expense-${expense.id}`} className={`flex items-center justify-between group rounded-2xl transition-all ${isPrintMode ? 'p-2 bg-white' : 'p-4 bg-white/5 border border-white/5 hover:bg-white/10'}`}>
+                              <div key={`expense-${expense.id}`} className={`flex items-center justify-between group ${isPrintMode ? 'p-2 bg-white' : 'p-4'}`}>
                                 <div>
-                                  <p className={`text-sm font-bold tracking-tight ${isPrintMode ? 'text-zinc-800' : 'text-white'}`}>{expense.name}</p>
-                                  <p className={`text-[8px] font-black uppercase tracking-[0.2em] ${isPrintMode ? 'text-zinc-400' : 'text-white/20'}`}>{new Date(expense.date).toLocaleDateString('pt-BR')}</p>
+                                  <p className={`text-xs uppercase tracking-tight ${isPrintMode ? 'font-mono text-zinc-800' : 'text-sm font-black text-zinc-800 font-mono'}`}>{expense.name}</p>
+                                  <p className={`text-[8px] font-bold uppercase tracking-widest ${isPrintMode ? 'text-zinc-500' : 'text-zinc-400'}`}>{new Date(expense.date).toLocaleDateString('pt-BR')}</p>
                                 </div>
                                 <div className="flex items-center gap-4">
-                                  <p className={`text-lg font-display font-black tracking-tighter ${isPrintMode ? 'text-zinc-900' : 'text-red-400'}`}>- R$ {expense.amount}</p>
+                                  <p className={`text-xs font-bold ${isPrintMode ? 'text-zinc-900' : 'text-md font-black text-red-600'}`}>R$ {expense.amount},00</p>
                                   {!isPrintMode && (
                                     <button 
                                       onClick={() => setExpenses(prev => prev.filter(e => e.id !== expense.id))}
-                                      className="w-8 h-8 rounded-full border border-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all opacity-0 group-hover:opacity-100 flex items-center justify-center shrink-0"
+                                      className="p-1.5 text-zinc-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
                                     >
                                       <Trash2 size={14} />
                                     </button>
@@ -6735,10 +6814,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   )}
 
                   {!isPrintMode && (
-                    <div className="grid grid-cols-2 gap-3 px-4">
-                      <div className="p-4 glass-card border-white/10 flex items-center justify-between">
-                        <div className="space-y-1">
-                          <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em]">Mensalidade</span>
+                    <div className="grid grid-cols-2 gap-2 px-4">
+                      <div className="p-3 shadow-sm rounded-3xl bg-gradient-to-br from-zinc-100 to-zinc-200 border border-zinc-300 flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Mensalidade</span>
                           {isEditingFee ? (
                             <input 
                               autoFocus
@@ -6757,7 +6836,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   setIsEditingFee(false);
                                 }
                               }}
-                              className="w-20 bg-white/5 border border-brand-primary/50 text-white font-bold text-sm rounded-lg px-2 py-1 outline-none"
+                              className="w-16 bg-white border border-zinc-300 text-zinc-900 font-black text-sm rounded px-1 outline-none"
                             />
                           ) : (
                             <div 
@@ -6765,35 +6844,35 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 setTempFee(monthlyFee.toString());
                                 setIsEditingFee(true);
                               }}
-                              className="text-lg font-display font-black text-white cursor-pointer hover:text-brand-primary transition-colors"
+                              className="text-base font-black text-zinc-900 cursor-pointer hover:opacity-80 transition-opacity"
                             >
                               R$ {monthlyFee},00
                             </div>
                           )}
                         </div>
                         <div className="flex flex-col gap-1">
-                          <button onClick={() => setMonthlyFee(prev => prev + 1)} className="btn-icon w-8 h-8"><Plus size={12} /></button>
-                          <button onClick={() => setMonthlyFee(prev => Math.max(0, prev - 1))} className="btn-icon w-8 h-8"><Minus size={12} /></button>
+                          <button onClick={() => setMonthlyFee(prev => prev + 1)} className="p-1 bg-white text-zinc-800 border border-zinc-300 rounded shadow-sm hover:bg-zinc-50 transition-all"><Plus size={10} /></button>
+                          <button onClick={() => setMonthlyFee(prev => Math.max(0, prev - 1))} className="p-1 bg-white text-zinc-800 border border-zinc-300 rounded shadow-sm hover:bg-zinc-50 transition-all"><Minus size={10} /></button>
                         </div>
                       </div>
 
-                      <div className="p-4 glass-card border-white/10 flex items-center justify-between">
-                        <div className="space-y-1">
-                          <span className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em]">Ano Base</span>
+                      <div className="p-3 shadow-sm rounded-3xl bg-gradient-to-br from-zinc-100 to-zinc-200 border border-zinc-300 flex items-center justify-between">
+                        <div className="space-y-0.5">
+                          <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Ano Selecionado</span>
                           <select 
                             value={selectedYear}
                             onChange={(e) => setSelectedYear(parseInt(e.target.value))}
-                            className="bg-transparent text-lg font-display font-black text-white outline-none cursor-pointer hover:text-brand-primary transition-colors"
+                            className="bg-transparent text-base font-black text-zinc-900 outline-none cursor-pointer"
                           >
                             {availableYears.map(y => (
-                              <option key={y} value={y} className="bg-[#121212] text-white">{y}</option>
+                              <option key={y} value={y} className="bg-white text-zinc-900">{y}</option>
                             ))}
                           </select>
                         </div>
                         <button 
                           onClick={addYear}
-                          className="btn-primary w-8 h-8 p-0"
-                          title="Novo Ano"
+                          className="w-7 h-7 rounded-lg bg-[#1E3D2F] text-white flex items-center justify-center hover:bg-[#2F5D4B] transition-all active:scale-90"
+                          title="Adicionar Novo Ano"
                         >
                           <Plus size={14} />
                         </button>
@@ -6813,75 +6892,82 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     </div>
                   )}
 
-                  <div className={`${isPrintMode ? 'bg-white' : 'glass-card border-white/5 p-4'}`}>
-                    <div className="overflow-x-auto custom-scrollbar">
-                      <table className="w-full text-[10px] border-collapse min-w-[800px]">
+                  <div className={`${isPrintMode ? 'overflow-visible' : 'overflow-x-auto -mx-4 px-4 pb-2 custom-scrollbar'}`}>
+                    <div className={`${isPrintMode ? 'w-full' : 'min-w-[800px]'}`}>
+                      <table className={`w-full border-collapse ${isPrintMode ? 'text-[10px]' : 'text-[9px]'}`}>
                         <thead>
-                          <tr className={`uppercase tracking-widest ${isPrintMode ? 'text-zinc-500' : 'text-white/40'}`}>
-                            <th className="p-3 text-left w-48 font-black uppercase tracking-[0.2em] sticky left-0 z-20 bg-[#121212]">Jogador</th>
+                          <tr className={`${isPrintMode ? 'bg-zinc-100 text-zinc-900' : 'bg-zinc-200 text-zinc-900'} font-black uppercase tracking-tighter`}>
+                            <th className={`p-1.5 text-left border ${isPrintMode ? 'border-zinc-300' : 'border-zinc-300 rounded-tl-xl sticky left-0 z-10 bg-zinc-200'}`}>Nome</th>
+                            <th className={`p-1.5 text-center border ${isPrintMode ? 'border-zinc-300' : 'border-zinc-300'}`} colSpan={12}>{selectedYear} (R$ {monthlyFee},00)</th>
+                            <th className={`p-1.5 text-center border ${isPrintMode ? 'border-zinc-300' : 'border-zinc-300 rounded-tr-xl'}`}>Dívida</th>
+                          </tr>
+                          <tr className={`${isPrintMode ? 'bg-zinc-50 text-zinc-700' : 'bg-zinc-100 text-zinc-800'} font-bold uppercase tracking-tighter`}>
+                            <th className={`border ${isPrintMode ? 'border-zinc-300' : 'border-zinc-300 sticky left-0 z-10 bg-zinc-100'}`}></th>
                             {MONTHS.map(month => (
-                              <th key={month} className="p-3 text-center w-16 font-black uppercase tracking-[0.2em]">{month.slice(0, 3)}</th>
+                              <th key={month} className={`p-0.5 border ${isPrintMode ? 'border-zinc-300' : 'border-zinc-300'}`}>{month}</th>
                             ))}
-                            <th className="p-3 text-center w-24 font-black uppercase tracking-[0.2em]">Pendente</th>
+                            <th className={`border ${isPrintMode ? 'border-zinc-300' : 'border-zinc-300'}`}></th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-white/[0.02]">
+                        <tbody className={`${isPrintMode ? 'bg-white text-black' : 'bg-white text-zinc-800'}`}>
                           {players.map((player, index) => {
                             const record = payments.find(p => p.playerId === player.id && p.year === selectedYear) || { playerId: player.id, year: selectedYear, months: {}, monthlyFee: monthlyFee };
                             
                             const totalDebt = 12 * monthlyFee;
-                            const paidMonthsCount = MONTHS.reduce((acc, month) => acc + (record?.months?.[month] ? 1 : 0), 0);
-                            const paidAmount = paidMonthsCount * monthlyFee;
-                            const remaining = totalDebt - paidAmount;
+                            const paidMonths = MONTHS.reduce((acc, month) => acc + (record?.months?.[month] ? monthlyFee : 0), 0);
+                            const remaining = totalDebt - paidMonths;
 
                             return (
-                              <tr key={`finance-row-${player.id}`} className="hover:bg-white/[0.02] transition-colors group">
-                                <td className="p-3 sticky left-0 z-20 bg-[#121212]">
-                                  <span className={`font-bold ${isPrintMode ? 'text-zinc-800' : 'text-white group-hover:text-brand-primary transition-colors'}`}>{player.name}</span>
+                              <tr key={`finance-row-${player.id}`} className={`${index % 2 === 0 ? (isPrintMode ? 'bg-zinc-50' : 'bg-zinc-50') : 'bg-white'} ${!isPrintMode ? 'hover:bg-emerald-50 transition-colors' : ''}`}>
+                                <td className={`p-1 border ${isPrintMode ? 'border-zinc-200' : 'border-zinc-200 font-bold sticky left-0 z-10 bg-inherit'}`}>
+                                  <span className="p-0.5 font-bold">{player.name}</span>
                                 </td>
                                 {MONTHS.map(month => {
                                   const isPaid = (record?.months?.[month] || 0) > 0;
                                   return (
-                                    <td key={`month-cell-${player.id}-${month}`} className="p-2 text-center">
-                                      <button 
-                                        onClick={() => togglePayment(player.id, month, monthlyFee)} 
-                                        className={`w-10 h-10 rounded-xl transition-all flex items-center justify-center mx-auto ${
-                                          isPaid 
-                                            ? 'bg-brand-primary text-black font-black shadow-[0_0_15px_rgba(193,255,114,0.15)] scale-100 hover:scale-105 active:scale-90' 
-                                            : 'bg-white/5 text-white/20 hover:bg-white/10 hover:text-white/40 font-bold'
-                                        }`}
-                                      >
-                                        {isPaid ? <Check size={14} strokeWidth={4} /> : <div className="w-1.5 h-1.5 rounded-full bg-current" />}
-                                      </button>
+                                    <td key={`month-cell-${player.id}-${month}`} className={`p-0.5 border border-zinc-200 text-center`}>
+                                      {isPrintMode ? (
+                                        <span className={`font-bold ${isPaid ? 'text-emerald-600' : 'text-red-400 opacity-30'}`}>
+                                          {isPaid ? 'OK' : '-'}
+                                        </span>
+                                      ) : (
+                                        <button 
+                                          onClick={() => togglePayment(player.id, month, monthlyFee)} 
+                                          className={`w-full h-full py-0.5 rounded transition-all ${isPaid ? 'bg-emerald-500 text-white font-black' : 'text-zinc-400 font-bold'}`}
+                                        >
+                                          {isPaid ? 'PAGO' : `R$ ${monthlyFee}`}
+                                        </button>
+                                      )}
                                     </td>
                                   );
                                 })}
-                                <td className="p-3 text-center">
-                                  <div className={`text-xs font-display font-black tracking-tighter ${remaining > 0 ? 'text-red-400' : 'text-brand-primary'}`}>
-                                    {remaining > 0 ? `R$ ${remaining}` : 'QUITADO'}
-                                  </div>
+                                <td className={`p-1 border border-zinc-200 text-center font-black ${remaining > 0 ? 'text-red-600' : 'text-emerald-700'}`}>
+                                  R$ {remaining}
                                 </td>
                               </tr>
                             );
                           })}
+                          {players.length === 0 && (
+                            <tr>
+                              <td colSpan={14} className="p-4 text-center text-zinc-400 italic normal-case">
+                                Nenhum jogador cadastrado.
+                              </td>
+                            </tr>
+                          )}
                         </tbody>
                       </table>
                     </div>
                   </div>
 
                   {!isPrintMode && (
-                    <div className="px-4">
-                      <div className="p-4 glass-card border-brand-primary/5 bg-brand-primary/5 flex items-start gap-4">
-                        <div className="w-8 h-8 rounded-full bg-brand-primary/10 flex items-center justify-center text-brand-primary shrink-0">
-                          <Info size={16} />
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-brand-primary">Configurações</p>
-                          <p className="text-[10px] text-white/40 leading-relaxed font-bold uppercase tracking-widest">
-                            Toque nos meses para marcar o pagamento. O valor da mensalidade e o ano base podem ser alterados nos cards acima.
-                          </p>
-                        </div>
+                    <div className="p-3 rounded-md bg-white/5 border border-white/10 space-y-1">
+                      <div className="flex items-center gap-1.5 text-brand-primary">
+                        <Info size={12} />
+                        <span className="text-[8px] font-bold uppercase tracking-widest">Dica</span>
                       </div>
+                      <p className="text-[8px] text-brand-text-secondary leading-relaxed">
+                        Clique no valor da mensalidade para editar. Use o botão "+" para criar um novo ano de controle.
+                      </p>
                     </div>
                   )}
                 </motion.div>
@@ -9716,8 +9802,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         />
 
         {/* Bottom Navigation */}
-        <div className={`fixed bottom-8 left-0 right-0 z-[100] transition-transform duration-500 ease-in-out px-6 flex justify-center ${isNavVisible ? 'translate-y-0' : 'translate-y-40'}`}>
-          <nav className="w-full max-w-sm glass-card border-brand-primary/10 p-2 flex items-center justify-between shadow-2xl relative overflow-visible">
+        <div className={`fixed bottom-0 left-0 right-0 z-[100] transition-transform duration-500 ease-in-out pb-4 sm:pb-6 px-4 ${isNavVisible ? 'translate-y-0' : 'translate-y-28'}`}>
+          <nav className="mx-auto max-w-[400px] bg-[#1E3D2F]/95 backdrop-blur-2xl border border-white/10 p-1.5 flex items-center justify-between shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-2xl">
             <button 
               onClick={() => {
                 const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
@@ -9726,14 +9812,25 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
                 setCurrentScreen('players');
               }}
-              className={`flex-1 flex flex-col items-center justify-center py-3 transition-all duration-300 rounded-2xl ${
+              className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-[12px] relative overflow-hidden ${
                 currentScreen === 'players' 
-                  ? 'text-brand-primary' 
-                  : 'text-white/40 hover:text-white/60'
+                  ? 'text-brand-primary bg-white/5 shadow-inner' 
+                  : 'text-white/50 hover:text-white/80 hover:bg-white/5'
               }`}
             >
-              <PiUserCirclePlus size={26} />
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] mt-1">Geral</span>
+              {currentScreen === 'players' && (
+                <motion.div layoutId="nav-glow" className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full" />
+              )}
+              {currentScreen === 'players' ? (
+                <div className="mb-1 transition-transform duration-300 -translate-y-0.5">
+                  <PiUserCirclePlusThin size={28} />
+                </div>
+              ) : (
+                <div className="mb-1 transition-transform duration-300">
+                  <PiUserCirclePlusThin size={24} />
+                </div>
+              )}
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'players' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Gerenciar</span>
             </button>
             <button 
               onClick={() => {
@@ -9742,35 +9839,29 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 const currentIndex = screens.indexOf(currentScreen);
                 setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
                 setCurrentScreen('teams');
+                // Open 'Confrontos' if match is active, otherwise 'Próximos'
                 setTeamsTab(match.isActive ? 'historico' : 'proximos');
               }}
-              className={`flex-1 flex flex-col items-center justify-center py-3 transition-all duration-300 rounded-2xl ${
+              className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-[12px] relative overflow-hidden ${
                 currentScreen === 'teams' 
-                  ? 'text-brand-primary' 
-                  : 'text-white/40 hover:text-white/60'
+                  ? 'text-brand-primary bg-white/5 shadow-inner' 
+                  : 'text-white/50 hover:text-white/80 hover:bg-white/5'
               }`}
             >
-              <GiSoccerBall size={26} />
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] mt-1">Jogos</span>
+              {currentScreen === 'teams' && (
+                <motion.div layoutId="nav-glow" className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full" />
+              )}
+              {currentScreen === 'teams' ? (
+                <div className="mb-1 transition-transform duration-300 -translate-y-0.5 text-brand-primary">
+                  <GiSoccerField size={26} />
+                </div>
+              ) : (
+                <div className="mb-1 transition-transform duration-300">
+                  <GiSoccerField size={22} />
+                </div>
+              )}
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'teams' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Partida</span>
             </button>
-            
-            {/* New Central Focus Button */}
-            <div className="px-2">
-              <button 
-                onClick={() => {
-                  if (currentScreen === 'players') {
-                    // Quick add player?
-                    setShowQuickAddPlayerModal(0);
-                  } else if (currentScreen === 'teams') {
-                    // Start match?
-                  }
-                }}
-                className="w-14 h-14 bg-brand-primary text-black rounded-full flex items-center justify-center shadow-[0_5px_20px_rgba(193,255,114,0.4)] active:scale-90 transition-transform -translate-y-8 border-4 border-brand-bg"
-              >
-                <Plus size={28} strokeWidth={3} />
-              </button>
-            </div>
-
             <button 
               onClick={() => {
                 const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
@@ -9779,31 +9870,25 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
                 setCurrentScreen('ranking');
               }}
-              className={`flex-1 flex flex-col items-center justify-center py-3 transition-all duration-300 rounded-2xl ${
+              className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-[12px] relative overflow-hidden ${
                 currentScreen === 'ranking' 
-                  ? 'text-brand-primary' 
-                  : 'text-white/40 hover:text-white/60'
+                  ? 'text-brand-primary bg-white/5 shadow-inner' 
+                  : 'text-white/50 hover:text-white/80 hover:bg-white/5'
               }`}
             >
-              <PiTrophyBold size={26} />
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] mt-1">Rank</span>
-            </button>
-            <button 
-              onClick={() => {
-                const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
-                const targetIndex = screens.indexOf('finance');
-                const currentIndex = screens.indexOf(currentScreen);
-                setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
-                setCurrentScreen('finance');
-              }}
-              className={`flex-1 flex flex-col items-center justify-center py-3 transition-all duration-300 rounded-2xl ${
-                currentScreen === 'finance' 
-                  ? 'text-brand-primary' 
-                  : 'text-white/40 hover:text-white/60'
-              }`}
-            >
-              <PiCurrencyDollar size={26} />
-              <span className="text-[9px] font-black uppercase tracking-[0.2em] mt-1">Caixa</span>
+              {currentScreen === 'ranking' && (
+                <motion.div layoutId="nav-glow" className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full" />
+              )}
+              {currentScreen === 'ranking' ? (
+                <div className="mb-1 transition-transform duration-300 -translate-y-0.5">
+                  <GiTrophy size={26} />
+                </div>
+              ) : (
+                <div className="mb-1 transition-transform duration-300">
+                  <GiTrophy size={22} />
+                </div>
+              )}
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'ranking' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Ranking</span>
             </button>
           </nav>
         </div>
