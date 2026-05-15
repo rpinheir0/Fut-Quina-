@@ -5069,7 +5069,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 }}
                                 className={`flex items-center gap-3 p-3 rounded-[1.5rem] border transition-all active:scale-[0.98] ${
                                   p.isAvailable 
-                                    ? 'bg-[#00FF00] border-[#00FF00] text-black shadow-lg shadow-[#00FF00]/10' 
+                                    ? 'bg-[#83A8FF] border-[#83A8FF] text-black shadow-lg shadow-[#83A8FF]/10' 
                                     : 'bg-black/5 border-black/5 text-black/50 opacity-100 hover:bg-black/10'
                                 }`}
                               >
