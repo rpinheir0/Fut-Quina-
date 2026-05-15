@@ -2218,7 +2218,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [showResetStatsConfirm, setShowResetStatsConfirm] = useState(false);
   const [showGoalAnimation, setShowGoalAnimation] = useState<{ scorerName: string, teamName: string, scorerPhoto?: string } | null>(null);
   const [showSetupGuide, setShowSetupGuide] = useState(false);
-  const [showMainMenu, setShowMainMenu] = useState(false);
   const [highlightFirstPlayer, setHighlightFirstPlayer] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
   const teamRects = useRef<DOMRect[]>([]);
@@ -4346,13 +4345,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               )}
             </AnimatePresence>
           </div>
-
-          <button 
-            onClick={() => setShowMainMenu(true)}
-            className="p-2 text-white/90 hover:bg-white/10 rounded-full transition-all relative z-10"
-          >
-            <PiListBold size={24} />
-          </button>
         </header>
 
         {/* Tabs for Teams */}
@@ -4572,25 +4564,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 </div>
               </section>
 
-              <button 
-                onClick={() => {
-                  setCurrentScreen('org-pro');
-                  setOrgProTab('painel');
-                }}
-                className="w-full p-4 bg-gradient-to-br from-zinc-200 to-zinc-300 rounded-2xl shadow-lg flex items-center justify-between text-left group hover:from-zinc-300 hover:to-zinc-400 transition-all active:scale-95 border border-[#1E3D2F]/10"
-              >
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-[#1E3D2F]/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform shadow-inner border border-[#1E3D2F]/20">
-                    <GiCrown size={24} color="#1E3D2F" />
-                  </div>
-                  <div>
-                    <h3 className="font-black uppercase tracking-widest text-sm text-[#1E3D2F]">Organização Pro</h3>
-                    <p className="text-[10px] text-[#1E3D2F]/70 uppercase tracking-widest mt-1 font-bold">Painel de Controle e Acesso</p>
-                  </div>
-                </div>
-                <ChevronRight size={20} className="text-[#1E3D2F]/50 group-hover:text-[#1E3D2F] transition-colors" />
-              </button>
-
               <section className="rounded-2xl overflow-hidden bg-zinc-200/50 backdrop-blur-xl border border-black/10 shadow-2xl relative">
                 {visiblePlayers.length === 0 ? (
                   <div className="text-center py-12 opacity-50 text-black/50 text-xs normal-case flex flex-col items-center justify-center gap-2">
@@ -4789,8 +4762,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     className="w-full h-12 rounded-xl flex items-center justify-between px-4 bg-black/5 border border-black/5 hover:border-white/20 transition-all"
                                   >
                                     <div className="flex items-center gap-2">
-                                      <div className="w-5 h-5 rounded-md shadow-sm border border-black/5" style={{ backgroundColor: fixedColors.teamA || TEAM_COLORS[0] }} />
-                                      <span className="text-[10px] font-bold text-black/60 uppercase tracking-widest">Escudo A</span>
+                                      <PiShieldFill size={20} className="drop-shadow-sm" style={{ color: fixedColors.teamA || TEAM_COLORS[0] }} />
                                     </div>
                                     <PenLine size={14} className="text-black/40" />
                                   </button>
@@ -4802,8 +4774,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     className="w-full h-12 rounded-xl flex items-center justify-between px-4 bg-black/5 border border-black/5 hover:border-white/20 transition-all"
                                   >
                                     <div className="flex items-center gap-2">
-                                      <div className="w-5 h-5 rounded-md shadow-sm border border-black/5" style={{ backgroundColor: fixedColors.teamB || TEAM_COLORS[1] }} />
-                                      <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Escudo B</span>
+                                      <PiShieldFill size={20} className="drop-shadow-sm" style={{ color: fixedColors.teamB || TEAM_COLORS[1] }} />
                                     </div>
                                     <PenLine size={14} className="text-zinc-400" />
                                   </button>
@@ -5234,7 +5205,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             )}
                           </div>
                         ) : (
-                          <div className="space-y-8 relative">
+                          <div className="space-y-8 relative pb-12">
                             {match.hasEnded && (
                               <div className="absolute inset-0 z-40 bg-black/10 backdrop-blur-[1px] rounded-2xl pointer-events-auto cursor-default" />
                             )}
@@ -5358,7 +5329,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               </div>
                             </div>
                             
-                            <div className="grid grid-cols-2 gap-4 bg-gradient-to-br from-zinc-100 to-zinc-300 p-4 rounded-[2.5rem] border border-black/5 shadow-inner">
+                            <div className="grid grid-cols-2 gap-4 bg-gradient-to-br from-zinc-100 to-zinc-300 p-4 rounded-[2.5rem] border border-black/5 shadow-inner mb-8">
                               <div className="space-y-2">
                                 {[...(teams[match.teamAIndex]?.playerIds || [])].sort((a, b) => {
                                   const playerA = players.find(p => p.id === a);
@@ -8240,7 +8211,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           className="w-full h-10 bg-emerald-600 text-white rounded-xl font-black uppercase text-[10px] flex items-center justify-between px-4 transition-all hover:bg-emerald-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-emerald-500/10 group"
                         >
                           <div className="flex items-center gap-2">
-                            <Trophy size={14} className="text-emerald-200 group-hover:scale-110 transition-transform" />
+                            <span className="text-emerald-200 group-hover:scale-110 transition-transform flex items-center">
+                              <IoIosFootball size={14} />
+                            </span>
                             <span className="tracking-widest">Registrar Gol</span>
                           </div>
                           <Plus size={12} className="opacity-50" />
@@ -9892,126 +9865,37 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               )}
               <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'ranking' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Ranking</span>
             </button>
+            <button 
+              onClick={() => {
+                const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
+                const targetIndex = screens.indexOf('finance');
+                const currentIndex = screens.indexOf(currentScreen);
+                setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
+                setCurrentScreen('finance');
+                setFinanceSubScreen('balanco');
+              }}
+              className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-[12px] relative overflow-hidden ${
+                currentScreen === 'finance' 
+                  ? 'text-brand-primary bg-white/5 shadow-inner' 
+                  : 'text-white/50 hover:text-white/80 hover:bg-white/5'
+              }`}
+            >
+              {currentScreen === 'finance' && (
+                <motion.div layoutId="nav-glow" className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full" />
+              )}
+              {currentScreen === 'finance' ? (
+                <div className="mb-1 transition-transform duration-300 -translate-y-0.5 text-brand-primary">
+                  <IoIosWallet size={26} />
+                </div>
+              ) : (
+                <div className="mb-1 transition-transform duration-300">
+                  <IoIosWallet size={22} />
+                </div>
+              )}
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'finance' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Financeiro</span>
+            </button>
           </nav>
         </div>
-
-        {/* Main Menu Modal */}
-        <AnimatePresence>
-          {showMainMenu && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/60 backdrop-blur-md z-[200] flex justify-end"
-              onClick={() => setShowMainMenu(false)}
-            >
-              <motion.div
-                initial={{ x: '100%', filter: 'blur(10px)' }}
-                animate={{ x: 0, filter: 'blur(0px)' }}
-                exit={{ x: '100%', filter: 'blur(10px)' }}
-                transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-                className="bg-[#1E3D2F]/95 w-72 h-full shadow-[0_0_50px_rgba(0,0,0,0.5)] flex flex-col border-l border-white/10 relative overflow-hidden"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {/* Background Pattern */}
-                <div className="absolute inset-0 opacity-5 pointer-events-none" style={{
-                  backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 21px), repeating-linear-gradient(-45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 21px)`,
-                }}></div>
-
-                {/* Header Section with Badge */}
-                <div className="pt-12 pb-6 px-8 relative z-10">
-                  <div className="flex flex-col gap-1">
-                    <h2 className="text-3xl font-black uppercase tracking-tighter text-white drop-shadow-lg font-megrim">Menu</h2>
-                  </div>
-                  <button 
-                    onClick={() => setShowMainMenu(false)} 
-                    className="absolute top-10 right-8 p-3 bg-white/5 text-white/40 hover:text-white hover:bg-white/10 rounded-lg transition-all duration-300"
-                  >
-                    <X size={20} />
-                  </button>
-                </div>
-                
-                <div className="flex-1 p-6 flex flex-col gap-8 relative z-10 overflow-y-auto">
-                  {/* Navigation Group */}
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3 px-2">
-                      <div className="h-[1px] flex-1 bg-white/5" />
-                      <span className="text-[9px] font-black text-white/20 uppercase tracking-[0.2em] whitespace-nowrap">Navegação</span>
-                      <div className="h-[1px] flex-1 bg-white/5" />
-                    </div>
-                    
-                    <button 
-                      onClick={() => {
-                        setShowMainMenu(false);
-                        if (!isOrgProAuthorized) {
-                          setShowAuthModal(true);
-                          return;
-                        }
-                        const screens: Screen[] = ['players', 'teams', 'ranking', 'finance', 'org-pro'];
-                        const targetIndex = screens.indexOf('org-pro');
-                        const currentIndex = screens.indexOf(currentScreen);
-                        setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
-                        setCurrentScreen('org-pro');
-                      }}
-                      className="group w-full flex items-center gap-4 p-3 rounded-lg bg-gradient-to-br from-brand-primary/20 to-brand-primary/5 hover:from-brand-primary/30 hover:to-brand-primary/10 transition-all duration-400 transform active:scale-95 text-left shadow-xl border border-brand-primary/20 relative overflow-hidden"
-                    >
-                      {!isOrgProAuthorized && (
-                        <div className="absolute top-0 right-0 p-1 text-brand-primary/40">
-                          <PiLockFill size={10} />
-                        </div>
-                      )}
-                      <div className="w-10 h-10 rounded-lg bg-brand-primary/20 text-brand-primary flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500 shadow-inner">
-                        <GiCrown size={20} />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="font-black uppercase tracking-widest text-xs text-brand-primary">Organização Pro</span>
-                        <span className="text-[10px] text-brand-primary/60 tracking-tight mt-0.5">Recursos avançados</span>
-                      </div>
-                      <ChevronRight size={16} className="ml-auto text-brand-primary/40 group-hover:text-brand-primary transition-colors" />
-                    </button>
-
-                    <button 
-                      onClick={() => {
-                        setShowMainMenu(false);
-                        const screens: Screen[] = ['players', 'teams', 'ranking', 'finance', 'org-pro'];
-                        const targetIndex = screens.indexOf('finance');
-                        const currentIndex = screens.indexOf(currentScreen);
-                        setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
-                        setCurrentScreen('finance');
-                        setFinanceSubScreen('balanco');
-                      }}
-                      className="group w-full flex items-center gap-4 p-3 rounded-lg bg-gradient-to-br from-white/10 to-white/5 hover:from-white/15 hover:to-white/10 transition-all duration-400 transform active:scale-95 text-left shadow-xl"
-                    >
-                      <div className="w-10 h-10 rounded-lg bg-white/10 text-white flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-500 shadow-inner">
-                        <IoIosWallet size={20} />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="font-black uppercase tracking-widest text-xs text-white">Financeiro</span>
-                        <span className="text-[10px] text-white/40 tracking-tight mt-0.5">Gestão de caixa</span>
-                      </div>
-                      <ChevronRight size={16} className="ml-auto text-white/20 group-hover:text-brand-primary transition-colors" />
-                    </button>
-                  </div>
-                </div>
-
-                {/* Footer Section */}
-                <div className="p-8 border-t border-white/5 relative z-10 bg-black/20 backdrop-blur-md pb-safe">
-                  <button 
-                    onClick={() => {
-                      setShowMainMenu(false);
-                      setShowBackToHomeConfirm(true);
-                    }}
-                    className="group w-full flex items-center justify-center gap-3 py-4 rounded-[24px] bg-white text-[#1E3D2F] font-normal uppercase tracking-[0.15em] text-[11px] hover:bg-zinc-100 transition-all duration-300 shadow-2xl active:scale-95"
-                  >
-                    <LogOut size={18} strokeWidth={3} className="group-hover:-translate-x-1 transition-transform" />
-                    <span>Sair da Partida</span>
-                  </button>
-                  
-                </div>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
 
         {/* Reset Stats Confirm Modal */}
         {showResetStatsConfirm && (
