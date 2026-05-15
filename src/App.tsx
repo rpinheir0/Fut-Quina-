@@ -4508,7 +4508,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     />
                     <button 
                       onClick={handleImportContacts}
-                      className="p-2 bg-[#83A8FF] text-[#1E3D2F] rounded-2xl shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square border-none"
+                      className="p-2 bg-[#ffffff] text-[#83A8EF] rounded-2xl shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square border-none"
                       title="Importar dos Contatos"
                     >
                       <Contact size={18} />
