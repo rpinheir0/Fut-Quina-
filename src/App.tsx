@@ -4729,9 +4729,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   >
                                     <div className="flex items-center gap-2">
                                       <div className="w-5 h-5 rounded-md shadow-sm border border-black/5" style={{ backgroundColor: fixedColors.teamB || TEAM_COLORS[1] }} />
-                                      <span className="text-[10px] font-bold text-zinc-600 uppercase tracking-widest">Escudo B</span>
+                                      <span className="text-[10px] font-bold text-white/60 uppercase tracking-widest">Escudo B</span>
                                     </div>
-                                    <PenLine size={14} className="text-zinc-400" />
+                                    <PenLine size={14} className="text-white/40" />
                                   </button>
                                 </div>
                               </div>
@@ -5002,8 +5002,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     <span className={p.isAvailable ? 'text-black' : 'text-white/40' + ' flex items-center shrink-0'}><IoPersonOutline size={16} /></span>
                                   )}
                                 </div>
-                                <div className="flex-1 text-left flex flex-col gap-0.5">
-                                  <div className={`text-xs font-black capitalize tracking-widest leading-none ${p.isAvailable ? 'text-black' : 'text-white/60'}`}>{p.name.toLowerCase()}</div>
+                                <div className="flex-1 text-left flex flex-col gap-0.5 min-w-0">
+                                  <div className={`text-xs font-black capitalize tracking-widest leading-none truncate ${p.isAvailable ? 'text-black' : 'text-white/60'}`}>{p.name.toLowerCase()}</div>
                                   <div className="flex gap-0.5">
                                     {[1, 2, 3, 4, 5].map((star) => (
                                       <Star 
@@ -5015,6 +5015,50 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   </div>
                                   <div className={`text-[8px] font-bold uppercase ${p.isAvailable ? 'text-black/60' : 'text-white/30'}`}>{p.isAvailable ? 'Confirmado' : 'Aguardando'}</div>
                                 </div>
+                                {p.isAvailable && (
+                                  <div className="flex flex-col gap-1 items-center justify-center mr-1">
+                                    <button 
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        const availablePlayers = players.filter(pl => pl.isAvailable).sort((a, b) => (a.arrivedAt || 0) - (b.arrivedAt || 0));
+                                        const idx = availablePlayers.findIndex(pl => pl.id === p.id);
+                                        if (idx > 0) {
+                                          const prevPlayer = availablePlayers[idx - 1];
+                                          const currentArrivedAt = p.arrivedAt || 0;
+                                          const prevArrivedAt = prevPlayer.arrivedAt || 0;
+                                          setPlayers(prev => prev.map(pl => {
+                                            if (pl.id === p.id) return { ...pl, arrivedAt: prevArrivedAt };
+                                            if (pl.id === prevPlayer.id) return { ...pl, arrivedAt: currentArrivedAt };
+                                            return pl;
+                                          }));
+                                        }
+                                      }}
+                                      className="p-1 rounded-md hover:bg-black/10 transition-colors"
+                                    >
+                                      <ChevronUp size={12} className={p.isAvailable ? 'text-black' : 'text-white'} />
+                                    </button>
+                                    <button 
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        const availablePlayers = players.filter(pl => pl.isAvailable).sort((a, b) => (a.arrivedAt || 0) - (b.arrivedAt || 0));
+                                        const idx = availablePlayers.findIndex(pl => pl.id === p.id);
+                                        if (idx < availablePlayers.length - 1) {
+                                          const nextPlayer = availablePlayers[idx + 1];
+                                          const currentArrivedAt = p.arrivedAt || 0;
+                                          const nextArrivedAt = nextPlayer.arrivedAt || 0;
+                                          setPlayers(prev => prev.map(pl => {
+                                            if (pl.id === p.id) return { ...pl, arrivedAt: nextArrivedAt };
+                                            if (pl.id === nextPlayer.id) return { ...pl, arrivedAt: currentArrivedAt };
+                                            return pl;
+                                          }));
+                                        }
+                                      }}
+                                      className="p-1 rounded-md hover:bg-black/10 transition-colors"
+                                    >
+                                      <ChevronDown size={12} className={p.isAvailable ? 'text-black' : 'text-white'} />
+                                    </button>
+                                  </div>
+                                )}
                                 {p.isAvailable && <CheckCircle2 size={16} className="text-black" />}
                               </button>
                             ))
@@ -5587,48 +5631,64 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               <Settings size={20} className={teamsTab === 'configuracao' ? 'text-brand-primary' : 'text-white/60'} />
                             </motion.div>
                           </button>
-                            <div className="flex gap-2">
-                              <button
-                                onClick={() => {
-                                  if (match.isActive && !match.hasEnded) return;
-                                  if (teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2) return;
-                                  
-                                  setShowLogoAnimation(true);
-                                  setTimeout(() => {
-                                  randomizeTeams(match.config.playersPerTeam);
-                                    setShowLogoAnimation(false);
-                                    sounds.playDrawFinished();
-                                    setToast({ message: "Times sorteados!", type: 'success' });
-                                  }, 3000);
-                                }}
-                                disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
-                                className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl border border-white/10 text-brand-primary hover:bg-white/10 disabled:opacity-20 transition-all font-bold text-[10px] uppercase tracking-widest"
-                              >
-                                <ImSpinner9 size={18} />
-                                Sortear
-                              </button>
-                              <button
-                                onClick={() => {
-                                  if (match.isActive && !match.hasEnded) {
-                                    setShowStartMatchConfirm(true);
-                                    return;
-                                  }
+                              <div className="flex gap-2">
+                                <button
+                                  onClick={() => {
+                                    if (match.isActive && !match.hasEnded) return;
+                                    if (teams.length === 0) return;
+                                    if (confirm("Deseja realmente limpar toda a fila de times?")) {
+                                      setTeams([]);
+                                      setMatch(prev => ({ ...prev, teamAIndex: -1, teamBIndex: -1 }));
+                                      setToast({ message: "Fila limpa com sucesso!", type: 'info' });
+                                    }
+                                  }}
+                                  disabled={match.isActive && !match.hasEnded}
+                                  className="flex items-center justify-center w-11 h-11 bg-red-500/10 text-red-500 rounded-xl border border-red-500/20 hover:bg-red-500/20 disabled:opacity-20 transition-all font-bold text-[10px] uppercase tracking-widest"
+                                  title="Limpar Fila"
+                                >
+                                  <Trash2 size={18} />
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    if (match.isActive && !match.hasEnded) return;
+                                    if (teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2) return;
+                                    
+                                    setShowLogoAnimation(true);
+                                    setTimeout(() => {
+                                      randomizeTeams(match.config.playersPerTeam);
+                                      setShowLogoAnimation(false);
+                                      sounds.playDrawFinished();
+                                      setToast({ message: "Times sorteados!", type: 'success' });
+                                    }, 3000);
+                                  }}
+                                  disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
+                                  className="flex items-center gap-2 px-4 py-2 bg-white/5 rounded-xl border border-white/10 text-brand-primary hover:bg-white/10 disabled:opacity-20 transition-all font-bold text-[10px] uppercase tracking-widest"
+                                >
+                                  <ImSpinner9 size={18} />
+                                  Sortear
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    if (match.isActive && !match.hasEnded) {
+                                      setShowStartMatchConfirm(true);
+                                      return;
+                                    }
 
-                                  if (match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
-                                      (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
-                                      teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) {
-                                    startNextMatch(match.teamAIndex, match.teamBIndex);
-                                  }
-                                }}
-                                disabled={!((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
-                                  (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
-                                   teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)))}
-                                className="flex items-center gap-2 px-4 py-2 bg-brand-primary rounded-xl text-black shadow-[0_5px_15px_rgba(193,255,114,0.3)] hover:opacity-90 disabled:opacity-20 transition-all font-black text-[10px] uppercase tracking-widest"
-                              >
-                                <IoFootballOutline size={18} />
-                                Iniciar
-                              </button>
-                            </div>
+                                    if (match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
+                                        (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
+                                        teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) {
+                                      startNextMatch(match.teamAIndex, match.teamBIndex);
+                                    }
+                                  }}
+                                  disabled={!((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
+                                    (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
+                                     teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)))}
+                                  className="flex items-center gap-2 px-4 py-2 bg-brand-primary rounded-xl text-black shadow-[0_5px_15px_rgba(193,255,114,0.3)] hover:opacity-90 disabled:opacity-20 transition-all font-black text-[10px] uppercase tracking-widest"
+                                >
+                                  <IoFootballOutline size={18} />
+                                  Iniciar
+                                </button>
+                              </div>
                         </div>
                         <div className="space-y-4">
                           {teams.length < 2 ? (
@@ -5740,7 +5800,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     />
                                     
                                     <div className="flex justify-between items-start mb-6">
-                                      <div className="flex items-center gap-4">
+                                      <div className="flex items-center gap-4 flex-1">
                                         <div 
                                           className={`w-14 h-14 rounded-2xl flex items-center justify-center transition-all cursor-pointer shadow-lg border-2 ${isCurrent ? 'border-brand-primary/40 bg-brand-primary/10' : 'border-white/10 bg-white/5'}`}
                                           style={{ color: teamColor }}
@@ -5775,21 +5835,61 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                             return <Icon size={32} />;
                                           })()}
                                         </div>
-                                        <div className="flex flex-col">
+                                        <div className="flex flex-col min-w-0">
                                           <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 mb-0.5">Time {String.fromCharCode(65 + tIdx)}</span>
-                                          <h3 className="text-lg font-display font-bold text-white tracking-tight">{t.name}</h3>
+                                          <input 
+                                            value={t.name}
+                                            placeholder="NOME DO TIME"
+                                            onClick={(e) => e.stopPropagation()}
+                                            onChange={(e) => {
+                                              const newTeams = [...teams];
+                                              newTeams[tIdx].name = e.target.value;
+                                              setTeams(newTeams);
+                                            }}
+                                            className="text-lg font-display font-bold text-white tracking-tight bg-transparent border-none outline-none w-full placeholder:text-white/20"
+                                          />
                                         </div>
                                       </div>
                                       
-                                      {t.lastMatchStatus && (
-                                        <div className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest shadow-sm ${
-                                          t.lastMatchStatus === 'Vencedor' ? 'bg-brand-primary text-black' :
-                                          t.lastMatchStatus === 'Empate' ? 'bg-white/20 text-white' :
-                                          'bg-red-500/20 text-red-400'
-                                        }`}>
-                                          {t.lastMatchStatus === 'Vencedor' ? 'Venceu' : t.lastMatchStatus}
+                                      <div className="flex items-center gap-1.5 shrink-0 z-20">
+                                        {/* Queue Controls */}
+                                        <div className="flex flex-col gap-1 mr-2 invisible group-hover:visible transition-all">
+                                          <button 
+                                            onClick={(e) => { e.stopPropagation(); moveTeam(tIdx, 'up'); }}
+                                            disabled={tIdx === 0}
+                                            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/40 hover:text-white disabled:opacity-0 transition-all"
+                                          >
+                                            <ChevronUp size={14} />
+                                          </button>
+                                          <button 
+                                            onClick={(e) => { e.stopPropagation(); moveTeam(tIdx, 'down'); }}
+                                            disabled={tIdx === teams.length - 1}
+                                            className="p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-white/40 hover:text-white disabled:opacity-0 transition-all"
+                                          >
+                                            <ChevronDown size={14} />
+                                          </button>
                                         </div>
-                                      )}
+
+                                        {t.lastMatchStatus && (
+                                          <div className={`px-3 py-1 rounded-full text-[8px] font-black uppercase tracking-widest shadow-sm mr-2 ${
+                                            t.lastMatchStatus === 'Vencedor' ? 'bg-brand-primary text-black' :
+                                            t.lastMatchStatus === 'Empate' ? 'bg-white/20 text-white' :
+                                            'bg-red-500/20 text-red-400'
+                                          }`}>
+                                            {t.lastMatchStatus === 'Vencedor' ? 'Venceu' : t.lastMatchStatus}
+                                          </div>
+                                        )}
+
+                                        <button 
+                                          onClick={(e) => { 
+                                            e.stopPropagation(); 
+                                            if (confirm(`Deseja remover o ${t.name}?`)) removeTeam(tIdx); 
+                                          }}
+                                          className="p-2.5 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500 hover:text-white transition-all scale-75 group-hover:scale-100 opacity-0 group-hover:opacity-100"
+                                        >
+                                          <Trash2 size={16} />
+                                        </button>
+                                      </div>
                                     </div>
 
                                     {/* Status Top Right removed */}
