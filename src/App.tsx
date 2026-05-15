@@ -1553,21 +1553,33 @@ const SpinningBall = ({
   );
 };
 
-const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, style }: { className?: string, size?: 'sm' | 'md' | 'lg', colorClass?: string, style?: React.CSSProperties }) => {
+const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, style, align = "center" }: { className?: string, size?: 'sm' | 'md' | 'lg', colorClass?: string, style?: React.CSSProperties, align?: 'start' | 'center' | 'end' }) => {
   const theme = 'light';
   const sizeClasses = {
     sm: "text-lg",
-    md: "text-xl",
+    md: "text-2xl", // increased slightly to better match the ball
     lg: "text-4xl"
+  };
+  const subSizeClasses = {
+    sm: "text-[8px]",
+    md: "text-[11px]",
+    lg: "text-xs"
   };
 
   const colorClass = overrideColor || 'text-zinc-500 font-bold';
   const shadowClass = '';
 
+  const alignClass = align === 'start' ? 'items-start text-left' : align === 'end' ? 'items-end text-right' : 'items-center text-center';
+
   return (
-    <span className={`${sizeClasses[size]} uppercase tracking-tighter ${colorClass} ${shadowClass} ${className} font-julius`} style={style}>
-      FutQuina
-    </span>
+    <div className={`flex flex-col justify-center ${alignClass} ${className}`} style={style}>
+      <span className={`${sizeClasses[size]} uppercase tracking-tighter ${colorClass} ${shadowClass} font-staatliches leading-[0.85]`}>
+        FutQuina
+      </span>
+      <span className={`${subSizeClasses[size]} opacity-100 font-readex tracking-widest mt-0.5 ${colorClass}`}>
+        Gestão de pelada
+      </span>
+    </div>
   );
 };
 
@@ -4110,7 +4122,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             <SpinningBall size="lg" />
             <div className="mt-8 text-center flex flex-col items-center">
               <FutQuinaLogo size="lg" className="mb-2" colorClass="text-white font-black" />
-              <p className="text-sm font-bold uppercase tracking-widest text-zinc-300">Gestão de peladas</p>
             </div>
           </motion.div>
         )}
@@ -4226,8 +4237,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 >
                   <FutQuinaLogo 
                     size="md" 
-                    style={{ color: '#E2E8F0' }} 
-                    colorClass="" 
+                    colorClass="text-white" 
+                    align="start"
                   />
                 </motion.div>
               ) : null}
@@ -4723,7 +4734,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             >
                   <div id="teams-list-section" className="max-w-5xl mx-auto w-full space-y-4">
                     {teamsTab === 'configuracao' ? (
-                      <div className="space-y-6 bg-[#1E3D2F]/90 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-white/10 ring-1 ring-white/5">
+                      <div className="space-y-6 bg-[#dedede] backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-white/10 ring-1 ring-white/5">
                         <div className="sticky top-[-1px] z-40 bg-[#1E3D2F]/95 backdrop-blur-md py-4 -mx-6 px-6 flex justify-between items-center rounded-t-[2.5rem] border-b border-white/5">
                           <h3 className="text-sm font-black uppercase tracking-widest text-[#B7D96C]">Configuração</h3>
                         </div>
@@ -4878,7 +4889,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
                       </div>
                     ) : teamsTab === 'chegada' ? (
-                      <div className="space-y-6 bg-[#1E3D2F]/95 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-white/10 ring-1 ring-white/5">
+                      <div className="space-y-6 bg-[#dedede] backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-white/10 ring-1 ring-white/5">
                         <div className="flex justify-between items-center">
                           <h3 className="text-sm font-black uppercase tracking-widest text-[#B7D96C]">Ordem de Chegada</h3>
                           <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -5092,7 +5103,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
                       </div>
                     ) : teamsTab === 'historico' ? (
-                      <div className="space-y-6 bg-[#1E3D2F]/95 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-white/10 ring-1 ring-white/5">
+                      <div className="space-y-6 bg-[#dedede] backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-white/10 ring-1 ring-white/5">
                         {!match.isActive ? (
                           <div className="py-12 text-center border border-dashed border-white/10 rounded-3xl flex flex-col items-center gap-4">
                             {players.filter(p => p.isAvailable).length === 0 ? (
@@ -5356,7 +5367,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               </div>
                             </div>
                             
-                            <div className="grid grid-cols-2 gap-4">
+                            <div className="grid grid-cols-2 gap-4 bg-gradient-to-br from-zinc-800 to-zinc-950 p-4 rounded-[2.5rem] border border-white/5 shadow-inner">
                               <div className="space-y-2">
                                 {[...(teams[match.teamAIndex]?.playerIds || [])].sort((a, b) => {
                                   const playerA = players.find(p => p.id === a);
@@ -5412,11 +5423,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                         }}
                   className={`w-full flex flex-row-reverse items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 ${
                     swappingPlayerId === pid
-                      ? 'border-2 border-brand-primary shadow-lg scale-105'
+                      ? 'border-2 border-[#53B986] shadow-lg scale-105'
                       : 'border group'
                   }`}
                   style={{ 
-                    borderColor: swappingPlayerId !== pid ? ((fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color || TEAM_COLORS[0]) + '40' : undefined,
+                    borderColor: swappingPlayerId !== pid ? '#53B986' : undefined,
                     backgroundColor: swappingPlayerId === pid ? undefined : undefined
                   }}
                 >
@@ -5553,11 +5564,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                         }}
                   className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/10 ${
                     swappingPlayerId === pid
-                      ? 'border-2 border-brand-primary shadow-lg scale-105'
+                      ? 'border-2 border-[#53B986] shadow-lg scale-105'
                       : 'border group'
                   }`}
                   style={{ 
-                    borderColor: swappingPlayerId !== pid ? ((fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color || TEAM_COLORS[1]) + '40' : undefined,
+                    borderColor: swappingPlayerId !== pid ? '#53B986' : undefined,
                     backgroundColor: swappingPlayerId === pid ? undefined : undefined
                   }}
                 >
@@ -5643,7 +5654,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         )}
                       </div>
                     ) : teamsTab === 'proximos' ? (
-                      <div className="space-y-6 relative overflow-hidden bg-[#1E3D2F]/95 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-white/10 ring-1 ring-white/5">
+                      <div className="space-y-6 relative overflow-hidden bg-[#dedede] backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-white/10 ring-1 ring-white/5">
                         <div className="flex justify-between items-center relative z-10">
                           <button 
                             onClick={() => setTeamsTab('configuracao')}
@@ -5806,11 +5817,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       (movingPlayers && isSelectingDestination) ? 'cursor-pointer hover:opacity-90' : 'cursor-default'
                                     } ${
                                       isCurrent 
-                                        ? 'shadow-2xl z-10 border-brand-primary/50 bg-white/10 backdrop-blur-md ring-4 ring-brand-primary/10'
+                                        ? 'shadow-2xl z-10 border-[#53B986] bg-white/10 backdrop-blur-md ring-4 ring-[#53B986]/10'
                                         : 'shadow-sm opacity-60 border-white/5 bg-white/5'
-                                    } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-brand-primary/10 !border-brand-primary' : ''}`}
+                                    } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-brand-primary/10 !border-[#53B986]' : ''}`}
                                     style={{
-                                      borderColor: (movingPlayers?.teamId === t.id || (swappingPlayerId && t.playerIds.includes(swappingPlayerId))) ? 'var(--brand-primary)' : undefined
+                                      borderColor: (movingPlayers?.teamId === t.id || (swappingPlayerId && t.playerIds.includes(swappingPlayerId))) ? '#53B986' : undefined
                                     }}
                                   >
                                     {/* Team Color Top Bar */}
@@ -6118,10 +6129,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                   }}
                                                   className={`w-full flex items-center justify-start gap-2 p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
                                                     swappingPlayerId === pid || movingPlayers?.playerIds.includes(pid)
-                                                      ? 'bg-brand-primary/20 text-white border-2 border-brand-primary shadow-lg scale-105'
+                                                      ? 'bg-[#53B986]/20 text-white border-2 border-[#53B986] shadow-lg scale-105'
                                                       : (swappingPlayerId && swappingPlayerId !== pid) || fillingVacancyForTeam !== null || ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < match.config.playersPerTeam))
-                                                        ? 'bg-brand-primary/10 text-brand-primary animate-pulse shadow-sm shadow-brand-primary/10'
-                                                        : `text-white border group bg-white/5 shadow-sm ${isCurrent ? 'border-brand-primary/50 ring-1 ring-brand-primary/30' : 'border-white/5 hover:border-white/10'}`
+                                                        ? 'bg-[#53B986]/10 text-[#53B986] animate-pulse shadow-sm shadow-[#53B986]/10'
+                                                        : `text-white border group bg-white/5 shadow-sm ${isCurrent ? 'border-[#53B986] ring-1 ring-[#53B986]/30' : 'border-white/5 hover:border-white/10'}`
                                                   }`}
                                                   style={{ 
                                                     backgroundColor: !((swappingPlayerId && swappingPlayerId !== pid) || 
@@ -6170,7 +6181,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         whileHover={{ y: -5 }}
                         className={`group p-3 sm:p-4 rounded-xl transition-all relative cursor-pointer flex flex-col border ${
                           match.teamAIndex === tIndex || match.teamBIndex === tIndex
-                            ? 'bg-emerald-900 border-brand-primary shadow-[0_0_30px_rgba(163,230,53,0.2)]' 
+                            ? 'bg-emerald-900 border-[#53B986] shadow-[0_0_30px_rgba(83,185,134,0.2)]' 
                             : 'bg-gradient-to-br from-zinc-50 to-zinc-100 border-zinc-200 hover:border-zinc-400'
                         } ${flashingTeamIds.includes(team.id) ? 'animate-flash' : ''}`}
                         onClick={() => {
@@ -6188,8 +6199,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         {/* Selection Indicator */}
                         <div className="absolute top-6 right-6">
                           <div className={`w-6 h-6 rounded-full border flex items-center justify-center transition-all duration-500 ${
-                            match.teamAIndex === tIndex ? 'bg-brand-primary border-brand-primary' : 
-                            match.teamBIndex === tIndex ? 'bg-brand-primary border-brand-primary' : 
+                            match.teamAIndex === tIndex ? 'bg-[#53B986] border-[#53B986]' : 
+                            match.teamBIndex === tIndex ? 'bg-[#53B986] border-[#53B986]' : 
                             'bg-transparent border-white/20'
                           }`}>
                             {(match.teamAIndex === tIndex || match.teamBIndex === tIndex) && (
@@ -6270,13 +6281,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 }}
                                 className={`flex justify-between items-center py-2 px-1 transition-all group/player cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
                                 swappingPlayerId === pid 
-                                  ? 'bg-brand-primary/20 rounded-lg' 
+                                  ? 'bg-[#53B986]/20 rounded-lg' 
                                   : (swappingPlayerId && swappingPlayerId !== pid)
-                                    ? 'bg-brand-primary/10 rounded-lg animate-pulse'
+                                    ? 'bg-[#53B986]/10 rounded-lg animate-pulse'
                                     : 'bg-transparent border-transparent'
                               }`}>
                                 <div className="flex items-center gap-2 overflow-hidden">
-                                  <div className={`w-6 h-6 rounded-full bg-zinc-100 flex items-center justify-center overflow-hidden border shrink-0 ${match.teamAIndex === tIndex || match.teamBIndex === tIndex ? 'border-emerald-500 ring-1 ring-emerald-500' : 'border-zinc-200'}`}>
+                                  <div className={`w-6 h-6 rounded-full bg-zinc-100 flex items-center justify-center overflow-hidden border shrink-0 ${match.teamAIndex === tIndex || match.teamBIndex === tIndex ? 'border-[#53B986] ring-1 ring-[#53B986]' : 'border-zinc-200'}`}>
                                     {p.photo ? (
                                       <img src={p.photo} alt={p.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                                     ) : (
@@ -6286,7 +6297,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   <div className="flex flex-col min-w-0">
                                     <span className={`text-[11px] sm:text-xs font-bold tracking-tight transition-colors truncate leading-none ${
                                       swappingPlayerId === pid 
-                                        ? 'text-brand-primary' 
+                                        ? 'text-[#53B986]' 
                                         : 'text-zinc-800'
                                     }`}>{p.name}</span>
                                     <div className="flex gap-0.5 mt-0.5">
@@ -6302,12 +6313,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 </div>
                                 <div className="flex items-center gap-1">
                                   {swappingPlayerId === pid && (
-                                    <div className="px-2 py-1 text-black bg-brand-primary/20 border border-brand-primary/50 rounded-sm text-[8px] font-black uppercase">
+                                    <div className="px-2 py-1 text-black bg-[#53B986]/20 border border-[#53B986]/50 rounded-sm text-[8px] font-black uppercase">
                                       Selecionado
                                     </div>
                                   )}
                                   {swappingPlayerId && swappingPlayerId !== pid && (
-                                    <div className="px-2 py-1 bg-brand-primary text-black rounded-sm text-[8px] font-black uppercase animate-pulse">
+                                    <div className="px-2 py-1 bg-[#53B986] text-black rounded-sm text-[8px] font-black uppercase animate-pulse">
                                       Trocar
                                     </div>
                                   )}
@@ -10185,8 +10196,8 @@ function AuthScreen() {
         <div className="flex flex-col items-center justify-center gap-4 text-center relative">
           <SpinningBall size="lg" />
           <div>
-            <h1 className="text-3xl font-black tracking-tighter uppercase mb-2">Futquina</h1>
-            <p className="text-sm font-medium tracking-widest uppercase opacity-50">Sua conta, suas peladas</p>
+            <FutQuinaLogo size="lg" colorClass="text-zinc-900" />
+            <p className="text-sm font-medium tracking-widest uppercase opacity-50 mt-4">Sua conta, suas peladas</p>
           </div>
         </div>
         
@@ -10315,7 +10326,7 @@ export default function App() {
             <SpinningBall size="lg" spin={true} />
           </motion.div>
           <div className="flex flex-col items-center">
-            <FutQuinaLogo size="lg" colorClass="" style={{ color: '#E3D39E', fontStyle: 'normal', fontFamily: 'Megrim', fontWeight: '900', letterSpacing: '-0.05em' }} />
+            <FutQuinaLogo size="lg" colorClass="" style={{ color: '#E3D39E' }} />
             <div className="h-0.5 w-12 bg-brand-primary mt-2 rounded-full opacity-60" />
           </div>
         </div>
