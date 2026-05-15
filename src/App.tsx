@@ -5683,7 +5683,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   }, 3000);
                                 }}
                                 disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
-                                className="p-2 rounded-xl transition-all active:scale-90 hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5 bg-gradient-to-br from-blue-500 to-blue-600 shadow border border-blue-600 text-white"
+                                className="p-2 rounded-xl transition-all active:scale-90 hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5 bg-[#83A8FF] shadow border border-[#83A8FF] text-white"
                               >
                                 <span className="text-white"><ImSpinner9 size={14} /></span>
                                 <span className="text-[10px] font-black uppercase tracking-widest text-white">Sortear</span>
