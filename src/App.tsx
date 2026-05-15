@@ -1653,6 +1653,37 @@ const RouletteOverlay = () => {
   );
 };
 
+// --- Animated Counter ---
+function AnimatedCounter({ value }: { value: number }) {
+  const [displayValue, setDisplayValue] = useState(0);
+
+  useEffect(() => {
+    let startTimestamp: number;
+    let animationFrameId: number;
+    const duration = 1000; // 1 second animation
+    const initialValue = displayValue;
+
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      
+      // easeOutExpo
+      const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+      setDisplayValue(Math.round(initialValue + (value - initialValue) * ease));
+      
+      if (progress < 1) {
+        animationFrameId = window.requestAnimationFrame(step);
+      }
+    };
+    
+    animationFrameId = window.requestAnimationFrame(step);
+    
+    return () => window.cancelAnimationFrame(animationFrameId);
+  }, [value]);
+
+  return <>{displayValue}</>;
+}
+
 // --- App Component ---
 
 function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: () => void }) {
@@ -4421,16 +4452,16 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           <div className="pt-4 px-6 pb-4 bg-white">
             <div className="flex gap-2 justify-center">
               <button 
-                onClick={() => setFinanceSubScreen('mensalidade')} 
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${financeSubScreen === 'mensalidade' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
-              >
-                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'mensalidade' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Mensalidade</span>
-              </button>
-              <button 
                 onClick={() => setFinanceSubScreen('balanco')} 
                 className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${financeSubScreen === 'balanco' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'balanco' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Balanço</span>
+              </button>
+              <button 
+                onClick={() => setFinanceSubScreen('mensalidade')} 
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${financeSubScreen === 'mensalidade' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
+              >
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'mensalidade' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Mensalidade</span>
               </button>
             </div>
           </div>
@@ -6529,7 +6560,36 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     <div className={`px-4 space-y-6 ${isPrintMode ? 'max-w-4xl mx-auto' : ''}`}>
                       {/* Summary Cards */}
                       {!isPrintPaymentsOnly && (
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                        {/* Saldo Líquido Card */}
+                        <div className={`p-5 transition-all col-span-2 lg:col-span-1 order-1 lg:order-none ${
+                          isPrintMode ? 'bg-white border-zinc-300 border rounded-none' :
+                          netBalance >= 0
+                            ? 'rounded-[2rem] border bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200'
+                            : 'rounded-[2rem] border bg-gradient-to-br from-red-50 to-red-100 border-red-200'
+                        }`}>
+                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'opacity-60'}`}>Saldo em Caixa</p>
+                          <p className={`text-xl sm:text-2xl lg:text-3xl font-black mb-4 ${
+                            isPrintMode ? 'text-black' :
+                            netBalance >= 0
+                              ? 'text-emerald-700'
+                              : 'text-red-700'
+                          }`}>R$ <AnimatedCounter value={netBalance} />,00</p>
+
+                          <div className="space-y-1.5">
+                            <div className="h-2 w-full bg-zinc-200/50 rounded-full overflow-hidden">
+                              <div 
+                                className={`h-full transition-all duration-1000 ${netBalance >= 0 ? 'bg-emerald-500' : 'bg-red-500'}`} 
+                                style={{ width: `${Math.min(100, (Math.abs(netBalance) / Math.max(1, totalRevenue)) * 100)}%` }}
+                              />
+                            </div>
+                            <div className="flex justify-between text-[8px] font-bold uppercase tracking-wider opacity-60">
+                              <span>{netBalance >= 0 ? 'Lucro' : 'Prejuízo'}</span>
+                              <span>{totalRevenue > 0 ? Math.round((Math.abs(netBalance) / totalRevenue) * 100) : 0}%</span>
+                            </div>
+                          </div>
+                        </div>
+
                         {/* Arrecadação Card */}
                         <div 
                           onClick={() => {
@@ -6538,13 +6598,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               setIsEditingTotal(true);
                             }
                           }}
-                          className={`p-5 transition-all ${isPrintMode ? 'bg-white border-zinc-300 border rounded-none text-black' : 'rounded-[2rem] border bg-[#1E3D2F]/70 backdrop-blur-md border-black/10 cursor-pointer hover:bg-[#1E3D2F]/90 shadow-xl overflow-hidden relative'}`}>
+                          className={`p-5 transition-all order-2 lg:order-none ${isPrintMode ? 'bg-white border-zinc-300 border rounded-none text-black' : 'rounded-[2rem] border bg-[#83A8FF] backdrop-blur-md border-black/10 cursor-pointer hover:bg-[#83A8FF]/90 shadow-xl overflow-hidden relative'}`}>
                           {!isPrintMode && <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />}
-                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'text-zinc-800/40'}`}>Arrecadação</p>
-                          <div className="flex items-baseline gap-2 mb-4">
+                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 relative z-10 ${isPrintMode ? 'text-zinc-600' : 'text-[#1E3D2F]/60'}`}>Arrecadação</p>
+                          <div className="flex items-baseline gap-2 mb-4 relative z-10">
                             {isEditingTotal ? (
-                              <div className="flex items-center gap-1 w-full">
-                                <span className="text-sm font-bold opacity-60">R$</span>
+                              <div className="flex items-center gap-1 w-full" onClick={(e) => e.stopPropagation()}>
+                                <span className={`text-sm font-bold ${isPrintMode ? 'opacity-60' : 'text-[#1E3D2F]/60'}`}>R$</span>
                                 <input 
                                   autoFocus
                                   type="number"
@@ -6560,21 +6620,22 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       setIsEditingTotal(false);
                                     }
                                   }}
-                                  className={`w-full bg-transparent border-b-2 border-brand-primary outline-none text-2xl font-black text-zinc-900`}
+                                  className={`w-full bg-transparent border-b-2 border-brand-primary outline-none text-xl sm:text-2xl lg:text-3xl font-black ${isPrintMode ? 'text-zinc-900' : 'text-[#1E3D2F]'}`}
                                 />
                               </div>
                             ) : (
                               <div className="flex flex-col">
-                                <p className={`text-3xl font-black ${isPrintMode ? 'text-black' : 'text-zinc-900'}`}>
+                                <p className={`text-xl sm:text-2xl lg:text-3xl font-black ${isPrintMode ? 'text-black' : 'text-[#1E3D2F]'}`}>
                                   R$ {totalRevenue},00
                                 </p>
                                 {!isPrintMode && (
                                   <button 
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                      e.stopPropagation();
                                       setTotalInput(manualAdjustment.toString());
                                       setIsEditingTotal(true);
                                     }}
-                                    className="text-[8px] font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-1 hover:underline w-fit mt-1"
+                                    className="text-[8px] font-bold uppercase tracking-widest text-[#1E3D2F]/60 flex items-center gap-1 hover:text-[#1E3D2F] w-fit mt-1"
                                   >
                                     Ajustar Manual (R$ {manualAdjustment})
                                   </button>
@@ -6582,14 +6643,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               </div>
                             )}
                           </div>
-                          <div className="space-y-1.5">
-                            <div className="h-2 w-full bg-zinc-200/50 rounded-full overflow-hidden">
+                          <div className="space-y-1.5 relative z-10">
+                            <div className="h-2 w-full bg-black/10 rounded-full overflow-hidden">
                               <div 
-                                className="h-full bg-emerald-500 transition-all duration-1000" 
+                                className="h-full bg-white transition-all duration-1000" 
                                 style={{ width: `${Math.min(100, (totalRevenue / Math.max(1, (players.length * (monthlyFee || 30)))) * 100)}%` }}
                               />
                             </div>
-                            <div className="flex justify-between text-[8px] font-bold uppercase tracking-wider opacity-60">
+                            <div className={`flex justify-between text-[8px] font-bold uppercase tracking-wider ${isPrintMode ? 'opacity-60' : 'text-[#1E3D2F]/60'}`}>
                               <span>Meta {players.length} jogs</span>
                               <span>R$ {players.length * (monthlyFee || 30)},00</span>
                             </div>
@@ -6597,9 +6658,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
 
                         {/* Despesas Card */}
-                        <div className={`p-5 transition-all ${isPrintMode ? 'bg-white border-zinc-300 border rounded-none' : 'rounded-[2rem] border bg-gradient-to-br from-red-50 to-red-100 border-red-200'}`}>
+                        <div 
+                          onClick={() => !isPrintMode && setShowExpenseModal(true)}
+                          className={`p-5 transition-all order-3 lg:order-none ${isPrintMode ? 'bg-white border-zinc-300 border rounded-none' : 'cursor-pointer hover:opacity-90 rounded-[2rem] border bg-gradient-to-br from-red-50 to-red-100 border-red-200'}`}
+                        >
                           <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'text-zinc-500'}`}>Despesas</p>
-                          <p className={`text-3xl font-black mb-4 ${isPrintMode ? 'text-black' : 'text-red-700'}`}>R$ {totalExpenses},00</p>
+                          <p className={`text-xl sm:text-2xl lg:text-3xl font-black mb-4 ${isPrintMode ? 'text-black' : 'text-red-700'}`}>R$ {totalExpenses},00</p>
                           <div className="space-y-1.5">
                             <div className="h-2 w-full bg-zinc-200/50 rounded-full overflow-hidden">
                               <div 
@@ -6610,35 +6674,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             <div className="flex justify-between text-[8px] font-bold uppercase tracking-wider opacity-60">
                               <span>Gasto Total</span>
                               <span>{totalRevenue > 0 ? Math.round((totalExpenses / totalRevenue) * 100) : 0}%</span>
-                            </div>
-                          </div>
-                        </div>
-
-                        {/* Saldo Líquido Card */}
-                        <div className={`p-5 transition-all ${
-                          isPrintMode ? 'bg-white border-zinc-300 border rounded-none' :
-                          netBalance >= 0
-                            ? 'rounded-[2rem] border bg-gradient-to-br from-emerald-50 to-emerald-100 border-emerald-200'
-                            : 'rounded-[2rem] border bg-gradient-to-br from-red-50 to-red-100 border-red-200'
-                        }`}>
-                          <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'opacity-60'}`}>Saldo em Caixa</p>
-                          <p className={`text-3xl font-black mb-4 ${
-                            isPrintMode ? 'text-black' :
-                            netBalance >= 0
-                              ? 'text-emerald-700'
-                              : 'text-red-700'
-                          }`}>R$ {netBalance},00</p>
-
-                          <div className="space-y-1.5">
-                            <div className="h-2 w-full bg-zinc-200/50 rounded-full overflow-hidden">
-                              <div 
-                                className={`h-full transition-all duration-1000 ${netBalance >= 0 ? 'bg-emerald-500' : 'bg-red-500'}`} 
-                                style={{ width: `${Math.min(100, (Math.abs(netBalance) / Math.max(1, totalRevenue)) * 100)}%` }}
-                              />
-                            </div>
-                            <div className="flex justify-between text-[8px] font-bold uppercase tracking-wider opacity-60">
-                              <span>{netBalance >= 0 ? 'Lucro' : 'Prejuízo'}</span>
-                              <span>{totalRevenue > 0 ? Math.round((Math.abs(netBalance) / totalRevenue) * 100) : 0}%</span>
                             </div>
                           </div>
                         </div>
@@ -6655,7 +6690,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           {!isPrintMode && (
                             <button 
                               onClick={() => setShowExpenseModal(true)}
-                              className="p-1.5 bg-[#1E3D2F] text-zinc-800 rounded-lg hover:opacity-90 transition-all active:scale-90"
+                              className="p-1.5 bg-[#ffffff] text-[#1E3D2F] rounded-lg hover:opacity-90 transition-all active:scale-90"
                             >
                               <Plus size={16} />
                             </button>
@@ -6796,10 +6831,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   )}
 
                   {!isPrintMode && (
-                    <div className="grid grid-cols-2 gap-2 px-4">
-                      <div className="p-3 shadow-sm rounded-3xl bg-gradient-to-br from-zinc-100 to-zinc-200 border border-zinc-300 flex items-center justify-between">
+                    <div className="grid grid-cols-2 gap-2 px-4 mb-8">
+                      <div className="p-3 shadow-sm rounded-3xl bg-[#83A8FF] border border-black/5 flex items-center justify-between">
                         <div className="space-y-0.5">
-                          <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Mensalidade</span>
+                          <span className="text-[8px] font-bold text-zinc-800/60 uppercase tracking-widest">Mensalidade</span>
                           {isEditingFee ? (
                             <input 
                               autoFocus
@@ -6818,7 +6853,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   setIsEditingFee(false);
                                 }
                               }}
-                              className="w-16 bg-white border border-zinc-300 text-zinc-900 font-black text-sm rounded px-1 outline-none"
+                              className="w-16 bg-white border border-transparent text-zinc-900 font-black text-sm rounded px-1 outline-none"
                             />
                           ) : (
                             <div 
@@ -6833,8 +6868,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           )}
                         </div>
                         <div className="flex flex-col gap-1">
-                          <button onClick={() => setMonthlyFee(prev => prev + 1)} className="p-1 bg-white text-zinc-800 border border-zinc-300 rounded shadow-sm hover:bg-zinc-50 transition-all"><Plus size={10} /></button>
-                          <button onClick={() => setMonthlyFee(prev => Math.max(0, prev - 1))} className="p-1 bg-white text-zinc-800 border border-zinc-300 rounded shadow-sm hover:bg-zinc-50 transition-all"><Minus size={10} /></button>
+                          <button onClick={() => setMonthlyFee(prev => prev + 1)} className="p-1 bg-white text-zinc-800 border-none rounded shadow-sm hover:opacity-90 transition-all"><Plus size={10} /></button>
+                          <button onClick={() => setMonthlyFee(prev => Math.max(0, prev - 1))} className="p-1 bg-white text-zinc-800 border-none rounded shadow-sm hover:opacity-90 transition-all"><Minus size={10} /></button>
                         </div>
                       </div>
 
@@ -6853,7 +6888,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
                         <button 
                           onClick={addYear}
-                          className="w-7 h-7 rounded-lg bg-[#1E3D2F] text-zinc-800 flex items-center justify-center hover:bg-[#2F5D4B] transition-all active:scale-90"
+                          className="w-7 h-7 rounded-lg bg-[#ffffff] shadow-sm text-[#1E3D2F] flex items-center justify-center hover:opacity-90 transition-all active:scale-90"
                           title="Adicionar Novo Ano"
                         >
                           <Plus size={14} />
