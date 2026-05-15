@@ -1329,7 +1329,7 @@ const PlayerManagementModalComponent = ({
                 }}
                 className={`w-full bg-transparent text-2xl font-black uppercase tracking-tighter text-black leading-none text-center outline-none border-b border-transparent focus:border-zinc-300 transition-all placeholder:text-zinc-300 py-1`}
               />
-              <p className="text-[10px] text-[#B7D96C] font-black mt-2 uppercase tracking-[0.2em]">NOME DO JOGADOR</p>
+              <p className="text-[10px] text-[#00FF00] font-black mt-2 uppercase tracking-[0.2em]">NOME DO JOGADOR</p>
             </div>
           </div>
         </div>
@@ -1337,11 +1337,11 @@ const PlayerManagementModalComponent = ({
         <div className="p-4 space-y-4">
           <div className="grid grid-cols-3 gap-2">
             <div className="p-3 bg-zinc-50 rounded-2xl border border-zinc-100 flex flex-col items-center justify-center shadow-sm">
-              <div className="text-xl font-black text-[#B7D96C] leading-none mb-1">{player.goals}</div>
+              <div className="text-xl font-black text-[#00FF00] leading-none mb-1">{player.goals}</div>
               <div className="text-[8px] font-bold uppercase tracking-widest text-zinc-500">Gols</div>
             </div>
             <div className="p-3 bg-zinc-50 rounded-2xl border border-zinc-100 flex flex-col items-center justify-center shadow-sm">
-              <div className="text-xl font-black text-[#B7D96C] leading-none mb-1">{player.assists}</div>
+              <div className="text-xl font-black text-[#00FF00] leading-none mb-1">{player.assists}</div>
               <div className="text-[8px] font-bold uppercase tracking-widest text-zinc-500">Assistências</div>
             </div>
             <div className="p-2 bg-orange-50 rounded-2xl flex flex-col items-center justify-center border border-orange-100 shadow-sm relative transition-all">
@@ -1366,7 +1366,7 @@ const PlayerManagementModalComponent = ({
           <div className="flex flex-col gap-2 pt-2">
             <button 
               onClick={onClose}
-              className="w-full py-3.5 bg-[#B7D96C] text-[#1E3D2F] rounded-2xl font-black uppercase tracking-widest shadow-md hover:shadow-lg active:scale-95 transition-all text-[11px]"
+              className="w-full py-3.5 bg-[#00FF00] text-[#1E3D2F] rounded-2xl font-black uppercase tracking-widest shadow-md hover:shadow-lg active:scale-95 transition-all text-[11px]"
             >
               Confirmar
             </button>
@@ -4368,7 +4368,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             <div className="flex gap-2 justify-center">
               <button 
                 onClick={() => navigateTeamsTab('configuracao')}
-                className={`w-12 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'configuracao' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80'}`}
+                className={`w-12 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'configuracao' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80'}`}
               >
                 <motion.div
                   animate={{ rotate: teamsTab === 'configuracao' ? [0, 180] : 0 }}
@@ -4385,19 +4385,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               </button>
               <button 
                 onClick={() => navigateTeamsTab('chegada')}
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'chegada' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'chegada' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'chegada' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Chegada</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('historico')}
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'historico' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'historico' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'historico' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Confrontos</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('proximos')}
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'proximos' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'proximos' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'proximos' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Próximos</span>
               </button>
@@ -4411,19 +4411,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             <div className="flex gap-2 justify-center">
               <button
                 onClick={() => setRankingTab('geral')}
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'geral' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'geral' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'geral' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Geral</span>
               </button>
               <button
                 onClick={() => setRankingTab('artilharia')}
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'artilharia' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'artilharia' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'artilharia' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Artilharia</span>
               </button>
               <button
                 onClick={() => setRankingTab('assistencias')}
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'assistencias' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'assistencias' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'assistencias' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Assistências</span>
               </button>
@@ -4437,13 +4437,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             <div className="flex gap-2 justify-center">
               <button 
                 onClick={() => setFinanceSubScreen('mensalidade')} 
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${financeSubScreen === 'mensalidade' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${financeSubScreen === 'mensalidade' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'mensalidade' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Mensalidade</span>
               </button>
               <button 
                 onClick={() => setFinanceSubScreen('balanco')} 
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${financeSubScreen === 'balanco' ? 'bg-[#B7D96C] text-[#1E3D2F] shadow-lg shadow-[#B7D96C]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${financeSubScreen === 'balanco' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#1E3D2F]/80 backdrop-blur-md border-[#1E3D2F]/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'balanco' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Balanço</span>
               </button>
@@ -4501,7 +4501,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   setIsInitialSetupFlow(true);
                                 }
                               }}
-                              className="flex-1 sm:flex-none px-4 py-2.5 bg-brand-gradient text-black text-[10px] font-black uppercase tracking-widest rounded-2xl shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 glass-3d flex items-center justify-center gap-2"
+                              className="flex-1 sm:flex-none px-4 py-2.5 bg-[#00FF00] text-black text-[10px] font-black uppercase tracking-widest rounded-2xl shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                             >
                               Configurar Partida
                             </button>
@@ -4534,7 +4534,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         addPlayer(input.value);
                         input.value = '';
                       }}
-                      className="p-2 bg-brand-gradient text-[#1E3D2F] rounded-2xl shadow hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square"
+                      className="p-2 bg-[#00FF00] text-[#1E3D2F] rounded-2xl shadow hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square"
                     >
                       <Plus size={18} />
                     </button>
@@ -4629,7 +4629,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             <input 
                               autoFocus
                               defaultValue={player.name}
-                              className={`flex-1 bg-black/10 border-b border-[#B7D96C] outline-none text-sm font-medium py-1 px-2 rounded-t-sm text-black`}
+                              className={`flex-1 bg-black/10 border-b border-[#00FF00] outline-none text-sm font-medium py-1 px-2 rounded-t-sm text-black`}
                               onClick={(e) => e.stopPropagation()}
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') updatePlayerName(player.id, e.currentTarget.value);
@@ -4641,14 +4641,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             <div className="flex flex-col gap-0.5 flex-1 min-w-0">
                               <div className="flex items-center gap-2">
                                 <span className="text-xs font-bold truncate text-left leading-none text-black">{player.name}</span>
-                                {orgProData[player.id] && <div className="shrink-0"><GiCrown size={16} color="#B7D96C" /></div>}
+                                {orgProData[player.id] && <div className="shrink-0"><GiCrown size={16} color="#00FF00" /></div>}
                               </div>
                               <div className="flex gap-0.5">
                                 {[1, 2, 3, 4, 5].map((star) => (
                                   <Star 
                                     key={`star-m-${player.id}-${star}`}
                                     size={8} 
-                                    className={`${(player.stars || 3) >= star ? 'fill-[#B7D96C] text-zinc-800' : 'text-black/10'}`} 
+                                    className={`${(player.stars || 3) >= star ? 'fill-[#00FF00] text-zinc-800' : 'text-black/10'}`} 
                                   />
                                 ))}
                               </div>
@@ -4735,7 +4735,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <div id="teams-list-section" className="max-w-5xl mx-auto w-full space-y-4">
                     {teamsTab === 'configuracao' ? (
                       <div className="space-y-6 bg-[#dedede] backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-black/10 ring-1 ring-white/5">
-                        <div className="sticky top-[-1px] z-40 bg-[#1E3D2F]/95 backdrop-blur-md py-4 -mx-6 px-6 flex justify-between items-center rounded-t-[2.5rem] border-b border-black/5">
+                        <div className="sticky top-[-1px] z-40 bg-[#dedede]/95 backdrop-blur-md py-4 -mx-6 px-6 flex justify-between items-center rounded-t-[2.5rem] border-b border-black/5">
                           <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">Configuração</h3>
                         </div>
                         
@@ -4748,7 +4748,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 defaultValue={match.config.duration}
                                 min={1}
                                 id="tab-match-duration"
-                                className="w-full p-4 rounded-2xl outline-none font-bold bg-black/5 text-black border border-black/10 focus:border-[#B7D96C]/50 transition-all text-sm"
+                                className="w-full p-4 rounded-2xl outline-none font-bold bg-black/5 text-black border border-black/10 focus:border-[#00FF00]/50 transition-all text-sm"
                               />
                             </div>
                             <div className="space-y-2">
@@ -4758,7 +4758,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 defaultValue={match.config.goalLimit}
                                 min={1}
                                 id="tab-match-goals"
-                                className="w-full p-4 rounded-2xl outline-none font-bold bg-black/5 text-black border border-black/10 focus:border-[#B7D96C]/50 transition-all text-sm"
+                                className="w-full p-4 rounded-2xl outline-none font-bold bg-black/5 text-black border border-black/10 focus:border-[#00FF00]/50 transition-all text-sm"
                               />
                             </div>
                             <div className="space-y-2">
@@ -4768,7 +4768,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 defaultValue={match.config.playersPerTeam}
                                 min={1}
                                 id="tab-match-players"
-                                className="w-full p-4 rounded-2xl outline-none font-bold bg-black/5 text-black border border-black/10 focus:border-[#B7D96C]/50 transition-all text-sm"
+                                className="w-full p-4 rounded-2xl outline-none font-bold bg-black/5 text-black border border-black/10 focus:border-[#00FF00]/50 transition-all text-sm"
                               />
                             </div>
                           </div>
@@ -5072,7 +5072,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 }}
                                 className={`flex items-center gap-3 p-3 rounded-[1.5rem] border transition-all active:scale-[0.98] ${
                                   p.isAvailable 
-                                    ? 'bg-[#B7D96C] border-[#B7D96C] text-black shadow-lg shadow-[#B7D96C]/10' 
+                                    ? 'bg-[#00FF00] border-[#00FF00] text-black shadow-lg shadow-[#00FF00]/10' 
                                     : 'bg-black/5 border-black/5 text-black/50 opacity-100 hover:bg-black/10'
                                 }`}
                               >
@@ -5090,7 +5090,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       <Star 
                                         key={`star-a-${p.id}-${star}`}
                                         size={8} 
-                                        className={`${(p.stars || 3) >= star ? (p.isAvailable ? 'fill-black text-black' : 'fill-[#B7D96C] text-zinc-800') : (p.isAvailable ? 'text-black/20' : 'text-black/20')}`} 
+                                        className={`${(p.stars || 3) >= star ? (p.isAvailable ? 'fill-black text-black' : 'fill-[#00FF00] text-zinc-800') : (p.isAvailable ? 'text-black/20' : 'text-black/20')}`} 
                                       />
                                     ))}
                                   </div>
@@ -5103,7 +5103,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
                       </div>
                     ) : teamsTab === 'historico' ? (
-                      <div className="space-y-6 bg-[#dedede] backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-black/10 ring-1 ring-white/5">
+                      <div className={`space-y-6 bg-[#dedede] backdrop-blur-xl rounded-[2.5rem] shadow-2xl border border-black/10 ring-1 ring-white/5 ${match.isActive ? 'pt-6 px-6 pb-0 overflow-hidden' : 'p-6'}`}>
                         {!match.isActive ? (
                           <div className="py-12 text-center border border-dashed border-black/10 rounded-3xl flex flex-col items-center gap-4">
                             {players.filter(p => p.isAvailable).length === 0 ? (
@@ -5201,7 +5201,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                     <Star 
                                                       key={`star-h-${p.id}-${star}`}
                                                       size={6} 
-                                                      className={`${(p.stars || 3) >= star ? 'fill-[#B7D96C] text-zinc-800' : 'text-black/10'}`} 
+                                                      className={`${(p.stars || 3) >= star ? 'fill-[#00FF00] text-zinc-800' : 'text-black/10'}`} 
                                                     />
                                                   ))}
                                                 </div>
@@ -5271,11 +5271,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     })()}
                                   </button>
                                   <div 
-                                    className={`text-4xl sm:text-7xl font-black origin-center text-black ${(!match.isActive || match.isPaused) ? 'opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-xl bg-black/20 border-b-4 border-black/5 shadow-inner`}
+                                    className={`text-4xl sm:text-7xl font-black origin-center text-white ${(!match.isActive || match.isPaused) ? 'opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-xl bg-black/20 border-b-4 border-black/5 shadow-inner`}
                                   >
                                     {match.scoreA}
                                   </div>
-                                  <span className="text-[7px] sm:text-[9px] font-black uppercase tracking-widest text-zinc-800 truncate max-w-[80px] sm:max-w-[120px] px-1 text-center">{teams[match.teamAIndex]?.name}</span>
                               </div>
                               
                               <div className="flex flex-col items-center justify-center gap-2 sm:gap-6 min-w-[70px] sm:min-w-[140px]">
@@ -5298,7 +5297,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           return { ...prev, isPaused: nextIsPaused, isActive: true };
                                         });
                                       }}
-                                      className={`w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center rounded-full transition-all shadow-md ${match.isPaused ? 'bg-[#B7D96C] text-black hover:opacity-90' : 'bg-black/10 text-black/40 hover:bg-white/20'} disabled:opacity-20 disabled:cursor-not-allowed`}
+                                      className={`w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center rounded-full transition-all shadow-md ${match.isPaused ? 'bg-[#00FF00] text-black hover:opacity-90' : 'bg-black/10 text-black/40 hover:bg-white/20'} disabled:opacity-20 disabled:cursor-not-allowed`}
                                     >
                                       {match.isPaused ? <Play size={16} className="sm:w-5 sm:h-5" fill="currentColor" /> : <Pause size={16} className="sm:w-5 sm:h-5" fill="currentColor" />}
                                     </button>
@@ -5359,11 +5358,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     })()}
                                   </button>
                                   <div 
-                                    className={`text-4xl sm:text-7xl font-black origin-center text-black ${(!match.isActive || match.isPaused) ? 'opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-xl bg-black/20 border-b-4 border-black/5 shadow-inner`}
+                                    className={`text-4xl sm:text-7xl font-black origin-center text-white ${(!match.isActive || match.isPaused) ? 'opacity-50' : ''} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-xl bg-black/20 border-b-4 border-black/5 shadow-inner`}
                                   >
                                     {match.scoreB}
                                   </div>
-                                  <span className="text-[7px] sm:text-[9px] font-black uppercase tracking-widest text-zinc-800 truncate max-w-full px-1">{teams[match.teamBIndex]?.name}</span>
                               </div>
                             </div>
                             
@@ -5441,7 +5439,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       <Star 
                         key={`star-${p.id}-${star}`}
                         size={6} 
-                        className={`${(p.stars || 3) >= star ? 'fill-[#B7D96C] text-zinc-800' : 'text-black/10'}`} 
+                        className={`${(p.stars || 3) >= star ? 'fill-[#00FF00] text-zinc-800' : 'text-black/10'}`} 
                       />
                     ))}
                   </div>
@@ -5582,7 +5580,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       <Star 
                         key={`star-b-${p.id}-${star}`}
                         size={6} 
-                        className={`${(p.stars || 3) >= star ? 'fill-[#B7D96C] text-zinc-800' : 'text-black/10'}`} 
+                        className={`${(p.stars || 3) >= star ? 'fill-[#00FF00] text-zinc-800' : 'text-black/10'}`} 
                       />
                     ))}
                   </div>
@@ -6154,7 +6152,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                       <Star 
                                                         key={`star-q-${p.id}-${star}`}
                                                         size={8} 
-                                                        className={`${(p.stars || 3) >= star ? 'fill-[#B7D96C] text-zinc-800' : 'text-black/20'}`} 
+                                                        className={`${(p.stars || 3) >= star ? 'fill-[#00FF00] text-zinc-800' : 'text-black/20'}`} 
                                                       />
                                                     ))}
                                                   </div>
@@ -6469,7 +6467,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           <Star 
                             key={`star-rank-${player.id}-${star}`}
                             size={8} 
-                            className={`${(player.stars || 3) >= star ? 'fill-[#B7D96C] text-zinc-800' : 'text-zinc-800/10'}`} 
+                            className={`${(player.stars || 3) >= star ? 'fill-[#00FF00] text-zinc-800' : 'text-zinc-800/10'}`} 
                           />
                         ))}
                       </div>
