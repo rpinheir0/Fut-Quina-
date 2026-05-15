@@ -1549,7 +1549,7 @@ const SpinningBall = ({
   );
 };
 
-const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, style, align = "center" }: { className?: string, size?: 'sm' | 'md' | 'lg', colorClass?: string, style?: React.CSSProperties, align?: 'start' | 'center' | 'end' }) => {
+const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, titleColorClass, subColorClass, style, align = "center" }: { className?: string, size?: 'sm' | 'md' | 'lg', colorClass?: string, titleColorClass?: string, subColorClass?: string, style?: React.CSSProperties, align?: 'start' | 'center' | 'end' }) => {
   const theme = 'light';
   const sizeClasses = {
     sm: "text-lg",
@@ -1569,10 +1569,10 @@ const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, 
 
   return (
     <div className={`flex flex-col justify-center ${alignClass} ${className}`} style={style}>
-      <span className={`${sizeClasses[size]} uppercase tracking-tighter ${colorClass} ${shadowClass} font-staatliches leading-[0.85]`}>
+      <span className={`${sizeClasses[size]} uppercase tracking-tighter ${titleColorClass || colorClass} ${shadowClass} font-staatliches leading-[0.85]`}>
         FutQuina
       </span>
-      <span className={`${subSizeClasses[size]} opacity-100 font-readex tracking-widest mt-0.5 ${colorClass}`}>
+      <span className={`${subSizeClasses[size]} opacity-100 font-readex tracking-widest mt-0.5 ${subColorClass || colorClass}`}>
         Gestão de pelada
       </span>
     </div>
@@ -4210,7 +4210,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         className="h-full flex flex-col overflow-hidden"
       >
         {/* Sticky Header and Tabs Container */}
-        <div className={`sticky top-0 z-50 bg-[#1E3D2F]/95 backdrop-blur-2xl ${isPrintMode ? 'hidden' : ''}`}>
+        <div className={`sticky top-0 z-50 bg-[#000000]/95 backdrop-blur-2xl ${isPrintMode ? 'hidden' : ''}`}>
         {/* Header */}
         <header className="px-6 py-4 flex justify-between items-center bg-transparent relative transition-colors duration-300">
           <div className="flex items-center gap-3 overflow-hidden relative z-10">
@@ -4233,7 +4233,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 >
                   <FutQuinaLogo 
                     size="md" 
-                    colorClass="text-white" 
+                    titleColorClass="text-brand-primary"
+                    subColorClass="text-white"
                     align="start"
                   />
                 </motion.div>
@@ -4472,7 +4473,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               }}
               className="p-6 space-y-6"
             >
-              <div className="max-w-3xl mx-auto space-y-6 bg-[#dedede] backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-black/10 ring-1 ring-black/5">
+              <div className="max-w-3xl mx-auto space-y-6 bg-white/20 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5">
                 <div className="space-y-6">
                     <section className="space-y-4">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -4730,8 +4731,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             >
                   <div id="teams-list-section" className="max-w-5xl mx-auto w-full space-y-4">
                     {teamsTab === 'configuracao' ? (
-                      <div className="space-y-6 bg-[#dedede] backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-black/10 ring-1 ring-white/5">
-                        <div className="sticky top-[-1px] z-40 bg-[#dedede]/95 backdrop-blur-md py-4 -mx-6 px-6 flex justify-between items-center rounded-t-[2.5rem] border-b border-black/5">
+                      <div className="space-y-6 bg-white/20 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5">
+                        <div className="sticky top-[-1px] z-40 bg-white/80 backdrop-blur-md py-4 -mx-6 px-6 flex justify-between items-center rounded-t-[2.5rem] border-b border-black/5">
                           <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">Configuração</h3>
                         </div>
                         
@@ -4885,7 +4886,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
                       </div>
                     ) : teamsTab === 'chegada' ? (
-                      <div className="space-y-6 bg-[#dedede] backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-black/10 ring-1 ring-white/5">
+                      <div className="space-y-6 bg-white/20 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5">
                         <div className="flex justify-between items-center">
                           <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">Ordem de Chegada</h3>
                           <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -5099,7 +5100,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
                       </div>
                     ) : teamsTab === 'historico' ? (
-                      <div className={`space-y-6 bg-[#dedede] backdrop-blur-xl rounded-[2.5rem] shadow-2xl border border-black/10 ring-1 ring-white/5 ${match.isActive ? 'pt-6 px-6 pb-0 overflow-hidden' : 'p-6'}`}>
+                      <div className={`space-y-6 bg-white/20 backdrop-blur-xl rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5 ${match.isActive ? 'pt-6 px-6 pb-0 overflow-hidden' : 'p-6'}`}>
                         {!match.isActive ? (
                           <div className="py-12 text-center border border-dashed border-black/10 rounded-3xl flex flex-col items-center gap-4">
                             {players.filter(p => p.isAvailable).length === 0 ? (
@@ -5648,7 +5649,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         )}
                       </div>
                     ) : teamsTab === 'proximos' ? (
-                      <div className="space-y-6 relative overflow-hidden bg-[#dedede] backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-black/10 ring-1 ring-white/5">
+                      <div className="space-y-6 relative overflow-hidden bg-white/20 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5">
                         <div className="flex justify-between items-center relative z-10">
                           <button 
                             onClick={() => setTeamsTab('configuracao')}
@@ -5743,7 +5744,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 <motion.div 
                                   initial={{ opacity: 0, y: -10 }}
                                   animate={{ opacity: 1, y: 0 }}
-                                  className="p-5 bg-black/5 border border-black/10 rounded-2xl flex items-start gap-4 shadow-xl mb-4 cursor-pointer hover:bg-black/10 transition-colors group"
+                                  className="p-5 bg-black border border-black/10 rounded-2xl flex items-start gap-4 shadow-xl mb-4 cursor-pointer hover:bg-black/90 transition-colors group"
                                   onClick={() => {
                                     setTeams(prev => prev.map(team => team.lastMatchStatus === 'Empate' ? { ...team, lastMatchStatus: undefined } : team));
                                   }}
@@ -5753,8 +5754,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   </div>
                                   <div className="flex flex-col">
                                     <span className="text-[10px] font-black uppercase tracking-widest text-brand-primary mb-1">Empate Resolvido Manualmente</span>
-                                    <p className="text-[10px] text-black/60 font-bold uppercase leading-relaxed tracking-wider">
-                                      Desmarque o time que deve <span className="text-black">descer na fila</span>. O time que permanecer selecionado jogará a próxima partida.
+                                    <p className="text-[10px] text-white/80 font-bold uppercase leading-relaxed tracking-wider">
+                                      Desmarque o time que deve <span className="text-white">descer na fila</span>. O time que permanecer selecionado jogará a próxima partida.
                                     </p>
                                   </div>
                                 </motion.div>
@@ -6399,7 +6400,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               className="p-6 space-y-6 pb-24"
             >
               <motion.div 
-                className={`bg-[#dedede] backdrop-blur-xl p-6 rounded-[2.5rem] shadow-2xl border border-black/10 ring-1 ring-black/5 overflow-hidden`}
+                className={`bg-white/20 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5 overflow-hidden`}
                 drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
                 onDragEnd={(event, info) => {
