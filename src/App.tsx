@@ -1325,13 +1325,26 @@ const PlayerManagementModalComponent = ({
                 }}
                 className={`w-full bg-transparent text-2xl font-black uppercase tracking-tighter text-black leading-none text-center outline-none border-b border-transparent focus:border-zinc-300 transition-all placeholder:text-zinc-300 py-1`}
               />
-              <p className="text-[10px] text-[#00FF00] font-black mt-2 uppercase tracking-[0.2em]">NOME DO JOGADOR</p>
+              <div className="flex flex-wrap items-center justify-center gap-1 mt-2">
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={`modal-star-${star}`}
+                    onClick={() => onUpdateStars && onUpdateStars(player.id, star)}
+                    className="transition-all active:scale-95 p-1"
+                  >
+                    <Star 
+                      size={20} 
+                      className={`${(player.stars || 0) >= star ? 'fill-yellow-400 text-yellow-400' : 'text-zinc-300'}`} 
+                    />
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
         <div className="p-4 space-y-4">
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2">
             <div className="p-3 bg-zinc-50 rounded-2xl border border-zinc-100 flex flex-col items-center justify-center shadow-sm">
               <div className="text-xl font-black text-[#00FF00] leading-none mb-1">{player.goals}</div>
               <div className="text-[8px] font-bold uppercase tracking-widest text-zinc-500">Gols</div>
@@ -1339,23 +1352,6 @@ const PlayerManagementModalComponent = ({
             <div className="p-3 bg-zinc-50 rounded-2xl border border-zinc-100 flex flex-col items-center justify-center shadow-sm">
               <div className="text-xl font-black text-[#00FF00] leading-none mb-1">{player.assists}</div>
               <div className="text-[8px] font-bold uppercase tracking-widest text-zinc-500">Assistências</div>
-            </div>
-            <div className="p-2 bg-orange-50 rounded-2xl flex flex-col items-center justify-center border border-orange-100 shadow-sm relative transition-all">
-              <div className="flex flex-wrap items-center justify-center gap-[1px] mb-1 px-1">
-                {[1, 2, 3, 4, 5].map((star) => (
-                  <button
-                    key={`modal-star-${star}`}
-                    onClick={() => onUpdateStars && onUpdateStars(player.id, star)}
-                    className="transition-all active:scale-95 p-0.5"
-                  >
-                    <Star 
-                      size={10} 
-                      className={`${(player.stars || 0) >= star ? 'fill-yellow-400 text-yellow-400' : 'text-orange-200'}`} 
-                    />
-                  </button>
-                ))}
-              </div>
-              <div className="text-[8px] font-bold uppercase tracking-widest text-orange-600">Nível</div>
             </div>
           </div>
 
