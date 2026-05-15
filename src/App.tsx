@@ -9825,8 +9825,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         />
 
         {/* Bottom Navigation */}
-        <div className={`fixed bottom-0 left-0 right-0 z-[100] transition-transform duration-500 ease-in-out pb-4 sm:pb-6 px-4 ${isNavVisible ? 'translate-y-0' : 'translate-y-28'}`}>
-          <nav className="mx-auto max-w-[400px] bg-black/95 backdrop-blur-2xl border border-white/10 p-1.5 flex items-center justify-between shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-2xl">
+        <div className={`fixed bottom-0 left-0 right-0 z-[100] transition-transform duration-500 ease-in-out w-full ${isNavVisible ? 'translate-y-0' : 'translate-y-28'}`}>
+          <nav className="w-full bg-[#111111] border-t border-white/5 pt-3 pb-6 sm:pb-8 px-2 sm:px-6 flex items-center justify-around shadow-[0_-8px_32px_rgba(0,0,0,0.5)]">
             <button 
               onClick={() => {
                 const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
