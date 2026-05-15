@@ -1568,11 +1568,11 @@ const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, 
   const alignClass = align === 'start' ? 'items-start text-left' : align === 'end' ? 'items-end text-right' : 'items-center text-center';
 
   return (
-    <div className={`flex flex-col justify-center ${alignClass} ${className}`} style={style}>
-      <span className={`${sizeClasses[size]} uppercase tracking-tighter ${titleColorClass || colorClass} ${shadowClass} font-staatliches leading-[0.85]`}>
+    <div className={`flex flex-col justify-center ${alignClass} ${className} shrink-0`} style={style}>
+      <span className={`${sizeClasses[size]} uppercase tracking-tighter ${titleColorClass || colorClass} ${shadowClass} font-staatliches leading-[0.85] shrink-0 whitespace-nowrap`}>
         FutQuina
       </span>
-      <span className={`${subSizeClasses[size]} opacity-100 font-readex tracking-widest mt-0.5 ${subColorClass || colorClass}`}>
+      <span className={`${subSizeClasses[size]} opacity-100 font-readex tracking-widest mt-0.5 ${subColorClass || colorClass} shrink-0 whitespace-nowrap`}>
         Gestão de pelada
       </span>
     </div>
@@ -4212,12 +4212,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         {/* Sticky Header and Tabs Container */}
         <div className={`sticky top-0 z-50 bg-[#000000]/95 backdrop-blur-2xl ${isPrintMode ? 'hidden' : ''}`}>
         {/* Header */}
-        <header className="px-6 py-4 flex justify-between items-center bg-transparent relative transition-colors duration-300">
-          <div className="flex items-center gap-3 overflow-hidden relative z-10">
+        <header className="px-6 py-4 flex justify-between items-center bg-transparent relative transition-colors duration-300 gap-4">
+          <div className="flex items-center gap-3 overflow-hidden relative z-10 shrink-0 max-w-[calc(100vw-80px)]">
             <motion.div
               initial={false}
               animate={{ rotate: match.isActive ? 360 : 0 }}
               transition={{ duration: 0.6, ease: "easeInOut" }}
+              className="shrink-0"
             >
               <SpinningBall size="sm" spin={match.isActive && !match.isPaused} />
             </motion.div>
@@ -4365,7 +4366,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             <div className="flex gap-2 justify-center">
               <button 
                 onClick={() => navigateTeamsTab('configuracao')}
-                className={`w-12 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'configuracao' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white/40 hover:text-white/80'}`}
+                className={`w-12 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'configuracao' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#000000] backdrop-blur-md border-black/20 text-white/40 hover:text-white/80'}`}
               >
                 <motion.div
                   animate={{ rotate: teamsTab === 'configuracao' ? [0, 180] : 0 }}
@@ -4382,19 +4383,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               </button>
               <button 
                 onClick={() => navigateTeamsTab('chegada')}
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'chegada' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'chegada' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#000000] backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'chegada' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Chegada</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('historico')}
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'historico' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'historico' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#000000] backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'historico' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Confrontos</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('proximos')}
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'proximos' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${teamsTab === 'proximos' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#000000] backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'proximos' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Próximos</span>
               </button>
@@ -9809,7 +9810,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
         {/* Bottom Navigation */}
         <div className={`fixed bottom-0 left-0 right-0 z-[100] transition-transform duration-500 ease-in-out pb-4 sm:pb-6 px-4 ${isNavVisible ? 'translate-y-0' : 'translate-y-28'}`}>
-          <nav className="mx-auto max-w-[400px] bg-black/95 backdrop-blur-2xl border border-white/10 p-1.5 flex items-center justify-between shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-2xl">
+          <nav className="mx-auto max-w-[400px] bg-[#000000] backdrop-blur-2xl border border-white/10 p-1.5 flex items-center justify-between shadow-[0_8px_32px_rgba(0,0,0,0.5)] rounded-2xl">
             <button 
               onClick={() => {
                 const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
