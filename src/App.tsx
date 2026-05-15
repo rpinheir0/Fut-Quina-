@@ -4427,21 +4427,21 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             <div className="flex gap-2 justify-center">
               <button
                 onClick={() => setRankingTab('geral')}
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'geral' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'geral' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
               >
-                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'geral' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Geral</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'geral' ? 'text-[#1E3D2F]' : 'text-white'}`}>Geral</span>
               </button>
               <button
                 onClick={() => setRankingTab('artilharia')}
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'artilharia' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'artilharia' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
               >
-                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'artilharia' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Artilharia</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'artilharia' ? 'text-[#1E3D2F]' : 'text-white'}`}>Artilharia</span>
               </button>
               <button
                 onClick={() => setRankingTab('assistencias')}
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'assistencias' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${rankingTab === 'assistencias' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
               >
-                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'assistencias' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Assistências</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'assistencias' ? 'text-[#1E3D2F]' : 'text-white'}`}>Assistências</span>
               </button>
             </div>
           </div>
@@ -4453,15 +4453,15 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             <div className="flex gap-2 justify-center">
               <button 
                 onClick={() => setFinanceSubScreen('balanco')} 
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${financeSubScreen === 'balanco' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${financeSubScreen === 'balanco' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
               >
-                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'balanco' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Balanço</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'balanco' ? 'text-[#1E3D2F]' : 'text-white'}`}>Balanço</span>
               </button>
               <button 
                 onClick={() => setFinanceSubScreen('mensalidade')} 
-                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${financeSubScreen === 'mensalidade' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white/40 hover:text-white/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-[20px] transition-all border ${financeSubScreen === 'mensalidade' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
               >
-                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'mensalidade' ? 'text-[#1E3D2F]' : 'text-white/70'}`}>Mensalidade</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'mensalidade' ? 'text-[#1E3D2F]' : 'text-white'}`}>Mensalidade</span>
               </button>
             </div>
           </div>
@@ -5684,7 +5684,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 className="p-2 rounded-xl transition-all active:scale-90 hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5 bg-[#83A8FF] shadow border border-[#83A8FF] text-white"
                               >
                                 <span className="text-white"><ImSpinner9 size={14} /></span>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-white">Sortear</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest text-[#363636]">Sortear</span>
                               </button>
                               <button
                                 onClick={() => {
@@ -5705,7 +5705,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 className="p-2 rounded-xl transition-all active:scale-90 hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5 bg-gradient-to-br from-[#00b024] to-[#01801c] shadow border border-[#01801c] text-white"
                               >
                                 <span className="text-white"><IoFootballOutline size={20} /></span>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-white">Iniciar</span>
+                                <span className="text-[10px] font-black uppercase tracking-widest text-[#363636]">Iniciar</span>
                               </button>
                             </div>
                         </div>
