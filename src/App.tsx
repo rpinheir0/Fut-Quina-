@@ -4520,7 +4520,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     />
                     <button 
                       onClick={handleImportContacts}
-                      className="p-2 bg-gradient-to-br from-zinc-200 to-zinc-300 text-[#1E3D2F] rounded-2xl shadow-sm hover:from-zinc-300 hover:to-zinc-400 transition-all active:scale-95 flex items-center justify-center aspect-square border-none"
+                      className="p-2 bg-[#83A8FF] text-[#1E3D2F] rounded-2xl shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square border-none"
                       title="Importar dos Contatos"
                     >
                       <Contact size={18} />
@@ -4550,7 +4550,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     }}
                   />
                   <div className="absolute top-3 left-4 pointer-events-none transition-all peer-focus:hidden peer-[:not(:placeholder-shown)]:hidden">
-                    <span className="text-sm font-medium text-[#1E3D2F]/50">
+                    <span className="text-xs font-medium text-[#1E3D2F]/50">
                       Cole aqui sua lista do WhatsApp (ex: 1. João, 2. Maria...)
                     </span>
                   </div>
