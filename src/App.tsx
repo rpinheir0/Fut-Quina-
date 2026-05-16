@@ -4658,15 +4658,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.1}
-              onDragEnd={(_, info) => {
-                if (info.offset.x < -100) {
-                  setCurrentScreen('teams');
-                  setTeamsTab(match.isActive ? 'historico' : 'proximos');
-                }
-              }}
               className="p-2 sm:p-4 space-y-6 text-white"
             >
               <div className="w-full space-y-6">
@@ -4886,26 +4877,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.1}
-              onDragEnd={(_, info) => {
-                const tabs = ['configuracao', 'chegada', 'historico', 'proximos'];
-                const currentIndex = tabs.indexOf(teamsTab as any);
-                if (info.offset.x > 100) {
-                  if (currentIndex > 0) {
-                    navigateTeamsTab(tabs[currentIndex - 1] as any);
-                  } else {
-                    setCurrentScreen('players');
-                  }
-                } else if (info.offset.x < -100) {
-                  if (currentIndex < tabs.length - 1) {
-                    navigateTeamsTab(tabs[currentIndex + 1] as any);
-                  } else {
-                    setCurrentScreen('ranking');
-                  }
-                }
-              }}
               className="px-2 sm:px-4 pb-6 pt-4 space-y-4 min-h-full bg-transparent flex flex-col text-white"
             >
                   <div id="teams-list-section" className="w-full space-y-4">
@@ -6509,29 +6480,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.1}
-              onDragEnd={(_, info) => {
-                if (info.offset.x > 100) {
-                  setCurrentScreen('teams');
-                  setTeamsTab(match.isActive ? 'historico' : 'proximos');
-                }
-              }}
               className="p-2 sm:p-4 space-y-6 pb-24"
             >
               <motion.div 
                 className={`w-full overflow-hidden`}
-                drag="x"
-                dragConstraints={{ left: 0, right: 0 }}
-                onDragEnd={(event, info) => {
-                  if (Math.abs(info.offset.x) > 50) {
-                    const tabs = ['geral', 'artilharia', 'assistencias'];
-                    const currentIndex = tabs.indexOf(rankingTab);
-                    if (info.offset.x > 0 && currentIndex > 0) setRankingTab(tabs[currentIndex - 1]);
-                    else if (info.offset.x < 0 && currentIndex < tabs.length - 1) setRankingTab(tabs[currentIndex + 1]);
-                  }
-                }}
               >
                 <div className="flex items-center justify-between pb-2 border-b border-dashed border-black/10 mb-4 px-2">
                   <div className="flex items-center gap-1">
@@ -6618,14 +6570,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.1}
-              onDragEnd={(_, info) => {
-                if (info.offset.x > 100) {
-                  setCurrentScreen('ranking');
-                }
-              }}
               className={`space-y-4 ${isPrintMode ? 'space-y-0' : ''}`}
             >
               {financeSubScreen === 'balanco' && (() => {
@@ -6635,11 +6579,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                 return (
                   <motion.div
-                    drag="x"
-                    dragConstraints={{ left: 0, right: 0 }}
-                    onDragEnd={(event, info) => {
-                      if (info.offset.x < -50) setFinanceSubScreen('mensalidade');
-                    }}
                     className={`space-y-6 ${isPrintMode ? 'bg-white min-h-screen text-black p-4 pb-12 font-mono' : 'font-mono'}`}
                   >
                     {!isPrintMode && (
@@ -6928,13 +6867,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               );
             })()}
               {financeSubScreen === 'mensalidade' && (
-                <motion.div
-                  drag="x"
-                  dragConstraints={{ left: 0, right: 0 }}
-                  onDragEnd={(event, info) => {
-                    if (info.offset.x > 50) setFinanceSubScreen('balanco');
-                  }}
-                >
+                <motion.div>
                   {!isPrintMode && (
                     <div className="flex justify-end px-4">
                       <div className="flex gap-1.5">
@@ -7169,17 +7102,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: swipeDirection * -20 }}
               transition={{ duration: 0.2 }}
-              drag="x"
-              dragConstraints={{ left: 0, right: 0 }}
-              dragElastic={0.1}
-              onDragEnd={(_, info) => {
-                if (info.offset.x > 100) {
-                  const screens: Screen[] = ['players', 'teams', 'ranking', 'finance', 'org-pro'];
-                  const currentIndex = screens.indexOf(currentScreen);
-                  setSwipeDirection(-1);
-                  setCurrentScreen(screens[currentIndex - 1]);
-                }
-              }}
               className="px-2 sm:px-4 pb-24 pt-4 space-y-6 min-h-full bg-transparent flex flex-col text-white"
             >
               <div className="w-full space-y-6">
