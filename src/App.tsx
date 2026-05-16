@@ -5666,7 +5666,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               <Settings size={20} className="text-zinc-800" />
                             </motion.div>
                           </button>
-                            <div className="flex gap-2">
+                            <div className="flex gap-1">
                               <button
                                 onClick={() => {
                                   if (match.isActive && !match.hasEnded) return;
@@ -5681,7 +5681,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   }, 3000);
                                 }}
                                 disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
-                                className="p-2 rounded-xl transition-all active:scale-90 hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5 bg-[#83A8FF] shadow border border-[#83A8FF] text-white"
+                                className="p-1 px-2 rounded-lg transition-all active:scale-90 hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1 bg-[#83A8FF] shadow border border-[#83A8FF] text-white"
                               >
                                 <span className="text-white"><ImSpinner9 size={14} /></span>
                                 <span className="text-[10px] font-black uppercase tracking-widest text-[#363636]">Sortear</span>
@@ -5702,9 +5702,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 disabled={!((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
                                   (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
                                    teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)))}
-                                className="p-2 rounded-xl transition-all active:scale-90 hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1.5 bg-gradient-to-br from-[#00b024] to-[#01801c] shadow border border-[#01801c] text-white"
+                                className="p-1 px-2 rounded-lg transition-all active:scale-90 hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1 bg-gradient-to-br from-[#00b024] to-[#01801c] shadow border border-[#01801c] text-white"
                               >
-                                <span className="text-white"><IoFootballOutline size={20} /></span>
+                                <span className="text-white"><IoFootballOutline size={16} /></span>
                                 <span className="text-[10px] font-black uppercase tracking-widest text-[#363636]">Iniciar</span>
                               </button>
                             </div>
