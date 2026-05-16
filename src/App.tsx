@@ -1547,6 +1547,46 @@ const SpinningBall = ({
   );
 };
 
+const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
+  useEffect(() => {
+    const timer = setTimeout(onComplete, 3000);
+    return () => clearTimeout(timer);
+  }, [onComplete]);
+
+  return (
+    <div className="fixed inset-0 z-[3000] flex flex-col items-center justify-center bg-[#14301F]">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="flex flex-col items-center gap-6"
+      >
+        <motion.img 
+          src="/logo.png"
+          alt="FutQuina Logo"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="w-32 h-32 drop-shadow-lg"
+        />
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+          className="flex flex-col items-center"
+        >
+          <span className="text-4xl uppercase tracking-tighter text-brand-primary font-staatliches leading-[0.85]">
+            FutQuina
+          </span>
+          <span className="text-xs opacity-100 font-readex tracking-widest mt-0.5 text-white uppercase font-bold">
+            Gestão de pelada
+          </span>
+        </motion.div>
+      </motion.div>
+    </div>
+  );
+};
+
 const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, titleColorClass, subColorClass, style, align = "center" }: { className?: string, size?: 'sm' | 'md' | 'lg', colorClass?: string, titleColorClass?: string, subColorClass?: string, style?: React.CSSProperties, align?: 'start' | 'center' | 'end' }) => {
   const sizeClasses = {
     sm: "text-lg",
@@ -1559,9 +1599,9 @@ const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, 
     lg: "text-xs"
   };
   const iconSizes = {
-    sm: 20,
-    md: 24,
-    lg: 40
+    sm: 24,
+    md: 32,
+    lg: 48
   };
 
   const colorClass = overrideColor || 'text-zinc-500 font-bold';
@@ -2216,7 +2256,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   }, [rankingTab, groupId]);
   const [showNotEnoughPlayersModal, setShowNotEnoughPlayersModal] = useState(false);
   const [showLogoAnimation, setShowLogoAnimation] = useState(false);
-  const [isInitializing, setIsInitializing] = useState(true);
   const [showCloseWarningModal, setShowCloseWarningModal] = useState(false);
   const [showBackToHomeConfirm, setShowBackToHomeConfirm] = useState(false);
   const [flashingTeamIds, setFlashingTeamIds] = useState<string[]>([]);
@@ -2604,13 +2643,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     };
   }, []);
 
-  // --- Initialization ---
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsInitializing(false);
-    }, 2500);
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     if (showEqualizerModal && equalizerData) {
@@ -4156,20 +4188,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         queueCount={teams.length - 2}
       />
 
-      <AnimatePresence>
-        {isInitializing && (
-          <motion.div 
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[1000] bg-gradient-to-br from-zinc-700 via-zinc-800 to-zinc-900 flex flex-col items-center justify-center p-6"
-          >
-            <SpinningBall size="lg" />
-            <div className="mt-8 text-center flex flex-col items-center">
-              <FutQuinaLogo size="lg" className="mb-2" colorClass="text-zinc-500" />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* Global Application Settings Modal */}
       <AnimatePresence>
@@ -10296,6 +10314,7 @@ function AuthScreen() {
 // --- Main App Component ---
 export default function App() {
   const [session, setSession] = useState<any>(null);
+  const [isInitializing, setIsInitializing] = useState(true);
 
   const [groups, setGroups] = useState<{ id: string, name: string, createdAt: number }[]>(() => {
     const saved = safeLocalStorage.getItem('futquina_groups_offline');
@@ -10335,6 +10354,10 @@ export default function App() {
   useEffect(() => {
     safeLocalStorage.setItem('futquina_groups_offline', JSON.stringify(groups));
   }, [groups]);
+
+  if (isInitializing) {
+    return <SplashScreen onComplete={() => setIsInitializing(false)} />;
+  }
 
   if (currentGroupId) {
     return <GroupApp groupId={currentGroupId} onBackToHome={() => setCurrentGroupId(null)} />;
