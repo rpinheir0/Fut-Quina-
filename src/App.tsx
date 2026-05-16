@@ -131,7 +131,9 @@ import {
   PiCheck,
   PiHandPointingBold,
   PiLockFill,
-  PiShieldCheckFill
+  PiShieldCheckFill,
+  PiPaletteBold,
+  PiClockBold
 } from 'react-icons/pi';
 import { supabase } from './lib/supabase';
 import { sounds } from './lib/sounds';
@@ -1546,31 +1548,44 @@ const SpinningBall = ({
 };
 
 const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, titleColorClass, subColorClass, style, align = "center" }: { className?: string, size?: 'sm' | 'md' | 'lg', colorClass?: string, titleColorClass?: string, subColorClass?: string, style?: React.CSSProperties, align?: 'start' | 'center' | 'end' }) => {
-  const theme = 'light';
   const sizeClasses = {
     sm: "text-lg",
-    md: "text-2xl", // increased slightly to better match the ball
-    lg: "text-4xl"
+    md: "text-xl",
+    lg: "text-3xl"
   };
   const subSizeClasses = {
     sm: "text-[8px]",
-    md: "text-[11px]",
+    md: "text-[10px]",
     lg: "text-xs"
+  };
+  const iconSizes = {
+    sm: 20,
+    md: 24,
+    lg: 40
   };
 
   const colorClass = overrideColor || 'text-zinc-500 font-bold';
-  const shadowClass = '';
-
   const alignClass = align === 'start' ? 'items-start text-left' : align === 'end' ? 'items-end text-right' : 'items-center text-center';
 
   return (
-    <div className={`flex flex-col justify-center ${alignClass} ${className}`} style={style}>
-      <span className={`${sizeClasses[size]} uppercase tracking-tighter ${titleColorClass || colorClass} ${shadowClass} font-staatliches leading-[0.85]`}>
-        FutQuina
-      </span>
-      <span className={`${subSizeClasses[size]} opacity-100 font-readex tracking-widest mt-0.5 ${subColorClass || colorClass}`}>
-        Gestão de pelada
-      </span>
+    <div className={`flex items-center gap-2.5 ${alignClass} ${className}`} style={style}>
+      <div className="relative shrink-0">
+        <img 
+          src="/logo.png"
+          alt="FutQuina Logo"
+          width={iconSizes[size]} 
+          height={iconSizes[size]} 
+          className="drop-shadow-md"
+        />
+      </div>
+      <div className={`flex flex-col justify-center ${alignClass}`}>
+        <span className={`${sizeClasses[size]} uppercase tracking-tighter ${titleColorClass || colorClass} font-staatliches leading-[0.85]`}>
+          FutQuina
+        </span>
+        <span className={`${subSizeClasses[size]} opacity-100 font-readex tracking-widest mt-0.5 ${subColorClass || colorClass} uppercase font-bold`}>
+          Gestão de pelada
+        </span>
+      </div>
     </div>
   );
 };
@@ -1687,8 +1702,14 @@ function AnimatedCounter({ value }: { value: number }) {
 // --- App Component ---
 
 function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: () => void }) {
-  const theme = 'light';
-  const setTheme = (t: string) => {}; // No-op if needed elsewhere
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    const saved = safeLocalStorage.getItem(`futquina_theme_${groupId}`);
+    return (saved as 'light' | 'dark') || 'light';
+  });
+
+  useEffect(() => {
+    safeLocalStorage.setItem(`futquina_theme_${groupId}`, theme);
+  }, [theme, groupId]);
   
   // -- Presence Mode --
   const urlParams = new URLSearchParams(window.location.search);
@@ -2247,6 +2268,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [showResetStatsConfirm, setShowResetStatsConfirm] = useState(false);
+  const [showGlobalSettings, setShowGlobalSettings] = useState(false);
   const [showGoalAnimation, setShowGoalAnimation] = useState<{ scorerName: string, teamName: string, scorerPhoto?: string } | null>(null);
   const [showSetupGuide, setShowSetupGuide] = useState(false);
   const [highlightFirstPlayer, setHighlightFirstPlayer] = useState(false);
@@ -4025,7 +4047,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   }
 
   return (
-    <div className="h-screen bg-brand-dark text-brand-text-primary font-sans overflow-hidden flex flex-col">
+    <div className={`h-screen bg-brand-dark text-brand-text-primary font-sans overflow-hidden flex flex-col transition-colors duration-500 ${theme === 'dark' ? 'dark' : ''}`}>
       
       {/* Logo Animation Overlay */}
       <AnimatePresence>
@@ -4143,8 +4165,108 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           >
             <SpinningBall size="lg" />
             <div className="mt-8 text-center flex flex-col items-center">
-              <FutQuinaLogo size="lg" className="mb-2" colorClass="text-white font-black" />
+              <FutQuinaLogo size="lg" className="mb-2" colorClass="text-zinc-500" />
             </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Global Application Settings Modal */}
+      <AnimatePresence>
+        {showGlobalSettings && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4 sm:p-6"
+          >
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              className="w-full max-w-2xl bg-brand-card rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-brand-border overflow-hidden flex flex-col max-h-[90vh]"
+            >
+              {/* Header */}
+              <div className="px-8 py-6 border-b border-brand-border flex justify-between items-center bg-brand-card sticky top-0 z-10">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-brand-dark flex items-center justify-center">
+                    <span className="text-brand-text-secondary"><PiGearBold size={20} /></span>
+                  </div>
+                  <h3 className="text-sm font-black uppercase tracking-widest text-brand-text-primary">Configuração</h3>
+                </div>
+                <button 
+                  onClick={() => setShowGlobalSettings(false)}
+                  className="w-10 h-10 rounded-full hover:bg-brand-dark flex items-center justify-center transition-colors text-brand-text-secondary"
+                >
+                  <PiXBold size={20} />
+                </button>
+              </div>
+
+              {/* Scrollable Content */}
+              <div className="flex-1 overflow-y-auto p-8 space-y-8 custom-scrollbar">
+
+                {/* Additional Options */}
+                <div className="space-y-3">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-brand-text-secondary px-2 opacity-60">Ferramentas & Sistema</span>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button 
+                      onClick={() => {
+                        setToast({ message: "Calendário de peladas em breve!", type: 'info' });
+                        setTimeout(() => setToast(null), 3000);
+                      }}
+                      className="flex items-center gap-3 p-4 rounded-2xl bg-brand-dark hover:opacity-80 border border-brand-border transition-all text-left"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-brand-card shadow-sm flex items-center justify-center text-brand-text-primary">
+                        <PiClockBold size={20} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs font-black uppercase tracking-wide text-brand-text-primary">Agendar Pelada</span>
+                        <span className="text-[9px] text-brand-text-secondary font-bold uppercase tracking-tight opacity-70">Definir data e horário</span>
+                      </div>
+                    </button>
+
+                    <button 
+                      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                      className="flex items-center gap-3 p-4 rounded-2xl bg-brand-dark hover:opacity-80 border border-brand-border transition-all text-left"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-brand-card shadow-sm flex items-center justify-center text-brand-text-primary">
+                        <PiPaletteBold size={20} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs font-black uppercase tracking-wide text-brand-text-primary">Alterar Tema</span>
+                        <span className="text-[9px] text-brand-text-secondary font-bold uppercase tracking-tight opacity-70">Modo: {theme === 'light' ? 'Claro' : 'Escuro'}</span>
+                      </div>
+                    </button>
+
+                    <button 
+                      onClick={() => setShowSetupGuide(true)}
+                      className="flex items-center gap-3 p-4 rounded-2xl bg-brand-dark hover:opacity-80 border border-brand-border transition-all text-left"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-brand-card shadow-sm flex items-center justify-center text-brand-text-primary">
+                        <PiUserPlusBold size={20} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs font-black uppercase tracking-wide text-brand-text-primary">Configurar App</span>
+                        <span className="text-[9px] text-brand-text-secondary font-bold uppercase tracking-tight opacity-70">Guia de configuração inicial</span>
+                      </div>
+                    </button>
+
+                    <button 
+                      onClick={() => setShowClearConfirm(true)}
+                      className="flex items-center gap-3 p-4 rounded-2xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all text-left group"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-brand-card shadow-sm flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
+                        <PiTrashBold size={20} />
+                      </div>
+                      <div className="flex flex-col">
+                        <span className="text-xs font-black uppercase tracking-wide text-red-500">Zerar Aplicativo</span>
+                        <span className="text-[9px] text-red-400 font-bold uppercase tracking-tight opacity-70">Limpar todos os dados</span>
+                      </div>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -4240,32 +4362,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         {/* Header */}
         <header className="px-6 py-4 flex justify-between items-center bg-transparent relative transition-colors duration-300">
           <div className="flex items-center gap-3 overflow-hidden relative z-10">
-            <motion.div
-              initial={false}
-              animate={{ rotate: match.isActive ? 360 : 0 }}
-              transition={{ duration: 0.6, ease: "easeInOut" }}
-            >
-              <SpinningBall size="sm" spin={match.isActive && !match.isPaused} />
-            </motion.div>
-            
-            <AnimatePresence mode="popLayout" initial={false}>
-              {!match.isActive || match.hasEnded ? (
-                <motion.div
-                  key="logo"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: 20 }}
-                  transition={{ duration: 0.4 }}
-                >
-                  <FutQuinaLogo 
-                    size="md" 
-                    titleColorClass="text-brand-primary"
-                    subColorClass="text-white"
-                    align="start"
-                  />
-                </motion.div>
-              ) : null}
-            </AnimatePresence>
+            <FutQuinaLogo 
+              size="md" 
+              titleColorClass="text-brand-primary"
+              subColorClass="text-white"
+              align="start"
+            />
           </div>
           
           {/* Centralized Scoreboard */}
@@ -4375,6 +4477,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 </motion.div>
               )}
             </AnimatePresence>
+          </div>
+
+          {/* Settings Button */}
+          <div className="relative z-10">
+            <button 
+              onClick={() => {
+                setShowGlobalSettings(true);
+              }}
+              className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all active:scale-90"
+              title="Configurar aplicativo"
+            >
+              <PiGearBold size={20} />
+            </button>
           </div>
         </header>
 
@@ -4793,7 +4908,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     className="w-full h-12 rounded-xl flex items-center justify-between px-4 bg-black/5 border border-black/5 hover:border-white/20 transition-all"
                                   >
                                     <div className="flex items-center gap-2">
-                                      <PiShieldFill size={20} className="drop-shadow-sm" style={{ color: fixedColors.teamA || TEAM_COLORS[0] }} />
+                                      <span className="drop-shadow-sm" style={{ color: fixedColors.teamA || TEAM_COLORS[0] }}><PiShieldFill size={20} /></span>
                                     </div>
                                     <PenLine size={14} className="text-black/40" />
                                   </button>
@@ -4805,7 +4920,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     className="w-full h-12 rounded-xl flex items-center justify-between px-4 bg-black/5 border border-black/5 hover:border-white/20 transition-all"
                                   >
                                     <div className="flex items-center gap-2">
-                                      <PiShieldFill size={20} className="drop-shadow-sm" style={{ color: fixedColors.teamB || TEAM_COLORS[1] }} />
+                                      <span className="drop-shadow-sm" style={{ color: fixedColors.teamB || TEAM_COLORS[1] }}><PiShieldFill size={20} /></span>
                                     </div>
                                     <PenLine size={14} className="text-zinc-400" />
                                   </button>
@@ -10057,15 +10172,15 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <div className="w-full space-y-3 text-left">
                   <div className="flex gap-3">
                     <div className="w-6 h-6 rounded-full bg-brand-primary text-black text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm">1</div>
-                    <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-700">Confirme a presença dos jogadores tocando em seus nomes (Verde = Confirmado).</p>
+                    <p className="text-[9px] font-medium text-zinc-600">Confirme a presença dos jogadores tocando em seus nomes (Verde = Confirmado).</p>
                   </div>
                   <div className="flex gap-3">
                     <div className="w-6 h-6 rounded-full bg-brand-primary text-black text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm">2</div>
-                    <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-700">O app organiza os times automaticamente com base na ordem de entrada.</p>
+                    <p className="text-[9px] font-medium text-zinc-600">O app organiza os times automaticamente com base na ordem de entrada.</p>
                   </div>
                   <div className="flex gap-3">
                     <div className="w-6 h-6 rounded-full bg-brand-primary text-black text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm">3</div>
-                    <p className="text-[10px] font-bold uppercase tracking-wide text-zinc-700">Toque em "Pronto" para ir à tela de confrontos e iniciar o sorteio ou o jogo.</p>
+                    <p className="text-[9px] font-medium text-zinc-600">Toque em "Pronto" para ir à tela de confrontos e iniciar o sorteio ou o jogo.</p>
                   </div>
                 </div>
 
@@ -10117,11 +10232,8 @@ function AuthScreen() {
     <div className="min-h-screen font-sans transition-colors duration-300 flex items-center justify-center p-6 bg-zinc-100 text-zinc-900">
       <div className="w-full max-w-sm space-y-8">
         <div className="flex flex-col items-center justify-center gap-4 text-center relative">
-          <SpinningBall size="lg" />
-          <div>
-            <FutQuinaLogo size="lg" colorClass="text-zinc-900" />
-            <p className="text-sm font-medium tracking-widest uppercase opacity-50 mt-4">Sua conta, suas peladas</p>
-          </div>
+          <FutQuinaLogo size="lg" colorClass="text-zinc-900" />
+          <p className="text-sm font-medium tracking-widest uppercase opacity-50 mt-4">Sua conta, suas peladas</p>
         </div>
         
         <form onSubmit={handleAuth} className="p-8 rounded-2xl shadow-md flex flex-col gap-4 bg-white">
@@ -10241,13 +10353,6 @@ export default function App() {
         </div>
 
         <div className="relative z-10 flex flex-col items-center justify-center gap-6 text-center mb-12">
-          <motion.div 
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, type: 'spring' }}
-          >
-            <SpinningBall size="lg" spin={true} />
-          </motion.div>
           <div className="flex flex-col items-center">
             <FutQuinaLogo size="lg" colorClass="" style={{ color: '#E3D39E' }} />
             <div className="h-0.5 w-12 bg-brand-primary mt-2 rounded-full opacity-60" />

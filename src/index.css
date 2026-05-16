@@ -37,6 +37,19 @@
   --brand-glass: rgba(255, 255, 255, 0.5);
 }
 
+.dark {
+  --brand-primary: #00FF00;
+  --brand-primary-hover: #39FF14;
+  --brand-dark: #050806;
+  --brand-card: #0D1612;
+  --brand-surface: #1E3D2F;
+  --brand-surface-light: #2A4D3F;
+  --brand-text-primary: #FFFFFF;
+  --brand-text-secondary: rgba(255, 255, 255, 0.7);
+  --brand-border: rgba(255, 255, 255, 0.1);
+  --brand-glass: rgba(0, 0, 0, 0.5);
+}
+
 @layer utilities {
   .glass-3d {
     @apply backdrop-blur-none bg-brand-card border border-brand-border shadow-[1px_1px_0_0_var(--brand-border)] transition-all duration-75 rounded-xl;
