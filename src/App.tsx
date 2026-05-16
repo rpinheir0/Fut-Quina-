@@ -2267,45 +2267,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [showQueuePlayerModal, setShowQueuePlayerModal] = useState<{ teamIndex: number, playerId: string, showMoveOptions?: boolean } | null>(null);
   const [movingPlayers, setMovingPlayers] = useState<{ teamId: string, playerIds: string[] } | null>(null);
   const [isSelectingDestination, setIsSelectingDestination] = useState(false);
-  const longPressTimer = useRef<NodeJS.Timeout | null>(null);
-  const isLongPressActive = useRef(false);
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
   const [showAssistSelection, setShowAssistSelection] = useState<{ teamIndex: number, scorerId: string } | null>(null);
   const [playerManagementModal, setPlayerManagementModal] = useState<Player | null>(null);
-  const [isNavVisible, setIsNavVisible] = useState(true);
-  const lastScrollY = useRef(0);
-
-  const handleScroll = () => {
-    if (!mainRef.current) return;
-    const currentScrollY = mainRef.current.scrollTop;
-    
-    // Threshold to prevent flickering
-    if (Math.abs(currentScrollY - lastScrollY.current) < 10) return;
-
-    if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
-
-    if (currentScrollY > lastScrollY.current && currentScrollY > 50) {
-      // Scrolling down
-      if (isNavVisible) setIsNavVisible(false);
-    } else {
-      // Scrolling up or stopped
-      if (!isNavVisible) setIsNavVisible(true);
-    }
-
-    scrollTimeout.current = setTimeout(() => {
-      setIsNavVisible(true);
-    }, 1200);
-
-    lastScrollY.current = currentScrollY;
-  };
-
-  useEffect(() => {
-    const main = mainRef.current;
-    if (main) {
-      main.addEventListener('scroll', handleScroll);
-      return () => main.removeEventListener('scroll', handleScroll);
-    }
-  }, [isNavVisible]);
 
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [showResetAppConfirm, setShowResetAppConfirm] = useState(false);
@@ -6210,54 +6174,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           return (
                                                 <button
                                                   key={`queue-player-${t.id}-${pid}-${idx}`}
-                                                  onTouchStart={(e) => {
-                                                    if (swappingPlayerId || fillingVacancyForTeam || (movingPlayers && isSelectingDestination)) return;
-                                                    if (movingPlayers && movingPlayers.teamId !== t.id) return;
-                                                    if (longPressTimer.current) clearTimeout(longPressTimer.current);
-                                                    isLongPressActive.current = false;
-                                                    longPressTimer.current = setTimeout(() => {
-                                                      isLongPressActive.current = true;
-                                                      navigator.vibrate?.(50);
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    if (movingPlayers && movingPlayers.teamId === t.id) {
                                                       setMovingPlayers(prev => {
-                                                        if (!prev) return { teamId: t.id, playerIds: [pid] };
-                                                        if (!prev.playerIds.includes(pid)) return { ...prev, playerIds: [...prev.playerIds, pid] };
-                                                        return prev;
-                                                      });
-                                                    }, 2000);
-                                                  }}
-                                                  onTouchEnd={() => { if (longPressTimer.current) clearTimeout(longPressTimer.current); }}
-                                                  onTouchCancel={() => { if (longPressTimer.current) clearTimeout(longPressTimer.current); }}
-                                                  onMouseDown={(e) => {
-                                                    if (swappingPlayerId || fillingVacancyForTeam || (movingPlayers && isSelectingDestination)) return;
-                                                    if (movingPlayers && movingPlayers.teamId !== t.id) return;
-                                                    if (longPressTimer.current) clearTimeout(longPressTimer.current);
-                                                    isLongPressActive.current = false;
-                                                    longPressTimer.current = setTimeout(() => {
-                                                      isLongPressActive.current = true;
-                                                      setMovingPlayers(prev => {
-                                                        if (!prev) return { teamId: t.id, playerIds: [pid] };
-                                                        if (!prev.playerIds.includes(pid)) return { ...prev, playerIds: [...prev.playerIds, pid] };
-                                                        return prev;
-                                                      });
-                                                    }, 2000);
-                                                  }}
-                                                  onMouseUp={() => { if (longPressTimer.current) clearTimeout(longPressTimer.current); }}
-                                                  onMouseLeave={() => { if (longPressTimer.current) clearTimeout(longPressTimer.current); }}
-                                                  onPointerDown={(e) => {
-                                                    const startTouchY = e.clientY;
-                                                    const onPointerUp = (upEvent: PointerEvent) => {
-                                                      const endTouchY = upEvent.clientY;
-                                                      if (isLongPressActive.current) {
-                                                        isLongPressActive.current = false;
-                                                        window.removeEventListener('pointerup', onPointerUp);
-                                                        return;
-                                                      }
-                                                      if (Math.abs(startTouchY - endTouchY) < 10) {
-                                                        // Tap logic
-                                                        e.stopPropagation();
-                                                        if (movingPlayers && movingPlayers.teamId === t.id) {
-                                                          setMovingPlayers(prev => {
-                                                            if (!prev) return null;
+                                                        if (!prev) return null;
                                                         const pIds = prev.playerIds.includes(pid) 
                                                           ? prev.playerIds.filter(id => id !== pid)
                                                           : [...prev.playerIds, pid];
@@ -6340,11 +6261,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                       } else {
                                                         setShowQueuePlayerModal({ teamIndex: tIdx, playerId: pid });
                                                       }
-                                                      }
                                                     }
-                                                    window.removeEventListener('pointerup', onPointerUp);
-                                                    };
-                                                    window.addEventListener('pointerup', onPointerUp);
                                                   }}
                                                   className={`w-full flex items-center justify-start gap-2 p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
                                                     swappingPlayerId === pid || movingPlayers?.playerIds.includes(pid)
@@ -10040,7 +9957,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         />
 
         {/* Bottom Navigation */}
-        <div className={`fixed bottom-0 left-0 right-0 z-[100] transition-transform duration-500 ease-in-out w-full ${isNavVisible ? 'translate-y-0' : 'translate-y-28'}`}>
+        <div className={`fixed bottom-0 left-0 right-0 z-[100] w-full`}>
           <nav className="w-full bg-[#111111] border-t border-white/5 pt-1 pb-3 sm:pb-4 px-2 sm:px-6 flex items-center justify-around">
             <button 
               onClick={() => {
