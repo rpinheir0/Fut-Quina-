@@ -4570,18 +4570,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 onClick={() => navigateTeamsTab('configuracao')}
                 className={`w-12 py-2 flex items-center justify-center rounded-none transition-all border ${teamsTab === 'configuracao' ? 'bg-[#00FF00] text-[#1E3D2F] border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80'}`}
               >
-                <motion.div
-                  animate={{ rotate: teamsTab === 'configuracao' ? [0, 180] : 0 }}
-                  transition={{
-                    duration: 1.5,
-                    repeat: teamsTab === 'configuracao' ? Infinity : 0,
-                    repeatDelay: 8.5,
-                    ease: "easeInOut"
-                  }}
+                <div
                   className={teamsTab === 'configuracao' ? 'text-[#1E3D2F]' : 'text-white'}
                 >
                   <PiGearBold size={18} />
-                </motion.div>
+                </div>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('chegada')}
@@ -6176,17 +6169,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                   key={`queue-player-${t.id}-${pid}-${idx}`}
                                                   onClick={(e) => {
                                                     e.stopPropagation();
-                                                    if (movingPlayers && movingPlayers.teamId === t.id) {
-                                                      setMovingPlayers(prev => {
-                                                        if (!prev) return null;
-                                                        const pIds = prev.playerIds.includes(pid) 
-                                                          ? prev.playerIds.filter(id => id !== pid)
-                                                          : [...prev.playerIds, pid];
-                                                        if (pIds.length === 0) return null;
-                                                        return { ...prev, playerIds: pIds };
-                                                      });
-                                                      return;
-                                                    }
                                                     if (swappingPlayerId) {
                                                       if (swappingPlayerId === pid) {
                                                         setSwappingPlayerId(null);
@@ -6258,8 +6240,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                           return newTeams.filter(team => team.playerIds.length > 0);
                                                         });
                                                         setToast({ message: `Jogador movido para o ${teams[incompleteSelectedTeamIdx].name}`, type: 'success' });
-                                                      } else {
-                                                        setShowQueuePlayerModal({ teamIndex: tIdx, playerId: pid });
                                                       }
                                                     }
                                                   }}
