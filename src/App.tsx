@@ -4484,126 +4484,67 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         {/* Header */}
         <header className="px-6 py-4 flex justify-between items-center bg-transparent relative transition-colors duration-300">
           <div className="flex items-center gap-3 overflow-hidden relative z-10">
-            <FutQuinaLogo 
-              size="md" 
-              style={{ color: '#83A8FF' }}
-              titleColorClass="text-[#83A8FF]"
-              subColorClass="text-white"
-              align="start"
-            />
+            <AnimatePresence mode="wait">
+              {(match.isActive && !match.isPaused && !match.hasEnded && teamsTab !== 'historico') ? (
+                <motion.div
+                  key="mini-header-status"
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -10 }}
+                  className="flex items-center gap-2 cursor-pointer group"
+                  onClick={() => {
+                    setCurrentScreen('teams');
+                    setTeamsTab('historico');
+                  }}
+                >
+                  <div className="flex items-center gap-2 px-3 py-1.5">
+                    <span className={`text-[12px] font-black tracking-widest tabular-nums text-brand-primary ${match.timeRemaining <= 60 ? 'animate-pulse text-red-500' : ''}`}>
+                      {Math.floor(match.timeRemaining / 60).toString().padStart(2, '0')}:{(match.timeRemaining % 60).toString().padStart(2, '0')}
+                    </span>
+                    <div className="h-3 w-px bg-white/10 mx-1" />
+                    <div className="flex items-center gap-2 mt-0.5">
+                      <div style={{ color: (fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color || '#ffffff' }}>
+                        {(() => {
+                          const team = teams[match.teamAIndex];
+                          const Icon = TEAM_ICONS[team?.iconIdx ?? 0];
+                          return <Icon size={12} />;
+                        })()}
+                      </div>
+                      <span className="text-white font-black text-xs tabular-nums">{match.scoreA}</span>
+                      <span className="text-white/30 text-[8px] font-bold mx-0.5">x</span>
+                      <span className="text-white font-black text-xs tabular-nums">{match.scoreB}</span>
+                      <div style={{ color: (fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color || '#ffffff' }}>
+                        {(() => {
+                          const team = teams[match.teamBIndex];
+                          const Icon = TEAM_ICONS[team?.iconIdx ?? 1];
+                          return <Icon size={12} />;
+                        })()}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key="main-logo"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <FutQuinaLogo 
+                    size="md" 
+                    style={{ color: '#83A8FF' }}
+                    titleColorClass="text-[#83A8FF]"
+                    subColorClass="text-white"
+                    align="start"
+                  />
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
           
-          {/* Centralized Scoreboard */}
-          <div 
-            onClick={() => {
-              setCurrentScreen('teams');
-              setTeamsTab('historico');
-            }}
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 hidden sm:flex items-center justify-center w-full max-w-[200px] cursor-pointer"
-          >
-            <AnimatePresence mode="popLayout" initial={false}>
-              {(match.isActive && !match.isPaused && !match.hasEnded) && (
-                <motion.div
-                  key="scoreboard-desktop"
-                  initial={{ y: -40, opacity: 0, scale: 0.8 }}
-                  animate={{ y: 0, opacity: 1, scale: 1 }}
-                  exit={{ y: -40, opacity: 0, scale: 0.8 }}
-                  transition={{ type: 'spring', damping: 20 }}
-                  className="flex items-center justify-center gap-2 bg-brand-primary px-4 py-1.5 rounded-full border border-black/10 shadow-lg backdrop-blur-md pointer-events-auto transition-colors"
-                >
-                  {match.teamAIndex !== -1 && match.teamBIndex !== -1 ? (
-                    <>
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-emerald-950 text-[10px] font-black uppercase truncate max-w-[40px] hidden sm:block">{teams[match.teamAIndex]?.name.substring(0, 3)}</span>
-                        <div className="drop-shadow-sm" style={{ color: (fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color || '#ffffff' }}>
-                          {(() => {
-                            const team = teams[match.teamAIndex];
-                            const Icon = TEAM_ICONS[team?.iconIdx ?? 0];
-                            return <Icon size={14} />;
-                          })()}
-                        </div>
-                        <span className="text-emerald-950 font-black text-sm ml-1">{match.scoreA}</span>
-                      </div>
-                      
-                      <span className="text-emerald-950/40 text-[10px] font-bold mx-1">x</span>
-                      
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-emerald-950 font-black text-sm mr-1">{match.scoreB}</span>
-                        <div className="drop-shadow-sm" style={{ color: (fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color || '#ffffff' }}>
-                          {(() => {
-                            const team = teams[match.teamBIndex];
-                            const Icon = TEAM_ICONS[team?.iconIdx ?? 1];
-                            return <Icon size={14} />;
-                          })()}
-                        </div>
-                        <span className="text-emerald-950 text-[10px] font-black uppercase truncate max-w-[40px] hidden sm:block">{teams[match.teamBIndex]?.name.substring(0, 3)}</span>
-                      </div>
-                      
-                      <span className={`ml-3 flex items-center justify-center text-[10px] sm:text-xs font-black tracking-widest bg-emerald-950/20 text-emerald-950 px-2 py-0.5 rounded-lg ${match.timeRemaining <= 60 && !match.isPaused ? 'text-red-600 animate-pulse' : ''}`}>
-                        {Math.floor(match.timeRemaining / 60).toString().padStart(2, '0')}:{(match.timeRemaining % 60).toString().padStart(2, '0')}
-                      </span>
-                    </>
-                  ) : null}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Centralized Scoreboard For Mobile */}
-          <div 
-            onClick={() => {
-              setCurrentScreen('teams');
-              setTeamsTab('historico');
-            }}
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0 sm:hidden flex items-center justify-center w-auto pl-6 pr-10 cursor-pointer"
-          >
-            <AnimatePresence mode="popLayout" initial={false}>
-              {(match.isActive && !match.isPaused && !match.hasEnded) && (
-                <motion.div
-                  key="scoreboard-mobile"
-                  initial={{ y: -40, opacity: 0, scale: 0.8 }}
-                  animate={{ y: 0, opacity: 1, scale: 1 }}
-                  exit={{ y: -40, opacity: 0, scale: 0.8 }}
-                  transition={{ type: 'spring', damping: 20 }}
-                  className="flex items-center justify-center gap-1.5 bg-brand-primary px-3 py-1 rounded-full border border-black/10 shadow-lg backdrop-blur-md pointer-events-auto transition-colors"
-                >
-                  {match.teamAIndex !== -1 && match.teamBIndex !== -1 ? (
-                    <>
-                      <div className="flex items-center gap-1">
-                        <div className="drop-shadow-sm" style={{ color: (fixedColors.enabled && fixedColors.teamA) || teams[match.teamAIndex]?.color || '#ffffff' }}>
-                          {(() => {
-                            const team = teams[match.teamAIndex];
-                            const Icon = TEAM_ICONS[team?.iconIdx ?? 0];
-                            return <Icon size={12} />;
-                          })()}
-                        </div>
-                        <span className="text-emerald-950 font-black text-xs ml-0.5">{match.scoreA}</span>
-                      </div>
-                      <span className="text-emerald-950/40 text-[9px] font-bold mx-0.5">x</span>
-                      <div className="flex items-center gap-1">
-                        <span className="text-emerald-950 font-black text-xs mr-0.5">{match.scoreB}</span>
-                        <div className="drop-shadow-sm" style={{ color: (fixedColors.enabled && fixedColors.teamB) || teams[match.teamBIndex]?.color || '#ffffff' }}>
-                          {(() => {
-                            const team = teams[match.teamBIndex];
-                            const Icon = TEAM_ICONS[team?.iconIdx ?? 1];
-                            return <Icon size={12} />;
-                          })()}
-                        </div>
-                      </div>
-                      
-                      <div className="w-[1px] h-3 bg-emerald-950/20 mx-0.5" />
-                      <span className={`flex items-center justify-center text-[9px] font-black tracking-widest bg-emerald-950/20 px-2 py-0.5 rounded-lg ${match.timeRemaining <= 60 && !match.isPaused ? 'text-red-600 animate-pulse' : 'text-emerald-950'}`}>
-                        {Math.floor(match.timeRemaining / 60).toString().padStart(2, '0')}:{(match.timeRemaining % 60).toString().padStart(2, '0')}
-                      </span>
-                    </>
-                  ) : null}
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Settings Button */}
-          <div className="relative z-10">
+          {/* Header Actions */}
+          <div className="flex items-center gap-3 relative z-10">
+            {/* Settings Button */}
             <button 
               onClick={() => {
                 setShowGlobalSettings(true);
@@ -4757,7 +4698,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               }}
                               className="flex-1 sm:flex-none px-4 py-2.5 bg-[#00FF00] text-black text-[10px] font-black uppercase tracking-widest rounded-xl shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                             >
-                              Configurar Partida
+                              CONFIGURAR PARTIDA
                             </button>
                           )}
                         </div>
