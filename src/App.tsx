@@ -5222,9 +5222,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {players.filter(p => sessionPlayerIds.includes(p.id)).length === 0 ? (
-                            <div className="col-span-full py-12 text-center border border-dashed border-black/5 rounded-xl flex flex-col items-center gap-4">
-                              <span className="opacity-50 text-brand-text-secondary"><GiSocks size={48} /></span>
-                              <p className="text-base text-brand-text-secondary normal-case">Nenhum jogador na sessão</p>
+                            <div className="col-span-full py-12 flex flex-col items-center justify-center gap-6">
+                              <div className="flex flex-col items-center gap-2 opacity-50 text-black/50 text-xs normal-case">
+                                <span className="opacity-30 text-black"><GiSocks size={48} /></span>
+                                <span>Nenhum jogador na sessão</span>
+                              </div>
                               <button 
                                 onClick={() => {
                                   if (players.length < 2) {
@@ -5338,13 +5340,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     ) : teamsTab === 'historico' ? (
                       <div className={`space-y-6 w-full ${match.isActive ? 'pt-6 px-2 sm:px-6 pb-0 overflow-hidden' : 'p-2 sm:p-6'}`}>
                         {!match.isActive ? (
-                          <div className="py-12 text-center border border-dashed border-black/10 rounded-xl flex flex-col items-center gap-4">
+                          <div className="py-12 flex flex-col items-center justify-center gap-6">
                             {players.filter(p => p.isAvailable).length === 0 ? (
                               <>
-                                <span className="opacity-30 text-black"><GiAbstract042 size={48} /></span>
-                                <p className="text-base text-black/60 normal-case">
-                                  Nenhum jogador presente
-                                </p>
+                                <div className="flex flex-col items-center gap-2 opacity-50 text-black/50 text-xs normal-case">
+                                  <span className="opacity-30 text-black"><GiAbstract042 size={48} /></span>
+                                  <span>Nenhum jogador presente</span>
+                                </div>
                                 <button
                                   onClick={() => {
                                     if (players.length < 2) {
@@ -5949,9 +5951,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
                         <div className="space-y-4">
                           {teams.length < 2 ? (
-                            <div className="py-12 text-center border border-dashed border-black/10 rounded-2xl flex flex-col items-center gap-4">
-                              <span className="opacity-30 text-black"><GiSoccerBall size={48} /></span>
-                              <p className="text-base text-black/50 normal-case">Crie mais times para ver a fila</p>
+                            <div className="py-12 flex flex-col items-center justify-center gap-6">
+                              <div className="flex flex-col items-center gap-2 opacity-50 text-black/50 text-xs normal-case">
+                                <span className="opacity-30 text-black"><GiSoccerBall size={48} /></span>
+                                <span>Crie mais times para ver a fila</span>
+                              </div>
                               <button
                                 onClick={() => {
                                   if (players.filter(p => sessionPlayerIds.includes(p.id)).length > 0) {
@@ -6725,8 +6729,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     </motion.div>
                   ))}
                   {players.length === 0 && (
-                    <div className="p-8 text-center text-brand-text-secondary text-sm font-bold normal-case flex flex-col items-center justify-center gap-2">
-                      <span className="opacity-50 text-brand-text-secondary"><GiCrown size={48} /></span>
+                    <div className="text-center py-12 opacity-50 text-black/50 text-xs normal-case flex flex-col items-center justify-center gap-2">
+                      <span className="opacity-30 text-black"><GiCrown size={48} /></span>
                       <span>Nenhum jogador registrado ainda.</span>
                     </div>
                   )}
