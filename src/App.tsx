@@ -4755,7 +4755,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   setIsInitialSetupFlow(true);
                                 }
                               }}
-                              className="flex-1 sm:flex-none px-4 py-2.5 bg-[#00FF00] text-black text-[10px] font-black uppercase tracking-widest rounded-2xl shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                              className="flex-1 sm:flex-none px-4 py-2.5 bg-[#00FF00] text-black text-[10px] font-black uppercase tracking-widest rounded-xl shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                             >
                               Configurar Partida
                             </button>
@@ -4767,7 +4767,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     <input 
                       type="text" 
                       placeholder="Nome do jogador..."
-                      className={`flex-1 px-4 py-2 rounded-2xl border-none outline-none transition-all bg-gradient-to-br from-zinc-200 to-zinc-300 text-[#1E3D2F] placeholder-[#1E3D2F]/50 focus:ring-2 focus:ring-[#1E3D2F]/20 text-sm`}
+                      className={`flex-1 px-4 py-2 rounded-xl border-none outline-none transition-all bg-gradient-to-br from-zinc-200 to-zinc-300 text-[#1E3D2F] placeholder-[#1E3D2F]/50 focus:ring-2 focus:ring-[#1E3D2F]/20 text-sm`}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           addPlayer(e.currentTarget.value);
@@ -4777,7 +4777,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     />
                     <button 
                       onClick={handleImportContacts}
-                      className="p-2 bg-[#ffffff] text-[#83A8EF] rounded-2xl shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square border-none"
+                      className="p-2 bg-[#ffffff] text-[#83A8EF] rounded-xl shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square border-none"
                       title="Importar dos Contatos"
                     >
                       <Contact size={18} />
@@ -4788,7 +4788,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         addPlayer(input.value);
                         input.value = '';
                       }}
-                      className="p-2 bg-[#00FF00] text-[#1E3D2F] rounded-2xl shadow hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square"
+                      className="p-2 bg-[#00FF00] text-[#1E3D2F] rounded-xl shadow hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square"
                     >
                       <Plus size={18} />
                     </button>
@@ -4798,7 +4798,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <div className="relative">
                   <textarea 
                     placeholder=" "
-                    className={`w-full h-24 px-4 py-3 rounded-2xl border-none outline-none transition-all text-sm resize-none bg-zinc-100 text-[#1E3D2F] focus:ring-2 focus:ring-[#1E3D2F]/20 peer`}
+                    className={`w-full h-24 px-4 py-3 rounded-xl border-none outline-none transition-all text-sm resize-none bg-zinc-100 text-[#1E3D2F] focus:ring-2 focus:ring-[#1E3D2F]/20 peer`}
                     onChange={(e) => {
                       if (e.target.value.includes('\n') || e.target.value.length > 10) {
                         addBulkPlayers(e.target.value);
