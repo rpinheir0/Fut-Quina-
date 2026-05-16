@@ -201,77 +201,6 @@ import {
   Legend
 } from 'recharts';
 
-// --- Common Hooks ---
-
-function useLongPress(callback: () => void, onClick: () => void, ms: number = 2000) {
-  const [longPressTriggered, setLongPressTriggered] = useState(false);
-  const timeout = useRef<NodeJS.Timeout>();
-
-  const start = useCallback((e: React.MouseEvent | React.TouchEvent) => {
-    e.stopPropagation();
-    setLongPressTriggered(false);
-    timeout.current = setTimeout(() => {
-      setLongPressTriggered(true);
-      callback();
-    }, ms);
-  }, [callback, ms]);
-
-  const stop = useCallback((e: React.MouseEvent | React.TouchEvent, wasLeaving: boolean = false) => {
-    e.stopPropagation();
-    if (timeout.current) {
-      clearTimeout(timeout.current);
-    }
-    if (!longPressTriggered && !wasLeaving) {
-      onClick();
-    }
-    setLongPressTriggered(false);
-  }, [longPressTriggered, onClick]);
-
-  return {
-    onMouseDown: start,
-    onTouchStart: start,
-    onMouseUp: (e: React.MouseEvent) => stop(e),
-    onMouseLeave: (e: React.MouseEvent) => stop(e, true),
-    onTouchEnd: (e: React.TouchEvent) => stop(e)
-  };
-}
-
-function PlayerInteractionWrapper({ 
-  children, 
-  onAction, 
-  onClick, 
-  className,
-  disabled,
-  style
-}: { 
-  children: React.ReactNode, 
-  onAction: () => void, 
-  onClick: () => void, 
-  className?: string,
-  disabled?: boolean,
-  style?: React.CSSProperties
-}) {
-  const handlers = useLongPress(onAction, onClick, 2000);
-  
-  if (disabled) {
-    return <button disabled className={className} style={style}>{children}</button>
-  }
-  
-  return (
-    <button 
-      {...handlers} 
-      onContextMenu={(e) => {
-        e.preventDefault();
-        onAction();
-      }}
-      className={className}
-      style={style}
-    >
-      {children}
-    </button>
-  );
-}
-
 // --- Types ---
 
 interface Player {
@@ -4098,7 +4027,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   {toast.type === 'gray' && <PiGearBold size={18} />}
                   {toast.type === 'info' && <PiRocketBold size={18} />}
                 </div>
-                <span className="text-[12px] font-bold lowercase leading-tight max-w-[200px]">{toast.message}</span>
+                <span className="text-xs font-bold leading-tight max-w-[200px]">{toast.message}</span>
                 <button 
                   onClick={() => setToast(null)}
                   className="ml-2 w-6 h-6 flex items-center justify-center bg-white/20 hover:bg-white/30 rounded-full transition-colors shrink-0"
@@ -4522,7 +4451,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             className="fixed bottom-24 left-0 right-0 z-[200] flex justify-center px-6 pointer-events-none"
           >
             <motion.div
-              className={`pointer-events-auto flex items-center gap-4 px-6 py-2.5 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.5)] border backdrop-blur-xl transition-all ${
+              className={`pointer-events-auto flex items-center gap-3 px-5 py-3 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] border backdrop-blur-xl transition-all ${
                 toast.type === 'success' ? 'bg-emerald-500/90 border-emerald-400/50 text-white' :
                 toast.type === 'warning' ? 'bg-amber-500/90 border-amber-400/50 text-white' :
                 'bg-[#1E3D2F]/95 border-white/10 text-white'
@@ -4534,12 +4463,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 {toast.type === 'gray' && <PiGearBold size={18} />}
                 {toast.type === 'info' && <PiRocketBold size={18} />}
               </div>
-              <p className="text-[12px] font-bold lowercase leading-none drop-shadow-sm">
+              <p className="text-[11px] font-black uppercase tracking-widest leading-none drop-shadow-sm">
                 {toast.message}
               </p>
               <button 
                 onClick={() => setToast(null)}
-                className="ml-2 w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-all"
+                className="ml-2 hover:opacity-70 transition-opacity"
               >
                 <PiXBold size={16} />
               </button>
@@ -5633,10 +5562,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   const matchGoals = match.events.filter(e => e.type === 'goal' && e.playerId === pid).length;
                                   const matchAssists = match.events.filter(e => e.type === 'goal' && e.assistId === pid).length;
                                   return (
-                                      <PlayerInteractionWrapper 
+                                      <button 
                                         key={`partida-p-a-${pid}-${idx}`} 
                                         disabled={match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit}
-                                        onAction={() => setShowPlayerActionsModal({ teamIndex: match.teamAIndex, playerId: pid })}
                                         onClick={() => {
                                           if (swappingPlayerId) {
                                             if (swappingPlayerId === pid) {
@@ -5713,7 +5641,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     </div>
                   )}
                 </div>
-              </PlayerInteractionWrapper>
+              </button>
                                   );
                                 })}
                                 {Array.from({ length: Math.max(0, match.config.playersPerTeam - (teams[match.teamAIndex]?.playerIds?.length || 0)) }).map((_, i) => (
@@ -5775,10 +5703,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   const matchGoals = match.events.filter(e => e.type === 'goal' && e.playerId === pid).length;
                                   const matchAssists = match.events.filter(e => e.type === 'goal' && e.assistId === pid).length;
                                   return (
-                                      <PlayerInteractionWrapper 
+                                      <button 
                                         key={`partida-p-b-${pid}-${idx}`} 
                                         disabled={match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit}
-                                        onAction={() => setShowPlayerActionsModal({ teamIndex: match.teamBIndex, playerId: pid })}
                                         onClick={() => {
                                           if (swappingPlayerId) {
                                             if (swappingPlayerId === pid) {
@@ -5855,7 +5782,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     </div>
                   )}
                 </div>
-              </PlayerInteractionWrapper>
+              </button>
                                   );
                                 })}
                                 {Array.from({ length: Math.max(0, match.config.playersPerTeam - (teams[match.teamBIndex]?.playerIds?.length || 0)) }).map((_, i) => (
@@ -6507,10 +6434,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           {team.playerIds.map((pid, idx) => {
                             const p = players.find(pl => pl.id === pid);
                             return p ? (
-                              <PlayerInteractionWrapper 
+                              <div 
                                 key={`scoreboard-player-${team.id}-${pid}-${idx}`} 
-                                onAction={() => setShowPlayerActionsModal({ teamIndex: tIndex, playerId: pid })}
-                                onClick={() => {
+                                onClick={(e) => {
+                                  e.stopPropagation();
                                   if (swappingPlayerId && swappingPlayerId !== pid) {
                                     // Complete swap logic
                                     setTeams(prev => {
@@ -6545,7 +6472,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     setShowPlayerActionsModal({ teamIndex: tIndex, playerId: pid });
                                   }
                                 }}
-                                className={`flex w-full justify-between items-center py-2 px-1 transition-all group/player cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
+                                className={`flex justify-between items-center py-2 px-1 transition-all group/player cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
                                 swappingPlayerId === pid 
                                   ? 'bg-[#53B986]/20 rounded-lg' 
                                   : (swappingPlayerId && swappingPlayerId !== pid)
@@ -6561,7 +6488,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     )}
                                   </div>
                                   <div className="flex flex-col min-w-0">
-                                    <span className={`text-[11px] sm:text-xs font-bold tracking-tight transition-colors truncate leading-none text-left ${
+                                    <span className={`text-[11px] sm:text-xs font-bold tracking-tight transition-colors truncate leading-none ${
                                       swappingPlayerId === pid 
                                         ? 'text-[#53B986]' 
                                         : 'text-zinc-800'
@@ -6589,7 +6516,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     </div>
                                   )}
                                 </div>
-                              </PlayerInteractionWrapper>
+                              </div>
                             ) : null;
                           })}
                           {team.playerIds.length === 0 && (
