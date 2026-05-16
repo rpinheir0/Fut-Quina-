@@ -4972,7 +4972,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <div id="teams-list-section" className="w-full space-y-4">
                     {teamsTab === 'configuracao' ? (
                       <div className="space-y-6">
-                        <div className="sticky top-[-1px] z-40 bg-[#14301F]/90 backdrop-blur-md py-4 -mx-6 px-6 flex justify-between items-center border-b border-white/10">
+                        <div className="sticky top-[-1px] z-40 bg-white/90 backdrop-blur-md py-4 -mx-6 px-6 flex justify-between items-center border-b border-black/5">
                           <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">Configuração</h3>
                         </div>
                         
@@ -5125,22 +5125,65 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </div>
                     ) : teamsTab === 'chegada' ? (
                       <div className="space-y-6">
-                        <div className="flex justify-between items-center">
-                          <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">Ordem de Chegada</h3>
-                          <div className="flex flex-col sm:flex-row items-center gap-3">
-                            {players.filter(p => p.isAvailable).length < match.config.playersPerTeam * 2 && (
-                                <button
-                                  onClick={() => {
-                                    const now = Date.now();
-                                    setPlayers(prev => prev.map((pl, idx) => ({ ...pl, isAvailable: true, arrivedAt: now + idx })));
-                                    
-                                    setTeams(prevTeams => {
-                                      // Gather all current session players in random or current string order, maybe just use all session players
-                                      const allPlayerIds = players.filter(p => sessionPlayerIds.includes(p.id)).map(p => p.id);
+                        {firstSetupDone && players.filter(p => sessionPlayerIds.includes(p.id)).length > 0 && (
+                          <div className="flex justify-between items-center">
+                            <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">Ordem de Chegada</h3>
+                            <div className="flex flex-col sm:flex-row items-center gap-3">
+                              {players.filter(p => p.isAvailable).length < match.config.playersPerTeam * 2 && (
+                                  <button
+                                    onClick={() => {
+                                      const now = Date.now();
+                                      setPlayers(prev => prev.map((pl, idx) => ({ ...pl, isAvailable: true, arrivedAt: now + idx })));
+                                      
+                                      setTeams(prevTeams => {
+                                        // Gather all current session players in random or current string order, maybe just use all session players
+                                        const allPlayerIds = players.filter(p => sessionPlayerIds.includes(p.id)).map(p => p.id);
+                                        const newTeams: Team[] = [];
+                                        const playersPerTeam = match.config.playersPerTeam;
+                                        for (let i = 0; i < allPlayerIds.length; i += playersPerTeam) {
+                                          const teamPlayers = allPlayerIds.slice(i, i + playersPerTeam);
+                                          const teamIndex = Math.floor(i / playersPerTeam);
+                                          const teamLetter = String.fromCharCode(65 + teamIndex);
+                                          newTeams.push({
+                                            id: generateId(),
+                                            name: `Time ${teamLetter}`,
+                                            playerIds: teamPlayers,
+                                            iconIdx: getNextTeamIconIdx(newTeams),
+                                            color: getNextTeamColor(newTeams)
+                                          });
+                                        }
+                                        return newTeams;
+                                      });
+                                    }}
+                                    className="p-2.5 rounded-xl transition-all active:scale-95 hover:bg-black/10 bg-black/5 backdrop-blur shadow-sm border border-black/10 flex items-center gap-2"
+                                  >
+                                    <span className="text-zinc-800"><CheckCircle2 size={18} /></span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Todos Presentes</span>
+                                  </button>
+                              )}
+                              {players.filter(p => p.isAvailable).length >= match.config.playersPerTeam * 2 && (
+                                  <button
+                                    onClick={() => {
+                                      // Ensure teams are generated from all available players in arrival order
+                                      const availablePlayers = [...players]
+                                        .filter(p => p.isAvailable)
+                                        .sort((a, b) => (a.arrivedAt || 0) - (b.arrivedAt || 0));
+                                      
+                                      const updatedPlayerIds = availablePlayers.map(p => p.id);
+                                      const uniquePlayerIds: string[] = [];
+                                      const seenIds = new Set<string>();
+                                      updatedPlayerIds.forEach(id => {
+                                        if (!seenIds.has(id)) {
+                                          uniquePlayerIds.push(id);
+                                          seenIds.add(id);
+                                        }
+                                      });
+
                                       const newTeams: Team[] = [];
                                       const playersPerTeam = match.config.playersPerTeam;
-                                      for (let i = 0; i < allPlayerIds.length; i += playersPerTeam) {
-                                        const teamPlayers = allPlayerIds.slice(i, i + playersPerTeam);
+                                      
+                                      for (let i = 0; i < uniquePlayerIds.length; i += playersPerTeam) {
+                                        const teamPlayers = uniquePlayerIds.slice(i, i + playersPerTeam);
                                         const teamIndex = Math.floor(i / playersPerTeam);
                                         const teamLetter = String.fromCharCode(65 + teamIndex);
                                         newTeams.push({
@@ -5151,77 +5194,36 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           color: getNextTeamColor(newTeams)
                                         });
                                       }
-                                      return newTeams;
-                                    });
-                                  }}
-                                  className="p-2.5 rounded-xl transition-all active:scale-95 hover:bg-black/10 bg-black/5 backdrop-blur shadow-sm border border-black/10 flex items-center gap-2"
-                                >
-                                  <span className="text-zinc-800"><CheckCircle2 size={18} /></span>
-                                  <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Todos Presentes</span>
-                                </button>
-                            )}
-                            {players.filter(p => p.isAvailable).length >= match.config.playersPerTeam * 2 && (
-                                <button
-                                  onClick={() => {
-                                    // Ensure teams are generated from all available players in arrival order
-                                    const availablePlayers = [...players]
-                                      .filter(p => p.isAvailable)
-                                      .sort((a, b) => (a.arrivedAt || 0) - (b.arrivedAt || 0));
-                                    
-                                    const updatedPlayerIds = availablePlayers.map(p => p.id);
-                                    const uniquePlayerIds: string[] = [];
-                                    const seenIds = new Set<string>();
-                                    updatedPlayerIds.forEach(id => {
-                                      if (!seenIds.has(id)) {
-                                        uniquePlayerIds.push(id);
-                                        seenIds.add(id);
+                                      
+                                      setTeams(newTeams);
+                                      
+                                      // Pre-select first two complete teams for a match
+                                      if (newTeams.length >= 2) {
+                                        setMatch(prev => ({ 
+                                          ...prev, 
+                                          teamAIndex: 0, 
+                                          teamBIndex: 1,
+                                          scoreA: 0,
+                                          scoreB: 0,
+                                          timeRemaining: prev.config.duration * 60,
+                                          isActive: false,
+                                          isPaused: true,
+                                          hasEnded: false,
+                                          events: []
+                                        }));
                                       }
-                                    });
-
-                                    const newTeams: Team[] = [];
-                                    const playersPerTeam = match.config.playersPerTeam;
-                                    
-                                    for (let i = 0; i < uniquePlayerIds.length; i += playersPerTeam) {
-                                      const teamPlayers = uniquePlayerIds.slice(i, i + playersPerTeam);
-                                      const teamIndex = Math.floor(i / playersPerTeam);
-                                      const teamLetter = String.fromCharCode(65 + teamIndex);
-                                      newTeams.push({
-                                        id: generateId(),
-                                        name: `Time ${teamLetter}`,
-                                        playerIds: teamPlayers,
-                                        iconIdx: getNextTeamIconIdx(newTeams),
-                                        color: getNextTeamColor(newTeams)
-                                      });
-                                    }
-                                    
-                                    setTeams(newTeams);
-                                    
-                                    // Pre-select first two complete teams for a match
-                                    if (newTeams.length >= 2) {
-                                      setMatch(prev => ({ 
-                                        ...prev, 
-                                        teamAIndex: 0, 
-                                        teamBIndex: 1,
-                                        scoreA: 0,
-                                        scoreB: 0,
-                                        timeRemaining: prev.config.duration * 60,
-                                        isActive: false,
-                                        isPaused: true,
-                                        hasEnded: false,
-                                        events: []
-                                      }));
-                                    }
-                                    
-                                    setTeamsTab('proximos');
-                                  }}
-                                  className="p-2.5 rounded-xl transition-all active:scale-95 hover:bg-black/10 bg-black/5 backdrop-blur shadow-sm border border-black/10 flex items-center gap-2"
-                                >
-                                  <span className="text-zinc-800"><CheckCircle2 size={18} /></span>
-                                  <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Pronto</span>
-                                </button>
-                            )}
+                                      
+                                      setTeamsTab('proximos');
+                                    }}
+                                    className="p-2.5 rounded-xl transition-all active:scale-95 hover:bg-black/10 bg-black/5 backdrop-blur shadow-sm border border-black/10 flex items-center gap-2"
+                                  >
+                                    <span className="text-zinc-800"><CheckCircle2 size={18} /></span>
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Pronto</span>
+                                  </button>
+                              )}
+                            </div>
                           </div>
-                        </div>
+                        )}
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {players.filter(p => sessionPlayerIds.includes(p.id)).length === 0 ? (
                             <div className="col-span-full py-20 flex flex-col items-center justify-center gap-6 w-full">
@@ -5241,9 +5243,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     setTeamsTab('configuracao');
                                   }
                                 }}
-                                className="px-6 py-3 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95"
+                                className="px-4 py-2 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
                               >
-                                {players.length < 2 ? 'Criar Jogadores' : 'Configurar Partida'}
+                                {players.length < 2 ? 'CRIAR JOGADORES' : 'CONFIGURAR PARTIDA'}
                               </button>
                             </div>
                           ) : (
@@ -5342,14 +5344,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
                       </div>
                     ) : teamsTab === 'historico' ? (
-                      <div className={`space-y-6 w-full ${match.isActive ? 'pt-6 px-2 sm:px-6 pb-0 overflow-hidden' : 'p-2 sm:p-6'}`}>
+                      <div className={`space-y-6 w-full ${match.isActive ? 'pt-6 px-2 sm:px-6 pb-0 overflow-hidden' : ''}`}>
                         {!match.isActive ? (
                           <div className="py-20 flex flex-col items-center justify-center gap-6 w-full">
                             {players.filter(p => p.isAvailable).length === 0 ? (
-                              <>
+                               <>
                                 <div className="flex flex-col items-center gap-4 opacity-50 text-black/50 text-xs">
                                   <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-2">
-                                    <span className="opacity-30 text-black"><GiAbstract042 size={48} /></span>
+                                    <span className="opacity-30 text-black"><GiSoccerField size={48} /></span>
                                   </div>
                                   <span className="font-bold uppercase tracking-widest text-[10px]">Nenhum jogador presente</span>
                                 </div>
@@ -5367,7 +5369,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   }}
                                   className="px-4 py-2 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
                                 >
-                                  {players.length < 2 ? 'Criar Jogadores' : 'Configurar Partida'}
+                                  {players.length < 2 ? 'CRIAR JOGADORES' : 'CONFIGURAR PARTIDA'}
                                 </button>
                               </>
                             ) : players.filter(p => p.isAvailable).length < match.config.playersPerTeam * 2 ? (
@@ -5894,67 +5896,69 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </div>
                     ) : teamsTab === 'proximos' ? (
                       <div className="space-y-6 relative overflow-hidden w-full">
-                        <div className="flex justify-between items-center relative z-10">
-                          <button 
-                            onClick={() => setTeamsTab('configuracao')}
-                            className="p-2 rounded-xl transition-all active:scale-90 hover:bg-black/10 bg-black/5 backdrop-blur shadow-sm border border-black/10 text-zinc-800"
-                            title="Configurações"
-                          >
-                            <motion.div
-                              animate={{ rotate: [0, 180, 0] }}
-                              transition={{
-                                duration: 1.5,
-                                repeat: Infinity,
-                                repeatDelay: 8.5,
-                                ease: "easeInOut"
-                              }}
+                        {firstSetupDone && teams.length >= 2 && (
+                          <div className="flex justify-between items-center relative z-10">
+                            <button 
+                              onClick={() => setTeamsTab('configuracao')}
+                              className="p-2 rounded-xl transition-all active:scale-90 hover:bg-black/10 bg-black/5 backdrop-blur shadow-sm border border-black/10 text-zinc-800"
+                              title="Configurações"
                             >
-                              <Settings size={20} className="text-zinc-800" />
-                            </motion.div>
-                          </button>
-                            <div className="flex gap-1">
-                              <button
-                                onClick={() => {
-                                  if (match.isActive && !match.hasEnded) return;
-                                  if (teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2) return;
-                                  
-                                  setShowLogoAnimation(true);
-                                  setTimeout(() => {
-                                  randomizeTeams(match.config.playersPerTeam);
-                                    setShowLogoAnimation(false);
-                                    sounds.playDrawFinished();
-                                    setToast({ message: "Times sorteados com sucesso!", type: 'success' });
-                                  }, 3000);
+                              <motion.div
+                                animate={{ rotate: [0, 180, 0] }}
+                                transition={{
+                                  duration: 1.5,
+                                  repeat: Infinity,
+                                  repeatDelay: 8.5,
+                                  ease: "easeInOut"
                                 }}
-                                disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
-                                className="p-1 px-2 rounded-lg transition-all active:scale-90 hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1 bg-[#83A8FF] shadow border border-[#83A8FF] text-white"
                               >
-                                <span className="text-white"><ImSpinner9 size={14} /></span>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-[#363636]">Sortear</span>
-                              </button>
-                              <button
-                                onClick={() => {
-                                  if (match.isActive && !match.hasEnded) {
-                                    setShowStartMatchConfirm(true);
-                                    return;
-                                  }
+                                <Settings size={20} className="text-zinc-800" />
+                              </motion.div>
+                            </button>
+                              <div className="flex gap-1">
+                                <button
+                                  onClick={() => {
+                                    if (match.isActive && !match.hasEnded) return;
+                                    if (teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2) return;
+                                    
+                                    setShowLogoAnimation(true);
+                                    setTimeout(() => {
+                                    randomizeTeams(match.config.playersPerTeam);
+                                      setShowLogoAnimation(false);
+                                      sounds.playDrawFinished();
+                                      setToast({ message: "Times sorteados com sucesso!", type: 'success' });
+                                    }, 3000);
+                                  }}
+                                  disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
+                                  className="p-1 px-2 rounded-lg transition-all active:scale-90 hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1 bg-[#83A8FF] shadow border border-[#83A8FF] text-white"
+                                >
+                                  <span className="text-white"><ImSpinner9 size={14} /></span>
+                                  <span className="text-[10px] font-black uppercase tracking-widest text-[#363636]">Sortear</span>
+                                </button>
+                                <button
+                                  onClick={() => {
+                                    if (match.isActive && !match.hasEnded) {
+                                      setShowStartMatchConfirm(true);
+                                      return;
+                                    }
 
-                                  if (match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
-                                      (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
-                                      teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) {
-                                    startNextMatch(match.teamAIndex, match.teamBIndex);
-                                  }
-                                }}
-                                disabled={!((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
-                                  (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
-                                   teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)))}
-                                className="p-1 px-2 rounded-lg transition-all active:scale-90 hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1 bg-gradient-to-br from-[#00b024] to-[#01801c] shadow border border-[#01801c] text-white"
-                              >
-                                <span className="text-white"><IoFootballOutline size={16} /></span>
-                                <span className="text-[10px] font-black uppercase tracking-widest text-[#363636]">Iniciar</span>
-                              </button>
-                            </div>
-                        </div>
+                                    if (match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
+                                        (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
+                                        teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) {
+                                      startNextMatch(match.teamAIndex, match.teamBIndex);
+                                    }
+                                  }}
+                                  disabled={!((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
+                                    (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
+                                     teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)))}
+                                  className="p-1 px-2 rounded-lg transition-all active:scale-90 hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1 bg-gradient-to-br from-[#00b024] to-[#01801c] shadow border border-[#01801c] text-white"
+                                >
+                                  <span className="text-white"><IoFootballOutline size={16} /></span>
+                                  <span className="text-[10px] font-black uppercase tracking-widest text-[#363636]">Iniciar</span>
+                                </button>
+                              </div>
+                          </div>
+                        )}
                         <div className="space-y-4">
                           {teams.length < 2 ? (
                             <div className="py-20 flex flex-col items-center justify-center gap-6 w-full">
@@ -5978,11 +5982,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     }
                                   }
                                 }}
-                                className="px-5 py-2.5 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded-xl shadow-xl hover:opacity-90 transition-all active:scale-95"
+                                className="px-4 py-2 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
                               >
                                 {players.filter(p => sessionPlayerIds.includes(p.id)).length > 0 
                                   ? 'Confirmar Chegada'
-                                  : (players.length < 2 ? 'Criar Jogadores' : 'Configurar Partida')}
+                                  : (players.length < 2 ? 'CRIAR JOGADORES' : 'CONFIGURAR PARTIDA')}
                               </button>
                             </div>
                           ) : (
