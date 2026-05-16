@@ -4202,7 +4202,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="w-full max-w-2xl bg-brand-card rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-brand-border overflow-hidden flex flex-col max-h-[90vh]"
+              className="w-full max-w-2xl bg-brand-card rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-brand-border overflow-hidden flex flex-col max-h-[90vh]"
             >
               {/* Header */}
               <div className="px-8 py-6 border-b border-brand-border flex justify-between items-center bg-brand-card sticky top-0 z-10">
@@ -4626,7 +4626,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               }}
               className="p-6 space-y-6"
             >
-              <div className="max-w-3xl mx-auto space-y-6 bg-white/20 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5">
+              <div className="max-w-3xl mx-auto space-y-6 bg-white/20 backdrop-blur-xl p-6 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5">
                 <div className="space-y-6">
                     <section className="space-y-4">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -4694,7 +4694,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <div className="relative">
                   <textarea 
                     placeholder=" "
-                    className={`w-full h-24 px-4 py-3 rounded-2xl border-none outline-none transition-all text-sm resize-none bg-gradient-to-br from-zinc-200 to-zinc-300 text-[#1E3D2F] focus:ring-2 focus:ring-[#1E3D2F]/20 peer`}
+                    className={`w-full h-24 px-4 py-3 rounded-2xl border-none outline-none transition-all text-sm resize-none bg-zinc-100 text-[#1E3D2F] focus:ring-2 focus:ring-[#1E3D2F]/20 peer`}
                     onChange={(e) => {
                       if (e.target.value.includes('\n') || e.target.value.length > 10) {
                         addBulkPlayers(e.target.value);
@@ -4729,7 +4729,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 </div>
               </section>
 
-              <section className="rounded-2xl overflow-hidden bg-zinc-200/50 backdrop-blur-xl border border-black/10 shadow-2xl relative">
+              <section className="rounded-xl overflow-hidden bg-zinc-200/50 backdrop-blur-xl border border-black/10 shadow-2xl relative">
                 {visiblePlayers.length === 0 ? (
                   <div className="text-center py-12 opacity-50 text-black/50 text-xs normal-case flex flex-col items-center justify-center gap-2">
                     <span className="opacity-30 text-black"><GiLaurelsTrophy size={48} /></span>
@@ -4865,8 +4865,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             >
                   <div id="teams-list-section" className="max-w-5xl mx-auto w-full space-y-4">
                     {teamsTab === 'configuracao' ? (
-                      <div className="space-y-6 bg-white/20 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5">
-                        <div className="sticky top-[-1px] z-40 bg-white/80 backdrop-blur-md py-4 -mx-6 px-6 flex justify-between items-center rounded-t-[2.5rem] border-b border-black/5">
+                      <div className="space-y-6 bg-white/20 backdrop-blur-xl p-6 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5">
+                        <div className="sticky top-[-1px] z-40 bg-white/80 backdrop-blur-md py-4 -mx-6 px-6 flex justify-between items-center rounded-t-2xl border-b border-black/5">
                           <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">Configuração</h3>
                         </div>
                         
@@ -5018,7 +5018,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
                       </div>
                     ) : teamsTab === 'chegada' ? (
-                      <div className="space-y-6 bg-white/20 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5">
+                      <div className="space-y-6 bg-white/20 backdrop-blur-xl p-6 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5">
                         <div className="flex justify-between items-center">
                           <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">Ordem de Chegada</h3>
                           <div className="flex flex-col sm:flex-row items-center gap-3">
@@ -5199,7 +5199,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     });
                                   }
                                 }}
-                                className={`flex items-center gap-3 p-3 rounded-[1.5rem] border transition-all active:scale-[0.98] ${
+                                className={`flex items-center gap-3 p-3 rounded-xl border transition-all active:scale-[0.98] ${
                                   p.isAvailable 
                                     ? 'bg-[#83A8FF] border-[#83A8FF] text-black shadow-lg shadow-[#83A8FF]/10' 
                                     : 'bg-black/5 border-black/5 text-black/50 opacity-100 hover:bg-black/10'
@@ -5214,25 +5214,25 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 </div>
                                 <div className="flex-1 text-left flex flex-col gap-0.5">
                                   <div className={`text-xs font-normal tracking-tight capitalize leading-none ${p.isAvailable ? 'text-black/90' : 'text-black/50'}`}>{p.name.toLowerCase()}</div>
-                                  <div className="flex gap-0.5">
+                                  <div className="flex gap-1">
                                     {[1, 2, 3, 4, 5].map((star) => (
                                       <Star 
                                         key={`star-a-${p.id}-${star}`}
                                         size={8} 
-                                        className={`${(p.stars || 3) >= star ? (p.isAvailable ? 'fill-black text-black' : 'fill-[#00FF00] text-zinc-800') : (p.isAvailable ? 'text-black/20' : 'text-black/20')}`} 
+                                        className={`${(p.stars || 3) >= star ? 'fill-[#00FF00] text-zinc-800' : 'text-black/20'}`} 
                                       />
                                     ))}
                                   </div>
                                   <div className={`text-[8px] font-bold uppercase ${p.isAvailable ? 'text-black/60' : 'text-black/30'}`}>{p.isAvailable ? 'Confirmado' : 'Aguardando'}</div>
                                 </div>
-                                {p.isAvailable && <CheckCircle2 size={16} className="text-black" />}
+                                {p.isAvailable && <CheckCircle2 size={16} className="text-white" />}
                               </button>
                             ))
                           )}
                         </div>
                       </div>
                     ) : teamsTab === 'historico' ? (
-                      <div className={`space-y-6 bg-white/20 backdrop-blur-xl rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5 ${match.isActive ? 'pt-6 px-6 pb-0 overflow-hidden' : 'p-6'}`}>
+                      <div className={`space-y-6 bg-white/20 backdrop-blur-xl rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5 ${match.isActive ? 'pt-6 px-6 pb-0 overflow-hidden' : 'p-6'}`}>
                         {!match.isActive ? (
                           <div className="py-12 text-center border border-dashed border-black/10 rounded-3xl flex flex-col items-center gap-4">
                             {players.filter(p => p.isAvailable).length === 0 ? (
@@ -5273,7 +5273,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             ) : (
                               <>
                                 {lastMatchResult ? (
-                                  <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto mb-2 space-y-4 bg-black/5 p-6 rounded-[32px] border border-black/10 shadow-sm backdrop-blur-sm">
+                                  <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto mb-2 space-y-4 bg-black/5 p-6 rounded-3xl border border-black/10 shadow-sm backdrop-blur-sm">
                                     <p className="text-[10px] font-black text-black/50 uppercase tracking-[0.2em]">Última Partida</p>
                                     <div className="flex items-center justify-between gap-4 px-2 py-2 w-full">
                                       <div className="flex-1 flex flex-col items-center text-center space-y-1">
@@ -5374,7 +5374,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             {match.hasEnded && (
                               <div className="absolute inset-0 z-40 bg-black/10 backdrop-blur-[1px] rounded-2xl pointer-events-auto cursor-default" />
                             )}
-                            <div className="sticky top-[-1px] z-40 bg-[#1E2D2F]/95 backdrop-blur-md border-b border-black/10 ring-1 ring-white/5 py-6 -mx-6 px-6 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-[35px] shadow-2xl w-full max-w-2xl mx-auto relative overflow-hidden">
+                            <div className="sticky top-[-1px] z-40 bg-[#1E2D2F]/95 backdrop-blur-md border-b border-black/10 ring-1 ring-white/5 py-6 -mx-6 px-6 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-3xl shadow-2xl w-full max-w-2xl mx-auto relative overflow-hidden">
                               <div className="flex-1 flex flex-col items-center text-center space-y-2 sm:space-y-4">
                                   <button 
                                     className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm"
@@ -5494,7 +5494,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               </div>
                             </div>
                             
-                            <div className="grid grid-cols-2 gap-4 bg-gradient-to-br from-zinc-100 to-zinc-300 p-4 rounded-[2.5rem] border border-black/5 shadow-inner mb-8">
+                            <div className="grid grid-cols-2 gap-4 bg-gradient-to-br from-zinc-100 to-zinc-300 p-4 rounded-3xl border border-black/5 shadow-inner mb-8">
                               <div className="space-y-2">
                                 {[...(teams[match.teamAIndex]?.playerIds || [])].sort((a, b) => {
                                   const playerA = players.find(p => p.id === a);
@@ -5781,7 +5781,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         )}
                       </div>
                     ) : teamsTab === 'proximos' ? (
-                      <div className="space-y-6 relative overflow-hidden bg-white/20 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5">
+                      <div className="space-y-6 relative overflow-hidden bg-white/20 backdrop-blur-xl p-6 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5">
                         <div className="flex justify-between items-center relative z-10">
                           <button 
                             onClick={() => setTeamsTab('configuracao')}
@@ -5944,7 +5944,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                         return;
                                       }
                                     }}
-                                    className={`p-4 rounded-[1.5rem] border-2 transition-all relative min-h-[110px] flex flex-col justify-center overflow-hidden ${
+                                    className={`p-4 rounded-xl border-2 transition-all relative min-h-[110px] flex flex-col justify-center overflow-hidden ${
                                       (movingPlayers && isSelectingDestination) ? 'cursor-pointer hover:opacity-90' : 'cursor-default'
                                     } ${
                                       isCurrent 
@@ -6536,7 +6536,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               className="p-6 space-y-6 pb-24"
             >
               <motion.div 
-                className={`bg-white/20 backdrop-blur-xl p-6 rounded-[2.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5 overflow-hidden`}
+                className={`bg-white/20 backdrop-blur-xl p-6 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5 overflow-hidden`}
                 drag="x"
                 dragConstraints={{ left: 0, right: 0 }}
                 onDragEnd={(event, info) => {
