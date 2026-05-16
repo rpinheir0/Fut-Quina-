@@ -6211,6 +6211,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                           return newTeams.filter(team => team.playerIds.length > 0);
                                                         });
                                                         setToast({ message: `Jogador movido para o ${teams[incompleteSelectedTeamIdx].name}`, type: 'success' });
+                                                      } else {
+                                                        setShowQueuePlayerModal({ teamIndex: tIdx, playerId: pid });
                                                       }
                                                     }
                                                   }}
