@@ -201,6 +201,77 @@ import {
   Legend
 } from 'recharts';
 
+// --- Common Hooks ---
+
+function useLongPress(callback: () => void, onClick: () => void, ms: number = 2000) {
+  const [longPressTriggered, setLongPressTriggered] = useState(false);
+  const timeout = useRef<NodeJS.Timeout>();
+
+  const start = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation();
+    setLongPressTriggered(false);
+    timeout.current = setTimeout(() => {
+      setLongPressTriggered(true);
+      callback();
+    }, ms);
+  }, [callback, ms]);
+
+  const stop = useCallback((e: React.MouseEvent | React.TouchEvent, wasLeaving: boolean = false) => {
+    e.stopPropagation();
+    if (timeout.current) {
+      clearTimeout(timeout.current);
+    }
+    if (!longPressTriggered && !wasLeaving) {
+      onClick();
+    }
+    setLongPressTriggered(false);
+  }, [longPressTriggered, onClick]);
+
+  return {
+    onMouseDown: start,
+    onTouchStart: start,
+    onMouseUp: (e: React.MouseEvent) => stop(e),
+    onMouseLeave: (e: React.MouseEvent) => stop(e, true),
+    onTouchEnd: (e: React.TouchEvent) => stop(e)
+  };
+}
+
+function PlayerInteractionWrapper({ 
+  children, 
+  onAction, 
+  onClick, 
+  className,
+  disabled,
+  style
+}: { 
+  children: React.ReactNode, 
+  onAction: () => void, 
+  onClick: () => void, 
+  className?: string,
+  disabled?: boolean,
+  style?: React.CSSProperties
+}) {
+  const handlers = useLongPress(onAction, onClick, 2000);
+  
+  if (disabled) {
+    return <button disabled className={className} style={style}>{children}</button>
+  }
+  
+  return (
+    <button 
+      {...handlers} 
+      onContextMenu={(e) => {
+        e.preventDefault();
+        onAction();
+      }}
+      className={className}
+      style={style}
+    >
+      {children}
+    </button>
+  );
+}
+
 // --- Types ---
 
 interface Player {
@@ -4027,7 +4098,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   {toast.type === 'gray' && <PiGearBold size={18} />}
                   {toast.type === 'info' && <PiRocketBold size={18} />}
                 </div>
-                <span className="text-xs font-bold leading-tight max-w-[200px]">{toast.message}</span>
+                <span className="text-[12px] font-bold lowercase leading-tight max-w-[200px]">{toast.message}</span>
                 <button 
                   onClick={() => setToast(null)}
                   className="ml-2 w-6 h-6 flex items-center justify-center bg-white/20 hover:bg-white/30 rounded-full transition-colors shrink-0"
@@ -4463,7 +4534,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 {toast.type === 'gray' && <PiGearBold size={18} />}
                 {toast.type === 'info' && <PiRocketBold size={18} />}
               </div>
-              <p className="text-[10px] font-black uppercase tracking-widest leading-none drop-shadow-sm">
+              <p className="text-[12px] font-bold lowercase leading-none drop-shadow-sm">
                 {toast.message}
               </p>
               <button 
@@ -5562,9 +5633,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   const matchGoals = match.events.filter(e => e.type === 'goal' && e.playerId === pid).length;
                                   const matchAssists = match.events.filter(e => e.type === 'goal' && e.assistId === pid).length;
                                   return (
-                                      <button 
+                                      <PlayerInteractionWrapper 
                                         key={`partida-p-a-${pid}-${idx}`} 
                                         disabled={match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit}
+                                        onAction={() => setShowPlayerActionsModal({ teamIndex: match.teamAIndex, playerId: pid })}
                                         onClick={() => {
                                           if (swappingPlayerId) {
                                             if (swappingPlayerId === pid) {
@@ -5641,7 +5713,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     </div>
                   )}
                 </div>
-              </button>
+              </PlayerInteractionWrapper>
                                   );
                                 })}
                                 {Array.from({ length: Math.max(0, match.config.playersPerTeam - (teams[match.teamAIndex]?.playerIds?.length || 0)) }).map((_, i) => (
@@ -5703,9 +5775,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   const matchGoals = match.events.filter(e => e.type === 'goal' && e.playerId === pid).length;
                                   const matchAssists = match.events.filter(e => e.type === 'goal' && e.assistId === pid).length;
                                   return (
-                                      <button 
+                                      <PlayerInteractionWrapper 
                                         key={`partida-p-b-${pid}-${idx}`} 
                                         disabled={match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit}
+                                        onAction={() => setShowPlayerActionsModal({ teamIndex: match.teamBIndex, playerId: pid })}
                                         onClick={() => {
                                           if (swappingPlayerId) {
                                             if (swappingPlayerId === pid) {
@@ -5782,7 +5855,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     </div>
                   )}
                 </div>
-              </button>
+              </PlayerInteractionWrapper>
                                   );
                                 })}
                                 {Array.from({ length: Math.max(0, match.config.playersPerTeam - (teams[match.teamBIndex]?.playerIds?.length || 0)) }).map((_, i) => (
@@ -6434,10 +6507,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           {team.playerIds.map((pid, idx) => {
                             const p = players.find(pl => pl.id === pid);
                             return p ? (
-                              <div 
+                              <PlayerInteractionWrapper 
                                 key={`scoreboard-player-${team.id}-${pid}-${idx}`} 
-                                onClick={(e) => {
-                                  e.stopPropagation();
+                                onAction={() => setShowPlayerActionsModal({ teamIndex: tIndex, playerId: pid })}
+                                onClick={() => {
                                   if (swappingPlayerId && swappingPlayerId !== pid) {
                                     // Complete swap logic
                                     setTeams(prev => {
@@ -6472,7 +6545,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     setShowPlayerActionsModal({ teamIndex: tIndex, playerId: pid });
                                   }
                                 }}
-                                className={`flex justify-between items-center py-2 px-1 transition-all group/player cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
+                                className={`flex w-full justify-between items-center py-2 px-1 transition-all group/player cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
                                 swappingPlayerId === pid 
                                   ? 'bg-[#53B986]/20 rounded-lg' 
                                   : (swappingPlayerId && swappingPlayerId !== pid)
@@ -6488,7 +6561,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     )}
                                   </div>
                                   <div className="flex flex-col min-w-0">
-                                    <span className={`text-[11px] sm:text-xs font-bold tracking-tight transition-colors truncate leading-none ${
+                                    <span className={`text-[11px] sm:text-xs font-bold tracking-tight transition-colors truncate leading-none text-left ${
                                       swappingPlayerId === pid 
                                         ? 'text-[#53B986]' 
                                         : 'text-zinc-800'
@@ -6516,7 +6589,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     </div>
                                   )}
                                 </div>
-                              </div>
+                              </PlayerInteractionWrapper>
                             ) : null;
                           })}
                           {team.playerIds.length === 0 && (
