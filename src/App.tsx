@@ -521,7 +521,7 @@ const AssistModal = ({
             initial={{ y: -10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="w-14 h-14 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mx-auto mb-4 border border-white/20 shadow-lg"
+            className="w-16 h-16 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center mx-auto mb-4 border border-white/20 shadow-lg"
           >
             <span className="text-black"><GiTrophy size={32} /></span>
           </motion.div>
@@ -1371,7 +1371,7 @@ const PlayerManagementModalComponent = ({
                   onRemove(player.id);
                   onClose();
                 }}
-                className="w-full py-3 flex items-center justify-center gap-2 text-red-500 bg-red-50 hover:bg-red-100 rounded-2xl font-black uppercase tracking-widest text-[9px] transition-all border border-red-100 active:scale-95"
+                className="w-full py-3 flex items-center justify-center gap-2 text-red-500 bg-red-50 hover:bg-red-100 rounded-xl font-black uppercase tracking-widest text-[9px] transition-all border border-red-100 active:scale-95"
               >
                 <Trash2 size={12} />
                 Remover
@@ -1615,7 +1615,7 @@ const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, 
           alt="FutQuina Logo"
           width={iconSizes[size]} 
           height={iconSizes[size]} 
-          className="drop-shadow-md"
+          className=""
         />
       </div>
       <div className={`flex flex-col justify-center ${alignClass}`}>
@@ -4014,7 +4014,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               className="fixed bottom-12 left-0 right-0 z-[200] flex justify-center px-6 pointer-events-none"
             >
               <motion.div
-                className={`pointer-events-auto flex items-center gap-3 px-5 py-3 rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] border backdrop-blur-xl transition-all ${
+                className={`pointer-events-auto flex items-center gap-3 px-5 py-3 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] border backdrop-blur-xl transition-all ${
                   toast.type === 'success' ? 'bg-emerald-500/90 border-emerald-400/50 text-white' :
                   toast.type === 'warning' ? 'bg-amber-500/90 border-amber-400/50 text-white' :
                   'bg-[#1E3D2F]/95 border-white/10 text-white'
@@ -4208,7 +4208,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     value={newExpense.name}
                     onChange={(e) => setNewExpense(prev => ({ ...prev, name: e.target.value }))}
                     placeholder="Ex: Aluguel da quadra"
-                    className="w-full p-4 bg-zinc-200 rounded-2xl outline-none focus:ring-2 ring-[#1E3D2F]/20 font-bold text-sm"
+                    className="w-full p-4 bg-zinc-200 rounded-xl outline-none focus:ring-2 ring-[#1E3D2F]/20 font-bold text-sm"
                   />
                 </div>
                 <div>
@@ -4218,7 +4218,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     value={newExpense.amount}
                     onChange={(e) => setNewExpense(prev => ({ ...prev, amount: e.target.value }))}
                     placeholder="00"
-                    className="w-full p-4 bg-zinc-200 rounded-2xl outline-none focus:ring-2 ring-[#1E3D2F]/20 font-black text-xl"
+                    className="w-full p-4 bg-zinc-200 rounded-xl outline-none focus:ring-2 ring-[#1E3D2F]/20 font-black text-xl"
                   />
                 </div>
                 
@@ -4234,7 +4234,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     setNewExpense({ name: '', amount: '' });
                     setShowExpenseModal(false);
                   }}
-                  className="w-full py-4 bg-[#1E3D2F] text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg hover:opacity-90 transition-all active:scale-95"
+                  className="w-full py-4 bg-[#1E3D2F] text-white rounded-xl font-black uppercase tracking-widest text-xs shadow-lg hover:opacity-90 transition-all active:scale-95"
                 >
                   Confirmar Despesa
                 </button>
@@ -4284,7 +4284,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               initial={{ scale: 0.95, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="w-full max-w-2xl bg-brand-card rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-brand-border overflow-hidden flex flex-col max-h-[90vh]"
+              className="w-full max-w-2xl bg-brand-card rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-brand-border overflow-hidden flex flex-col max-h-[90vh]"
             >
               {/* Header */}
               <div className="px-8 py-6 border-b border-brand-border flex justify-between items-center bg-brand-card sticky top-0 z-10">
@@ -4371,7 +4371,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           <div className="flex gap-2">
                             <button 
                               onClick={handleResetApp}
-                              className="flex-1 py-3 bg-red-600 text-white rounded-xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-red-500/20 active:scale-95 transition-all"
+                              className="flex-1 py-3 bg-red-600 text-white rounded-xl font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all"
                             >
                               Zerar
                             </button>
@@ -4450,7 +4450,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             className="fixed bottom-24 left-0 right-0 z-[200] flex justify-center px-6 pointer-events-none"
           >
             <motion.div
-              className={`pointer-events-auto flex items-center gap-3 px-5 py-3 rounded-2xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] border backdrop-blur-xl transition-all ${
+              className={`pointer-events-auto flex items-center gap-3 px-5 py-3 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] border backdrop-blur-xl transition-all ${
                 toast.type === 'success' ? 'bg-emerald-500/90 border-emerald-400/50 text-white' :
                 toast.type === 'warning' ? 'bg-amber-500/90 border-amber-400/50 text-white' :
                 'bg-[#1E3D2F]/95 border-white/10 text-white'
@@ -4622,7 +4622,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             <div className="flex gap-2 justify-center">
               <button 
                 onClick={() => navigateTeamsTab('configuracao')}
-                className={`w-12 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === 'configuracao' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80'}`}
+                className={`w-12 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === 'configuracao' ? 'bg-[#00FF00] text-[#1E3D2F] border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80'}`}
               >
                 <motion.div
                   animate={{ rotate: teamsTab === 'configuracao' ? [0, 180] : 0 }}
@@ -4639,19 +4639,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               </button>
               <button 
                 onClick={() => navigateTeamsTab('chegada')}
-                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === 'chegada' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === 'chegada' ? 'bg-[#00FF00] text-[#1E3D2F] border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'chegada' ? 'text-[#1E3D2F]' : 'text-white'}`}>Chegada</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('historico')}
-                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === 'historico' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === 'historico' ? 'bg-[#00FF00] text-[#1E3D2F] border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'historico' ? 'text-[#1E3D2F]' : 'text-white'}`}>Confrontos</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('proximos')}
-                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === 'proximos' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === 'proximos' ? 'bg-[#00FF00] text-[#1E3D2F] border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'proximos' ? 'text-[#1E3D2F]' : 'text-white'}`}>Próximos</span>
               </button>
@@ -4730,12 +4730,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               }}
               className="p-6 space-y-6"
             >
-              <div className="max-w-3xl mx-auto space-y-6 bg-white/20 backdrop-blur-xl p-6 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.1)] border border-white/40 ring-1 ring-black/5">
+              <div className="max-w-3xl mx-auto space-y-6 bg-[#83A8FF] p-6 rounded-xl shadow-2xl border border-black/10">
                 <div className="space-y-6">
                     <section className="space-y-4">
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                         <div className="flex items-center gap-2">
-                          <h2 className="text-sm font-bold uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">Gerenciar jogadores</h2>
+                          <h2 className="text-sm font-bold uppercase tracking-widest text-[#1E3D2F]">Gerenciar jogadores</h2>
                           {!isOrgProAuthorized && (
                             <div 
                               onClick={() => setShowAuthModal(true)}
@@ -4755,7 +4755,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   setIsInitialSetupFlow(true);
                                 }
                               }}
-                              className="flex-1 sm:flex-none px-4 py-2.5 bg-[#00FF00] text-black text-[10px] font-black uppercase tracking-widest rounded-xl shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                              className="flex-1 sm:flex-none px-4 py-2.5 bg-white text-[#83A8FF] text-[10px] font-black uppercase tracking-widest rounded-xl shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                             >
                               Configurar Partida
                             </button>
@@ -4767,7 +4767,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     <input 
                       type="text" 
                       placeholder="Nome do jogador..."
-                      className={`flex-1 px-4 py-2 rounded-xl border-none outline-none transition-all bg-gradient-to-br from-zinc-200 to-zinc-300 text-[#1E3D2F] placeholder-[#1E3D2F]/50 focus:ring-2 focus:ring-[#1E3D2F]/20 text-sm`}
+                      className={`flex-1 px-4 py-2 rounded-xl border-none outline-none transition-all bg-white text-[#1E3D2F] placeholder-[#1E3D2F]/50 focus:ring-2 focus:ring-[#1E3D2F]/20 text-sm`}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           addPlayer(e.currentTarget.value);
@@ -4788,7 +4788,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         addPlayer(input.value);
                         input.value = '';
                       }}
-                      className="p-2 bg-[#00FF00] text-[#1E3D2F] rounded-xl shadow hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square"
+                      className="p-2 bg-white text-[#1E3D2F] rounded-xl shadow hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square"
                     >
                       <Plus size={18} />
                     </button>
@@ -4798,7 +4798,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <div className="relative">
                   <textarea 
                     placeholder=" "
-                    className={`w-full h-24 px-4 py-3 rounded-xl border-none outline-none transition-all text-sm resize-none bg-zinc-100 text-[#1E3D2F] focus:ring-2 focus:ring-[#1E3D2F]/20 peer`}
+                    className={`w-full h-24 px-4 py-3 rounded-xl border-none outline-none transition-all text-sm resize-none bg-white text-[#1E3D2F] focus:ring-2 focus:ring-[#1E3D2F]/20 peer`}
                     onChange={(e) => {
                       if (e.target.value.includes('\n') || e.target.value.length > 10) {
                         addBulkPlayers(e.target.value);
@@ -4833,7 +4833,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 </div>
               </section>
 
-              <section className="rounded-xl overflow-hidden bg-zinc-200/50 backdrop-blur-xl border border-black/10 shadow-2xl relative">
+              <section className="rounded-xl overflow-hidden bg-[#F8FAFC] border border-black/10 shadow-2xl relative">
                 {visiblePlayers.length === 0 ? (
                   <div className="text-center py-12 opacity-50 text-black/50 text-xs normal-case flex flex-col items-center justify-center gap-2">
                     <span className="opacity-30 text-black"><GiLaurelsTrophy size={48} /></span>
@@ -5478,7 +5478,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             {match.hasEnded && (
                               <div className="absolute inset-0 z-40 bg-black/10 backdrop-blur-[1px] rounded-2xl pointer-events-auto cursor-default" />
                             )}
-                            <div className="sticky top-[-1px] z-40 bg-[#1E2D2F]/95 backdrop-blur-md border-b border-black/10 ring-1 ring-white/5 py-6 -mx-6 px-6 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-3xl shadow-2xl w-full max-w-2xl mx-auto relative overflow-hidden">
+                            <div className="sticky top-[-1px] z-40 bg-[#1E2D2F]/95 backdrop-blur-md border-b border-black/10 ring-1 ring-white/5 py-6 -mx-6 px-6 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-3xl w-full max-w-2xl mx-auto relative overflow-hidden">
                               <div className="flex-1 flex flex-col items-center text-center space-y-2 sm:space-y-4">
                                   <button 
                                     className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm"
@@ -10091,7 +10091,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <PiUserCirclePlusThin size={24} />
                 </div>
               )}
-              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'players' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Gerenciar</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'players' ? 'opacity-100 translate-y-0' : 'opacity-70'}`}>Gerenciar</span>
             </button>
             <button 
               onClick={() => {
@@ -10121,7 +10121,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <GiSoccerField size={22} />
                 </div>
               )}
-              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'teams' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Partida</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'teams' ? 'opacity-100 translate-y-0' : 'opacity-70'}`}>Partida</span>
             </button>
             <button 
               onClick={() => {
@@ -10149,7 +10149,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <GiTrophy size={22} />
                 </div>
               )}
-              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'ranking' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Ranking</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'ranking' ? 'opacity-100 translate-y-0' : 'opacity-70'}`}>Ranking</span>
             </button>
             <button 
               onClick={() => {
@@ -10178,7 +10178,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <IoIosWallet size={22} />
                 </div>
               )}
-              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'finance' ? 'opacity-100 translate-y-0 drop-shadow-md' : 'opacity-70'}`}>Financeiro</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'finance' ? 'opacity-100 translate-y-0' : 'opacity-70'}`}>Financeiro</span>
             </button>
           </nav>
         </div>
