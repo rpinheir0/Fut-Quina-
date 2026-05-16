@@ -4471,7 +4471,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       {/* Main Content */}
       <main 
         ref={mainRef} 
-        className={`flex-1 overflow-y-auto pb-24 ${isPrintMode ? 'p-0 pb-0 bg-white text-black' : (['players', 'teams', 'ranking', 'finance'].includes(currentScreen) ? 'bg-white' : '')}`}
+        className={`flex-1 overflow-y-auto pb-20 ${isPrintMode ? 'p-0 pb-0 bg-white text-black' : (['players', 'teams', 'ranking', 'finance'].includes(currentScreen) ? 'bg-white' : '')}`}
       >
         <AnimatePresence mode="wait">
           {currentScreen === 'players' && !isPrintMode && (
@@ -9826,7 +9826,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
         {/* Bottom Navigation */}
         <div className={`fixed bottom-0 left-0 right-0 z-[100] transition-transform duration-500 ease-in-out w-full ${isNavVisible ? 'translate-y-0' : 'translate-y-28'}`}>
-          <nav className="w-full bg-[#111111] border-t border-white/5 pt-3 pb-6 sm:pb-8 px-2 sm:px-6 flex items-center justify-around shadow-[0_-8px_32px_rgba(0,0,0,0.5)]">
+          <nav className="w-full bg-[#111111] border-t border-white/5 pt-1 pb-3 sm:pb-4 px-2 sm:px-6 flex items-center justify-around">
             <button 
               onClick={() => {
                 const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
