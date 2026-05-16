@@ -64,7 +64,8 @@ import {
   Contact,
   Rocket,
   Globe,
-  Star
+  Star,
+  Palette
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { IoPersonOutline, IoFootballOutline, IoCheckmarkCircle } from 'react-icons/io5';
@@ -4976,7 +4977,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     <div className="flex items-center gap-2">
                                       <span className="drop-shadow-sm" style={{ color: fixedColors.teamA || TEAM_COLORS[0] }}><PiShieldFill size={20} /></span>
                                     </div>
-                                    <PenLine size={14} className="text-black/40" />
+                                    <Palette size={14} className="text-black/40" />
                                   </button>
                                 </div>
                                 <div className="space-y-2">
@@ -4988,7 +4989,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     <div className="flex items-center gap-2">
                                       <span className="drop-shadow-sm" style={{ color: fixedColors.teamB || TEAM_COLORS[1] }}><PiShieldFill size={20} /></span>
                                     </div>
-                                    <PenLine size={14} className="text-zinc-400" />
+                                    <Palette size={14} className="text-zinc-400" />
                                   </button>
                                 </div>
                               </div>
