@@ -6140,6 +6140,20 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                   key={`queue-player-${t.id}-${pid}-${idx}`}
                                                   onClick={(e) => {
                                                     e.stopPropagation();
+                                                    if (movingPlayers && movingPlayers.teamId === t.id) {
+                                                      setMovingPlayers(prev => {
+                                                        if (!prev) return null;
+                                                        const pIds = prev.playerIds.includes(pid) 
+                                                          ? prev.playerIds.filter(id => id !== pid)
+                                                          : [...prev.playerIds, pid];
+                                                        if (pIds.length === 0) {
+                                                          setIsSelectingDestination(false);
+                                                          return null;
+                                                        }
+                                                        return { ...prev, playerIds: pIds };
+                                                      });
+                                                      return;
+                                                    }
                                                     if (swappingPlayerId) {
                                                       if (swappingPlayerId === pid) {
                                                         setSwappingPlayerId(null);
