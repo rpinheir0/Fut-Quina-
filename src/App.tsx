@@ -2306,6 +2306,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   }, [isNavVisible]);
 
   const [showClearConfirm, setShowClearConfirm] = useState(false);
+  const [showResetAppConfirm, setShowResetAppConfirm] = useState(false);
   const [showResetStatsConfirm, setShowResetStatsConfirm] = useState(false);
   const [showGlobalSettings, setShowGlobalSettings] = useState(false);
   const [showGoalAnimation, setShowGoalAnimation] = useState<{ scorerName: string, teamName: string, scorerPhoto?: string } | null>(null);
@@ -2322,6 +2323,87 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const playCheer = () => {
     const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2020/2020-preview.mp3');
     audio.play().catch(e => console.log('Audio play failed:', e));
+  };
+
+  const handleResetApp = async () => {
+    try {
+      setPlayers([]);
+      setTeams([
+        { id: generateId(), name: 'Time A', playerIds: [], iconIdx: 0, color: TEAM_COLORS[0] },
+        { id: generateId(), name: 'Time B', playerIds: [], iconIdx: 1, color: TEAM_COLORS[1] }
+      ]);
+      setMatch({
+        isActive: false,
+        isPaused: true,
+        timeRemaining: 600,
+        config: { duration: 10, playersPerTeam: 5, goalLimit: 5 },
+        scoreA: 0,
+        scoreB: 0,
+        events: [],
+        startTime: null,
+        hasEnded: false,
+        teamAIndex: -1,
+        teamBIndex: -1
+      });
+      setMatchHistory([]);
+      setPayments([]);
+      setExpenses([]);
+      setSessionPlayerIds([]);
+      setHasRandomized(false);
+      setLastMatchResult(null);
+      setOrgProData({});
+      setOrgProSettings({
+        maxAbsences: null,
+        requirePaymentUpToDate: false,
+        matchDayOfWeek: null,
+        matchTime: "",
+        appliedDate: null
+      });
+      setFixedColors({ teamA: null, teamB: null, enabled: false });
+      setMonthlyFee(5);
+      setAvailableYears([new Date().getFullYear()]);
+      setSelectedYear(new Date().getFullYear());
+      setManualAdjustment(0);
+      setAdminPin('');
+      setFirstSetupDone(false);
+      
+      // Clear localStorage
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith('futquina_') && key.includes(groupId)) {
+          localStorage.removeItem(key);
+        }
+      });
+
+      // Clear Supabase
+      if (groupId) {
+        await Promise.all([
+          supabase.from('players').delete().eq('group_id', groupId),
+          supabase.from('teams').delete().eq('group_id', groupId),
+          supabase.from('match_history').delete().eq('group_id', groupId),
+          supabase.from('match_state').delete().eq('group_id', groupId),
+          supabase.from('payments').delete().eq('group_id', groupId),
+          supabase.from('transactions').delete().eq('group_id', groupId),
+          supabase.from('groups').update({ 
+            admin_pin: null, 
+            monthly_fee: 5, 
+            selected_year: new Date().getFullYear(),
+            manual_adjustment: 0,
+            available_years: [new Date().getFullYear()],
+            first_setup_done: false
+          }).eq('id', groupId)
+        ]);
+      }
+
+      setToast({ message: "Aplicativo zerado com sucesso!", type: 'success' });
+      setShowResetAppConfirm(false);
+      setShowGlobalSettings(false);
+      setCurrentScreen('players');
+      setTimeout(() => setToast(null), 3000);
+    } catch (e) {
+      console.error("Error resetting app:", e);
+      setToast({ message: "Erro ao zerar aplicativo", type: 'warning' });
+      setTimeout(() => setToast(null), 3000);
+    }
   };
 
   // --- Persistence ---
@@ -4269,18 +4351,40 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </div>
                     </button>
 
-                    <button 
-                      onClick={() => setShowClearConfirm(true)}
-                      className="flex items-center gap-3 p-4 rounded-2xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all text-left group"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-brand-card shadow-sm flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
-                        <PiTrashBold size={20} />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-xs font-black uppercase tracking-wide text-red-500">Zerar Aplicativo</span>
-                        <span className="text-[9px] text-red-400 font-bold uppercase tracking-tight opacity-70">Limpar todos os dados</span>
-                      </div>
-                    </button>
+                    <div className="relative">
+                      {!showResetAppConfirm ? (
+                        <button 
+                          onClick={() => setShowResetAppConfirm(true)}
+                          className="flex items-center gap-3 p-4 rounded-2xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all text-left group w-full"
+                        >
+                          <div className="w-10 h-10 rounded-xl bg-brand-card shadow-sm flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
+                            <PiTrashBold size={20} />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-xs font-black uppercase tracking-wide text-red-500">Zerar Aplicativo</span>
+                            <span className="text-[9px] text-red-400 font-bold uppercase tracking-tight opacity-70">Limpar todos os dados</span>
+                          </div>
+                        </button>
+                      ) : (
+                        <div className="flex flex-col gap-2 p-3 bg-red-500/5 rounded-2xl border border-red-500/20 animate-in fade-in zoom-in duration-200">
+                          <p className="text-[9px] font-black uppercase tracking-widest text-red-500 text-center mb-1">CUIDADO! Isso apagará TUDO.</p>
+                          <div className="flex gap-2">
+                            <button 
+                              onClick={handleResetApp}
+                              className="flex-1 py-3 bg-red-600 text-white rounded-xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-red-500/20 active:scale-95 transition-all"
+                            >
+                              Zerar
+                            </button>
+                            <button 
+                              onClick={() => setShowResetAppConfirm(false)}
+                              className="flex-1 py-3 bg-black/10 text-brand-text-primary rounded-xl font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all"
+                            >
+                              Voltar
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -5205,11 +5309,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     : 'bg-black/5 border-black/5 text-black/50 opacity-100 hover:bg-black/10'
                                 }`}
                               >
-                                <div className={`w-10 h-10 rounded-xl ${p.isAvailable ? 'bg-black/10' : 'bg-black/10'} flex items-center justify-center overflow-hidden border ${p.isAvailable ? 'border-black/10' : 'border-black/10'}`}>
+                                <div className={`w-10 h-10 rounded-xl bg-gradient-to-br from-zinc-100 to-zinc-300 flex items-center justify-center overflow-hidden border border-black/10`}>
                                   {p.photo ? (
                                     <img src={p.photo} alt="P" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                                   ) : (
-                                    <span className={p.isAvailable ? 'text-black' : 'text-black/40' + ' flex items-center shrink-0'}><IoPersonOutline size={16} /></span>
+                                    <span className={(p.isAvailable ? 'text-zinc-500' : 'text-black/40') + ' flex items-center shrink-0'}><IoPersonOutline size={16} /></span>
                                   )}
                                 </div>
                                 <div className="flex-1 text-left flex flex-col gap-0.5">
@@ -6275,8 +6379,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                       : undefined 
                                                   }}
                                                 >
-                                                <div className="w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-black/10 flex items-center justify-center shrink-0 border border-black/10 overflow-hidden">
-                                                  {p.photo ? <img src={p.photo} className="w-full h-full object-cover" referrerPolicy="no-referrer" /> : <span className="text-black flex items-center shrink-0"><IoPersonOutline size={12} /></span>}
+                                                <div className="w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-gradient-to-br from-zinc-100 to-zinc-300 flex items-center justify-center shrink-0 border border-black/10 overflow-hidden">
+                                                  {p.photo ? <img src={p.photo} className="w-full h-full object-cover" referrerPolicy="no-referrer" /> : <span className="text-zinc-500 flex items-center shrink-0"><IoPersonOutline size={12} /></span>}
                                                 </div>
                                                 <div className="flex flex-col items-start gap-1 overflow-hidden">
                                                   <span className="text-xs font-normal tracking-tight capitalize truncate text-black/90 leading-none">{p.name.toLowerCase()}</span>
