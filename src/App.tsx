@@ -2268,6 +2268,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [movingPlayers, setMovingPlayers] = useState<{ teamId: string, playerIds: string[] } | null>(null);
   const [isSelectingDestination, setIsSelectingDestination] = useState(false);
   const longPressTimer = useRef<NodeJS.Timeout | null>(null);
+  const isLongPressActive = useRef(false);
   const scrollTimeout = useRef<NodeJS.Timeout | null>(null);
   const [showAssistSelection, setShowAssistSelection] = useState<{ teamIndex: number, scorerId: string } | null>(null);
   const [playerManagementModal, setPlayerManagementModal] = useState<Player | null>(null);
@@ -6213,7 +6214,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                     if (swappingPlayerId || fillingVacancyForTeam || (movingPlayers && isSelectingDestination)) return;
                                                     if (movingPlayers && movingPlayers.teamId !== t.id) return;
                                                     if (longPressTimer.current) clearTimeout(longPressTimer.current);
+                                                    isLongPressActive.current = false;
                                                     longPressTimer.current = setTimeout(() => {
+                                                      isLongPressActive.current = true;
                                                       navigator.vibrate?.(50);
                                                       setMovingPlayers(prev => {
                                                         if (!prev) return { teamId: t.id, playerIds: [pid] };
@@ -6228,7 +6231,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                     if (swappingPlayerId || fillingVacancyForTeam || (movingPlayers && isSelectingDestination)) return;
                                                     if (movingPlayers && movingPlayers.teamId !== t.id) return;
                                                     if (longPressTimer.current) clearTimeout(longPressTimer.current);
+                                                    isLongPressActive.current = false;
                                                     longPressTimer.current = setTimeout(() => {
+                                                      isLongPressActive.current = true;
                                                       setMovingPlayers(prev => {
                                                         if (!prev) return { teamId: t.id, playerIds: [pid] };
                                                         if (!prev.playerIds.includes(pid)) return { ...prev, playerIds: [...prev.playerIds, pid] };
@@ -6242,6 +6247,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                     const startTouchY = e.clientY;
                                                     const onPointerUp = (upEvent: PointerEvent) => {
                                                       const endTouchY = upEvent.clientY;
+                                                      if (isLongPressActive.current) {
+                                                        isLongPressActive.current = false;
+                                                        window.removeEventListener('pointerup', onPointerUp);
+                                                        return;
+                                                      }
                                                       if (Math.abs(startTouchY - endTouchY) < 10) {
                                                         // Tap logic
                                                         e.stopPropagation();
