@@ -4451,7 +4451,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             className="fixed bottom-24 left-0 right-0 z-[200] flex justify-center px-6 pointer-events-none"
           >
             <motion.div
-              className={`pointer-events-auto flex items-center gap-3 px-5 py-3 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] border backdrop-blur-xl transition-all ${
+              className={`pointer-events-auto flex items-center gap-4 px-6 py-2.5 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.5)] border backdrop-blur-xl transition-all ${
                 toast.type === 'success' ? 'bg-emerald-500/90 border-emerald-400/50 text-white' :
                 toast.type === 'warning' ? 'bg-amber-500/90 border-amber-400/50 text-white' :
                 'bg-[#1E3D2F]/95 border-white/10 text-white'
@@ -4463,12 +4463,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 {toast.type === 'gray' && <PiGearBold size={18} />}
                 {toast.type === 'info' && <PiRocketBold size={18} />}
               </div>
-              <p className="text-[11px] font-black uppercase tracking-widest leading-none drop-shadow-sm">
+              <p className="text-[10px] font-black uppercase tracking-widest leading-none drop-shadow-sm">
                 {toast.message}
               </p>
               <button 
                 onClick={() => setToast(null)}
-                className="ml-2 hover:opacity-70 transition-opacity"
+                className="ml-2 w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 transition-all"
               >
                 <PiXBold size={16} />
               </button>
