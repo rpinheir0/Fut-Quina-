@@ -2741,9 +2741,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   // --- Match Timer ---
   useEffect(() => {
     let interval: NodeJS.Timeout;
-    if (match.isActive && !match.isPaused && match.timeRemaining > 0) {
+    if (match.isActive && !match.isPaused) {
       interval = setInterval(() => {
         setMatch(prev => {
+          if (prev.timeRemaining <= 0) return prev;
           const nextTime = prev.timeRemaining - 1;
           if (nextTime <= 0) {
             return { ...prev, timeRemaining: 0, isPaused: true };
@@ -2753,7 +2754,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       }, 1000);
     }
     return () => clearInterval(interval);
-  }, [match.isActive, match.isPaused, match.timeRemaining]);
+  }, [match.isActive, match.isPaused]);
 
   // --- Match End Detection ---
   useEffect(() => {
@@ -3928,6 +3929,44 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     }
   }, [isMatchTimePassed]);
 
+  // --- Memoized Computations for Performance ---
+  const sortedPlayersByName = useMemo(() => [...players].sort((a,b)=>a.name.localeCompare(b.name)), [players]);
+  const sortedPlayersByAssists = useMemo(() => [...players].sort((a, b) => (b.assists || 0) - (a.assists || 0)), [players]);
+  const sessionPlayersSorted = useMemo(() => {
+    return players
+      .filter(p => sessionPlayerIds.includes(p.id))
+      .sort((a, b) => {
+        if (a.isAvailable && !b.isAvailable) return -1;
+        if (!a.isAvailable && b.isAvailable) return 1;
+        if (a.isAvailable && b.isAvailable) return (a.arrivedAt || 0) - (b.arrivedAt || 0);
+        return a.name.localeCompare(b.name);
+      });
+  }, [players, sessionPlayerIds]);
+  const sortedExpenses = useMemo(() => [...(expenses || [])].sort((a, b) => b.date - a.date), [expenses]);
+  const sortedPlayersByTotal = useMemo(() => [...players].sort((a, b) => (b.goals + b.assists) - (a.goals + a.assists)), [players]);
+  const sortedRankingPlayers = useMemo(() => {
+    return [...players].sort((a, b) => {
+      if (rankingTab === 'geral') return (b.goals + b.assists) - (a.goals + a.assists);
+      if (rankingTab === 'artilharia') return b.goals - a.goals;
+      if (rankingTab === 'assistencias') return b.assists - a.assists;
+      return 0;
+    });
+  }, [players, rankingTab]);
+  const sortedTeamAPlayers = useMemo(() => {
+    return [...(teams[match.teamAIndex]?.playerIds || [])].sort((a, b) => {
+      const playerA = players.find(p => p.id === a);
+      const playerB = players.find(p => p.id === b);
+      return (playerA?.arrivedAt || 0) - (playerB?.arrivedAt || 0);
+    });
+  }, [teams, match.teamAIndex, players]);
+  const sortedTeamBPlayers = useMemo(() => {
+    return [...(teams[match.teamBIndex]?.playerIds || [])].sort((a, b) => {
+      const playerA = players.find(p => p.id === a);
+      const playerB = players.find(p => p.id === b);
+      return (playerA?.arrivedAt || 0) - (playerB?.arrivedAt || 0);
+    });
+  }, [teams, match.teamBIndex, players]);
+
   const visiblePlayers = useMemo(() => {
     const timePassed = isMatchTimePassed;
     const currentMonth = MONTHS[new Date().getMonth()];
@@ -4049,7 +4088,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             <div className="space-y-4 relative z-10">
                <label className="text-[10px] font-black uppercase tracking-widest text-white/50">Selecione seu nome</label>
                <div className="grid grid-cols-1 gap-2 max-h-80 overflow-y-auto custom-scrollbar pr-2">
-                  {[...players].sort((a,b)=>a.name.localeCompare(b.name)).map(p => (
+                  {sortedPlayersByName.map(p => (
                      <button
                         key={`pres-${p.id}`}
                         onClick={() => {
@@ -5191,12 +5230,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               </button>
                             </div>
                           ) : (
-                            players.filter(p => sessionPlayerIds.includes(p.id)).sort((a, b) => {
-                              if (a.isAvailable && !b.isAvailable) return -1;
-                              if (!a.isAvailable && b.isAvailable) return 1;
-                              if (a.isAvailable && b.isAvailable) return (a.arrivedAt || 0) - (b.arrivedAt || 0);
-                              return a.name.localeCompare(b.name);
-                            }).map((p) => (
+                            sessionPlayersSorted.map((p) => (
                               <button 
                                 key={`arrival-player-below-${p.id}`}
                                 onClick={() => {
@@ -5552,11 +5586,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             
                             <div className="grid grid-cols-2 gap-4 bg-gradient-to-br from-zinc-100 to-zinc-300 p-4 rounded-xl border border-black/5 shadow-inner mb-8">
                               <div className="space-y-2">
-                                {[...(teams[match.teamAIndex]?.playerIds || [])].sort((a, b) => {
-                                  const playerA = players.find(p => p.id === a);
-                                  const playerB = players.find(p => p.id === b);
-                                  return (playerA?.arrivedAt || 0) - (playerB?.arrivedAt || 0);
-                                }).map((pid, idx) => {
+                                {sortedTeamAPlayers.map((pid, idx) => {
                                   const p = players.find(pl => pl.id === pid);
                                   if (!p) return null;
                                   const matchGoals = match.events.filter(e => e.type === 'goal' && e.playerId === pid).length;
@@ -5693,11 +5723,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 ))}
                               </div>
                               <div className="space-y-2">
-                                {[...(teams[match.teamBIndex]?.playerIds || [])].sort((a, b) => {
-                                  const playerA = players.find(p => p.id === a);
-                                  const playerB = players.find(p => p.id === b);
-                                  return (playerA?.arrivedAt || 0) - (playerB?.arrivedAt || 0);
-                                }).map((pid, idx) => {
+                                {sortedTeamBPlayers.map((pid, idx) => {
                                   const p = players.find(pl => pl.id === pid);
                                   if (!p) return null;
                                   const matchGoals = match.events.filter(e => e.type === 'goal' && e.playerId === pid).length;
@@ -5845,17 +5871,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               className="p-2 rounded-xl transition-all active:scale-90 hover:bg-black/10 bg-black/5 backdrop-blur shadow-sm border border-black/10 text-zinc-800"
                               title="Configurações"
                             >
-                              <motion.div
-                                animate={{ rotate: [0, 180, 0] }}
-                                transition={{
-                                  duration: 1.5,
-                                  repeat: Infinity,
-                                  repeatDelay: 8.5,
-                                  ease: "easeInOut"
-                                }}
-                              >
-                                <Settings size={20} className="text-zinc-800" />
-                              </motion.div>
+                              <Settings size={20} className="text-zinc-800" />
                             </button>
                               <div className="flex gap-1">
                                 <button
@@ -6630,14 +6646,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 </div>
 
                 <div className="flex flex-col gap-1">
-                  {[...players]
-                    .sort((a, b) => {
-                      if (rankingTab === 'geral') return (b.goals + b.assists) - (a.goals + a.assists);
-                      if (rankingTab === 'artilharia') return b.goals - a.goals;
-                      if (rankingTab === 'assistencias') return b.assists - a.assists;
-                      return 0;
-                    })
-                    .map((player, index) => (
+                  {sortedRankingPlayers.map((player, index) => (
                     <motion.div 
                       layout
                       initial={{ opacity: 0, y: 10 }}
@@ -6902,7 +6911,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           {(expenses || []).length === 0 ? (
                             <div className={`text-center text-zinc-400 text-xs uppercase tracking-widest ${isPrintMode ? 'p-2' : 'p-8'}`}>Nenhuma despesa registrada</div>
                           ) : (
-                            [...(expenses || [])].sort((a, b) => b.date - a.date).map((expense) => (
+                            sortedExpenses.map((expense) => (
                               <div key={`expense-${expense.id}`} className={`flex items-center justify-between group ${isPrintMode ? 'p-2 bg-white' : 'p-4'}`}>
                                 <div>
                                   <p className={`text-xs uppercase tracking-tight ${isPrintMode ? 'font-mono text-zinc-800' : 'text-sm font-black text-zinc-800 font-mono'}`}>{expense.name}</p>
@@ -7225,9 +7234,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </tr>
                     </thead>
                     <tbody>
-                      {[...players]
-                        .sort((a, b) => (b.goals + b.assists) - (a.goals + a.assists))
-                        .slice(0, 15)
+                      {sortedPlayersByTotal.slice(0, 15)
                         .map((player, index) => (
                         <tr key={`ranking-row-print-${player.id}`} className="border-b border-black/10">
                           <td className="p-2 text-xs font-black">{index + 1}</td>
@@ -7444,7 +7451,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     </div>
                                   ))}
 
-                                  {panelModal === 'assist' && [...players].sort((a, b) => (b.assists || 0) - (a.assists || 0)).map((p, idx) => (
+                                  {panelModal === 'assist' && sortedPlayersByAssists.map((p, idx) => (
                                     <div key={p.id} className="flex items-center gap-4 p-4 bg-blue-500/10 rounded-2xl border border-blue-500/20">
                                       <div className="w-8 h-8 rounded-xl bg-blue-500 text-white flex items-center justify-center text-[11px] font-black shrink-0">
                                         #{idx + 1}
