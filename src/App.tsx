@@ -4622,7 +4622,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             <div className="flex gap-2 justify-center">
               <button 
                 onClick={() => navigateTeamsTab('configuracao')}
-                className={`w-12 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === 'configuracao' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80'}`}
+                className={`w-12 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === 'configuracao' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#83A8FF] border-[#83A8FF]/20 text-white hover:bg-[#7297EF]'}`}
               >
                 <motion.div
                   animate={{ rotate: teamsTab === 'configuracao' ? [0, 180] : 0 }}
@@ -4639,19 +4639,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               </button>
               <button 
                 onClick={() => navigateTeamsTab('chegada')}
-                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === 'chegada' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === 'chegada' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#83A8FF] border-[#83A8FF]/20 text-white hover:bg-[#7297EF] font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'chegada' ? 'text-[#1E3D2F]' : 'text-white'}`}>Chegada</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('historico')}
-                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === 'historico' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === 'historico' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#83A8FF] border-[#83A8FF]/20 text-white hover:bg-[#7297EF] font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'historico' ? 'text-[#1E3D2F]' : 'text-white'}`}>Confrontos</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('proximos')}
-                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === 'proximos' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === 'proximos' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#83A8FF] border-[#83A8FF]/20 text-white hover:bg-[#7297EF] font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'proximos' ? 'text-[#1E3D2F]' : 'text-white'}`}>Próximos</span>
               </button>
@@ -4665,19 +4665,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             <div className="flex gap-2 justify-center">
               <button
                 onClick={() => setRankingTab('geral')}
-                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${rankingTab === 'geral' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${rankingTab === 'geral' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#83A8FF] border-[#83A8FF]/20 text-white hover:bg-[#7297EF] font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'geral' ? 'text-[#1E3D2F]' : 'text-white'}`}>Geral</span>
               </button>
               <button
                 onClick={() => setRankingTab('artilharia')}
-                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${rankingTab === 'artilharia' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${rankingTab === 'artilharia' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#83A8FF] border-[#83A8FF]/20 text-white hover:bg-[#7297EF] font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'artilharia' ? 'text-[#1E3D2F]' : 'text-white'}`}>Artilharia</span>
               </button>
               <button
                 onClick={() => setRankingTab('assistencias')}
-                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${rankingTab === 'assistencias' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${rankingTab === 'assistencias' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#83A8FF] border-[#83A8FF]/20 text-white hover:bg-[#7297EF] font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === 'assistencias' ? 'text-[#1E3D2F]' : 'text-white'}`}>Assistências</span>
               </button>
@@ -4691,13 +4691,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             <div className="flex gap-2 justify-center">
               <button 
                 onClick={() => setFinanceSubScreen('balanco')} 
-                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${financeSubScreen === 'balanco' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${financeSubScreen === 'balanco' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#83A8FF] border-[#83A8FF]/20 text-white hover:bg-[#7297EF] font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'balanco' ? 'text-[#1E3D2F]' : 'text-white'}`}>Balanço</span>
               </button>
               <button 
                 onClick={() => setFinanceSubScreen('mensalidade')} 
-                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${financeSubScreen === 'mensalidade' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
+                className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${financeSubScreen === 'mensalidade' ? 'bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent' : 'bg-[#83A8FF] border-[#83A8FF]/20 text-white hover:bg-[#7297EF] font-medium'}`}
               >
                 <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === 'mensalidade' ? 'text-[#1E3D2F]' : 'text-white'}`}>Mensalidade</span>
               </button>
