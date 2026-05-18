@@ -5955,8 +5955,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       (movingPlayers && isSelectingDestination) ? 'cursor-pointer hover:opacity-90' : 'cursor-default'
                                     } ${
                                       isCurrent 
-                                        ? 'shadow-2xl z-10 border-[#53B986] bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef] backdrop-blur-md ring-4 ring-[#53B986]/10'
-                                        : 'shadow-sm opacity-60 border-black/5 bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef]'
+                                        ? 'shadow-2xl z-10 border-[#53B986] bg-[#dce3ee] backdrop-blur-md ring-4 ring-[#53B986]/10'
+                                        : 'shadow-sm opacity-60 border-black/5 bg-[#dce3ee]'
                                     } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-brand-primary/10 !border-[#53B986]' : ''}`}
                                     style={{
                                       borderColor: (movingPlayers?.teamId === t.id || (swappingPlayerId && t.playerIds.includes(swappingPlayerId))) ? '#53B986' : undefined
