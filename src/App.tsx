@@ -65,7 +65,8 @@ import {
   Rocket,
   Globe,
   Star,
-  Palette
+  Palette,
+  Power
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { IoPersonOutline, IoFootballOutline, IoCheckmarkCircle } from 'react-icons/io5';
@@ -2191,6 +2192,64 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     return saved ? JSON.parse(saved) : { teamA: null, teamB: null, enabled: false };
   });
 
+  const [autoCompleteTeams, setAutoCompleteTeams] = useState(() => {
+    const saved = safeLocalStorage.getItem(`futquina_auto_complete_teams_${groupId}`);
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    if (groupId) {
+      safeLocalStorage.setItem(`futquina_auto_complete_teams_${groupId}`, JSON.stringify(autoCompleteTeams));
+    }
+  }, [autoCompleteTeams, groupId]);
+
+  useEffect(() => {
+    if (!autoCompleteTeams || !match?.config?.playersPerTeam) return;
+
+    setTeams(prev => {
+      const limit = match.config.playersPerTeam;
+      const allPlayerIds = prev.flatMap(t => t.playerIds);
+      
+      let needsUpdate = false;
+      
+      for (let i = 0; i < prev.length; i++) {
+        const expectedChunkSize = Math.min(limit, Math.max(0, allPlayerIds.length - i * limit));
+        if (prev[i].playerIds.length !== expectedChunkSize) {
+          needsUpdate = true;
+          break;
+        }
+      }
+      
+      const expectedTeamCount = Math.ceil(allPlayerIds.length / limit);
+      // We won't automatically delete the two playing teams if they have empty slots but we don't have enough players
+      // In the app, if there's less than 2 teams it tends to keep empty teams A and B.
+      // But if there are more than required teams due to gaps, we should fix it.
+      if (prev.length > Math.max(2, expectedTeamCount) || (prev.length > 2 && prev.some(t => t.playerIds.length === 0))) {
+        needsUpdate = true;
+      }
+      
+      if (!needsUpdate) return prev;
+
+      const newTeams: Team[] = [];
+      const teamCount = Math.max(2, expectedTeamCount); // keep at least 2 teams
+      for (let i = 0; i < teamCount; i++) {
+        const chunk = allPlayerIds.slice(i * limit, (i + 1) * limit) || [];
+        const existingTeam = prev[i];
+
+        newTeams.push({
+          id: existingTeam?.id || `team-auto-${i}-${generateId()}`,
+          name: existingTeam?.name || `Time ${String.fromCharCode(65 + i)}`,
+          playerIds: chunk,
+          iconIdx: existingTeam?.iconIdx ?? getNextTeamIconIdx(newTeams),
+          color: existingTeam?.color ?? getNextTeamColor(newTeams)
+        });
+      }
+      
+      return newTeams;
+    });
+  }, [teams, autoCompleteTeams, match?.config?.playersPerTeam]);
+
+
   useEffect(() => {
     if (groupId) {
       safeLocalStorage.setItem(`futquina_fixed_colors_${groupId}`, JSON.stringify(fixedColors));
@@ -2276,6 +2335,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [showResetAppConfirm, setShowResetAppConfirm] = useState(false);
   const [showResetStatsConfirm, setShowResetStatsConfirm] = useState(false);
+  const [showAutoCompleteModal, setShowAutoCompleteModal] = useState(false);
   const [showGlobalSettings, setShowGlobalSettings] = useState(false);
   const [showGoalAnimation, setShowGoalAnimation] = useState<{ scorerName: string, teamName: string, scorerPhoto?: string } | null>(null);
   const [showSetupGuide, setShowSetupGuide] = useState(false);
@@ -4930,7 +4990,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               </div>
                               <button 
                                 onClick={() => setFixedColors(prev => ({ ...prev, enabled: !prev.enabled }))}
-                                className={`w-12 h-6 rounded-full p-1 transition-colors relative ${fixedColors.enabled ? 'bg-[#39FF14]' : 'bg-black/10'}`}
+                                className={`w-12 h-6 rounded-full p-1 transition-colors relative ${fixedColors.enabled ? 'bg-[#dce3ee]' : 'bg-black/10'}`}
                               >
                                 <div className={`w-4 h-4 bg-white rounded-full transition-transform ${fixedColors.enabled ? 'translate-x-6' : 'translate-x-0'} shadow-sm`} />
                               </button>
@@ -5796,14 +5856,33 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     ) : teamsTab === 'proximos' ? (
                       <div className="space-y-6 relative overflow-hidden w-full">
                         {firstSetupDone && teams.length >= 2 && (
-                          <div className="flex justify-between items-center relative z-10">
-                            <button 
-                              onClick={() => setTeamsTab('configuracao')}
-                              className="p-2 rounded-xl transition-all active:scale-90 hover:bg-black/10 bg-black/5 backdrop-blur shadow-sm border border-black/10 text-zinc-800"
-                              title="Configurações"
-                            >
-                              <Settings size={20} className="text-zinc-800" />
-                            </button>
+                          <div className="flex justify-between items-center relative z-10 bg-zinc-100/80 backdrop-blur-sm rounded-2xl p-1 mb-2 shadow-sm border border-black/5">
+                            <div className="flex gap-1">
+                              <button 
+                                onClick={() => setTeamsTab('configuracao')}
+                                className="p-2 rounded-xl transition-all active:scale-90 hover:bg-black/5 text-zinc-800 flex items-center justify-center"
+                                title="Configurações"
+                              >
+                                <Settings size={20} className="text-zinc-800" />
+                              </button>
+                              <div className="flex items-center justify-center px-2">
+                                <button 
+                                  onClick={() => {
+                                    const newState = !autoCompleteTeams;
+                                    setAutoCompleteTeams(newState);
+                                    if (newState) {
+                                      setShowAutoCompleteModal(true);
+                                    } else {
+                                      setToast({ message: "Subida automática desativada", type: 'info' });
+                                    }
+                                  }}
+                                  className={`w-12 h-6 rounded-full p-1 transition-colors relative ${autoCompleteTeams ? 'bg-[#dce3ee]' : 'bg-black/10'}`}
+                                  title="Subir automaticamente"
+                                >
+                                  <div className={`w-4 h-4 bg-white rounded-full transition-transform ${autoCompleteTeams ? 'translate-x-6' : 'translate-x-0'} shadow-sm`} />
+                                </button>
+                              </div>
+                            </div>
                               <div className="flex gap-1">
                                 <button
                                   onClick={() => {
@@ -5819,7 +5898,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     }, 3000);
                                   }}
                                   disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
-                                  className="p-2.5 rounded-xl transition-all active:scale-95 hover:bg-black/10 bg-black/5 backdrop-blur shadow-sm border border-black/10 flex items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed"
+                                  className="px-3 py-2 rounded-xl transition-all active:scale-95 hover:bg-black/5 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
                                 >
                                   <span className="text-zinc-800"><PiShuffleAngularBold size={18} /></span>
                                   <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Sortear</span>
@@ -5840,7 +5919,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   disabled={!((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
                                     (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
                                      teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)))}
-                                  className="p-2.5 rounded-xl transition-all active:scale-95 hover:bg-black/10 bg-black/5 backdrop-blur shadow-sm border border-black/10 flex items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed"
+                                  className="px-3 py-2 rounded-xl transition-all active:scale-95 hover:bg-black/5 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
                                 >
                                   <span className="text-zinc-800"><IoFootballOutline size={18} /></span>
                                   <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Iniciar</span>
@@ -10051,6 +10130,42 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             </button>
           </nav>
         </div>
+
+        {/* Auto Complete Confirmation Modal */}
+        {showAutoCompleteModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
+            onClick={() => setShowAutoCompleteModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.95, opacity: 0 }}
+              className="bg-brand-dark border border-emerald-500/30 rounded-lg p-6 max-w-sm w-full shadow-2xl shadow-emerald-500/20"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center mx-auto mb-4">
+                <IoCheckmarkCircle size={32} />
+              </div>
+              <h2 className="text-xl font-black text-center mb-2 uppercase tracking-tighter text-white">Subida Automática</h2>
+              <p className="text-center text-brand-text-secondary mb-6 text-sm">
+                Os jogadores subirão na fila automaticamente nos times.
+              </p>
+              
+              <div className="flex gap-3 justify-center">
+                <button 
+                  onClick={() => setShowAutoCompleteModal(false)}
+                  className="w-full py-3 bg-emerald-500 text-black rounded-xl font-black uppercase tracking-widest text-xs shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] hover:bg-emerald-400 transition-all active:scale-95"
+                >
+                  OK
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
 
         {/* Reset Stats Confirm Modal */}
         {showResetStatsConfirm && (
