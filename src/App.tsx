@@ -69,6 +69,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { IoPersonOutline, IoFootballOutline, IoCheckmarkCircle } from 'react-icons/io5';
+import { BsArrowUpRightCircle } from 'react-icons/bs';
 import { IoIosTrophy, IoIosWallet, IoIosFootball } from 'react-icons/io';
 import { PiUserCirclePlusThin, PiUserCirclePlusLight, PiUserCirclePlus } from 'react-icons/pi';
 import { ImSpinner9 } from 'react-icons/im';
@@ -134,7 +135,8 @@ import {
   PiLockFill,
   PiShieldCheckFill,
   PiPaletteBold,
-  PiClockBold
+  PiClockBold,
+  PiShuffleAngularBold
 } from 'react-icons/pi';
 import { supabase } from './lib/supabase';
 import { sounds } from './lib/sounds';
@@ -5819,7 +5821,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
                                   className="p-2.5 rounded-xl transition-all active:scale-95 hover:bg-black/10 bg-black/5 backdrop-blur shadow-sm border border-black/10 flex items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed"
                                 >
-                                  <span className="text-zinc-800"><ImSpinner9 size={18} /></span>
+                                  <span className="text-zinc-800"><PiShuffleAngularBold size={18} /></span>
                                   <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Sortear</span>
                                 </button>
                                 <button
@@ -6123,9 +6125,48 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                         </p>
                                       </div>
                                     )}
+                                    
+                                    {!isCurrent && t.playerIds.length < match.config.playersPerTeam && (
+                                      <div className="absolute top-4 left-0 right-0 flex justify-center z-10 pointer-events-none">
+                                        <div className="flex items-center gap-1.5 pointer-events-auto">
+                                          <span className="text-[10px] font-bold text-black/40 uppercase tracking-widest">
+                                            Falta {match.config.playersPerTeam - t.playerIds.length} jogador{match.config.playersPerTeam - t.playerIds.length > 1 ? 'es' : ''}
+                                          </span>
+                                          <button
+                                            type="button"
+                                            className="text-black/40 hover:text-amber-500 cursor-pointer transition-all active:scale-90 hover:bg-black/5 p-1 rounded-full flex items-center justify-center pointer-events-auto"
+                                            onClick={(e) => {
+                                              e.preventDefault();
+                                              e.stopPropagation();
+                                              const required = match.config.playersPerTeam - t.playerIds.length;
+                                              let count = 0;
+                                              setTeams(prev => {
+                                                const newTeams = prev.map(team => ({...team, playerIds: [...team.playerIds]}));
+                                                const currentTeam = newTeams[tIdx];
+                                                if (!currentTeam) return prev;
+                                                
+                                                for (let i = tIdx + 1; i < newTeams.length; i++) {
+                                                  const sourceTeam = newTeams[i];
+                                                  while (sourceTeam.playerIds.length > 0 && count < required) {
+                                                    const pId = sourceTeam.playerIds.shift()!;
+                                                    currentTeam.playerIds.push(pId);
+                                                    count++;
+                                                  }
+                                                  if (count >= required) break;
+                                                }
+                                                return newTeams;
+                                              });
+                                            }}
+                                          >
+                                            <BsArrowUpRightCircle size={16} />
+                                          </button>
+                                        </div>
+                                      </div>
+                                    )}
 
                                     <div className={isCurrent && t.playerIds.length < match.config.playersPerTeam ? "pt-0" : "pt-14"}>
-                                      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                                      <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+                                        <AnimatePresence>
                                         {[...t.playerIds].sort((a, b) => {
                                           const playerA = players.find(p => p.id === a);
                                           const playerB = players.find(p => p.id === b);
@@ -6134,8 +6175,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           const p = players.find(pl => pl.id === pid);
                                           if (!p) return null;
                                           return (
-                                                <button
-                                                  key={`queue-player-${t.id}-${pid}-${idx}`}
+                                                <motion.button
+                                                  layout
+                                                  layoutId={`player-card-${pid}`}
+                                                  initial={{ opacity: 0, scale: 0.8 }}
+                                                  animate={{ opacity: 1, scale: 1 }}
+                                                  exit={{ opacity: 0, scale: 0.8 }}
+                                                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                                                  key={`queue-player-${pid}`}
                                                   onClick={(e) => {
                                                     e.stopPropagation();
                                                     if (movingPlayers && movingPlayers.teamId === t.id) {
@@ -6260,10 +6307,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                     ))}
                                                   </div>
                                                 </div>
-                                                </button>
+                                                </motion.button>
                                           );
                                         })}
-                                      </div>
+                                        </AnimatePresence>
+                                      </motion.div>
                                     </div>
                                   </motion.div>
                                 );
