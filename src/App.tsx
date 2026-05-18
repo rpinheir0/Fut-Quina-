@@ -6107,8 +6107,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       })()}
                                     </div>
 
-                                    {/* Status Top Right removed */}
+                                    {/* Status Top Right */}
                                     <div className="absolute top-2 right-2">
+                                      {isCurrent && (
+                                        <div className="w-8 h-8 rounded-lg bg-white/50 backdrop-blur border border-black/5 flex items-center justify-center shadow-sm">
+                                          <IoFootballOutline size={18} className="text-[#53B986]" />
+                                        </div>
+                                      )}
                                     </div>
 
                                     {isCurrent && t.playerIds.length < match.config.playersPerTeam && (
