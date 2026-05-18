@@ -74,7 +74,7 @@ import { BsArrowUpRightCircle } from 'react-icons/bs';
 import { IoIosTrophy, IoIosWallet, IoIosFootball, IoMdSwap, IoMdArrowUp, IoMdArrowDown } from 'react-icons/io';
 import { PiUserCirclePlusThin, PiUserCirclePlusLight, PiUserCirclePlus } from 'react-icons/pi';
 import { ImSpinner9 } from 'react-icons/im';
-import { GiGoalKeeper, GiSoccerKick, GiSoccerField, GiTrophy, GiPodiumWinner, GiRunningShoe, GiLaurelsTrophy, GiSocks, GiAbstract042, GiSoccerBall, GiCrown, GiQueenCrown, GiCrossShield, GiDragonShield, GiEdgedShield, GiRank3, GiBoltShield, GiBorderedShield, GiCrownedSkull } from 'react-icons/gi';
+import { GiGloves, GiGoalKeeper, GiSoccerKick, GiSoccerField, GiTrophy, GiPodiumWinner, GiRunningShoe, GiLaurelsTrophy, GiSocks, GiAbstract042, GiSoccerBall, GiCrown, GiQueenCrown, GiCrossShield, GiDragonShield, GiEdgedShield, GiRank3, GiBoltShield, GiBorderedShield, GiCrownedSkull } from 'react-icons/gi';
 import { 
   PiUsersBold,
   PiUsers,
@@ -216,13 +216,13 @@ interface Player {
   arrivedAt?: number;
   absences?: number;
   stars?: number;
+  isGoalkeeper?: boolean;
 }
 
 interface Team {
   id: string;
   name: string;
   playerIds: string[];
-  goalkeeperId?: string;
   iconIdx: number;
   color: string;
   lastMatchStatus?: 'Vencedor' | 'Empate' | 'Derrota' | 'Subiu';
@@ -1477,11 +1477,6 @@ const safeLocalStorage = {
       localStorage.removeItem(key);
     } catch (e) {}
   },
-  removeItem: (key) => {
-    try {
-      localStorage.removeItem(key);
-    } catch (e) {}
-  },
   clear: () => {
     try {
       localStorage.clear();
@@ -2256,11 +2251,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     return saved ? JSON.parse(saved) : { teamA: null, teamB: null, enabled: false };
   });
 
-  const [fixedGoalkeeper, setFixedGoalkeeper] = useState(() => {
-    const saved = safeLocalStorage.getItem(`futquina_fixed_goalkeeper_${groupId}`);
-    return saved ? JSON.parse(saved) : false;
-  });
-
   const [autoCompleteTeams, setAutoCompleteTeams] = useState(() => {
     const saved = safeLocalStorage.getItem(`futquina_auto_complete_teams_${groupId}`);
     return saved ? JSON.parse(saved) : false;
@@ -2273,10 +2263,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   }, [autoCompleteTeams, groupId]);
 
   useEffect(() => {
-    if (!autoCompleteTeams || !(match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0))) return;
+    if (!autoCompleteTeams || !match.config.playersPerTeam) return;
 
     setTeams(prev => {
-      const limit = (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0));
+      const limit = match.config.playersPerTeam;
       const allPlayerIds = prev.flatMap(t => t.playerIds);
       
       let needsUpdate = false;
@@ -2325,12 +2315,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       safeLocalStorage.setItem(`futquina_fixed_colors_${groupId}`, JSON.stringify(fixedColors));
     }
   }, [fixedColors, groupId]);
-
-  useEffect(() => {
-    if (groupId) {
-      safeLocalStorage.setItem(`futquina_fixed_goalkeeper_${groupId}`, JSON.stringify(fixedGoalkeeper));
-    }
-  }, [fixedGoalkeeper, groupId]);
 
   const [showEventModal, setShowEventModal] = useState<{ team: 'A' | 'B' | number } | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'info' | 'warning' | 'gray' | 'success' } | null>(null);
@@ -3025,7 +3009,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     setPlayers(prev => [...prev, newPlayer]);
 
     const team = teams[teamIndex];
-    if (team && team.playerIds.length >= (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0))) {
+    if (team && team.playerIds.length >= match.config.playersPerTeam) {
       const nextLetter = String.fromCharCode(65 + teams.length);
       const iconIdx = getNextTeamIconIdx(teams);
       const newTeam = { id: generateId(), name: `Time ${nextLetter}`, playerIds: [newPlayer.id], iconIdx, color: getNextTeamColor(teams) };
@@ -3071,7 +3055,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     }
 
     const team = teams[teamIndex];
-    if (team && team.playerIds.length >= (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0))) {
+    if (team && team.playerIds.length >= match.config.playersPerTeam) {
       const nextLetter = String.fromCharCode(65 + teams.length);
       const iconIdx = getNextTeamIconIdx(teams);
     const newTeam = { id: generateId(), name: `Time ${nextLetter}`, playerIds: [playerId], iconIdx, color: getNextTeamColor(teams) };
@@ -3121,7 +3105,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     setTeams(prev => {
       // Regroup all players from all teams to maintain order and fill gap
       const allPlayerIds = prev.flatMap(t => t.playerIds).filter(pid => pid !== id);
-      const limit = (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0));
+      const limit = match.config.playersPerTeam;
       const newTeams: Team[] = [];
       
       for (let i = 0; i < allPlayerIds.length; i += limit) {
@@ -3176,7 +3160,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     setTeams(prev => {
       // For Ordem de Chegada, we always regroup from start to maintain the queue
       const allPlayerIds = prev.flatMap(t => t.playerIds).filter(id => id !== playerId);
-      const limit = (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0));
+      const limit = match.config.playersPerTeam;
       const newTeams: Team[] = [];
       
       for (let i = 0; i < allPlayerIds.length; i += limit) {
@@ -3249,7 +3233,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
     setTeams(prevTeams => {
       let currentTeams = [...prevTeams].map(t => ({ ...t, playerIds: [...t.playerIds] }));
-      const limit = (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0));
+      const limit = match.config.playersPerTeam;
 
       availablePlayers.forEach(player => {
         let lastTeam = currentTeams[currentTeams.length - 1];
@@ -3556,11 +3540,34 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         }
 
         const leavingTeam = newTeams.splice(teamToLeaveIndex, 1)[0];
-        newTeams.push(leavingTeam);
 
-        // Identify which team just "subiu" to the match selection
+        // --- GOALKEEPER FIXED LOGIC ---
+        const totalGoalkeepers = players.filter(p => p.isGoalkeeper && p.isAvailable).length;
         const finalStayIndex = teamToStayIndex > teamToLeaveIndex ? teamToStayIndex - 1 : teamToStayIndex;
         const nextTeamIndex = finalStayIndex === 0 ? 1 : 0;
+        let incomingTeam = newTeams[nextTeamIndex];
+        let finalLeavingTeam = { ...leavingTeam };
+
+        if (totalGoalkeepers <= 2 && incomingTeam && finalLeavingTeam) {
+          const leavingTeamGKId = finalLeavingTeam.playerIds.find(id => players.find(p => p.id === id)?.isGoalkeeper);
+          const incomingTeamGKId = incomingTeam.playerIds.find(id => players.find(p => p.id === id)?.isGoalkeeper);
+          
+          if (leavingTeamGKId && !incomingTeamGKId) {
+            const incomingLinePlayerId = incomingTeam.playerIds.find(id => !players.find(p => p.id === id)?.isGoalkeeper);
+            if (incomingLinePlayerId) {
+              finalLeavingTeam.playerIds = finalLeavingTeam.playerIds.map(id => id === leavingTeamGKId ? incomingLinePlayerId : id);
+              incomingTeam = {
+                ...incomingTeam,
+                playerIds: incomingTeam.playerIds.map(id => id === incomingLinePlayerId ? leavingTeamGKId : id)
+              };
+              newTeams[nextTeamIndex] = incomingTeam;
+            }
+          }
+        }
+
+        newTeams.push(finalLeavingTeam);
+
+        // Identify which team just "subiu" to the match selection
         const joinedTeamId = newTeams[nextTeamIndex]?.id;
 
         if (joinedTeamId) {
@@ -4059,10 +4066,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     const teamA = teams[match.teamAIndex];
     if (!teamA) return [];
     return [...teamA.playerIds].sort((a, b) => {
-      if (a === teamA.goalkeeperId) return -1;
-      if (b === teamA.goalkeeperId) return 1;
       const playerA = players.find(p => p.id === a);
       const playerB = players.find(p => p.id === b);
+      if (playerA?.isGoalkeeper && !playerB?.isGoalkeeper) return -1;
+      if (!playerA?.isGoalkeeper && playerB?.isGoalkeeper) return 1;
       return (playerA?.arrivedAt || 0) - (playerB?.arrivedAt || 0);
     });
   }, [teams, match.teamAIndex, players]);
@@ -4070,10 +4077,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     const teamB = teams[match.teamBIndex];
     if (!teamB) return [];
     return [...teamB.playerIds].sort((a, b) => {
-      if (a === teamB.goalkeeperId) return -1;
-      if (b === teamB.goalkeeperId) return 1;
       const playerA = players.find(p => p.id === a);
       const playerB = players.find(p => p.id === b);
+      if (playerA?.isGoalkeeper && !playerB?.isGoalkeeper) return -1;
+      if (!playerA?.isGoalkeeper && playerB?.isGoalkeeper) return 1;
       return (playerA?.arrivedAt || 0) - (playerB?.arrivedAt || 0);
     });
   }, [teams, match.teamBIndex, players]);
@@ -5109,22 +5116,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               </div>
                             )}
                           </div>
-
-                          <div className="p-5 bg-black/5 rounded-none border border-black/10 space-y-4 shadow-inner mt-4">
-                            <div className="flex items-center justify-between">
-                              <div className="flex flex-col">
-                                <span className="text-[11px] font-black uppercase tracking-widest text-black/90">Goleiro Fixo nos Times?</span>
-                                <p className="text-[9px] text-black/40 font-bold uppercase tracking-wider mt-0.5">Define se cada time terá 1 goleiro fixo além dos jogadores</p>
-                              </div>
-                              <button 
-                                onClick={() => setFixedGoalkeeper(prev => !prev)}
-                                className={`w-12 h-6 rounded-full p-1 transition-colors relative ${fixedGoalkeeper ? 'bg-[#dce3ee]' : 'bg-black/10'}`}
-                              >
-                                <div className={`w-4 h-4 bg-white rounded-full transition-transform ${fixedGoalkeeper ? 'translate-x-6' : 'translate-x-0'} shadow-sm`} />
-                              </button>
-                            </div>
-                          </div>
-
+                          
                           <button 
                             onClick={() => {
                               const duration = parseInt((document.getElementById('tab-match-duration') as HTMLInputElement).value) || 10;
@@ -5200,7 +5192,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           <div className="flex justify-between items-center">
                             <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">Ordem de Chegada</h3>
                             <div className="flex flex-col sm:flex-row items-center gap-3">
-                              {players.filter(p => p.isAvailable).length < (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) * 2 && (
+                              {players.filter(p => p.isAvailable).length < match.config.playersPerTeam * 2 && (
                                   <button
                                     onClick={() => {
                                       const now = Date.now();
@@ -5210,7 +5202,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                         // Gather all current session players in random or current string order, maybe just use all session players
                                         const allPlayerIds = players.filter(p => sessionPlayerIds.includes(p.id)).map(p => p.id);
                                         const newTeams: Team[] = [];
-                                        const playersPerTeam = (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0));
+                                        const playersPerTeam = match.config.playersPerTeam;
                                         for (let i = 0; i < allPlayerIds.length; i += playersPerTeam) {
                                           const teamPlayers = allPlayerIds.slice(i, i + playersPerTeam);
                                           const teamIndex = Math.floor(i / playersPerTeam);
@@ -5232,7 +5224,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Todos Presentes</span>
                                   </button>
                               )}
-                              {players.filter(p => p.isAvailable).length >= (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) * 2 && (
+                              {players.filter(p => p.isAvailable).length >= match.config.playersPerTeam * 2 && (
                                   <button
                                     onClick={() => {
                                       // Ensure teams are generated from all available players in arrival order
@@ -5251,7 +5243,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       });
 
                                       const newTeams: Team[] = [];
-                                      const playersPerTeam = (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0));
+                                      const playersPerTeam = match.config.playersPerTeam;
                                       
                                       for (let i = 0; i < uniquePlayerIds.length; i += playersPerTeam) {
                                         const teamPlayers = uniquePlayerIds.slice(i, i + playersPerTeam);
@@ -5337,7 +5329,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       const updatedPlayerIds = [...allPlayerIds, p.id];
                                       // 3. Re-group into teams of N
                                       const newTeams: Team[] = [];
-                                      const playersPerTeam = (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0));
+                                      const playersPerTeam = match.config.playersPerTeam;
                                       for (let i = 0; i < updatedPlayerIds.length; i += playersPerTeam) {
                                         const teamPlayers = updatedPlayerIds.slice(i, i + playersPerTeam);
                                         const teamIndex = Math.floor(i / playersPerTeam);
@@ -5360,7 +5352,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       const updatedPlayerIds = allPlayerIds.filter(id => id !== p.id);
                                       // 3. Re-group into teams of N
                                       const newTeams: Team[] = [];
-                                      const playersPerTeam = (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0));
+                                      const playersPerTeam = match.config.playersPerTeam;
                                       for (let i = 0; i < updatedPlayerIds.length; i += playersPerTeam) {
                                         const teamPlayers = updatedPlayerIds.slice(i, i + playersPerTeam);
                                         const teamIndex = Math.floor(i / playersPerTeam);
@@ -5438,7 +5430,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   {players.length < 2 ? 'CRIAR JOGADORES' : 'CONFIGURAR PARTIDA'}
                                 </button>
                               </>
-                            ) : players.filter(p => p.isAvailable).length < (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) * 2 ? (
+                            ) : players.filter(p => p.isAvailable).length < match.config.playersPerTeam * 2 ? (
                               <>
                                 <p className="text-xs font-bold text-zinc-500 uppercase tracking-widest">
                                   Faltam {match.config.playersPerTeam * 2 - players.filter(p => p.isAvailable).length} jogadores para iniciar
@@ -5593,7 +5585,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     <button 
                                       disabled={!((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
                                         teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
-                                        teams[match.teamBIndex]?.playerIds?.length === (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)))) || 
+                                        teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) || 
                                         (match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit)}
                                       onClick={() => {
                                         setMatch(prev => {
@@ -5618,7 +5610,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           exit={{ opacity: 0, scale: 0.5, x: -20 }}
                                           disabled={!((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
                                             teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
-                                            teams[match.teamBIndex]?.playerIds?.length === (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)))) || 
+                                            teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) || 
                                             (match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit)}
                                           onClick={finishMatch}
                                           className="p-3 rounded-full transition-all bg-red-500/10 text-red-400 hover:bg-red-500/20 disabled:opacity-20 disabled:cursor-not-allowed"
@@ -5632,7 +5624,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   <button 
                                     disabled={!match.isActive || !((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
                                       teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
-                                      teams[match.teamBIndex]?.playerIds?.length === (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)))) || 
+                                      teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) || 
                                       (match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit)}
                                     onClick={finishMatch}
                                     className="px-2 sm:px-4 py-1 rounded-full bg-red-500/10 text-red-600 text-[6px] sm:text-[8px] font-black uppercase tracking-widest hover:bg-red-500/20 transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-red-500/10"
@@ -5750,8 +5742,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   </div>
                 </div>
                 <div className="flex items-center gap-1 mr-auto">
-                  {fixedGoalkeeper && teams[match.teamAIndex]?.goalkeeperId === p.id && (
-                    <div className="px-1.5 py-0.5 rounded-[4px] bg-sky-200 text-sky-800 text-[8px] font-black uppercase tracking-widest leading-none border border-sky-300">GOL</div>
+                  {p.isGoalkeeper && (
+                    <div className="flex items-center justify-center shrink-0 mr-1 ml-1 text-sky-500 drop-shadow-sm">
+                      <GiGloves size={14} />
+                    </div>
                   )}
                   {matchAssists > 0 && (
                     <div className="flex items-center gap-0.5 text-[10px] font-bold text-black/50">
@@ -5765,16 +5759,16 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   )}
                   {playerEvents[p.id] && (
                     <div className="flex items-center justify-center shrink-0 w-5 h-5 bg-white/50 rounded-full shadow-sm ml-1">
-                      {playerEvents[p.id].type === 'swap' && <IoMdSwap size={12} className="text-blue-500 animate-pulse" />}
-                      {playerEvents[p.id].type === 'up' && <IoMdArrowUp size={12} className="text-emerald-500 animate-bounce" />}
-                      {playerEvents[p.id].type === 'down' && <IoMdArrowDown size={12} className="text-red-500 animate-bounce" />}
+                      {playerEvents[p.id].type === 'swap' && <span className="text-blue-500 animate-pulse"><IoMdSwap size={12} /></span>}
+                      {playerEvents[p.id].type === 'up' && <span className="text-emerald-500 animate-bounce"><IoMdArrowUp size={12} /></span>}
+                      {playerEvents[p.id].type === 'down' && <span className="text-red-500 animate-bounce"><IoMdArrowDown size={12} /></span>}
                     </div>
                   )}
                 </div>
               </button>
                                   );
                                 })}
-                                {Array.from({ length: Math.max(0, (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) - (teams[match.teamAIndex]?.playerIds?.length || 0)) }).map((_, i) => (
+                                {Array.from({ length: Math.max(0, match.config.playersPerTeam - (teams[match.teamAIndex]?.playerIds?.length || 0)) }).map((_, i) => (
                                   <button 
                                     key={`empty-a-${i}`}
                                     onClick={() => {
@@ -5786,7 +5780,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           setIsSelectingDestination(false);
                                           return;
                                         }
-                                        const availableSlots = (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) - (teams[match.teamAIndex]?.playerIds?.length || 0);
+                                        const availableSlots = match.config.playersPerTeam - (teams[match.teamAIndex]?.playerIds?.length || 0);
                                         if (availableSlots <= 0) {
                                           setToast({ message: "Este time já está completo.", type: 'warning' });
                                           return;
@@ -5897,14 +5891,16 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   </div>
                 </div>
                 <div className="flex items-center gap-1 ml-auto">
-                  {fixedGoalkeeper && teams[match.teamBIndex]?.goalkeeperId === p.id && (
-                    <div className="px-1.5 py-0.5 rounded-[4px] bg-sky-200 text-sky-800 text-[8px] font-black uppercase tracking-widest leading-none border border-sky-300">GOL</div>
+                  {p.isGoalkeeper && (
+                    <div className="flex items-center justify-center shrink-0 mr-1 ml-1 text-sky-500 drop-shadow-sm">
+                      <GiGloves size={14} />
+                    </div>
                   )}
                   {playerEvents[p.id] && (
                     <div className="flex items-center justify-center shrink-0 w-5 h-5 bg-white/50 rounded-full shadow-sm mr-1">
-                      {playerEvents[p.id].type === 'swap' && <IoMdSwap size={12} className="text-blue-500 animate-pulse" />}
-                      {playerEvents[p.id].type === 'up' && <IoMdArrowUp size={12} className="text-emerald-500 animate-bounce" />}
-                      {playerEvents[p.id].type === 'down' && <IoMdArrowDown size={12} className="text-red-500 animate-bounce" />}
+                      {playerEvents[p.id].type === 'swap' && <span className="text-blue-500 animate-pulse"><IoMdSwap size={12} /></span>}
+                      {playerEvents[p.id].type === 'up' && <span className="text-emerald-500 animate-bounce"><IoMdArrowUp size={12} /></span>}
+                      {playerEvents[p.id].type === 'down' && <span className="text-red-500 animate-bounce"><IoMdArrowDown size={12} /></span>}
                     </div>
                   )}
                   {matchGoals > 0 && (
@@ -5921,7 +5917,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               </button>
                                   );
                                 })}
-                                {Array.from({ length: Math.max(0, (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) - (teams[match.teamBIndex]?.playerIds?.length || 0)) }).map((_, i) => (
+                                {Array.from({ length: Math.max(0, match.config.playersPerTeam - (teams[match.teamBIndex]?.playerIds?.length || 0)) }).map((_, i) => (
                                   <button 
                                     key={`empty-b-${i}`}
                                     onClick={() => {
@@ -5933,7 +5929,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           setIsSelectingDestination(false);
                                           return;
                                         }
-                                        const availableSlots = (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) - (teams[match.teamBIndex]?.playerIds?.length || 0);
+                                        const availableSlots = match.config.playersPerTeam - (teams[match.teamBIndex]?.playerIds?.length || 0);
                                         if (availableSlots <= 0) {
                                           setToast({ message: "Este time já está completo.", type: 'warning' });
                                           return;
@@ -6006,7 +6002,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 <button
                                   onClick={() => {
                                     if (match.isActive && !match.hasEnded) return;
-                                    if (teams.filter(t => t.playerIds.length === (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0))).length < 2) return;
+                                    if (teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2) return;
                                     
                                     setShowLogoAnimation(true);
                                     setTimeout(() => {
@@ -6016,7 +6012,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       setToast({ message: "Times sorteados com sucesso!", type: 'success' });
                                     }, 3000);
                                   }}
-                                  disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0))).length < 2}
+                                  disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
                                   className="px-3 py-2 rounded-xl transition-all active:scale-95 hover:bg-black/5 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
                                 >
                                   <span className="text-zinc-800"><PiShuffleAngularBold size={18} /></span>
@@ -6030,14 +6026,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     }
 
                                     if (match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
-                                        (teams[match.teamAIndex]?.playerIds?.length === (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) && 
-                                        teams[match.teamBIndex]?.playerIds?.length === (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)))) {
+                                        (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
+                                        teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) {
                                       startNextMatch(match.teamAIndex, match.teamBIndex);
                                     }
                                   }}
                                   disabled={!((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
-                                    (teams[match.teamAIndex]?.playerIds?.length === (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) && 
-                                     teams[match.teamBIndex]?.playerIds?.length === (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)))))}
+                                    (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
+                                     teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)))}
                                   className="px-3 py-2 rounded-xl transition-all active:scale-95 hover:bg-black/5 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
                                 >
                                   <span className="text-zinc-800"><IoFootballOutline size={18} /></span>
@@ -6122,7 +6118,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       if (swappingPlayerId) return;
                                       if (movingPlayers && isSelectingDestination) {
                                         e.stopPropagation();
-                                        const availableSlots = (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) - t.playerIds.length;
+                                        const availableSlots = match.config.playersPerTeam - t.playerIds.length;
                                         if (availableSlots <= 0) {
                                           setToast({ message: "Este time já está completo.", type: 'warning' });
                                           return;
@@ -6157,7 +6153,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       isCurrent 
                                         ? 'shadow-2xl z-10 border-[#53B986] bg-[#dce3ee] backdrop-blur-md ring-4 ring-[#53B986]/10'
                                         : 'shadow-sm opacity-60 border-black/5 bg-[#dce3ee]'
-                                    } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0))) ? 'animate-pulse bg-brand-primary/10 !border-[#53B986]' : ''}`}
+                                    } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-brand-primary/10 !border-[#53B986]' : ''}`}
                                     style={{
                                       borderColor: (movingPlayers?.teamId === t.id || (swappingPlayerId && t.playerIds.includes(swappingPlayerId))) ? '#53B986' : undefined
                                     }}
@@ -6311,7 +6307,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     <div className="absolute top-2 right-2">
                                     </div>
 
-                                    {isCurrent && t.playerIds.length < (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) && (
+                                    {isCurrent && t.playerIds.length < match.config.playersPerTeam && (
                                       <div className="flex flex-col items-center justify-center pt-6 pb-2 relative z-10 w-full px-4">
                                         <div className="w-6 h-6 rounded-full border border-black/20 flex items-center justify-center mb-1">
                                           <Info className="text-black/80" size={12} />
@@ -6324,11 +6320,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       </div>
                                     )}
                                     
-                                    {!isCurrent && t.playerIds.length < (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) && (
+                                    {!isCurrent && t.playerIds.length < match.config.playersPerTeam && (
                                       <div className="absolute top-4 left-0 right-0 flex justify-center z-10 pointer-events-none">
                                         <div className="flex items-center gap-1.5 pointer-events-auto">
                                           <span className="text-[10px] font-bold text-black/40 uppercase tracking-widest">
-                                            Falta {(match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) - t.playerIds.length} jogador{(match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) - t.playerIds.length > 1 ? 'es' : ''}
+                                            Falta {match.config.playersPerTeam - t.playerIds.length} jogador{match.config.playersPerTeam - t.playerIds.length > 1 ? 'es' : ''}
                                           </span>
                                           <button
                                             type="button"
@@ -6336,7 +6332,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                             onClick={(e) => {
                                               e.preventDefault();
                                               e.stopPropagation();
-                                              const required = (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) - t.playerIds.length;
+                                              const required = match.config.playersPerTeam - t.playerIds.length;
                                               let count = 0;
                                               setTeams(prev => {
                                                 const newTeams = prev.map(team => ({...team, playerIds: [...team.playerIds]}));
@@ -6364,41 +6360,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       </div>
                                     )}
 
-                                    {fixedGoalkeeper && (
-                                      <div className={isCurrent && t.playerIds.length < (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) ? "pt-0 mb-3 relative z-30" : "pt-14 mb-3 relative z-30"}>
-                                        <div className="flex flex-col px-2 space-y-1">
-                                          <label className="text-[9px] font-black uppercase tracking-widest text-indigo-600">Goleiro Fixo</label>
-                                          <select
-                                            className="w-full p-2 rounded-lg bg-white/60 backdrop-blur border border-indigo-600/30 text-xs font-bold text-black outline-none focus:border-indigo-600 focus:ring-1 focus:ring-indigo-600 transition-all cursor-pointer shadow-sm"
-                                            value={t.goalkeeperId || ''}
-                                            onClick={(e) => e.stopPropagation()}
-                                            onChange={(e) => {
-                                              const val = e.target.value;
-                                              setTeams(prev => {
-                                                const newTeams = [...prev];
-                                                newTeams[tIdx] = { ...newTeams[tIdx], goalkeeperId: val || undefined };
-                                                return newTeams;
-                                              });
-                                            }}
-                                          >
-                                            <option value="">Selecionar Goleiro</option>
-                                            {t.playerIds.map(pid => {
-                                              const p = players.find(x => x.id === pid);
-                                              if (!p) return null;
-                                              return <option key={pid} value={pid}>{p.name}</option>;
-                                            })}
-                                          </select>
-                                        </div>
-                                      </div>
-                                    )}
-
-                                    <div className={(!fixedGoalkeeper && isCurrent && t.playerIds.length < (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0))) ? "pt-0 relative z-20" : (fixedGoalkeeper ? "pt-0 relative z-20" : "pt-14 relative z-20")}>
-                                      {fixedGoalkeeper && (
-                                        <label className="text-[9px] font-black uppercase tracking-widest text-black/50 px-2 block mb-1">Jogadores</label>
-                                      )}
+                                    <div className={isCurrent && t.playerIds.length < match.config.playersPerTeam ? "pt-0 relative z-20" : "pt-14 relative z-20"}>
                                       <motion.div layout className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                                         <AnimatePresence>
-                                        {[...t.playerIds].filter(pid => pid !== t.goalkeeperId).sort((a, b) => {
+                                        {[...t.playerIds].sort((a, b) => {
                                           const playerA = players.find(p => p.id === a);
                                           const playerB = players.find(p => p.id === b);
                                           return (playerA?.arrivedAt || 0) - (playerB?.arrivedAt || 0);
@@ -6509,7 +6474,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                   className={`w-full flex items-center justify-start gap-2 p-2 sm:p-1.5 rounded-md transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
                                                     swappingPlayerId === pid || movingPlayers?.playerIds.includes(pid)
                                                       ? 'bg-[#53B986]/20 text-black border-2 border-[#53B986] shadow-lg scale-105'
-                                                      : (swappingPlayerId && swappingPlayerId !== pid) || fillingVacancyForTeam !== null || ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0))))
+                                                      : (swappingPlayerId && swappingPlayerId !== pid) || fillingVacancyForTeam !== null || ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < match.config.playersPerTeam))
                                                         ? 'bg-[#53B986]/10 text-[#53B986] animate-pulse shadow-sm shadow-[#53B986]/10'
                                                         : `text-black border group shadow-sm ${isCurrent ? 'bg-[#a9d3be] border-[#53B986] ring-1 ring-[#53B986]/30' : 'bg-gradient-to-br from-white to-[#f4f4f5] border-black/5 hover:border-black/10'}`
                                                   }`}
@@ -6517,7 +6482,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                     backgroundColor: !((swappingPlayerId && swappingPlayerId !== pid) || 
                                                                        fillingVacancyForTeam !== null || 
                                                                        (movingPlayers?.playerIds.includes(pid)) ||
-                                                                       ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)))) ||
+                                                                       ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < match.config.playersPerTeam)) ||
                                                                        swappingPlayerId === pid)
                                                       ? undefined 
                                                       : undefined 
@@ -6538,13 +6503,20 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                     ))}
                                                   </div>
                                                 </div>
-                                                {playerEvents[p.id] && (
-                                                  <div className="ml-auto flex items-center justify-center shrink-0 w-5 h-5 bg-white/50 rounded-full shadow-sm">
-                                                    {playerEvents[p.id].type === 'swap' && <IoMdSwap size={12} className="text-blue-500 animate-pulse" />}
-                                                    {playerEvents[p.id].type === 'up' && <IoMdArrowUp size={12} className="text-emerald-500 animate-bounce" />}
-                                                    {playerEvents[p.id].type === 'down' && <IoMdArrowDown size={12} className="text-red-500 animate-bounce" />}
-                                                  </div>
-                                                )}
+                                                <div className="ml-auto flex items-center gap-1">
+                                                  {p.isGoalkeeper && (
+                                                    <div className="flex items-center justify-center shrink-0 text-sky-500 drop-shadow-sm">
+                                                      <GiGloves size={14} />
+                                                    </div>
+                                                  )}
+                                                  {playerEvents[p.id] && (
+                                                    <div className="flex items-center justify-center shrink-0 w-5 h-5 bg-white/50 rounded-full shadow-sm">
+                                                      {playerEvents[p.id].type === 'swap' && <span className="text-blue-500 animate-pulse"><IoMdSwap size={12} /></span>}
+                                                      {playerEvents[p.id].type === 'up' && <span className="text-emerald-500 animate-bounce"><IoMdArrowUp size={12} /></span>}
+                                                      {playerEvents[p.id].type === 'down' && <span className="text-red-500 animate-bounce"><IoMdArrowDown size={12} /></span>}
+                                                    </div>
+                                                  )}
+                                                </div>
                                                 </motion.button>
                                           );
                                         })}
@@ -8546,7 +8518,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 onClick={e => e.stopPropagation()}
               >
                 {/* Header */}
-                <div className="bg-gradient-to-br from-zinc-300 via-zinc-400 to-zinc-600 p-10 text-center relative overflow-hidden">
+                <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
                   {/* Decorative Elements */}
                   <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                   <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
@@ -8651,6 +8623,24 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     )}
   
                     {/* Action Grid */}
+                    {!swappingPlayerId && (
+                      <button 
+                        onClick={() => {
+                          setPlayers(prev => prev.map(p => 
+                            p.id === showPlayerActionsModal.playerId 
+                              ? { ...p, isGoalkeeper: !p.isGoalkeeper }
+                              : p
+                          ));
+                          setShowPlayerActionsModal(null);
+                        }}
+                        className={`w-full h-10 mt-2 text-black rounded-xl font-black uppercase text-[10px] flex items-center justify-between px-4 transition-all active:scale-[0.98] shadow-md group ${players.find(p => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? 'bg-sky-200 hover:bg-sky-300' : 'bg-sky-100 hover:bg-sky-200'}`}
+                      >
+                        <div className="flex items-center gap-2">
+                          <GiGloves size={14} className={players.find(p => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? 'text-sky-800' : 'text-sky-600'} />
+                          <span className="tracking-widest">{players.find(p => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? 'Remover de Goleiro Fixo' : 'Definir como Goleiro Fixo'}</span>
+                        </div>
+                      </button>
+                    )}
                     <div className="grid grid-cols-2 gap-1.5 mt-2">
                       {/* Substituir */}
                       {swappingPlayerId !== showPlayerActionsModal.playerId && (
@@ -8764,7 +8754,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               onClick={e => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-gradient-to-br from-zinc-300 via-zinc-400 to-zinc-600 p-10 text-center relative overflow-hidden">
+              <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
@@ -8794,6 +8784,20 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <div className="space-y-2.5">
                   {!showQueuePlayerModal.showMoveOptions ? (
                     <div className="grid grid-cols-2 gap-2">
+                      <button 
+                        onClick={() => {
+                          setPlayers(prev => prev.map(p => 
+                            p.id === showQueuePlayerModal.playerId 
+                              ? { ...p, isGoalkeeper: !p.isGoalkeeper }
+                              : p
+                          ));
+                          setShowQueuePlayerModal(null);
+                        }}
+                        className={`col-span-2 p-4 rounded-2xl font-bold uppercase text-[9px] flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 border group ${players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? 'bg-sky-50 text-sky-600 border-sky-100 hover:bg-sky-100' : 'bg-zinc-50 text-zinc-900 border-zinc-100 hover:border-zinc-300 hover:bg-zinc-100'}`}
+                      >
+                        <GiGloves size={18} className={players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? 'text-sky-500' : 'text-zinc-400 group-hover:text-zinc-600 transition-colors'} />
+                        {players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? 'Remover de Goleiro Fixo' : 'Definir como Goleiro Fixo'}
+                      </button>
                       <button 
                         onClick={() => {
                           setSwappingPlayerId(showQueuePlayerModal.playerId);
@@ -9627,8 +9631,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   onClick={() => {
                     setShowStartMatchConfirm(false);
                     if (match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
-                        (teams[match.teamAIndex]?.playerIds?.length === (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)) && 
-                        teams[match.teamBIndex]?.playerIds?.length === (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0)))) {
+                        (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
+                        teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)) {
                       startNextMatch(match.teamAIndex, match.teamBIndex);
                     }
                   }}
@@ -9726,7 +9730,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             const teamIdx = showEventModal.team as any;
                             const currentTeam = teams[teamIdx];
                             
-                            if (currentTeam.playerIds.length >= (match.config.playersPerTeam + (fixedGoalkeeper ? 1 : 0))) {
+                            if (currentTeam.playerIds.length >= match.config.playersPerTeam) {
                               // Team is full, create new team
                               const nextLetter = String.fromCharCode(65 + teams.length);
                               const iconIdx = getNextTeamIconIdx(teams);
