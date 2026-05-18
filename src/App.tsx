@@ -5513,7 +5513,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               </div>
                             </div>
                             
-                            <div className="grid grid-cols-2 gap-4 bg-gradient-to-br from-zinc-100 to-zinc-300 p-4 rounded-xl border border-black/5 shadow-inner mb-8">
+                            <div className="grid grid-cols-2 gap-4 bg-transparent p-4 rounded-xl border border-black/5 shadow-inner mb-8">
                               <div className="space-y-2">
                                 {sortedTeamAPlayers.map((pid, idx) => {
                                   const p = players.find(pl => pl.id === pid);
@@ -5563,7 +5563,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           }
                                           setShowPlayerActionsModal({ teamIndex: match.teamAIndex, playerId: pid });
                                         }}
-                  className={`w-full flex flex-row-reverse items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-black/5 border border-black/5 hover:bg-black/10 hover:border-black/10 ${
+                  className={`w-full flex flex-row-reverse items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-black/5 hover:bg-black/5 hover:border-black/10 ${
                     swappingPlayerId === pid
                       ? 'border-2 border-[#53B986] shadow-lg scale-105'
                       : 'border group'
@@ -5573,7 +5573,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     backgroundColor: swappingPlayerId === pid ? undefined : undefined
                   }}
                 >
-                <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-black/10 flex items-center justify-center shrink-0 border border-black/10 overflow-hidden ml-3">
+                <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-transparent flex items-center justify-center shrink-0 border border-black/10 overflow-hidden ml-3">
                   {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <span className="text-black/40 flex items-center shrink-0"><IoPersonOutline size={10} /></span>}
                 </div>
                 <div className="flex flex-col items-end gap-0.5 overflow-hidden">
@@ -5700,7 +5700,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           }
                                           setShowPlayerActionsModal({ teamIndex: match.teamBIndex, playerId: pid });
                                         }}
-                  className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-black/5 border border-black/5 hover:bg-black/10 hover:border-black/10 ${
+                  className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-black/5 hover:bg-black/5 hover:border-black/10 ${
                     swappingPlayerId === pid
                       ? 'border-2 border-[#53B986] shadow-lg scale-105'
                       : 'border group'
@@ -5710,7 +5710,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     backgroundColor: swappingPlayerId === pid ? undefined : undefined
                   }}
                 >
-                <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-black/10 flex items-center justify-center shrink-0 border border-black/10 overflow-hidden mr-3">
+                <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-transparent flex items-center justify-center shrink-0 border border-black/10 overflow-hidden mr-3">
                   {p.photo ? <img src={p.photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" /> : <span className="text-black/40 flex items-center shrink-0"><IoPersonOutline size={10} /></span>}
                 </div>
                 <div className="flex flex-col gap-0.5 overflow-hidden">
