@@ -5722,9 +5722,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   )}
                   {playerEvents[p.id] && (
                     <div className="flex items-center justify-center shrink-0 w-5 h-5 bg-white/50 rounded-full shadow-sm ml-1">
-                      {playerEvents[p.id].type === 'swap' && <IoMdSwap size={12} className="text-blue-500 animate-pulse" />}
-                      {playerEvents[p.id].type === 'up' && <IoMdArrowUp size={12} className="text-emerald-500 animate-bounce" />}
-                      {playerEvents[p.id].type === 'down' && <IoMdArrowDown size={12} className="text-red-500 animate-bounce" />}
+                      {playerEvents[p.id].type === 'swap' && <IoMdSwap size={12} className="text-blue-500" />}
+                      {playerEvents[p.id].type === 'up' && <IoMdArrowUp size={12} className="text-emerald-500" />}
+                      {playerEvents[p.id].type === 'down' && <IoMdArrowDown size={12} className="text-red-500" />}
                     </div>
                   )}
                 </div>
@@ -5856,9 +5856,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <div className="flex items-center gap-1 ml-auto">
                   {playerEvents[p.id] && (
                     <div className="flex items-center justify-center shrink-0 w-5 h-5 bg-white/50 rounded-full shadow-sm mr-1">
-                      {playerEvents[p.id].type === 'swap' && <IoMdSwap size={12} className="text-blue-500 animate-pulse" />}
-                      {playerEvents[p.id].type === 'up' && <IoMdArrowUp size={12} className="text-emerald-500 animate-bounce" />}
-                      {playerEvents[p.id].type === 'down' && <IoMdArrowDown size={12} className="text-red-500 animate-bounce" />}
+                      {playerEvents[p.id].type === 'swap' && <IoMdSwap size={12} className="text-blue-500" />}
+                      {playerEvents[p.id].type === 'up' && <IoMdArrowUp size={12} className="text-emerald-500" />}
+                      {playerEvents[p.id].type === 'down' && <IoMdArrowDown size={12} className="text-red-500" />}
                     </div>
                   )}
                   {matchGoals > 0 && (
@@ -6463,9 +6463,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                 </div>
                                                 {playerEvents[p.id] && (
                                                   <div className="ml-auto flex items-center justify-center shrink-0 w-5 h-5 bg-white/50 rounded-full shadow-sm">
-                                                    {playerEvents[p.id].type === 'swap' && <IoMdSwap size={12} className="text-blue-500 animate-pulse" />}
-                                                    {playerEvents[p.id].type === 'up' && <IoMdArrowUp size={12} className="text-emerald-500 animate-bounce" />}
-                                                    {playerEvents[p.id].type === 'down' && <IoMdArrowDown size={12} className="text-red-500 animate-bounce" />}
+                                                    {playerEvents[p.id].type === 'swap' && <IoMdSwap size={12} className="text-blue-500" />}
+                                                    {playerEvents[p.id].type === 'up' && <IoMdArrowUp size={12} className="text-emerald-500" />}
+                                                    {playerEvents[p.id].type === 'down' && <IoMdArrowDown size={12} className="text-red-500" />}
                                                   </div>
                                                 )}
                                                 </motion.button>
