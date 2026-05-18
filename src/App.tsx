@@ -5817,10 +5817,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     }, 3000);
                                   }}
                                   disabled={(match.isActive && !match.hasEnded) || teams.filter(t => t.playerIds.length === match.config.playersPerTeam).length < 2}
-                                  className="p-1 px-2 rounded-lg transition-all active:scale-90 hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1 bg-[#83A8FF] shadow border border-[#83A8FF] text-white"
+                                  className="p-2.5 rounded-xl transition-all active:scale-95 hover:bg-black/10 bg-black/5 backdrop-blur shadow-sm border border-black/10 flex items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed"
                                 >
-                                  <span className="text-white"><ImSpinner9 size={14} /></span>
-                                  <span className="text-[10px] font-black uppercase tracking-widest text-[#363636]">Sortear</span>
+                                  <span className="text-zinc-800"><ImSpinner9 size={18} /></span>
+                                  <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Sortear</span>
                                 </button>
                                 <button
                                   onClick={() => {
@@ -5838,10 +5838,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   disabled={!((match.teamAIndex !== -1 && match.teamBIndex !== -1 && 
                                     (teams[match.teamAIndex]?.playerIds?.length === match.config.playersPerTeam && 
                                      teams[match.teamBIndex]?.playerIds?.length === match.config.playersPerTeam)))}
-                                  className="p-1 px-2 rounded-lg transition-all active:scale-90 hover:opacity-90 disabled:opacity-30 disabled:cursor-not-allowed flex items-center gap-1 bg-gradient-to-br from-[#00b024] to-[#01801c] shadow border border-[#01801c] text-white"
+                                  className="p-2.5 rounded-xl transition-all active:scale-95 hover:bg-black/10 bg-black/5 backdrop-blur shadow-sm border border-black/10 flex items-center gap-2 disabled:opacity-30 disabled:cursor-not-allowed"
                                 >
-                                  <span className="text-white"><IoFootballOutline size={16} /></span>
-                                  <span className="text-[10px] font-black uppercase tracking-widest text-[#363636]">Iniciar</span>
+                                  <span className="text-zinc-800"><IoFootballOutline size={18} /></span>
+                                  <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Iniciar</span>
                                 </button>
                               </div>
                           </div>
@@ -5955,8 +5955,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       (movingPlayers && isSelectingDestination) ? 'cursor-pointer hover:opacity-90' : 'cursor-default'
                                     } ${
                                       isCurrent 
-                                        ? 'shadow-2xl z-10 border-[#53B986] bg-black/10 backdrop-blur-md ring-4 ring-[#53B986]/10'
-                                        : 'shadow-sm opacity-60 border-black/5 bg-black/5'
+                                        ? 'shadow-2xl z-10 border-[#53B986] bg-zinc-200 backdrop-blur-md ring-4 ring-[#53B986]/10'
+                                        : 'shadow-sm opacity-60 border-black/5 bg-zinc-200'
                                     } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-brand-primary/10 !border-[#53B986]' : ''}`}
                                     style={{
                                       borderColor: (movingPlayers?.teamId === t.id || (swappingPlayerId && t.playerIds.includes(swappingPlayerId))) ? '#53B986' : undefined
@@ -6235,7 +6235,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                       ? 'bg-[#53B986]/20 text-black border-2 border-[#53B986] shadow-lg scale-105'
                                                       : (swappingPlayerId && swappingPlayerId !== pid) || fillingVacancyForTeam !== null || ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < match.config.playersPerTeam))
                                                         ? 'bg-[#53B986]/10 text-[#53B986] animate-pulse shadow-sm shadow-[#53B986]/10'
-                                                        : `text-black border group bg-black/5 shadow-sm ${isCurrent ? 'border-[#53B986] ring-1 ring-[#53B986]/30' : 'border-black/5 hover:border-black/10'}`
+                                                        : `text-black border group bg-zinc-300 shadow-sm ${isCurrent ? 'border-[#53B986] ring-1 ring-[#53B986]/30' : 'border-black/5 hover:border-black/10'}`
                                                   }`}
                                                   style={{ 
                                                     backgroundColor: !((swappingPlayerId && swappingPlayerId !== pid) || 
@@ -6247,7 +6247,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                       : undefined 
                                                   }}
                                                 >
-                                                <div className="w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-gradient-to-br from-zinc-100 to-zinc-300 flex items-center justify-center shrink-0 border border-black/10 overflow-hidden">
+                                                <div className="w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-transparent flex items-center justify-center shrink-0 border border-black/10 overflow-hidden">
                                                   {p.photo ? <img src={p.photo} className="w-full h-full object-cover" referrerPolicy="no-referrer" /> : <span className="text-zinc-500 flex items-center shrink-0"><IoPersonOutline size={12} /></span>}
                                                 </div>
                                                 <div className="flex flex-col items-start gap-1 overflow-hidden">
