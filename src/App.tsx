@@ -5218,7 +5218,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 }}
                                 className={`flex items-center gap-3 p-3 rounded-xl border transition-all active:scale-[0.98] ${
                                   p.isAvailable 
-                                    ? 'bg-[#83A8FF] border-[#83A8FF] text-black shadow-lg shadow-[#83A8FF]/10' 
+                                    ? 'bg-[#dce3ee] border-[#dce3ee] text-black shadow-lg shadow-[#dce3ee]/10' 
                                     : 'bg-black/5 border-black/5 text-black/50 opacity-100 hover:bg-black/10'
                                 }`}
                               >
@@ -5242,7 +5242,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   </div>
                                   <div className={`text-[8px] font-bold uppercase ${p.isAvailable ? 'text-black/60' : 'text-black/30'}`}>{p.isAvailable ? 'Confirmado' : 'Aguardando'}</div>
                                 </div>
-                                {p.isAvailable && <CheckCircle2 size={16} className="text-white" />}
+                                {p.isAvailable && <CheckCircle2 size={16} className="text-[#00FF00]" />}
                               </button>
                             ))
                           )}
@@ -6378,6 +6378,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     });
                                     setSwappingPlayerId(null);
                                     setToast({ message: "Jogadores trocados com sucesso!", type: 'success' });
+                                  } else if (swappingPlayerId === pid) {
+                                    setSwappingPlayerId(null);
+                                    setToast({ message: "Seleção cancelada.", type: 'info' });
                                   } else {
                                     setShowPlayerActionsModal({ teamIndex: tIndex, playerId: pid });
                                   }
