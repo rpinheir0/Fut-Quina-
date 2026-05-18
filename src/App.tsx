@@ -5242,7 +5242,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   </div>
                                   <div className={`text-[8px] font-bold uppercase ${p.isAvailable ? 'text-black/60' : 'text-black/30'}`}>{p.isAvailable ? 'Confirmado' : 'Aguardando'}</div>
                                 </div>
-                                {p.isAvailable && <CheckCircle2 size={16} className="text-[#00FF00]" />}
+                                {p.isAvailable && <CheckCircle2 size={16} className="text-green-700" />}
                               </button>
                             ))
                           )}
