@@ -8669,7 +8669,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     )}
   
                     {/* Action Grid */}
-                    {!swappingPlayerId && (
+                    {!swappingPlayerId && (!teams[showPlayerActionsModal.teamIndex]?.playerIds.some(pid => players.find(p => p.id === pid)?.isGoalkeeper) || players.find(p => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper) && (
                       <button 
                         onClick={() => {
                           setPlayers(prev => prev.map(p => 
@@ -8830,20 +8830,22 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <div className="space-y-2.5">
                   {!showQueuePlayerModal.showMoveOptions ? (
                     <div className="grid grid-cols-2 gap-2">
-                      <button 
-                        onClick={() => {
-                          setPlayers(prev => prev.map(p => 
-                            p.id === showQueuePlayerModal.playerId 
-                              ? { ...p, isGoalkeeper: !p.isGoalkeeper }
-                              : p
-                          ));
-                          setShowQueuePlayerModal(null);
-                        }}
-                        className={`col-span-2 p-4 rounded-2xl font-bold uppercase text-[9px] flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 border group ${players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? 'bg-sky-50 text-sky-600 border-sky-100 hover:bg-sky-100' : 'bg-zinc-50 text-zinc-900 border-zinc-100 hover:border-zinc-300 hover:bg-zinc-100'}`}
-                      >
-                        <GiGloves size={18} className={players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? 'text-sky-500' : 'text-zinc-400 group-hover:text-zinc-600 transition-colors'} />
-                        {players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? 'Remover de Goleiro Fixo' : 'Definir como Goleiro Fixo'}
-                      </button>
+                      {(!teams[showQueuePlayerModal.teamIndex]?.playerIds.some(pid => players.find(p => p.id === pid)?.isGoalkeeper) || players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper) && (
+                        <button 
+                          onClick={() => {
+                            setPlayers(prev => prev.map(p => 
+                              p.id === showQueuePlayerModal.playerId 
+                                ? { ...p, isGoalkeeper: !p.isGoalkeeper }
+                                : p
+                            ));
+                            setShowQueuePlayerModal(null);
+                          }}
+                          className={`col-span-2 p-4 rounded-2xl font-bold uppercase text-[9px] flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 border group ${players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? 'bg-sky-50 text-sky-600 border-sky-100 hover:bg-sky-100' : 'bg-zinc-50 text-zinc-900 border-zinc-100 hover:border-zinc-300 hover:bg-zinc-100'}`}
+                        >
+                          <GiGloves size={18} className={players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? 'text-sky-500' : 'text-zinc-400 group-hover:text-zinc-600 transition-colors'} />
+                          {players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? 'Remover de Goleiro Fixo' : 'Definir como Goleiro Fixo'}
+                        </button>
+                      )}
                       <button 
                         onClick={() => {
                           setSwappingPlayerId(showQueuePlayerModal.playerId);
