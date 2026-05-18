@@ -3542,28 +3542,74 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         const leavingTeam = newTeams.splice(teamToLeaveIndex, 1)[0];
 
         // --- GOALKEEPER FIXED LOGIC ---
-        const totalGoalkeepers = players.filter(p => p.isGoalkeeper && p.isAvailable).length;
+        const activeGoalkeepers = players.filter(p => p.isGoalkeeper && p.isAvailable);
+        const totalGoalkeepers = activeGoalkeepers.length;
+
         const finalStayIndex = teamToStayIndex > teamToLeaveIndex ? teamToStayIndex - 1 : teamToStayIndex;
         const nextTeamIndex = finalStayIndex === 0 ? 1 : 0;
-        let incomingTeam = newTeams[nextTeamIndex];
         let finalLeavingTeam = { ...leavingTeam };
 
-        if (totalGoalkeepers <= 2 && incomingTeam && finalLeavingTeam) {
-          const leavingTeamGKId = finalLeavingTeam.playerIds.find(id => players.find(p => p.id === id)?.isGoalkeeper);
-          const incomingTeamGKId = incomingTeam.playerIds.find(id => players.find(p => p.id === id)?.isGoalkeeper);
-          
-          if (leavingTeamGKId && !incomingTeamGKId) {
-            const incomingLinePlayerId = incomingTeam.playerIds.find(id => !players.find(p => p.id === id)?.isGoalkeeper);
-            if (incomingLinePlayerId) {
-              finalLeavingTeam.playerIds = finalLeavingTeam.playerIds.map(id => id === leavingTeamGKId ? incomingLinePlayerId : id);
-              incomingTeam = {
-                ...incomingTeam,
-                playerIds: incomingTeam.playerIds.map(id => id === incomingLinePlayerId ? leavingTeamGKId : id)
-              };
-              newTeams[nextTeamIndex] = incomingTeam;
+        let allTeamsNow = [...newTeams, { ...finalLeavingTeam }];
+
+        const getGks = (team: Team) => team?.playerIds.filter(id => players.find(p => p.id === id)?.isGoalkeeper) || [];
+        const getLinePlayers = (team: Team) => team?.playerIds.filter(id => !players.find(p => p.id === id)?.isGoalkeeper) || [];
+
+        // Distribute GKs: A team cannot have > 1 GK if possible
+        for (let i = 0; i < allTeamsNow.length; i++) {
+            let team = allTeamsNow[i];
+            let gks = getGks(team);
+            while (gks.length > 1) {
+                let gkToMove = gks.pop()!;
+                let receiverFound = false;
+                for (let j = 0; j < allTeamsNow.length; j++) {
+                    if (i !== j && getGks(allTeamsNow[j]).length === 0) {
+                        let line = getLinePlayers(allTeamsNow[j])[0];
+                        if (line) {
+                            allTeamsNow[i].playerIds = allTeamsNow[i].playerIds.map(id => id === gkToMove ? line : id);
+                            allTeamsNow[j].playerIds = allTeamsNow[j].playerIds.map(id => id === line ? gkToMove : id);
+                            receiverFound = true;
+                            break;
+                        }
+                    }
+                }
+                if (!receiverFound) break; // More GKs than teams
             }
-          }
         }
+
+        // Ensure active teams (finalStayIndex and nextTeamIndex) have a GK if available
+        [finalStayIndex, nextTeamIndex].forEach(activeIdx => {
+            if (!allTeamsNow[activeIdx]) return;
+            if (getGks(allTeamsNow[activeIdx]).length === 0) {
+                if (totalGoalkeepers === 2) {
+                    const leavingIdx = allTeamsNow.length - 1;
+                    const leavingGKs = getGks(allTeamsNow[leavingIdx]);
+                    if (leavingGKs.length > 0) {
+                        const gkToMove = leavingGKs[0];
+                        const lineToSwap = getLinePlayers(allTeamsNow[activeIdx])[0];
+                        if (lineToSwap) {
+                            allTeamsNow[leavingIdx].playerIds = allTeamsNow[leavingIdx].playerIds.map(id => id === gkToMove ? lineToSwap : id);
+                            allTeamsNow[activeIdx].playerIds = allTeamsNow[activeIdx].playerIds.map(id => id === lineToSwap ? gkToMove : id);
+                        }
+                    }
+                } else if (totalGoalkeepers > 2) {
+                    for (let j = 2; j < allTeamsNow.length; j++) {
+                        let qGks = getGks(allTeamsNow[j]);
+                        if (qGks.length > 0) {
+                            const gkToMove = qGks[0];
+                            const lineToSwap = getLinePlayers(allTeamsNow[activeIdx])[0];
+                            if (lineToSwap) {
+                                allTeamsNow[j].playerIds = allTeamsNow[j].playerIds.map(id => id === gkToMove ? lineToSwap : id);
+                                allTeamsNow[activeIdx].playerIds = allTeamsNow[activeIdx].playerIds.map(id => id === lineToSwap ? gkToMove : id);
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        finalLeavingTeam = allTeamsNow.pop()!;
+        newTeams = allTeamsNow;
 
         newTeams.push(finalLeavingTeam);
 
