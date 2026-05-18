@@ -6237,15 +6237,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                               });
                                             }}
                                           >
-                                            <motion.div
-                                              animate={{
-                                                color: ['#9ca3af', '#22c55e', '#9ca3af'],
-                                                scale: [1, 1.2, 1]
-                                              }}
-                                              transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
-                                            >
+                                            <div className="text-[#22c55e]">
                                               <BsArrowUpRightCircle size={16} />
-                                            </motion.div>
+                                            </div>
                                           </button>
                                         </div>
                                       </div>
