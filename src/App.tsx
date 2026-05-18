@@ -5994,7 +5994,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                                     {/* Jersey Icon Top Left */}
                                     <div 
-                                      className={`absolute top-2 left-2 w-10 h-10 rounded-xl border flex items-center justify-center transition-all cursor-pointer z-50 ${isCurrent ? 'border-brand-primary/50 bg-white/20 shadow-[0_0_8px_rgba(183,217,108,0.3)]' : 'border-black/10 bg-black/5 hover:bg-black/10 hover:border-white/20 hover:scale-110'}`}
+                                      className={`absolute top-2 left-2 w-8 h-8 rounded-xl border flex items-center justify-center transition-all cursor-pointer z-50 ${isCurrent ? 'border-brand-primary/50 bg-white/20 shadow-[0_0_8px_rgba(183,217,108,0.3)]' : 'border-black/10 bg-black/5 hover:bg-black/10 hover:border-white/20 hover:scale-110'}`}
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         if (match.isActive && !match.hasEnded && !match.isPaused) {
@@ -6100,8 +6100,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       {(() => {
                                         const Icon = TEAM_ICONS[t.iconIdx ?? (tIdx % TEAM_ICONS.length)];
                                         return (
-                                          <div className="relative w-10 h-10 flex items-center justify-center transition-transform hover:scale-110 drop-shadow-lg" style={{ color: teamColor }}>
-                                            <Icon size={36} />
+                                          <div className="relative w-8 h-8 flex items-center justify-center transition-transform hover:scale-110 drop-shadow-lg" style={{ color: teamColor }}>
+                                            <Icon size={24} />
                                           </div>
                                         );
                                       })()}
@@ -6230,12 +6230,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                       }
                                                     }
                                                   }}
-                                                  className={`w-full flex items-center justify-start gap-2 p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
+                                                  className={`w-full flex items-center justify-start gap-2 p-2 sm:p-1.5 rounded-md transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
                                                     swappingPlayerId === pid || movingPlayers?.playerIds.includes(pid)
                                                       ? 'bg-[#53B986]/20 text-black border-2 border-[#53B986] shadow-lg scale-105'
                                                       : (swappingPlayerId && swappingPlayerId !== pid) || fillingVacancyForTeam !== null || ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < match.config.playersPerTeam))
                                                         ? 'bg-[#53B986]/10 text-[#53B986] animate-pulse shadow-sm shadow-[#53B986]/10'
-                                                        : `text-black border group bg-gradient-to-br from-white to-[#f4f4f5] shadow-sm ${isCurrent ? 'border-[#53B986] ring-1 ring-[#53B986]/30' : 'border-black/5 hover:border-black/10'}`
+                                                        : `text-black border group shadow-sm ${isCurrent ? 'bg-[#a9d3be] border-[#53B986] ring-1 ring-[#53B986]/30' : 'bg-gradient-to-br from-white to-[#f4f4f5] border-black/5 hover:border-black/10'}`
                                                   }`}
                                                   style={{ 
                                                     backgroundColor: !((swappingPlayerId && swappingPlayerId !== pid) || 
