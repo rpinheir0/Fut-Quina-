@@ -5513,7 +5513,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               </div>
                             </div>
                             
-                            <div className="grid grid-cols-2 gap-4 bg-transparent p-4 rounded-xl border border-black/5 shadow-inner mb-8">
+                            <div className="grid grid-cols-2 gap-4 bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef] p-4 rounded-xl border border-black/5 shadow-inner mb-8">
                               <div className="space-y-2">
                                 {sortedTeamAPlayers.map((pid, idx) => {
                                   const p = players.find(pl => pl.id === pid);
@@ -5563,7 +5563,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           }
                                           setShowPlayerActionsModal({ teamIndex: match.teamAIndex, playerId: pid });
                                         }}
-                  className={`w-full flex flex-row-reverse items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-black/5 hover:bg-black/5 hover:border-black/10 ${
+                  className={`w-full flex flex-row-reverse items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br from-white to-[#f4f4f5] border border-black/5 hover:opacity-90 hover:border-black/10 ${
                     swappingPlayerId === pid
                       ? 'border-2 border-[#53B986] shadow-lg scale-105'
                       : 'border group'
@@ -5700,7 +5700,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           }
                                           setShowPlayerActionsModal({ teamIndex: match.teamBIndex, playerId: pid });
                                         }}
-                  className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-transparent border border-black/5 hover:bg-black/5 hover:border-black/10 ${
+                  className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br from-white to-[#f4f4f5] border border-black/5 hover:opacity-90 hover:border-black/10 ${
                     swappingPlayerId === pid
                       ? 'border-2 border-[#53B986] shadow-lg scale-105'
                       : 'border group'
@@ -5955,8 +5955,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       (movingPlayers && isSelectingDestination) ? 'cursor-pointer hover:opacity-90' : 'cursor-default'
                                     } ${
                                       isCurrent 
-                                        ? 'shadow-2xl z-10 border-[#53B986] bg-zinc-200 backdrop-blur-md ring-4 ring-[#53B986]/10'
-                                        : 'shadow-sm opacity-60 border-black/5 bg-zinc-200'
+                                        ? 'shadow-2xl z-10 border-[#53B986] bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef] backdrop-blur-md ring-4 ring-[#53B986]/10'
+                                        : 'shadow-sm opacity-60 border-black/5 bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef]'
                                     } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? 'animate-pulse bg-brand-primary/10 !border-[#53B986]' : ''}`}
                                     style={{
                                       borderColor: (movingPlayers?.teamId === t.id || (swappingPlayerId && t.playerIds.includes(swappingPlayerId))) ? '#53B986' : undefined
@@ -6235,7 +6235,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                       ? 'bg-[#53B986]/20 text-black border-2 border-[#53B986] shadow-lg scale-105'
                                                       : (swappingPlayerId && swappingPlayerId !== pid) || fillingVacancyForTeam !== null || ([match.teamAIndex, match.teamBIndex].some(targetTIdx => targetTIdx !== -1 && targetTIdx !== tIdx && (teams[targetTIdx]?.playerIds?.length || 0) < match.config.playersPerTeam))
                                                         ? 'bg-[#53B986]/10 text-[#53B986] animate-pulse shadow-sm shadow-[#53B986]/10'
-                                                        : `text-black border group bg-zinc-300 shadow-sm ${isCurrent ? 'border-[#53B986] ring-1 ring-[#53B986]/30' : 'border-black/5 hover:border-black/10'}`
+                                                        : `text-black border group bg-gradient-to-br from-white to-[#f4f4f5] shadow-sm ${isCurrent ? 'border-[#53B986] ring-1 ring-[#53B986]/30' : 'border-black/5 hover:border-black/10'}`
                                                   }`}
                                                   style={{ 
                                                     backgroundColor: !((swappingPlayerId && swappingPlayerId !== pid) || 
