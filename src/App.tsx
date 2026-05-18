@@ -5994,7 +5994,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                                     {/* Jersey Icon Top Left */}
                                     <div 
-                                      className={`absolute top-2 left-2 w-8 h-8 rounded-xl border flex items-center justify-center transition-all cursor-pointer z-50 ${isCurrent ? 'border-brand-primary/50 bg-white/20 shadow-[0_0_8px_rgba(183,217,108,0.3)]' : 'border-black/10 bg-black/5 hover:bg-black/10 hover:border-white/20 hover:scale-110'}`}
+                                      className={`absolute top-2 left-2 w-8 h-8 rounded-full border flex items-center justify-center transition-all cursor-pointer z-50 ${isCurrent ? 'border-brand-primary/50 bg-white/20 shadow-[0_0_8px_rgba(183,217,108,0.3)]' : 'border-black/10 bg-black/5 hover:bg-black/10 hover:border-white/20 hover:scale-110'}`}
                                       onClick={(e) => {
                                         e.stopPropagation();
                                         if (match.isActive && !match.hasEnded && !match.isPaused) {
@@ -6107,31 +6107,24 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       })()}
                                     </div>
 
-                                    {/* Status Top Right */}
+                                    {/* Status Top Right removed */}
                                     <div className="absolute top-2 right-2">
-                                      {isCurrent && (
-                                        <div className="w-8 h-8 rounded-lg bg-white/50 backdrop-blur border border-black/5 flex items-center justify-center shadow-sm">
-                                          <IoFootballOutline size={18} className="text-[#53B986]" />
-                                        </div>
-                                      )}
                                     </div>
 
                                     {isCurrent && t.playerIds.length < match.config.playersPerTeam && (
-                                      <div className="absolute inset-0 z-30 flex items-center justify-center p-4 bg-red-600/95 backdrop-blur-md">
-                                        <div className="flex flex-col items-center gap-2 relative z-10">
-                                          <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center animate-bounce">
-                                            <Info className="text-black" size={20} />
-                                          </div>
-                                          <h3 className="text-2xl font-black text-black uppercase tracking-tighter">Time Incompleto!</h3>
-                                          <p className="text-[10px] font-bold uppercase tracking-widest text-black/90 leading-tight px-4 text-center">
-                                            Times devem estar equilibrados.<br/>
-                                            <span className="text-yellow-300">Toque em um jogador de outro time</span> para completar esta vaga.
-                                          </p>
+                                      <div className="flex flex-col items-center justify-center pt-6 pb-2 relative z-10 w-full px-4">
+                                        <div className="w-6 h-6 rounded-full border border-black/20 flex items-center justify-center mb-1">
+                                          <Info className="text-black/80" size={12} />
                                         </div>
+                                        <h3 className="text-sm font-black text-black uppercase tracking-tighter">Time Incompleto!</h3>
+                                        <p className="text-[8px] font-bold uppercase tracking-widest text-black/70 leading-tight text-center mt-1">
+                                          Times devem estar equilibrados.<br/>
+                                          <span className="text-amber-600 font-black">Toque em um jogador de outro time</span> para completar esta vaga.
+                                        </p>
                                       </div>
                                     )}
 
-                                    <div className="pt-14">
+                                    <div className={isCurrent && t.playerIds.length < match.config.playersPerTeam ? "pt-0" : "pt-14"}>
                                       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
                                         {[...t.playerIds].sort((a, b) => {
                                           const playerA = players.find(p => p.id === a);
@@ -6252,7 +6245,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                       : undefined 
                                                   }}
                                                 >
-                                                <div className="w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-transparent flex items-center justify-center shrink-0 border border-black/10 overflow-hidden">
+                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full bg-transparent flex items-center justify-center shrink-0 border overflow-hidden ${isCurrent ? 'border-[#53B986]' : 'border-black/10'}`}>
                                                   {p.photo ? <img src={p.photo} className="w-full h-full object-cover" referrerPolicy="no-referrer" /> : <span className="text-zinc-500 flex items-center shrink-0"><IoPersonOutline size={12} /></span>}
                                                 </div>
                                                 <div className="flex flex-col items-start gap-1 overflow-hidden">
