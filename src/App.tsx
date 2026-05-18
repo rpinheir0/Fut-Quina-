@@ -71,7 +71,7 @@ import {
 import { motion, AnimatePresence } from 'motion/react';
 import { IoPersonOutline, IoFootballOutline, IoCheckmarkCircle } from 'react-icons/io5';
 import { BsArrowUpRightCircle } from 'react-icons/bs';
-import { IoIosTrophy, IoIosWallet, IoIosFootball } from 'react-icons/io';
+import { IoIosTrophy, IoIosWallet, IoIosFootball, IoMdSwap, IoMdArrowUp, IoMdArrowDown } from 'react-icons/io';
 import { PiUserCirclePlusThin, PiUserCirclePlusLight, PiUserCirclePlus } from 'react-icons/pi';
 import { ImSpinner9 } from 'react-icons/im';
 import { GiGoalKeeper, GiSoccerKick, GiSoccerField, GiTrophy, GiPodiumWinner, GiRunningShoe, GiLaurelsTrophy, GiSocks, GiAbstract042, GiSoccerBall, GiCrown, GiQueenCrown, GiCrossShield, GiDragonShield, GiEdgedShield, GiRank3, GiBoltShield, GiBorderedShield, GiCrownedSkull } from 'react-icons/gi';
@@ -2183,6 +2183,64 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [showScorerModal, setShowScorerModal] = useState(false);
   const [scorerTeam, setScorerTeam] = useState<'A' | 'B' | null>(null);
   const [replacingPlayer, setReplacingPlayer] = useState<{ teamIndex: number, removedPlayerId: string } | null>(null);
+  const [playerEvents, setPlayerEvents] = useState<{ [playerId: string]: { type: 'swap' | 'up' | 'down', timestamp: number } }>({});
+  
+  const prevTeamsRef = useRef<Team[]>([]);
+  useEffect(() => {
+    const currentTeams = teams;
+    const prevTeams = prevTeamsRef.current;
+    
+    if (prevTeams.length > 0 && currentTeams.length > 0 && prevTeams !== currentTeams) {
+      const now = Date.now();
+      const newEvents = { ...playerEvents };
+      let changed = false;
+      
+      const prevMap = new Map<string, number>();
+      prevTeams.forEach((t, i) => t.playerIds.forEach(pid => prevMap.set(pid, i)));
+      
+      const currMap = new Map<string, number>();
+      currentTeams.forEach((t, i) => t.playerIds.forEach(pid => currMap.set(pid, i)));
+      
+      currMap.forEach((currIndex, pid) => {
+        if (prevMap.has(pid)) {
+          const prevIndex = prevMap.get(pid)!;
+          if (currIndex < prevIndex) {
+            if (newEvents[pid]?.type !== 'swap' || (now - newEvents[pid].timestamp) > 1000) {
+              newEvents[pid] = { type: 'up', timestamp: now };
+              changed = true;
+            }
+          } else if (currIndex > prevIndex) {
+            if (newEvents[pid]?.type !== 'swap' || (now - newEvents[pid].timestamp) > 1000) {
+              newEvents[pid] = { type: 'down', timestamp: now };
+              changed = true;
+            }
+          }
+        }
+      });
+      if (changed) {
+        setPlayerEvents(newEvents);
+      }
+    }
+    prevTeamsRef.current = currentTeams;
+  }, [teams]); // Omit playerEvents from dependencies to prevent excessive re-renders
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setPlayerEvents(prev => {
+        const now = Date.now();
+        const next = { ...prev };
+        let changed = false;
+        Object.keys(next).forEach(pid => {
+          if (now - next[pid].timestamp > 15000) {
+            delete next[pid];
+            changed = true;
+          }
+        });
+        return changed ? next : prev;
+      });
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
   const [showMatchSettingsModal, setShowMatchSettingsModal] = useState(false);
   const [showConfigMenu, setShowConfigMenu] = useState(false);
   const [showTimeEditModal, setShowTimeEditModal] = useState(false);
@@ -2241,7 +2299,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           name: existingTeam?.name || `Time ${String.fromCharCode(65 + i)}`,
           playerIds: chunk,
           iconIdx: existingTeam?.iconIdx ?? getNextTeamIconIdx(newTeams),
-          color: existingTeam?.color ?? getNextTeamColor(newTeams)
+          color: existingTeam?.color ?? getNextTeamColor(newTeams),
+          lastMatchStatus: existingTeam?.lastMatchStatus
         });
       }
       
@@ -5654,11 +5713,18 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   {matchAssists > 0 && (
                     <div className="flex items-center gap-0.5 text-[10px] font-bold text-black/50">
                       <Footprints size={10} /> {matchAssists}
-                    </div>
+                     </div>
                   )}
                   {matchGoals > 0 && (
                     <div className="flex items-center gap-0.5 text-[10px] font-bold text-black/50">
                       <CircleDot size={10} /> {matchGoals}
+                    </div>
+                  )}
+                  {playerEvents[p.id] && (
+                    <div className="flex items-center justify-center shrink-0 w-5 h-5 bg-white/50 rounded-full shadow-sm ml-1">
+                      {playerEvents[p.id].type === 'swap' && <IoMdSwap size={12} className="text-blue-500 animate-pulse" />}
+                      {playerEvents[p.id].type === 'up' && <IoMdArrowUp size={12} className="text-emerald-500 animate-bounce" />}
+                      {playerEvents[p.id].type === 'down' && <IoMdArrowDown size={12} className="text-red-500 animate-bounce" />}
                     </div>
                   )}
                 </div>
@@ -5788,6 +5854,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   </div>
                 </div>
                 <div className="flex items-center gap-1 ml-auto">
+                  {playerEvents[p.id] && (
+                    <div className="flex items-center justify-center shrink-0 w-5 h-5 bg-white/50 rounded-full shadow-sm mr-1">
+                      {playerEvents[p.id].type === 'swap' && <IoMdSwap size={12} className="text-blue-500 animate-pulse" />}
+                      {playerEvents[p.id].type === 'up' && <IoMdArrowUp size={12} className="text-emerald-500 animate-bounce" />}
+                      {playerEvents[p.id].type === 'down' && <IoMdArrowDown size={12} className="text-red-500 animate-bounce" />}
+                    </div>
+                  )}
                   {matchGoals > 0 && (
                     <div className="flex items-center gap-0.5 text-[10px] font-bold text-black/50">
                       <CircleDot size={10} /> {matchGoals}
@@ -6388,6 +6461,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                     ))}
                                                   </div>
                                                 </div>
+                                                {playerEvents[p.id] && (
+                                                  <div className="ml-auto flex items-center justify-center shrink-0 w-5 h-5 bg-white/50 rounded-full shadow-sm">
+                                                    {playerEvents[p.id].type === 'swap' && <IoMdSwap size={12} className="text-blue-500 animate-pulse" />}
+                                                    {playerEvents[p.id].type === 'up' && <IoMdArrowUp size={12} className="text-emerald-500 animate-bounce" />}
+                                                    {playerEvents[p.id].type === 'down' && <IoMdArrowDown size={12} className="text-red-500 animate-bounce" />}
+                                                  </div>
+                                                )}
                                                 </motion.button>
                                           );
                                         })}
@@ -9882,6 +9962,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               );
                               return newTeams.filter(team => team.playerIds.length > 0);
                             });
+                            setPlayerEvents(prev => ({ ...prev, [pid]: { type: 'swap', timestamp: Date.now() } }));
                             setReplacingPlayer(null);
                           }}
                           className="w-full p-3 flex items-center justify-between rounded-md bg-brand-dark border border-white/5 hover:border-brand-primary/50 transition-all group"
