@@ -4967,7 +4967,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     <input 
                       type="text" 
                       placeholder="Nome do jogador..."
-                      className={`flex-1 px-4 py-2 rounded-xl border-none outline-none transition-all bg-gradient-to-br from-zinc-200 to-zinc-300 text-[#1E3D2F] placeholder-[#1E3D2F]/50 focus:ring-2 focus:ring-[#1E3D2F]/20 text-sm`}
+                      className={`flex-1 px-4 py-2 rounded-xl border-none outline-none transition-all bg-[#dce3ee] text-[#1E3D2F] placeholder-[#1E3D2F]/50 focus:ring-2 focus:ring-[#1E3D2F]/20 text-sm`}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           addPlayer(e.currentTarget.value);
@@ -4998,7 +4998,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <div className="relative">
                   <textarea 
                     placeholder=" "
-                    className={`w-full h-24 px-4 py-3 rounded-xl border-none outline-none transition-all text-sm resize-none bg-zinc-100 text-[#1E3D2F] focus:ring-2 focus:ring-[#1E3D2F]/20 peer`}
+                    className={`w-full h-24 px-4 py-3 rounded-xl border-none outline-none transition-all text-sm resize-none bg-[#dce3ee] text-[#1E3D2F] focus:ring-2 focus:ring-[#1E3D2F]/20 peer`}
                     onChange={(e) => {
                       if (e.target.value.includes('\n') || e.target.value.length > 10) {
                         addBulkPlayers(e.target.value);
