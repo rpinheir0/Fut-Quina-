@@ -1508,6 +1508,47 @@ const formatPlayerName = (name: string) => {
   return `${firstName} ${lastInitial}.`;
 };
 
+const resolveMultipleGoalkeepers = (teams: Team[], playersList: Player[], playersPerTeam?: number): { newTeams: Team[], changed: boolean } => {
+  const getGks = (team: Team) => team?.playerIds.filter(id => playersList.find(p => p.id === id)?.isGoalkeeper) || [];
+  const getLinePlayers = (team: Team) => team?.playerIds.filter(id => !playersList.find(p => p.id === id)?.isGoalkeeper) || [];
+  
+  let changed = false;
+  const allTeamsNow = teams.map(t => ({ ...t, playerIds: [...t.playerIds] }));
+  
+  for (let i = 0; i < allTeamsNow.length; i++) {
+      let team = allTeamsNow[i];
+      let gks = getGks(team);
+      while (gks.length > 1) {
+          let gkToMove = gks.pop()!;
+          let receiverFound = false;
+          // Try to find a receiver team that has 0 GKs and has a line player to swap
+          for (let j = 0; j < allTeamsNow.length; j++) {
+              if (i !== j && getGks(allTeamsNow[j]).length === 0) {
+                  let line = getLinePlayers(allTeamsNow[j])[0];
+                  if (line) {
+                      allTeamsNow[i].playerIds = allTeamsNow[i].playerIds.map(id => id === gkToMove ? line : id);
+                      allTeamsNow[j].playerIds = allTeamsNow[j].playerIds.map(id => id === line ? gkToMove : id);
+                      receiverFound = true;
+                      changed = true;
+                      break;
+                  } else if (playersPerTeam !== undefined && allTeamsNow[j].playerIds.length < playersPerTeam) {
+                      // Empty team or team with space, just move them
+                      allTeamsNow[i].playerIds = allTeamsNow[i].playerIds.filter(id => id !== gkToMove);
+                      allTeamsNow[j].playerIds.push(gkToMove);
+                      receiverFound = true;
+                      changed = true;
+                      break;
+                  }
+              }
+          }
+          if (!receiverFound) {
+             break;
+          }
+      }
+  }
+  return { newTeams: allTeamsNow, changed };
+};
+
 const SpinningBall = ({ 
   size = "md", 
   className = "", 
@@ -1916,14 +1957,16 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [orgProSettings, setOrgProSettings] = useState<{
     maxAbsences: number | null;
     requirePaymentUpToDate: boolean;
+    allowFixedGoalkeeper: boolean;
     matchDayOfWeek: number | null;
     matchTime: string;
     appliedDate: number | null;
   }>(() => {
     const saved = safeLocalStorage.getItem(`futquina_org_settings_${groupId}`);
-    return saved ? JSON.parse(saved) : {
+    return saved ? { allowFixedGoalkeeper: true, ...JSON.parse(saved) } : {
       maxAbsences: null,
       requirePaymentUpToDate: false,
+      allowFixedGoalkeeper: true,
       matchDayOfWeek: null,
       matchTime: "",
       appliedDate: null
@@ -2305,10 +2348,22 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         });
       }
       
-      return newTeams;
+      const { newTeams: resolvedTeams } = resolveMultipleGoalkeepers(newTeams, players, match?.config?.playersPerTeam);
+      return resolvedTeams;
     });
   }, [teams, autoCompleteTeams, match?.config?.playersPerTeam]);
 
+
+  useEffect(() => {
+    // Globally ensure no team assumes > 1 goalkeeper if possible.
+    const hasMultipleGks = teams.some(t => t.playerIds.filter(id => players.find(p => p.id === id)?.isGoalkeeper).length > 1);
+    if (hasMultipleGks) {
+      const { newTeams, changed } = resolveMultipleGoalkeepers(teams, players, match?.config?.playersPerTeam);
+      if (changed) {
+        setTeams(newTeams);
+      }
+    }
+  }, [teams, players, match?.config?.playersPerTeam]);
 
   useEffect(() => {
     if (groupId) {
@@ -2411,6 +2466,21 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const playCheer = () => {
     const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2020/2020-preview.mp3');
     audio.play().catch(e => console.log('Audio play failed:', e));
+  };
+
+  const handleGoalkeeperSwap = (pAId: string, pBId: string) => {
+    setPlayers(prev => {
+      const pA = prev.find(p => p.id === pAId);
+      const pB = prev.find(p => p.id === pBId);
+      if (pA?.isGoalkeeper || pB?.isGoalkeeper) {
+        return prev.map(p => {
+          if (p.id === pAId) return { ...p, isGoalkeeper: !!pB?.isGoalkeeper };
+          if (p.id === pBId) return { ...p, isGoalkeeper: !!pA?.isGoalkeeper };
+          return p;
+        });
+      }
+      return prev;
+    });
   };
 
   const handleResetApp = async () => {
@@ -3374,7 +3444,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       });
     }
     
-    setTeams(newTeams);
+    const { newTeams: resolvedTeams } = resolveMultipleGoalkeepers(newTeams, players, match?.config?.playersPerTeam);
+    setTeams(resolvedTeams);
     setMatch(prev => ({
       ...prev,
       teamAIndex: 0,
@@ -4072,13 +4143,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
   useEffect(() => {
     if (isMatchTimePassed) {
-      setOrgProSettings({
+      setOrgProSettings(prev => ({
+        ...prev,
         maxAbsences: null,
         requirePaymentUpToDate: false,
         matchDayOfWeek: null,
         matchTime: "",
         appliedDate: null
-      });
+      }));
       setOrgProData({});
       setToast({ message: 'A data da pelada passou! As exigências e presenças foram redefinidas.', type: 'info' });
       setTimeout(() => setToast(null), 3000);
@@ -5162,6 +5234,21 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               </div>
                             )}
                           </div>
+
+                          <div className="p-5 bg-black/5 rounded-none border border-black/10 space-y-4 shadow-inner">
+                            <div className="flex items-center justify-between">
+                              <div className="flex flex-col">
+                                <span className="text-[11px] font-black uppercase tracking-widest text-black/90">Permitir Goleiro Fixo?</span>
+                                <p className="text-[9px] text-black/40 font-bold uppercase tracking-wider mt-0.5">Ativa a opção de definir goleiros nas ações do jogador</p>
+                              </div>
+                              <button 
+                                onClick={() => setOrgProSettings(prev => ({ ...prev, allowFixedGoalkeeper: !prev.allowFixedGoalkeeper }))}
+                                className={`w-12 h-6 rounded-full p-1 transition-colors relative ${orgProSettings.allowFixedGoalkeeper !== false ? 'bg-[#dce3ee]' : 'bg-black/10'}`}
+                              >
+                                <div className={`w-4 h-4 bg-white rounded-full transition-transform ${orgProSettings.allowFixedGoalkeeper !== false ? 'translate-x-6' : 'translate-x-0'} shadow-sm`} />
+                              </button>
+                            </div>
+                          </div>
                           
                           <button 
                             onClick={() => {
@@ -5175,29 +5262,20 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 return;
                               }
 
-                              const playersPerTeamChanged = playersCount !== match.config.playersPerTeam;
-
-                              if (playersPerTeamChanged || isInitialSetupFlow) {
+                              if (isInitialSetupFlow) {
                                 if (players.length < playersCount * 2) {
                                   setShowNotEnoughPlayersModal(true);
                                   return;
                                 }
 
-                                if (isInitialSetupFlow) {
-                                  // For first time setup, ensure everyone is absent
-                                  setPlayers(prev => prev.map(p => ({ ...p, isAvailable: false, arrivedAt: undefined })));
-                                  setTeams([]); // Clear teams since everyone is now absent
-                                  setIsInitialSetupFlow(false);
-                                  setFirstSetupDone(true);
-                                  safeLocalStorage.setItem(`futquina_first_setup_done_${groupId}`, 'true');
-                                  setShowSetupGuide(true);
-                                }
+                                // For first time setup, ensure everyone is absent
+                                setPlayers(prev => prev.map(p => ({ ...p, isAvailable: false, arrivedAt: undefined })));
+                                setTeams([]); // Clear teams since everyone is now absent
+                                setIsInitialSetupFlow(false);
+                                setFirstSetupDone(true);
+                                safeLocalStorage.setItem(`futquina_first_setup_done_${groupId}`, 'true');
+                                setShowSetupGuide(true);
 
-                                // Reset teams and match if size changed
-                                if (playersPerTeamChanged) {
-                                  setTeams([]);
-                                }
-                                
                                 setMatch(prev => ({ 
                                   ...prev, 
                                   config: { duration, goalLimit: goals, playersPerTeam: playersCount },
@@ -5213,12 +5291,22 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 }));
                                 setTeamsTab('chegada');
                               } else {
-                                // Only duration or goal limit changed
-                                setMatch(prev => ({
-                                  ...prev,
-                                  config: { ...prev.config, duration, goalLimit: goals },
-                                  timeRemaining: (!prev.isActive || prev.hasEnded) ? duration * 60 : prev.timeRemaining
-                                }));
+                                // Update config directly including playersPerTeam so it reflects dynamically in the active matches
+                                setMatch(prev => {
+                                  let newTimeRemaining = prev.timeRemaining;
+                                  if (!prev.isActive || prev.hasEnded || prev.isPaused) {
+                                    newTimeRemaining = duration * 60;
+                                  } else if (duration !== prev.config.duration) {
+                                    newTimeRemaining = prev.timeRemaining + ((duration - prev.config.duration) * 60);
+                                  }
+                                  if (newTimeRemaining < 0) newTimeRemaining = 0;
+                                  
+                                  return {
+                                    ...prev,
+                                    config: { ...prev.config, duration, goalLimit: goals, playersPerTeam: playersCount },
+                                    timeRemaining: newTimeRemaining
+                                  };
+                                });
                                 setToast({ message: "Configurações aplicadas!", type: 'success' });
                                 setTimeout(() => setToast(null), 3000);
                               }
@@ -5731,6 +5819,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                               return;
                                             }
                                             
+                                            handleGoalkeeperSwap(swappingPlayerId, pid);
                                             setTeams(prev => {
                                               const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
                                               let swapTeamIdx = -1;
@@ -5788,7 +5877,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   </div>
                 </div>
                 <div className="flex items-center gap-1 mr-auto">
-                  {p.isGoalkeeper && (
+                  {p.isGoalkeeper && orgProSettings.allowFixedGoalkeeper !== false && (
                     <div className="flex items-center justify-center shrink-0 mr-1 ml-1 text-sky-500 drop-shadow-sm">
                       <GiGloves size={14} />
                     </div>
@@ -5880,6 +5969,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                               return;
                                             }
                                             
+                                            handleGoalkeeperSwap(swappingPlayerId, pid);
                                             setTeams(prev => {
                                               const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
                                               let swapTeamIdx = -1;
@@ -5937,7 +6027,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   </div>
                 </div>
                 <div className="flex items-center gap-1 ml-auto">
-                  {p.isGoalkeeper && (
+                  {p.isGoalkeeper && orgProSettings.allowFixedGoalkeeper !== false && (
                     <div className="flex items-center justify-center shrink-0 mr-1 ml-1 text-sky-500 drop-shadow-sm">
                       <GiGloves size={14} />
                     </div>
@@ -6448,6 +6538,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                         return;
                                                       }
                                                       // Swap logic
+                                                      handleGoalkeeperSwap(swappingPlayerId, pid);
                                                       setTeams(prev => {
                                                         const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
                                                         let swapTeamIdx = -1;
@@ -6550,7 +6641,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                                   </div>
                                                 </div>
                                                 <div className="ml-auto flex items-center gap-1">
-                                                  {p.isGoalkeeper && (
+                                                  {p.isGoalkeeper && orgProSettings.allowFixedGoalkeeper !== false && (
                                                     <div className="flex items-center justify-center shrink-0 text-sky-500 drop-shadow-sm">
                                                       <GiGloves size={14} />
                                                     </div>
@@ -6652,6 +6743,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   e.stopPropagation();
                                   if (swappingPlayerId && swappingPlayerId !== pid) {
                                     // Complete swap logic
+                                    handleGoalkeeperSwap(swappingPlayerId, pid);
                                     setTeams(prev => {
                                       const newTeams = [...prev].map(team => ({ ...team, playerIds: [...team.playerIds] }));
                                       let teamAIdx = -1;
@@ -8630,6 +8722,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           const playerAId = swappingPlayerId;
                           const playerBId = showPlayerActionsModal.playerId;
                           
+                          handleGoalkeeperSwap(playerAId, playerBId);
                           setTeams(prev => {
                             const newTeams = prev.map(t => ({ ...t, playerIds: [...t.playerIds] }));
                             let teamAIdx = -1;
@@ -8669,7 +8762,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     )}
   
                     {/* Action Grid */}
-                    {!swappingPlayerId && (!teams[showPlayerActionsModal.teamIndex]?.playerIds.some(pid => players.find(p => p.id === pid)?.isGoalkeeper) || players.find(p => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper) && (
+                    {!swappingPlayerId && (orgProSettings.allowFixedGoalkeeper !== false) && (!teams[showPlayerActionsModal.teamIndex]?.playerIds.some(pid => players.find(p => p.id === pid)?.isGoalkeeper) || players.find(p => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper) && (
                       <button 
                         onClick={() => {
                           setPlayers(prev => prev.map(p => 
@@ -8830,7 +8923,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <div className="space-y-2.5">
                   {!showQueuePlayerModal.showMoveOptions ? (
                     <div className="grid grid-cols-2 gap-2">
-                      {(!teams[showQueuePlayerModal.teamIndex]?.playerIds.some(pid => players.find(p => p.id === pid)?.isGoalkeeper) || players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper) && (
+                      {(orgProSettings.allowFixedGoalkeeper !== false) && (!teams[showQueuePlayerModal.teamIndex]?.playerIds.some(pid => players.find(p => p.id === pid)?.isGoalkeeper) || players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper) && (
                         <button 
                           onClick={() => {
                             setPlayers(prev => prev.map(p => 
@@ -9275,6 +9368,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                           const playerAId = swappingPlayerId;
                                           const playerBId = pid;
                                           
+                                          handleGoalkeeperSwap(playerAId, playerBId);
                                           setTeams(prev => {
                                             const newTeams = prev.map(t => ({ ...t, playerIds: [...t.playerIds] }));
                                             let teamAIdx = -1;
@@ -9349,6 +9443,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   const playerInTeamId = swappingPlayerId;
                                   const playerFromBenchId = player.id;
                                   
+                                  handleGoalkeeperSwap(playerInTeamId, playerFromBenchId);
                                   setTeams(prev => {
                                     const newTeams = prev.map(t => ({ ...t, playerIds: [...t.playerIds] }));
                                     const teamIdx = newTeams.findIndex(t => t.playerIds.includes(playerInTeamId));
@@ -10081,6 +10176,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <button
                           key={`summary-player-replace-${t.id}-${pid}-${idx}`}
                           onClick={() => {
+                            handleGoalkeeperSwap(replacingPlayer.removedPlayerId, pid);
                             setTeams(prev => {
                               const newTeams = prev.map(team => ({ ...team, playerIds: [...team.playerIds] }));
                               // Remove from source team
