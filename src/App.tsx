@@ -1658,7 +1658,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
   }, [onComplete]);
 
   return (
-    <div className="fixed inset-0 z-[3000] flex flex-col items-center justify-center bg-[#14301F]">
+    <div className="fixed inset-0 z-[3000] flex flex-col items-center justify-center bg-[#dce3ee]">
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -1682,7 +1682,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
           <span className="text-4xl uppercase tracking-tighter text-[#83A8FF] font-staatliches leading-[0.85]">
             FutQuina
           </span>
-          <span className="text-xs opacity-100 font-readex tracking-widest mt-0.5 text-white uppercase font-bold">
+          <span className="text-xs opacity-100 font-readex tracking-widest mt-0 text-zinc-600 uppercase font-bold">
             Gestão de pelada
           </span>
         </motion.div>
@@ -6949,104 +6949,156 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
 
 
-          {currentScreen === 'ranking' && !isPrintMode && (
+          {currentScreen === 'ranking' && (
             <motion.div 
               key="ranking"
-              initial={{ opacity: 0 }}
+              initial={isPrintMode ? { opacity: 1 } : { opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="p-2 sm:p-4 space-y-6 pb-24"
+              className={`p-2 sm:p-4 space-y-6 pb-24 ${isPrintMode ? 'bg-white min-h-screen p-0' : ''}`}
             >
-              <motion.div 
-                className={`w-full overflow-hidden`}
-              >
-                <div className="flex items-center justify-between pb-2 border-b border-dashed border-black/10 mb-4 px-2">
-                  <div className="flex items-center gap-1">
+              {!isPrintMode ? (
+                <motion.div 
+                  className={`w-full overflow-hidden`}
+                >
+                  <div className="flex items-center justify-between pb-2 border-b border-dashed border-black/10 mb-4 px-2">
+                    <div className="flex items-center gap-1">
+                      <button 
+                        onClick={() => setIsPrintMode(true)} 
+                        className="flex items-center gap-2 p-2 px-3 rounded-xl border border-black/10 bg-black/5 hover:bg-black/10 transition-colors shadow-sm"
+                      >
+                        <span className="text-zinc-800">
+                          <GiPodiumWinner size={20} />
+                        </span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Ranking</span>
+                      </button>
+                    </div>
+                    <div className="text-zinc-800/30 text-xs font-bold font-mono tracking-tighter uppercase"></div>
+                    <div className={`flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-zinc-800/50 ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
+                      <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'assistencias' ? '' : 'opacity-0'}`}><IoFootballOutline size={14} /> Gols</div>
+                      <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'artilharia' ? '' : 'opacity-0'}`}><GiRunningShoe size={14} /> Ass</div>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    {sortedRankingPlayers.map((player, index) => (
+                      <motion.div 
+                        layout
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ 
+                          layout: { type: "spring", stiffness: 300, damping: 25 },
+                          opacity: { duration: 0.2 }
+                        }}
+                        key={player.id}
+                        className="flex items-center py-3 px-2 transition-colors rounded-xl bg-transparent border-b border-black/5"
+                      >
+                        <div className="w-8 text-sm font-black text-zinc-800/40 text-center shrink-0">
+                          {index + 1}
+                        </div>
+                        
+                        <div className="relative ml-2 mr-4 shrink-0">
+                          <div className={`w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center bg-black/10 border border-black/10 relative z-10`}>
+                            {player.photo ? (
+                              <img src={player.photo} alt={player.name} className="w-full h-full object-cover" />
+                            ) : (
+                              <span className="text-zinc-800/40 flex items-center shrink-0"><IoPersonOutline size={20} /></span>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex-1 text-xs text-zinc-800/90 tracking-tight truncate mr-4 font-normal capitalize flex flex-col gap-0.5">
+                          <span className="leading-none">{player.name.toLowerCase()}</span>
+                          <div className="flex gap-0.5">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star 
+                                key={`star-rank-${player.id}-${star}`}
+                                size={8} 
+                                className={`${(player.stars || 3) >= star ? 'fill-[#00FF00] text-zinc-800' : 'text-zinc-800/10'}`} 
+                              />
+                            ))}
+                          </div>
+                        </div>
+
+                        <div className={`flex gap-4 sm:gap-8 shrink-0 ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
+                          <div className={`w-12 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'assistencias' ? 'opacity-0' : ''}`}>{player.goals}</div>
+                          <div className={`w-12 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'artilharia' ? 'opacity-0' : ''}`}>{player.assists}</div>
+                        </div>
+                      </motion.div>
+                    ))}
+                    {players.length === 0 && (
+                      <div className="w-full text-center py-20 opacity-50 text-black/50 text-xs flex flex-col items-center justify-center gap-4">
+                        <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-2">
+                          <span className="opacity-30 text-black"><GiCrown size={48} /></span>
+                        </div>
+                        <span className="font-bold uppercase tracking-widest text-[10px]">Nenhum jogador registrado ainda.</span>
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              ) : (
+                <div key="ranking-print" className="p-8 bg-[#dce3ee] min-h-screen text-black space-y-8">
+                  <div className="flex items-center justify-between border-b border-black/10 pb-3">
+                    <div className="flex items-center gap-2">
+                      <Trophy size={16} className="text-black" />
+                      <FutQuinaLogo size="sm" titleColorClass="text-[#484848]" />
+                      <span className="text-sm font-black opacity-10">|</span>
+                      <span className="text-sm font-black tracking-tighter">Ranking</span>
+                    </div>
                     <button 
-                      onClick={() => setIsPrintMode(true)} 
-                      className="flex items-center gap-2 p-2 px-3 rounded-xl border border-black/10 bg-black/5 hover:bg-black/10 transition-colors shadow-sm"
+                      onClick={() => setIsPrintMode(false)}
+                      className="print:hidden px-3 py-1.5 bg-brand-primary text-black rounded-sm text-[9px] font-bold uppercase hover:opacity-80 transition-colors"
                     >
-                      <span className="text-zinc-800">
-                        <GiPodiumWinner size={20} />
-                      </span>
-                      <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Ranking</span>
+                      Sair do Print
                     </button>
                   </div>
-                  <div className="text-zinc-800/30 text-xs font-bold font-mono tracking-tighter uppercase"></div>
-                  <div className={`flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-zinc-800/50 ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
-                    <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'assistencias' ? '' : 'opacity-0'}`}><IoFootballOutline size={14} /> Gols</div>
-                    <div className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== 'artilharia' ? '' : 'opacity-0'}`}><GiRunningShoe size={14} /> Ass</div>
+
+                  <div className="space-y-4">
+                    <h2 className="text-base font-bold uppercase tracking-widest border-l-4 border-black pl-3">Top Jogadores</h2>
+                    <div className="border border-black rounded-lg overflow-hidden">
+                      <table className="w-full text-left border-collapse">
+                        <thead>
+                          <tr className="bg-brand-primary text-black">
+                            <th className="p-2 text-[10px] font-black uppercase">Pos</th>
+                            <th className="p-2 text-[10px] font-black uppercase">Jogador</th>
+                            <th className="p-2 text-[10px] font-black text-center !normal-case">Gols</th>
+                            <th className="p-2 text-[10px] font-black text-center !normal-case">Assistências</th>
+                            <th className="p-2 text-[10px] font-black uppercase text-center">Total</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {sortedPlayersByTotal.slice(0, 15)
+                            .map((player, index) => (
+                            <tr key={`ranking-row-print-${player.id}`} className="border-b border-black/10">
+                              <td className="p-2 text-xs font-black">{index + 1}</td>
+                              <td className="p-2 text-xs font-bold">{player.name}</td>
+                              <td className="p-2 text-xs text-center">{player.goals}</td>
+                              <td className="p-2 text-xs text-center">{player.assists}</td>
+                              <td className="p-2 text-xs text-center font-black">{player.goals + player.assists}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  
+                  <div className="text-[8px] text-center opacity-50 uppercase font-bold">
+                    Gerado em {new Date().toLocaleDateString('pt-BR')} • FutQuina App
                   </div>
                 </div>
-
-                <div className="flex flex-col gap-1">
-                  {sortedRankingPlayers.map((player, index) => (
-                    <motion.div 
-                      layout
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      transition={{ 
-                        layout: { type: "spring", stiffness: 300, damping: 25 },
-                        opacity: { duration: 0.2 }
-                      }}
-                      key={player.id}
-                      className="flex items-center py-3 px-2 transition-colors rounded-xl bg-transparent border-b border-black/5"
-                    >
-                      <div className="w-8 text-sm font-black text-zinc-800/40 text-center shrink-0">
-                        {index + 1}
-                      </div>
-                      
-                      <div className="relative ml-2 mr-4 shrink-0">
-                        <div className={`w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center bg-black/10 border border-black/10 relative z-10`}>
-                          {player.photo ? (
-                            <img src={player.photo} alt={player.name} className="w-full h-full object-cover" />
-                          ) : (
-                            <span className="text-zinc-800/40 flex items-center shrink-0"><IoPersonOutline size={20} /></span>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="flex-1 text-xs text-zinc-800/90 tracking-tight truncate mr-4 font-normal capitalize flex flex-col gap-0.5">
-                        <span className="leading-none">{player.name.toLowerCase()}</span>
-                        <div className="flex gap-0.5">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <Star 
-                              key={`star-rank-${player.id}-${star}`}
-                              size={8} 
-                              className={`${(player.stars || 3) >= star ? 'fill-[#00FF00] text-zinc-800' : 'text-zinc-800/10'}`} 
-                            />
-                          ))}
-                        </div>
-                      </div>
-
-                      <div className={`flex gap-4 sm:gap-8 shrink-0 ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
-                        <div className={`w-12 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'assistencias' ? 'opacity-0' : ''}`}>{player.goals}</div>
-                        <div className={`w-12 text-center text-sm font-black text-brand-text-primary ${rankingTab === 'artilharia' ? 'opacity-0' : ''}`}>{player.assists}</div>
-                      </div>
-                    </motion.div>
-                  ))}
-                  {players.length === 0 && (
-                    <div className="w-full text-center py-20 opacity-50 text-black/50 text-xs flex flex-col items-center justify-center gap-4">
-                      <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-2">
-                        <span className="opacity-30 text-black"><GiCrown size={48} /></span>
-                      </div>
-                      <span className="font-bold uppercase tracking-widest text-[10px]">Nenhum jogador registrado ainda.</span>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
+              )}
             </motion.div>
           )}
 
           {currentScreen === 'finance' && (
             <motion.div 
               key="finance"
-              initial={{ opacity: 0 }}
+              initial={isPrintMode ? { opacity: 1 } : { opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className={`space-y-4 ${isPrintMode ? 'space-y-0' : ''}`}
+              className={`space-y-4 ${isPrintMode ? 'space-y-0 bg-white text-black min-h-screen' : ''}`}
             >
               {financeSubScreen === 'balanco' && (() => {
                 const totalRevenue = (payments || []).reduce((acc: number, p: PaymentRecord) => acc + Object.values(p?.months || {}).reduce((mAcc: number, mVal) => mAcc + Number(mVal || 0), 0), 0) + manualAdjustment;
@@ -7054,9 +7106,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 const netBalance = totalRevenue - totalExpenses;
 
                 return (
-                  <motion.div
-                    className={`space-y-6 ${isPrintMode ? 'bg-white min-h-screen text-black p-4 pb-12 font-mono' : 'font-mono'}`}
-                  >
+                  <div className={`space-y-6 ${isPrintMode ? 'bg-white min-h-screen text-black p-4 pb-12 font-mono' : 'font-mono'}`}>
                     {!isPrintMode && (
                       <div className="flex justify-end px-4">
                         <button 
@@ -7070,45 +7120,39 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     )}
 
                     {isPrintMode && (
-                      <div className="pt-8 pb-4 text-center border-b border-zinc-300 mb-6">
-                        <div className="flex justify-center mb-4 opacity-20 invert">
-                          <FutQuinaLogo size="md" />
+                      <div className="pt-10 pb-6 text-center border-b border-zinc-300 mb-6 bg-[#dce3ee] flex flex-col items-center relative">
+                        <div className="mb-4">
+                          <FutQuinaLogo size="md" titleColorClass="text-[#484848]" />
                         </div>
-                        <h2 className="text-2xl font-bold uppercase mb-1">
+                        <h2 className="text-2xl font-black uppercase mb-1 text-black">
                           {isPrintPaymentsOnly ? 'Planilha de Pagamentos' : 'Relatório Financeiro'}
                         </h2>
-                        <p className="text-xs uppercase opacity-60">Competência: {MONTHS[new Date().getMonth()]} / {new Date().getFullYear()}</p>
+                        <p className="text-[10px] font-bold uppercase opacity-60 text-black">Competência: {MONTHS[new Date().getMonth()]} / {new Date().getFullYear()}</p>
                         <button 
                           onClick={() => {
                             setIsPrintMode(false);
                             setIsPrintPaymentsOnly(false);
                           }} 
-                          className="absolute top-4 right-4 p-2 text-zinc-400 hover:bg-zinc-100 rounded-full transition-colors"
+                          className="absolute top-4 right-4 p-2 text-zinc-400 hover:bg-zinc-800/10 rounded-full transition-colors"
                         >
                           <X size={20} />
                         </button>
                       </div>
                     )}
 
-                    <div className={`px-2 sm:px-4 space-y-6 w-full sm:w-[98%] max-w-7xl mx-auto`}>
-                      {/* Summary Cards */}
-                      {!isPrintPaymentsOnly && (
-                        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                  <div className={`px-2 sm:px-4 space-y-6 w-full sm:w-[98%] max-w-7xl mx-auto`}>
+                    {/* Summary Cards */}
+                    {!isPrintPaymentsOnly && (
+                      <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                         {/* Saldo Líquido Card */}
                         <div className={`p-5 transition-all col-span-2 lg:col-span-1 order-1 lg:order-none ${
                           isPrintMode ? 'bg-white border-zinc-300 border rounded-none' :
-                          netBalance >= 0
-                            ? 'bg-transparent border-emerald-500/20'
-                            : 'bg-transparent border-red-500/20'
+                          netBalance >= 0 ? 'bg-transparent border-emerald-500/20' : 'bg-transparent border-red-500/20'
                         }`}>
                           <p className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? 'text-zinc-600' : 'opacity-60'}`}>Saldo em Caixa</p>
                           <p className={`text-xl sm:text-2xl lg:text-3xl font-black mb-4 ${
-                            isPrintMode ? 'text-black' :
-                            netBalance >= 0
-                              ? 'text-emerald-700'
-                              : 'text-red-700'
+                            isPrintMode ? 'text-black' : netBalance >= 0 ? 'text-emerald-700' : 'text-red-700'
                           }`}>R$ <AnimatedCounter value={netBalance} />,00</p>
-
                           <div className="space-y-1.5">
                             <div className="h-2 w-full bg-zinc-200/50 rounded-full overflow-hidden">
                               <div 
@@ -7339,7 +7383,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </div>
                     )}
                   </div>
-                </motion.div>
+                </div>
               );
             })()}
               {financeSubScreen === 'mensalidade' && (
@@ -7425,11 +7469,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   )}
 
                   {isPrintMode && (
-                    <div className="p-3 bg-emerald-600 text-zinc-800 flex justify-between items-center">
-                      <FutQuinaLogo size="sm" />
+                    <div className="p-3 bg-[#dce3ee] text-zinc-800 flex justify-between items-center">
+                      <FutQuinaLogo size="sm" titleColorClass="text-[#484848]" />
                       <button 
                         onClick={() => setIsPrintMode(false)}
-                        className="p-1.5 bg-white/20 rounded-sm"
+                        className="p-1.5 bg-black/10 rounded-sm"
                       >
                         <X size={16} />
                       </button>
@@ -7453,7 +7497,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             <th className={`border ${isPrintMode ? 'border-zinc-300' : 'border-zinc-300'}`}></th>
                           </tr>
                         </thead>
-                        <tbody className={`${isPrintMode ? 'bg-white text-black' : 'bg-transparent text-white'}`}>
+                        <tbody className={`${isPrintMode ? 'bg-white text-black' : 'bg-white text-[#1E3D2F]'}`}>
                           {players.map((player, index) => {
                             const record = payments.find(p => p.playerId === player.id && p.year === selectedYear) || { playerId: player.id, year: selectedYear, months: {}, monthlyFee: monthlyFee };
                             
@@ -7517,58 +7561,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 </motion.div>
               )}
             </motion.div>
-          )}
-
-          {currentScreen === 'ranking' && isPrintMode && (
-            <div key="ranking-print" className="p-8 bg-white min-h-screen text-black space-y-8">
-              <div className="flex items-center justify-between border-b border-black/10 pb-3">
-                <div className="flex items-center gap-2">
-                  <Trophy size={16} className="text-black" />
-                  <FutQuinaLogo size="sm" />
-                  <span className="text-sm font-black opacity-10">|</span>
-                  <span className="text-sm font-black tracking-tighter">Ranking</span>
-                </div>
-                <button 
-                  onClick={() => setIsPrintMode(false)}
-                  className="print:hidden px-3 py-1.5 bg-brand-primary text-black rounded-sm text-[9px] font-bold uppercase hover:opacity-80 transition-colors"
-                >
-                  Sair do Print
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                <h2 className="text-base font-bold uppercase tracking-widest border-l-4 border-black pl-3">Top Jogadores</h2>
-                <div className="border border-black rounded-lg overflow-hidden">
-                  <table className="w-full text-left border-collapse">
-                    <thead>
-                      <tr className="bg-brand-primary text-black">
-                        <th className="p-2 text-[10px] font-black uppercase">Pos</th>
-                        <th className="p-2 text-[10px] font-black uppercase">Jogador</th>
-                        <th className="p-2 text-[10px] font-black text-center !normal-case">Gols</th>
-                        <th className="p-2 text-[10px] font-black text-center !normal-case">Assistências</th>
-                        <th className="p-2 text-[10px] font-black uppercase text-center">Total</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {sortedPlayersByTotal.slice(0, 15)
-                        .map((player, index) => (
-                        <tr key={`ranking-row-print-${player.id}`} className="border-b border-black/10">
-                          <td className="p-2 text-xs font-black">{index + 1}</td>
-                          <td className="p-2 text-xs font-bold">{player.name}</td>
-                          <td className="p-2 text-xs text-center">{player.goals}</td>
-                          <td className="p-2 text-xs text-center">{player.assists}</td>
-                          <td className="p-2 text-xs text-center font-black">{player.goals + player.assists}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-              
-              <div className="text-[8px] text-center opacity-50 uppercase font-bold">
-                Gerado em {new Date().toLocaleDateString('pt-BR')} • FutQuina App
-              </div>
-            </div>
           )}
 
           {currentScreen === 'org-pro' && (
@@ -10422,7 +10414,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         />
 
         {/* Bottom Navigation */}
-        <div className={`fixed bottom-0 left-0 right-0 z-[100] w-full`}>
+        <div className={`fixed bottom-0 left-0 right-0 z-[100] w-full ${isPrintMode ? 'hidden' : ''}`}>
           <nav className="w-full bg-[#111111] border-t border-white/5 pt-1 pb-3 sm:pb-4 px-2 sm:px-6 flex items-center justify-around">
             <button 
               onClick={() => {
