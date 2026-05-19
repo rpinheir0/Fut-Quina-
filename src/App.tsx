@@ -66,7 +66,8 @@ import {
   Globe,
   Star,
   Palette,
-  Power
+  Power,
+  Shirt
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { IoPersonOutline, IoFootballOutline, IoCheckmarkCircle } from 'react-icons/io5';
@@ -2364,7 +2365,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   }, [autoCompleteTeams, groupId]);
 
   useEffect(() => {
-    if (!autoCompleteTeams || !match.config.playersPerTeam) return;
+    // Only run auto-complete if enabled and there are players to assign
+    const availableTotal = players.filter(p => p.isAvailable && sessionPlayerIds.includes(p.id)).length;
+    if (!autoCompleteTeams || !match.config.playersPerTeam || players.length === 0 || availableTotal === 0) return;
 
     setTeams(prev => {
       const limit = match.config.playersPerTeam;
@@ -2438,6 +2441,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   }, [fixedColors, groupId]);
 
   const [showEventModal, setShowEventModal] = useState<{ team: 'A' | 'B' | number } | null>(null);
+  const [showInsufficientPlayersModal, setShowInsufficientPlayersModal] = useState(false);
+  const [showArrivalStepGuide, setShowArrivalStepGuide] = useState(false);
+  const [isFlashingConfig, setIsFlashingConfig] = useState(false);
+
+  useEffect(() => {
+    if (isFlashingConfig) {
+      const timer = setTimeout(() => {
+        setIsFlashingConfig(false);
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [isFlashingConfig]);
+
   const [toast, setToast] = useState<{ message: string; type: 'info' | 'warning' | 'gray' | 'success' } | null>(null);
   const [showIconPicker, setShowIconPicker] = useState<number | null>(null);
   const [selectedScorerId, setSelectedScorerId] = useState<string | null>(null);
@@ -2850,11 +2866,25 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     }).then();
   }, [match, isDataLoaded, groupId, isPresenceMode, isOrgProAuthorized]);
 
+  // Automatically clear teams and reset match if no players exist or all are unavailable
   useEffect(() => {
-    if (players.length > 0 && players.every(p => !p.isAvailable)) {
-      setTeams([]);
+    if (players.length === 0 || (players.length > 0 && players.every(p => !p.isAvailable))) {
+      if (teams.length > 0) {
+        setTeams([]);
+      }
+      if (match.isActive || match.teamAIndex !== -1 || match.teamBIndex !== -1) {
+        setMatch(prev => ({
+          ...prev,
+          isActive: false,
+          isPaused: true,
+          teamAIndex: -1,
+          teamBIndex: -1,
+          scoreA: 0,
+          scoreB: 0
+        }));
+      }
     }
-  }, [players]);
+  }, [players, teams.length, match.isActive, match.teamAIndex, match.teamBIndex]);
 
   useEffect(() => {
     safeLocalStorage.setItem(`futquina_players_${groupId}`, JSON.stringify(players));
@@ -2981,7 +3011,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
   // --- Match End Detection ---
   useEffect(() => {
-    if (match.isActive && !match.hasEnded) {
+    if (match.isActive && !match.hasEnded && !tieBreaker.showSelection && players.length > 0) {
       const isTimeUp = match.timeRemaining === 0;
       const isGoalLimitReached = match.scoreA >= match.config.goalLimit || match.scoreB >= match.config.goalLimit;
       
@@ -2989,7 +3019,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         finishMatch();
       }
     }
-  }, [match.timeRemaining, match.scoreA, match.scoreB, match.isActive, match.hasEnded, match.config.goalLimit, teams, match.teamAIndex, match.teamBIndex]);
+  }, [match.timeRemaining, match.scoreA, match.scoreB, match.isActive, match.hasEnded, match.config.goalLimit, teams, match.teamAIndex, match.teamBIndex, tieBreaker.showSelection, players.length]);
 
   // --- Handlers ---
 
@@ -3208,7 +3238,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   // Ensure match indices are always valid
   useEffect(() => {
     if (teams.length === 0) {
-      setMatch(prev => ({ ...prev, teamAIndex: 0, teamBIndex: 0 }));
+      if (match.teamAIndex !== -1 || match.teamBIndex !== -1) {
+        setMatch(prev => ({ ...prev, teamAIndex: -1, teamBIndex: -1 }));
+      }
       return;
     }
     
@@ -4576,6 +4608,130 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       </AnimatePresence>
 
       <AnimatePresence>
+        {showArrivalStepGuide && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
+            onClick={() => setShowArrivalStepGuide(false)}
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 30, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 30, opacity: 0 }}
+              className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-2xl bg-zinc-50 border border-zinc-200"
+              onClick={e => e.stopPropagation()}
+            >
+              <div className="bg-brand-gradient p-8 text-center relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
+                
+                <div className="w-16 h-16 mx-auto rounded-full bg-white flex items-center justify-center border-4 border-black/5 shadow-xl relative z-10 mb-4">
+                  <span className="text-emerald-500"><PiRocketBold size={32} /></span>
+                </div>
+
+                <h3 className="text-xl font-black uppercase tracking-tighter text-black leading-none mb-1">
+                  Próximo Passo
+                </h3>
+                <p className="text-[10px] text-black/60 font-black uppercase tracking-[0.2em]">
+                  ORDEM DE CHEGADA
+                </p>
+              </div>
+
+              <div className="p-6 space-y-4">
+                <div className="space-y-3">
+                  <div className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full bg-[#dce3ee] text-zinc-800 flex items-center justify-center text-[10px] font-black shrink-0">1</div>
+                    <p className="text-[11px] font-bold text-zinc-600 leading-tight">Toque nos jogadores para confirmar a presença deles na pelada de hoje.</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-5 h-5 rounded-full bg-[#dce3ee] text-zinc-800 flex items-center justify-center text-[10px] font-black shrink-0">2</div>
+                    <p className="text-[11px] font-bold text-zinc-600 leading-tight">Você precisa de pelo menos o dobro de jogadores (ex: 2 times de {match.config.playersPerTeam}) para prosseguir.</p>
+                  </div>
+                </div>
+
+                <button 
+                  onClick={() => setShowArrivalStepGuide(false)}
+                  className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg hover:bg-black transition-all active:scale-95"
+                >
+                  OK, Entendi!
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {showInsufficientPlayersModal && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
+            onClick={() => setShowInsufficientPlayersModal(false)}
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 30, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 30, opacity: 0 }}
+              className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-2xl bg-zinc-50 border border-zinc-200"
+              onClick={e => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div className="bg-[#dce3ee] p-8 text-center relative overflow-hidden">
+                {/* Decorative Elements */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
+                
+                <div className="w-16 h-16 mx-auto rounded-full bg-white flex items-center justify-center border-4 border-black/5 shadow-xl relative z-10 mb-4">
+                  <span className="text-amber-500"><PiWarningCircleBold size={32} /></span>
+                </div>
+
+                <h3 className="text-xl font-black uppercase tracking-tighter text-black leading-none mb-1">
+                  Ops! Quase lá...
+                </h3>
+                <p className="text-[10px] text-black/60 font-black uppercase tracking-[0.2em]">
+                  JOGADORES INSUFICIENTES
+                </p>
+              </div>
+
+              <div className="p-6 space-y-4">
+                <p className="text-xs font-bold text-zinc-600 text-center leading-relaxed">
+                  Jogadores insuficientes para formar 2 times. Crie mais jogadores em Gerenciar Jogadores ou altere a quantidade de jogadores por time.
+                </p>
+
+                <div className="space-y-2">
+                  <button 
+                    onClick={() => {
+                      setShowInsufficientPlayersModal(false);
+                      setCurrentScreen('players');
+                    }}
+                    className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg hover:bg-black transition-all active:scale-95 flex items-center justify-center gap-2"
+                  >
+                    <User size={14} />
+                    Gerenciar Jogadores
+                  </button>
+                  
+                  <button 
+                    onClick={() => {
+                      setShowInsufficientPlayersModal(false);
+                      setCurrentScreen('teams');
+                      setTeamsTab('configuracao');
+                      setIsFlashingConfig(true);
+                    }}
+                    className="w-full py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-zinc-50 transition-all active:scale-95 shadow-sm"
+                  >
+                    OK, Entendido
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
         {showGoalAnimation && (
           <GoalCelebration 
             isOpen={!!showGoalAnimation} 
@@ -4906,7 +5062,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 onClick={() => navigateTeamsTab('chegada')}
                 className={`px-4 py-2 flex items-center justify-center rounded-none transition-all border ${teamsTab === 'chegada' ? 'bg-[#00FF00] text-[#1E3D2F] border-transparent' : 'bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium'}`}
               >
-                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'chegada' ? 'text-[#1E3D2F]' : 'text-white'}`}>Chegada</span>
+                <span className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === 'chegada' ? 'text-[#1E3D2F]' : 'text-white'}`}>Presença</span>
               </button>
               <button 
                 onClick={() => navigateTeamsTab('historico')}
@@ -5234,7 +5390,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 className="w-full p-4 rounded-none outline-none font-bold bg-black/5 text-black border border-black/10 focus:border-[#00FF00]/50 transition-all text-sm"
                               />
                             </div>
-                            <div className="space-y-2">
+                            <div className={`space-y-2 transition-all duration-500 rounded-xl p-2 ${isFlashingConfig ? 'animate-flash-highlight' : ''}`}>
                               <label className="text-[10px] font-black uppercase tracking-widest text-black/40">Jogadores por Time</label>
                               <input 
                                 type="number" 
@@ -5249,7 +5405,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           <div className="p-5 bg-black/5 rounded-none border border-black/10 space-y-4 shadow-inner">
                             <div className="flex items-center justify-between">
                               <div className="flex flex-col">
-                                <span className="text-[11px] font-black uppercase tracking-widest text-black/90">Fixar Cores nos Confrontos?</span>
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-black/70"><Shirt size={14} /></span>
+                                  <span className="text-[11px] font-black uppercase tracking-widest text-black/90">Fixar Cores.</span>
+                                </div>
                                 <p className="text-[9px] text-black/40 font-bold uppercase tracking-wider mt-0.5">Define cores permanentes para o Time A e Time B</p>
                               </div>
                               <button 
@@ -5293,7 +5452,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           <div className="p-5 bg-black/5 rounded-none border border-black/10 space-y-4 shadow-inner">
                             <div className="flex items-center justify-between">
                               <div className="flex flex-col">
-                                <span className="text-[11px] font-black uppercase tracking-widest text-black/90">Permitir Goleiro Fixo?</span>
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-black/70"><GiGloves size={16} /></span>
+                                  <span className="text-[11px] font-black uppercase tracking-widest text-black/90">Goleiro Fixo.</span>
+                                </div>
                                 <p className="text-[9px] text-black/40 font-bold uppercase tracking-wider mt-0.5">Ativa a opção de definir goleiros nas ações do jogador</p>
                               </div>
                               <button 
@@ -5346,6 +5508,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 }));
                                 setTeamsTab('chegada');
                               } else {
+                                if (players.length < playersCount * 2) {
+                                  setShowInsufficientPlayersModal(true);
+                                  return;
+                                }
+
                                 // Update config directly including playersPerTeam so it reflects dynamically in the active matches
                                 setMatch(prev => {
                                   let newTimeRemaining = prev.timeRemaining;
@@ -5362,7 +5529,51 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     timeRemaining: newTimeRemaining
                                   };
                                 });
-                                setToast({ message: "Configurações aplicadas!", type: 'success' });
+                                const availableTotal = players.filter(p => p.isAvailable).length;
+                                if (availableTotal >= playersCount * 2) {
+                                  // Re-sort players by arrival order to ensure consistency
+                                  const availablePlayers = [...players]
+                                    .filter(p => p.isAvailable)
+                                    .sort((a, b) => (a.arrivedAt || 0) - (b.arrivedAt || 0));
+                                  
+                                  const uniquePlayerIds = availablePlayers.map(p => p.id);
+                                  const newTeams: Team[] = [];
+                                  
+                                  for (let i = 0; i < uniquePlayerIds.length; i += playersCount) {
+                                    const teamPlayers = uniquePlayerIds.slice(i, i + playersCount);
+                                    const teamLetter = String.fromCharCode(65 + Math.floor(i / playersCount));
+                                    newTeams.push({
+                                      id: generateId(),
+                                      name: `Time ${teamLetter}`,
+                                      playerIds: teamPlayers,
+                                      iconIdx: getNextTeamIconIdx(newTeams),
+                                      color: getNextTeamColor(newTeams)
+                                    });
+                                  }
+                                  
+                                  setTeams(newTeams);
+                                  if (newTeams.length >= 2) {
+                                    setMatch(prev => ({ 
+                                      ...prev, 
+                                      teamAIndex: 0, 
+                                      teamBIndex: 1,
+                                      scoreA: 0,
+                                      scoreB: 0,
+                                      timeRemaining: prev.config.duration * 60,
+                                      isActive: false,
+                                      isPaused: true,
+                                      hasEnded: false,
+                                      events: []
+                                    }));
+                                  }
+                                  
+                                  setTeamsTab('proximos');
+                                  setToast({ message: "Configurações aplicadas e times formados!", type: 'success' });
+                                } else {
+                                  setTeamsTab('chegada');
+                                  setShowArrivalStepGuide(true);
+                                  setToast({ message: "Configurações aplicadas!", type: 'success' });
+                                }
                                 setTimeout(() => setToast(null), 3000);
                               }
                               
@@ -5381,7 +5592,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           <div className="flex justify-between items-center">
                             <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">Ordem de Chegada</h3>
                             <div className="flex flex-col sm:flex-row items-center gap-3">
-                              {players.filter(p => p.isAvailable).length < match.config.playersPerTeam * 2 && (
+                              {players.some(p => sessionPlayerIds.includes(p.id) && !p.isAvailable) && (
                                   <button
                                     onClick={() => {
                                       const now = Date.now();
@@ -5413,13 +5624,21 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Todos Presentes</span>
                                   </button>
                               )}
-                              {players.filter(p => p.isAvailable).length >= match.config.playersPerTeam * 2 && (
+                              {players.filter(p => p.isAvailable).length >= (match.config.playersPerTeam * 2) && (
                                   <button
                                     onClick={() => {
                                       // Ensure teams are generated from all available players in arrival order
                                       const availablePlayers = [...players]
                                         .filter(p => p.isAvailable)
                                         .sort((a, b) => (a.arrivedAt || 0) - (b.arrivedAt || 0));
+                                      
+                                      const playersPerTeam = match.config.playersPerTeam;
+                                      const minNeeded = playersPerTeam * 2;
+
+                                      if (availablePlayers.length < minNeeded) {
+                                        setShowInsufficientPlayersModal(true);
+                                        return;
+                                      }
                                       
                                       const updatedPlayerIds = availablePlayers.map(p => p.id);
                                       const uniquePlayerIds: string[] = [];
@@ -5432,7 +5651,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       });
 
                                       const newTeams: Team[] = [];
-                                      const playersPerTeam = match.config.playersPerTeam;
                                       
                                       for (let i = 0; i < uniquePlayerIds.length; i += playersPerTeam) {
                                         const teamPlayers = uniquePlayerIds.slice(i, i + playersPerTeam);

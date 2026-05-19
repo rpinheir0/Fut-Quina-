@@ -68,11 +68,18 @@
     0%, 100% { opacity: 1; transform: scale(1); filter: brightness(1); }
     50% { opacity: 0; transform: scale(1); filter: brightness(1); }
   }
+  @keyframes flash-highlight {
+    0%, 100% { background-color: #dce3ee; }
+    50% { background-color: white; }
+  }
   .animate-flash {
     animation: flash 0.2s steps(2, end) infinite;
     border-color: var(--brand-primary) !important;
     background-color: var(--brand-primary);
     color: var(--brand-dark);
+  }
+  .animate-flash-highlight {
+    animation: flash-highlight 1s ease-in-out infinite;
   }
   
   .field-container {
