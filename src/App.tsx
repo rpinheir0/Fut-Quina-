@@ -726,7 +726,7 @@ const TieBreakerModal = ({
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="w-full max-w-md h-auto max-h-[90vh] flex flex-col bg-[#112F24] rounded-2xl overflow-x-hidden overflow-y-auto border border-white/10 shadow-[0_20px_50px_rgba(0,0,0,0.5)] relative"
+        className="w-full max-w-md h-auto max-h-[90vh] flex flex-col bg-[#dce3ee] rounded-2xl overflow-x-hidden overflow-y-auto border border-black/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative"
       >
         {/* Background Decorative Elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-[100px] -mr-32 -mt-32" />
@@ -736,17 +736,17 @@ const TieBreakerModal = ({
         <div className="pt-10 pb-4 px-6 relative z-10">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-3">
-              <div className="w-2 h-8 bg-brand-primary rounded-full shadow-[0_0_15px_rgba(183,217,108,0.6)]" />
-              <span className="text-xs font-black text-brand-primary uppercase tracking-[0.4em]">Desempate</span>
+              <div className="w-2 h-8 bg-zinc-900 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.1)]" />
+              <span className="text-xs font-black text-zinc-900 uppercase tracking-[0.4em]">Desempate</span>
             </div>
             {state.type === 'penalties' && (
-              <span className="text-white/80 text-xs font-medium ml-5 mt-[-4px]">Disputa de pênaltis</span>
+              <span className="text-zinc-600 text-xs font-medium ml-5 mt-[-4px]">Disputa de pênaltis</span>
             )}
           </div>
           {state.type !== 'none' && (
             <button 
               onClick={() => onTypeSelect('none')}
-              className="absolute right-6 top-10 w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all active:scale-90"
+              className="absolute right-6 top-10 w-8 h-8 rounded-full bg-black/5 border border-black/10 flex items-center justify-center text-zinc-400 hover:text-zinc-600 hover:bg-black/10 transition-all active:scale-90"
             >
               <ArrowLeft size={18} />
             </button>
@@ -757,7 +757,7 @@ const TieBreakerModal = ({
         <div className="p-6 pt-0 relative z-10">
           {state.type === 'none' && !showQueueOrder && (
             <div className="space-y-4">
-              <div className="flex items-center gap-4 bg-white/10 p-5 rounded-xl border border-white/10 mb-6 backdrop-blur-sm">
+              <div className="flex items-center gap-4 bg-white/40 p-5 rounded-xl border border-black/5 mb-6 backdrop-blur-sm">
                 <div className="flex-1 flex flex-col items-center">
               <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-2" style={{ color: resolvedColorA }}>
                     {(() => {
@@ -765,19 +765,19 @@ const TieBreakerModal = ({
                       return <IconA size={48} />;
                     })()}
                   </div>
-                  <div className="text-[10px] font-black text-white/40 uppercase tracking-widest">{teamA.name}</div>
+                  <div className="text-[10px] font-black text-zinc-800 uppercase tracking-widest">{teamA.name}</div>
                   <div className="mt-2 flex flex-wrap justify-center gap-1 px-2">
                     {teamA.playerIds.map((pid, idx) => {
                       const p = players.find(player => player.id === pid);
                       return (
-                        <span key={pid} className="text-[7px] font-bold text-white/30 uppercase tracking-tighter">
+                        <span key={pid} className="text-[7px] font-bold text-zinc-500 uppercase tracking-tighter">
                           {p?.name}{idx < teamA.playerIds.length - 1 ? ' •' : ''}
                         </span>
                       );
                     })}
                   </div>
                 </div>
-                <div className="text-white/20 font-black text-xl">VS</div>
+                <div className="text-black/10 font-black text-xl">VS</div>
                 <div className="flex-1 flex flex-col items-center">
               <div className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-2" style={{ color: resolvedColorB }}>
                     {(() => {
@@ -785,12 +785,12 @@ const TieBreakerModal = ({
                       return <IconB size={48} />;
                     })()}
                   </div>
-                  <div className="text-[10px] font-black text-white/40 uppercase tracking-widest">{teamB.name}</div>
+                  <div className="text-[10px] font-black text-zinc-800 uppercase tracking-widest">{teamB.name}</div>
                   <div className="mt-2 flex flex-wrap justify-center gap-1 px-2">
                     {teamB.playerIds.map((pid, idx) => {
                       const p = players.find(player => player.id === pid);
                       return (
-                        <span key={pid} className="text-[7px] font-bold text-white/30 uppercase tracking-tighter">
+                        <span key={pid} className="text-[7px] font-bold text-zinc-500 uppercase tracking-tighter">
                           {p?.name}{idx < teamB.playerIds.length - 1 ? ' •' : ''}
                         </span>
                       );
@@ -859,8 +859,8 @@ const TieBreakerModal = ({
           {state.type === 'none' && showQueueOrder && (
             <div className="space-y-6">
               <div className="text-center">
-                <h3 className="text-lg font-black text-white uppercase tracking-tighter">Posição na Fila</h3>
-                <p className="text-xs text-white/40 font-bold uppercase tracking-widest mt-1">Quem entra primeiro na fila?</p>
+                <h3 className="text-lg font-black text-zinc-900 uppercase tracking-tighter">Posição na Fila</h3>
+                <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-1">Quem entra primeiro na fila?</p>
               </div>
 
               <div className="grid grid-cols-1 gap-3">
@@ -910,7 +910,7 @@ const TieBreakerModal = ({
 
                 <button 
                   onClick={() => setShowQueueOrder(false)}
-                  className="w-full p-4 mt-4 rounded-[20px] bg-zinc-800 text-white/60 text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:bg-zinc-700 active:scale-95 text-center"
+                  className="w-full p-4 mt-4 rounded-[20px] bg-zinc-200 text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:bg-zinc-300 active:scale-95 text-center"
                 >
                   Voltar
                 </button>
@@ -920,7 +920,7 @@ const TieBreakerModal = ({
 
           {isPenaltiesOngoing && (
             <div className="space-y-6">
-              <div className="flex justify-between items-center bg-white/10 p-6 rounded-[32px] border border-white/10 backdrop-blur-sm">
+              <div className="flex justify-between items-center bg-white/40 p-6 rounded-[32px] border border-black/5 backdrop-blur-sm">
                 <div className="text-center flex-1 flex flex-col items-center">
                   <div className="w-14 h-14 flex items-center justify-center drop-shadow-md mb-3" style={{ color: teamA.color || TEAM_COLORS[0] }}>
                     {(() => {
@@ -928,9 +928,9 @@ const TieBreakerModal = ({
                       return <IconA size={48} />;
                     })()}
                   </div>
-                  <div className="text-4xl font-black text-white tracking-tighter">{teamAGoals}</div>
+                  <div className="text-4xl font-black text-zinc-900 tracking-tighter">{teamAGoals}</div>
                 </div>
-                <div className="text-white/10 font-black text-2xl tracking-tighter uppercase mx-4">VS</div>
+                <div className="text-black/10 font-black text-2xl tracking-tighter uppercase mx-4">VS</div>
                 <div className="text-center flex-1 flex flex-col items-center">
                   <div className="w-14 h-14 flex items-center justify-center drop-shadow-md mb-3" style={{ color: teamB.color || TEAM_COLORS[1] }}>
                     {(() => {
@@ -938,14 +938,14 @@ const TieBreakerModal = ({
                       return <IconB size={48} />;
                     })()}
                   </div>
-                  <div className="text-4xl font-black text-white tracking-tighter">{teamBGoals}</div>
+                  <div className="text-4xl font-black text-zinc-900 tracking-tighter">{teamBGoals}</div>
                 </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4 h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                 {/* Team A Penalties */}
                 <div className="space-y-2">
-                  <div className="text-[9px] font-normal text-brand-primary/40 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#112F24] py-1">Time A</div>
+                  <div className="text-[9px] font-bold text-zinc-500 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#dce3ee] py-1">Time A</div>
                   {state.penalties.teamA.map((shot, idx) => {
                     const p = players.find(player => player.id === shot.playerId);
                     return (
@@ -984,7 +984,7 @@ const TieBreakerModal = ({
 
                 {/* Team B Penalties */}
                 <div className="space-y-2">
-                  <div className="text-[9px] font-normal text-brand-primary/40 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#112F24] py-1">Time B</div>
+                  <div className="text-[9px] font-bold text-zinc-500 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#dce3ee] py-1">Time B</div>
                   {state.penalties.teamB.map((shot, idx) => {
                     const p = players.find(player => player.id === shot.playerId);
                     return (
@@ -1061,9 +1061,8 @@ const TieBreakerModal = ({
                   </div>
 
                   {/* Marker */}
-                  <div className="w-24 h-24 bg-[#112F24] rounded-full border-4 border-brand-primary/30 shadow-inner flex items-center justify-center z-10">
+                  <div className="w-24 h-24 bg-[#dce3ee] rounded-full border-4 border-black/5 shadow-inner flex items-center justify-center z-10">
                     <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center">
-                      <div className="w-2 h-10 bg-brand-primary rounded-full absolute top-4 shadow-[0_0_10px_rgba(183,217,108,0.5)]" />
                       <SpinningBall size="sm" spin={state.lottery.isSpinning} />
                     </div>
                   </div>
@@ -1075,7 +1074,7 @@ const TieBreakerModal = ({
 
               {!state.lottery.winnerId && !state.lottery.isSpinning && (
                 <div className="w-full space-y-6">
-                  <div className="flex items-center gap-4 bg-white/10 p-5 rounded-[24px] border border-white/10 backdrop-blur-sm">
+                  <div className="flex items-center gap-4 bg-white/40 p-5 rounded-[24px] border border-black/5 backdrop-blur-sm">
                     <div className="flex-1 flex flex-col items-center">
                       <div className="w-10 h-10 flex items-center justify-center drop-shadow-lg mb-2" style={{ color: teamA.color || TEAM_COLORS[0] }}>
                         {(() => {
@@ -1083,19 +1082,19 @@ const TieBreakerModal = ({
                           return <IconA size={32} />;
                         })()}
                       </div>
-                      <div className="text-[8px] font-black text-white/40 uppercase tracking-widest">{teamA.name}</div>
+                      <div className="text-[8px] font-black text-zinc-500 uppercase tracking-widest">{teamA.name}</div>
                       <div className="mt-1 flex flex-wrap justify-center gap-0.5">
                         {teamA.playerIds.map((pid, idx) => {
                           const p = players.find(player => player.id === pid);
                           return (
-                            <span key={pid} className="text-[6px] font-bold text-white/20 uppercase">
+                            <span key={pid} className="text-[6px] font-bold text-zinc-400 uppercase">
                               {p?.name}{idx < teamA.playerIds.length - 1 ? ',' : ''}
                             </span>
                           );
                         })}
                       </div>
                     </div>
-                    <div className="text-white/10 font-bold text-xs uppercase">VS</div>
+                    <div className="text-black/10 font-bold text-xs uppercase">VS</div>
                     <div className="flex-1 flex flex-col items-center">
                       <div className="w-10 h-10 flex items-center justify-center drop-shadow-lg mb-2" style={{ color: teamB.color || TEAM_COLORS[1] }}>
                         {(() => {
@@ -1103,12 +1102,12 @@ const TieBreakerModal = ({
                           return <IconB size={32} />;
                         })()}
                       </div>
-                      <div className="text-[8px] font-black text-white/40 uppercase tracking-widest">{teamB.name}</div>
+                      <div className="text-[8px] font-black text-zinc-500 uppercase tracking-widest">{teamB.name}</div>
                       <div className="mt-1 flex flex-wrap justify-center gap-0.5">
                         {teamB.playerIds.map((pid, idx) => {
                           const p = players.find(player => player.id === pid);
                           return (
-                            <span key={pid} className="text-[6px] font-bold text-white/20 uppercase">
+                            <span key={pid} className="text-[6px] font-bold text-zinc-400 uppercase">
                               {p?.name}{idx < teamB.playerIds.length - 1 ? ',' : ''}
                             </span>
                           );
@@ -1127,7 +1126,7 @@ const TieBreakerModal = ({
 
               {state.lottery.winnerId && !state.lottery.isSpinning && (
                 <div className="w-full space-y-6 text-center">
-                  <div className="bg-white/10 p-6 rounded-[32px] border border-white/10 animate-in fade-in zoom-in duration-500 backdrop-blur-sm">
+                  <div className="bg-white/40 p-6 rounded-[32px] border border-black/5 animate-in fade-in zoom-in duration-500 backdrop-blur-sm">
                     <div className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em] mb-4">Vencedor Sorteado</div>
                     <div className="flex flex-col items-center gap-3">
                       <div className="w-20 h-20 flex items-center justify-center drop-shadow-xl" style={{ color: (state.lottery.winnerId === teamA.id ? teamA.color : teamB.color) || TEAM_COLORS[0] }}>
@@ -1137,7 +1136,7 @@ const TieBreakerModal = ({
                           return <IconWinner size={64} />;
                         })()}
                       </div>
-                      <div className="text-xl font-black text-white uppercase tracking-tighter">
+                      <div className="text-xl font-black text-zinc-900 uppercase tracking-tighter">
                         {state.lottery.winnerId === teamA.id ? teamA.name : teamB.name}
                       </div>
 
@@ -1146,7 +1145,7 @@ const TieBreakerModal = ({
                         {(state.lottery.winnerId === teamA.id ? teamA.playerIds : teamB.playerIds).map((pid, idx, arr) => {
                           const p = players.find(player => player.id === pid);
                           return (
-                            <span key={pid} className="text-[8px] font-bold text-white/40 uppercase tracking-widest">
+                            <span key={pid} className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">
                               {p?.name}{idx < arr.length - 1 ? ' •' : ''}
                             </span>
                           );
@@ -8775,7 +8774,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         className={`w-full h-10 mt-2 text-black rounded-xl font-black uppercase text-[10px] flex items-center justify-between px-4 transition-all active:scale-[0.98] shadow-md group ${players.find(p => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? 'bg-sky-200 hover:bg-sky-300' : 'bg-sky-100 hover:bg-sky-200'}`}
                       >
                         <div className="flex items-center gap-2">
-                          <GiGloves size={14} className={players.find(p => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? 'text-sky-800' : 'text-sky-600'} />
+                          <span className={`${players.find(p => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? 'text-sky-800' : 'text-sky-600'} flex items-center`}>
+                            <GiGloves size={14} />
+                          </span>
                           <span className="tracking-widest">{players.find(p => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? 'Remover de Goleiro Fixo' : 'Definir como Goleiro Fixo'}</span>
                         </div>
                       </button>
@@ -8935,7 +8936,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           }}
                           className={`col-span-2 p-4 rounded-2xl font-bold uppercase text-[9px] flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 border group ${players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? 'bg-sky-50 text-sky-600 border-sky-100 hover:bg-sky-100' : 'bg-zinc-50 text-zinc-900 border-zinc-100 hover:border-zinc-300 hover:bg-zinc-100'}`}
                         >
-                          <GiGloves size={18} className={players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? 'text-sky-500' : 'text-zinc-400 group-hover:text-zinc-600 transition-colors'} />
+                          <span className={`${players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? 'text-sky-500' : 'text-zinc-400 group-hover:text-zinc-600 transition-colors'} flex items-center`}>
+                          <GiGloves size={18} />
+                        </span>
                           {players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? 'Remover de Goleiro Fixo' : 'Definir como Goleiro Fixo'}
                         </button>
                       )}
