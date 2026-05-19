@@ -767,11 +767,17 @@ const TieBreakerModal = ({
                   </div>
                   <div className="text-[10px] font-black text-zinc-800 uppercase tracking-widest">{teamA.name}</div>
                   <div className="mt-2 flex flex-wrap justify-center gap-1 px-2">
-                    {teamA.playerIds.map((pid, idx) => {
+                    {[...teamA.playerIds].sort((a, b) => {
+                      const pA = players.find(p => p.id === a);
+                      const pB = players.find(p => p.id === b);
+                      if (pA?.isGoalkeeper && !pB?.isGoalkeeper) return -1;
+                      if (!pA?.isGoalkeeper && pB?.isGoalkeeper) return 1;
+                      return 0;
+                    }).map((pid, idx, arr) => {
                       const p = players.find(player => player.id === pid);
                       return (
                         <span key={pid} className="text-[7px] font-bold text-zinc-500 uppercase tracking-tighter">
-                          {p?.name}{idx < teamA.playerIds.length - 1 ? ' •' : ''}
+                          {p?.name}{idx < arr.length - 1 ? ' •' : ''}
                         </span>
                       );
                     })}
@@ -787,11 +793,17 @@ const TieBreakerModal = ({
                   </div>
                   <div className="text-[10px] font-black text-zinc-800 uppercase tracking-widest">{teamB.name}</div>
                   <div className="mt-2 flex flex-wrap justify-center gap-1 px-2">
-                    {teamB.playerIds.map((pid, idx) => {
+                    {[...teamB.playerIds].sort((a, b) => {
+                      const pA = players.find(p => p.id === a);
+                      const pB = players.find(p => p.id === b);
+                      if (pA?.isGoalkeeper && !pB?.isGoalkeeper) return -1;
+                      if (!pA?.isGoalkeeper && pB?.isGoalkeeper) return 1;
+                      return 0;
+                    }).map((pid, idx, arr) => {
                       const p = players.find(player => player.id === pid);
                       return (
                         <span key={pid} className="text-[7px] font-bold text-zinc-500 uppercase tracking-tighter">
-                          {p?.name}{idx < teamB.playerIds.length - 1 ? ' •' : ''}
+                          {p?.name}{idx < arr.length - 1 ? ' •' : ''}
                         </span>
                       );
                     })}
@@ -1084,11 +1096,17 @@ const TieBreakerModal = ({
                       </div>
                       <div className="text-[8px] font-black text-zinc-500 uppercase tracking-widest">{teamA.name}</div>
                       <div className="mt-1 flex flex-wrap justify-center gap-0.5">
-                        {teamA.playerIds.map((pid, idx) => {
+                        {[...teamA.playerIds].sort((a, b) => {
+                          const pA = players.find(p => p.id === a);
+                          const pB = players.find(p => p.id === b);
+                          if (pA?.isGoalkeeper && !pB?.isGoalkeeper) return -1;
+                          if (!pA?.isGoalkeeper && pB?.isGoalkeeper) return 1;
+                          return 0;
+                        }).map((pid, idx, arr) => {
                           const p = players.find(player => player.id === pid);
                           return (
                             <span key={pid} className="text-[6px] font-bold text-zinc-400 uppercase">
-                              {p?.name}{idx < teamA.playerIds.length - 1 ? ',' : ''}
+                              {p?.name}{idx < arr.length - 1 ? ',' : ''}
                             </span>
                           );
                         })}
@@ -1104,11 +1122,17 @@ const TieBreakerModal = ({
                       </div>
                       <div className="text-[8px] font-black text-zinc-500 uppercase tracking-widest">{teamB.name}</div>
                       <div className="mt-1 flex flex-wrap justify-center gap-0.5">
-                        {teamB.playerIds.map((pid, idx) => {
+                        {[...teamB.playerIds].sort((a, b) => {
+                          const pA = players.find(p => p.id === a);
+                          const pB = players.find(p => p.id === b);
+                          if (pA?.isGoalkeeper && !pB?.isGoalkeeper) return -1;
+                          if (!pA?.isGoalkeeper && pB?.isGoalkeeper) return 1;
+                          return 0;
+                        }).map((pid, idx, arr) => {
                           const p = players.find(player => player.id === pid);
                           return (
                             <span key={pid} className="text-[6px] font-bold text-zinc-400 uppercase">
-                              {p?.name}{idx < teamB.playerIds.length - 1 ? ',' : ''}
+                              {p?.name}{idx < arr.length - 1 ? ',' : ''}
                             </span>
                           );
                         })}
@@ -1512,39 +1536,74 @@ const resolveMultipleGoalkeepers = (teams: Team[], playersList: Player[], player
   const getLinePlayers = (team: Team) => team?.playerIds.filter(id => !playersList.find(p => p.id === id)?.isGoalkeeper) || [];
   
   let changed = false;
-  const allTeamsNow = teams.map(t => ({ ...t, playerIds: [...t.playerIds] }));
+  // Deep copy for mutation
+  let allTeamsNow = teams.map(t => ({ 
+    ...t, 
+    playerIds: [...t.playerIds] 
+  }));
+
+  // Step 1: Ensure all teams have GKs at index 0 if they have any
+  for (let i = 0; i < allTeamsNow.length; i++) {
+    const currentTeam = allTeamsNow[i];
+    const gks = getGks(currentTeam);
+    const line = getLinePlayers(currentTeam);
+    const sorted = [...gks, ...line];
+    
+    if (JSON.stringify(currentTeam.playerIds) !== JSON.stringify(sorted)) {
+      allTeamsNow[i].playerIds = sorted;
+      changed = true;
+    }
+  }
   
+  // Step 2: Balance goalkeepers (ensure max 1 per team if possible)
   for (let i = 0; i < allTeamsNow.length; i++) {
       let team = allTeamsNow[i];
       let gks = getGks(team);
       while (gks.length > 1) {
           let gkToMove = gks.pop()!;
           let receiverFound = false;
-          // Try to find a receiver team that has 0 GKs and has a line player to swap
+          
+          // Try to find a receiver team that has 0 GKs
           for (let j = 0; j < allTeamsNow.length; j++) {
               if (i !== j && getGks(allTeamsNow[j]).length === 0) {
-                  let line = getLinePlayers(allTeamsNow[j])[0];
-                  if (line) {
-                      allTeamsNow[i].playerIds = allTeamsNow[i].playerIds.map(id => id === gkToMove ? line : id);
-                      allTeamsNow[j].playerIds = allTeamsNow[j].playerIds.map(id => id === line ? gkToMove : id);
+                  const receiverLine = getLinePlayers(allTeamsNow[j]);
+                  
+                  if (receiverLine.length > 0) {
+                      // Swap GK with first line player of receiver (to keep GK at index 0)
+                      const lineToSwap = receiverLine[0];
+                      allTeamsNow[i].playerIds = allTeamsNow[i].playerIds.filter(id => id !== gkToMove);
+                      allTeamsNow[i].playerIds.push(lineToSwap); // Add line player to giver team
+                      
+                      allTeamsNow[j].playerIds = [gkToMove, ...allTeamsNow[j].playerIds.filter(id => id !== lineToSwap)];
+                      
                       receiverFound = true;
                       changed = true;
                       break;
                   } else if (playersPerTeam !== undefined && allTeamsNow[j].playerIds.length < playersPerTeam) {
                       // Empty team or team with space, just move them
                       allTeamsNow[i].playerIds = allTeamsNow[i].playerIds.filter(id => id !== gkToMove);
-                      allTeamsNow[j].playerIds.push(gkToMove);
+                      allTeamsNow[j].playerIds.unshift(gkToMove); // Push to front
                       receiverFound = true;
                       changed = true;
                       break;
                   }
               }
           }
-          if (!receiverFound) {
-             break;
-          }
+          if (!receiverFound) break;
+          // Refresh gks for current team after move
+          gks = getGks(allTeamsNow[i]);
       }
   }
+
+  // Final pass: ensure index 0 again for safety after movements
+  if (changed) {
+    allTeamsNow = allTeamsNow.map(team => {
+      const gks = getGks(team);
+      const line = getLinePlayers(team);
+      return { ...team, playerIds: [...gks, ...line] };
+    });
+  }
+
   return { newTeams: allTeamsNow, changed };
 };
 
@@ -2309,32 +2368,38 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
     setTeams(prev => {
       const limit = match.config.playersPerTeam;
-      const allPlayerIds = prev.flatMap(t => t.playerIds);
+      const allGks = prev.flatMap(t => t.playerIds.filter(id => players.find(p => p.id === id)?.isGoalkeeper));
+      const allLine = prev.flatMap(t => t.playerIds.filter(id => !players.find(p => p.id === id)?.isGoalkeeper));
       
       let needsUpdate = false;
       
-      for (let i = 0; i < prev.length; i++) {
-        const expectedChunkSize = Math.min(limit, Math.max(0, allPlayerIds.length - i * limit));
-        if (prev[i].playerIds.length !== expectedChunkSize) {
-          needsUpdate = true;
-          break;
-        }
-      }
+      const expectedTeamCount = Math.max(2, Math.ceil((allGks.length + allLine.length) / limit));
       
-      const expectedTeamCount = Math.ceil(allPlayerIds.length / limit);
-      // We won't automatically delete the two playing teams if they have empty slots but we don't have enough players
-      // In the app, if there's less than 2 teams it tends to keep empty teams A and B.
-      // But if there are more than required teams due to gaps, we should fix it.
-      if (prev.length > Math.max(2, expectedTeamCount) || (prev.length > 2 && prev.some(t => t.playerIds.length === 0))) {
+      if (prev.length !== expectedTeamCount) {
         needsUpdate = true;
+      } else {
+        // Check if any team has more than 1 GK or GK is not at index 0
+        for (const t of prev) {
+          const tGks = t.playerIds.filter(id => players.find(p => p.id === id)?.isGoalkeeper);
+          if (tGks.length > 1 || (tGks.length === 1 && t.playerIds[0] !== tGks[0])) {
+            needsUpdate = true;
+            break;
+          }
+        }
       }
       
       if (!needsUpdate) return prev;
 
       const newTeams: Team[] = [];
-      const teamCount = Math.max(2, expectedTeamCount); // keep at least 2 teams
-      for (let i = 0; i < teamCount; i++) {
-        const chunk = allPlayerIds.slice(i * limit, (i + 1) * limit) || [];
+      let linePointer = 0;
+      
+      for (let i = 0; i < expectedTeamCount; i++) {
+        const teamGk = allGks[i] ? [allGks[i]] : [];
+        const lineNeeded = limit - teamGk.length;
+        const teamLine = allLine.slice(linePointer, linePointer + lineNeeded);
+        linePointer += lineNeeded;
+        
+        const chunk = [...teamGk, ...teamLine];
         const existingTeam = prev[i];
 
         newTeams.push({
@@ -3625,57 +3690,46 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         const getLinePlayers = (team: Team) => team?.playerIds.filter(id => !players.find(p => p.id === id)?.isGoalkeeper) || [];
 
         // Distribute GKs: A team cannot have > 1 GK if possible
-        for (let i = 0; i < allTeamsNow.length; i++) {
-            let team = allTeamsNow[i];
-            let gks = getGks(team);
-            while (gks.length > 1) {
-                let gkToMove = gks.pop()!;
-                let receiverFound = false;
+        const { newTeams: resolvedTeams } = resolveMultipleGoalkeepers(allTeamsNow, players, match?.config?.playersPerTeam);
+        allTeamsNow = resolvedTeams;
+
+        // Ensure active teams (finalStayIndex and nextTeamIndex) have a GK if available
+        // According to instructions: if next team has no GK, pull from next available team below
+        [finalStayIndex, nextTeamIndex].forEach(activeIdx => {
+            if (!allTeamsNow[activeIdx]) return;
+            if (getGks(allTeamsNow[activeIdx]).length === 0) {
+                // Find next team with GK starting from other teams
                 for (let j = 0; j < allTeamsNow.length; j++) {
-                    if (i !== j && getGks(allTeamsNow[j]).length === 0) {
-                        let line = getLinePlayers(allTeamsNow[j])[0];
-                        if (line) {
-                            allTeamsNow[i].playerIds = allTeamsNow[i].playerIds.map(id => id === gkToMove ? line : id);
-                            allTeamsNow[j].playerIds = allTeamsNow[j].playerIds.map(id => id === line ? gkToMove : id);
-                            receiverFound = true;
+                    if (j === activeIdx) continue;
+                    // Don't steal from the other playing team
+                    if (j === (activeIdx === finalStayIndex ? nextTeamIndex : finalStayIndex)) continue;
+
+                    const queueGks = getGks(allTeamsNow[j]);
+                    if (queueGks.length > 0) {
+                        const gkToMove = queueGks[0];
+                        const activeLine = getLinePlayers(allTeamsNow[activeIdx]);
+                        if (activeLine.length > 0) {
+                            const lineToSwap = activeLine[0];
+                            // Move GK to active team (index 0)
+                            allTeamsNow[activeIdx].playerIds = [gkToMove, ...allTeamsNow[activeIdx].playerIds.filter(id => id !== lineToSwap)];
+                            // Move line player to source team
+                            allTeamsNow[j].playerIds = allTeamsNow[j].playerIds.map(id => id === gkToMove ? lineToSwap : id);
+                            break;
+                        } else if (match?.config?.playersPerTeam !== undefined && allTeamsNow[activeIdx].playerIds.length < match.config.playersPerTeam) {
+                            allTeamsNow[activeIdx].playerIds = [gkToMove, ...allTeamsNow[activeIdx].playerIds];
+                            allTeamsNow[j].playerIds = allTeamsNow[j].playerIds.filter(id => id !== gkToMove);
                             break;
                         }
                     }
                 }
-                if (!receiverFound) break; // More GKs than teams
             }
-        }
+        });
 
-        // Ensure active teams (finalStayIndex and nextTeamIndex) have a GK if available
-        [finalStayIndex, nextTeamIndex].forEach(activeIdx => {
-            if (!allTeamsNow[activeIdx]) return;
-            if (getGks(allTeamsNow[activeIdx]).length === 0) {
-                if (totalGoalkeepers === 2) {
-                    const leavingIdx = allTeamsNow.length - 1;
-                    const leavingGKs = getGks(allTeamsNow[leavingIdx]);
-                    if (leavingGKs.length > 0) {
-                        const gkToMove = leavingGKs[0];
-                        const lineToSwap = getLinePlayers(allTeamsNow[activeIdx])[0];
-                        if (lineToSwap) {
-                            allTeamsNow[leavingIdx].playerIds = allTeamsNow[leavingIdx].playerIds.map(id => id === gkToMove ? lineToSwap : id);
-                            allTeamsNow[activeIdx].playerIds = allTeamsNow[activeIdx].playerIds.map(id => id === lineToSwap ? gkToMove : id);
-                        }
-                    }
-                } else if (totalGoalkeepers > 2) {
-                    for (let j = 2; j < allTeamsNow.length; j++) {
-                        let qGks = getGks(allTeamsNow[j]);
-                        if (qGks.length > 0) {
-                            const gkToMove = qGks[0];
-                            const lineToSwap = getLinePlayers(allTeamsNow[activeIdx])[0];
-                            if (lineToSwap) {
-                                allTeamsNow[j].playerIds = allTeamsNow[j].playerIds.map(id => id === gkToMove ? lineToSwap : id);
-                                allTeamsNow[activeIdx].playerIds = allTeamsNow[activeIdx].playerIds.map(id => id === lineToSwap ? gkToMove : id);
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
+        // Final sort for all teams to ensure GKs are at index 0
+        allTeamsNow = allTeamsNow.map(t => {
+            const gks = getGks(t);
+            const line = getLinePlayers(t);
+            return { ...t, playerIds: [...gks, ...line] };
         });
 
         finalLeavingTeam = allTeamsNow.pop()!;
@@ -6501,6 +6555,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                         {[...t.playerIds].sort((a, b) => {
                                           const playerA = players.find(p => p.id === a);
                                           const playerB = players.find(p => p.id === b);
+                                          if (playerA?.isGoalkeeper && !playerB?.isGoalkeeper) return -1;
+                                          if (!playerA?.isGoalkeeper && playerB?.isGoalkeeper) return 1;
                                           return (playerA?.arrivedAt || 0) - (playerB?.arrivedAt || 0);
                                         }).map((pid, idx) => {
                                           const p = players.find(pl => pl.id === pid);
@@ -6733,7 +6789,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </div>
                         
                         <div className="flex-1 space-y-2 pr-1 custom-scrollbar">
-                          {team.playerIds.map((pid, idx) => {
+                          {[...team.playerIds].sort((a, b) => {
+                            const pA = players.find(p => p.id === a);
+                            const pB = players.find(p => p.id === b);
+                            if (pA?.isGoalkeeper && !pB?.isGoalkeeper) return -1;
+                            if (!pA?.isGoalkeeper && pB?.isGoalkeeper) return 1;
+                            return (pA?.arrivedAt || 0) - (pB?.arrivedAt || 0);
+                          }).map((pid, idx) => {
                             const p = players.find(pl => pl.id === pid);
                             return p ? (
                               <div 
@@ -8764,11 +8826,27 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     {!swappingPlayerId && (orgProSettings.allowFixedGoalkeeper !== false) && (!teams[showPlayerActionsModal.teamIndex]?.playerIds.some(pid => players.find(p => p.id === pid)?.isGoalkeeper) || players.find(p => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper) && (
                       <button 
                         onClick={() => {
+                          const pid = showPlayerActionsModal.playerId;
+                          const targetTeamIndex = showPlayerActionsModal.teamIndex;
+                          const player = players.find(p => p.id === pid);
+                          const isBecomingGk = player ? !player.isGoalkeeper : false;
+
                           setPlayers(prev => prev.map(p => 
-                            p.id === showPlayerActionsModal.playerId 
+                            p.id === pid 
                               ? { ...p, isGoalkeeper: !p.isGoalkeeper }
                               : p
                           ));
+
+                          if (isBecomingGk && targetTeamIndex !== -1) {
+                            setTeams(prev => prev.map((team, idx) => {
+                              if (idx === targetTeamIndex) {
+                                const otherIds = team.playerIds.filter(id => id !== pid);
+                                return { ...team, playerIds: [pid, ...otherIds] };
+                              }
+                              return team;
+                            }));
+                          }
+
                           setShowPlayerActionsModal(null);
                         }}
                         className={`w-full h-10 mt-2 text-black rounded-xl font-black uppercase text-[10px] flex items-center justify-between px-4 transition-all active:scale-[0.98] shadow-md group ${players.find(p => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? 'bg-sky-200 hover:bg-sky-300' : 'bg-sky-100 hover:bg-sky-200'}`}
@@ -8927,11 +9005,27 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       {(orgProSettings.allowFixedGoalkeeper !== false) && (!teams[showQueuePlayerModal.teamIndex]?.playerIds.some(pid => players.find(p => p.id === pid)?.isGoalkeeper) || players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper) && (
                         <button 
                           onClick={() => {
+                            const pid = showQueuePlayerModal.playerId;
+                            const targetTeamIndex = showQueuePlayerModal.teamIndex;
+                            const player = players.find(p => p.id === pid);
+                            const isBecomingGk = player ? !player.isGoalkeeper : false;
+
                             setPlayers(prev => prev.map(p => 
-                              p.id === showQueuePlayerModal.playerId 
+                              p.id === pid 
                                 ? { ...p, isGoalkeeper: !p.isGoalkeeper }
                                 : p
                             ));
+
+                            if (isBecomingGk && targetTeamIndex !== -1) {
+                              setTeams(prev => prev.map((team, idx) => {
+                                if (idx === targetTeamIndex) {
+                                  const otherIds = team.playerIds.filter(id => id !== pid);
+                                  return { ...team, playerIds: [pid, ...otherIds] };
+                                }
+                                return team;
+                              }));
+                            }
+
                             setShowQueuePlayerModal(null);
                           }}
                           className={`col-span-2 p-4 rounded-2xl font-bold uppercase text-[9px] flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 border group ${players.find(p => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? 'bg-sky-50 text-sky-600 border-sky-100 hover:bg-sky-100' : 'bg-zinc-50 text-zinc-900 border-zinc-100 hover:border-zinc-300 hover:bg-zinc-100'}`}
@@ -9324,7 +9418,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           </div>
                           
                           <div className="space-y-2">
-                            {team.playerIds.map((pid, idx) => {
+                            {[...team.playerIds].sort((a, b) => {
+                              const pA = players.find(p => p.id === a);
+                              const pB = players.find(p => p.id === b);
+                              if (pA?.isGoalkeeper && !pB?.isGoalkeeper) return -1;
+                              if (!pA?.isGoalkeeper && pB?.isGoalkeeper) return 1;
+                              return (pA?.arrivedAt || 0) - (pB?.arrivedAt || 0);
+                            }).map((pid, idx) => {
                               const player = players.find(p => p.id === pid);
                               if (!player) return null;
                               return (
@@ -10175,7 +10275,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   tIdx !== (replacingPlayer?.teamIndex ?? -1) && (
                     <div key={`summary-team-select-${t.id}-${tIdx}`} className="space-y-1">
                       <p className="text-[8px] font-black uppercase tracking-widest text-brand-text-secondary ml-2">{t.name}</p>
-                      {t.playerIds.map((pid, idx) => (
+                      {[...t.playerIds].sort((a, b) => {
+                        const pA = players.find(p => p.id === a);
+                        const pB = players.find(p => p.id === b);
+                        if (pA?.isGoalkeeper && !pB?.isGoalkeeper) return -1;
+                        if (!pA?.isGoalkeeper && pB?.isGoalkeeper) return 1;
+                        return (pA?.arrivedAt || 0) - (pB?.arrivedAt || 0);
+                      }).map((pid, idx) => (
                         <button
                           key={`summary-player-replace-${t.id}-${pid}-${idx}`}
                           onClick={() => {
