@@ -1694,12 +1694,12 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
 const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, titleColorClass, subColorClass, style, align = "center" }: { className?: string, size?: 'sm' | 'md' | 'lg', colorClass?: string, titleColorClass?: string, subColorClass?: string, style?: React.CSSProperties, align?: 'start' | 'center' | 'end' }) => {
   const sizeClasses = {
     sm: "text-lg",
-    md: "text-2xl",
+    md: "text-xl",
     lg: "text-3xl"
   };
   const subSizeClasses = {
     sm: "text-[8px]",
-    md: "text-[11px]",
+    md: "text-[10px]",
     lg: "text-xs"
   };
   const iconSizes = {
@@ -1722,11 +1722,11 @@ const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, 
           className=""
         />
       </div>
-      <div className={`flex flex-col justify-center ${alignClass}`}>
-        <span className={`${sizeClasses[size]} uppercase tracking-tighter ${titleColorClass || colorClass} font-staatliches leading-[0.85]`}>
+      <div className={`flex flex-col justify-center mt-1.5 ${alignClass}`}>
+        <span className={`${sizeClasses[size]} uppercase tracking-tighter ${titleColorClass || colorClass} font-staatliches leading-none`}>
           FutQuina
         </span>
-        <span className={`${subSizeClasses[size]} opacity-100 font-readex tracking-widest mt-0.5 ${subColorClass || colorClass} uppercase font-bold`}>
+        <span className={`${subSizeClasses[size]} opacity-100 font-readex tracking-widest ${subColorClass || colorClass} uppercase font-bold`}>
           Gestão de pelada
         </span>
       </div>
