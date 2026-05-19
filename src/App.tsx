@@ -1694,17 +1694,17 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
 const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, titleColorClass, subColorClass, style, align = "center" }: { className?: string, size?: 'sm' | 'md' | 'lg', colorClass?: string, titleColorClass?: string, subColorClass?: string, style?: React.CSSProperties, align?: 'start' | 'center' | 'end' }) => {
   const sizeClasses = {
     sm: "text-lg",
-    md: "text-xl",
+    md: "text-2xl",
     lg: "text-3xl"
   };
   const subSizeClasses = {
     sm: "text-[8px]",
-    md: "text-[10px]",
+    md: "text-[11px]",
     lg: "text-xs"
   };
   const iconSizes = {
     sm: 24,
-    md: 32,
+    md: 40,
     lg: 48
   };
 
@@ -2368,38 +2368,40 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
     setTeams(prev => {
       const limit = match.config.playersPerTeam;
-      const allGks = prev.flatMap(t => t.playerIds.filter(id => players.find(p => p.id === id)?.isGoalkeeper));
-      const allLine = prev.flatMap(t => t.playerIds.filter(id => !players.find(p => p.id === id)?.isGoalkeeper));
       
-      let needsUpdate = false;
+      // Use only AVAILABLE session players as the source for teams
+      // Sort by arrivedAt to maintain queue order
+      const availableSessionPlayers = players
+        .filter(p => p.isAvailable && sessionPlayerIds.includes(p.id))
+        .sort((a, b) => (a.arrivedAt || 0) - (b.arrivedAt || 0));
       
-      const expectedTeamCount = Math.max(2, Math.ceil((allGks.length + allLine.length) / limit));
+      const allPlayerIds = availableSessionPlayers.map(p => p.id);
+      const allGks = availableSessionPlayers.filter(p => p.isGoalkeeper).map(p => p.id);
+      const allLine = availableSessionPlayers.filter(p => !p.isGoalkeeper).map(p => p.id);
       
-      if (prev.length !== expectedTeamCount) {
-        needsUpdate = true;
-      } else {
-        // Check if any team has more than 1 GK or GK is not at index 0
-        for (const t of prev) {
-          const tGks = t.playerIds.filter(id => players.find(p => p.id === id)?.isGoalkeeper);
-          if (tGks.length > 1 || (tGks.length === 1 && t.playerIds[0] !== tGks[0])) {
-            needsUpdate = true;
-            break;
-          }
-        }
-      }
+      const expectedTeamCount = Math.max(2, Math.ceil(allPlayerIds.length / limit));
       
-      if (!needsUpdate) return prev;
-
-      const newTeams: Team[] = [];
-      let linePointer = 0;
-      
+      // Generate the target assignment to check if we need an update
+      const targetAssignment: string[][] = [];
+      let lp = 0;
       for (let i = 0; i < expectedTeamCount; i++) {
         const teamGk = allGks[i] ? [allGks[i]] : [];
         const lineNeeded = limit - teamGk.length;
-        const teamLine = allLine.slice(linePointer, linePointer + lineNeeded);
-        linePointer += lineNeeded;
-        
-        const chunk = [...teamGk, ...teamLine];
+        const teamLine = allLine.slice(lp, lp + lineNeeded);
+        lp += lineNeeded;
+        targetAssignment.push([...teamGk, ...teamLine]);
+      }
+
+      const isDifferent = prev.length !== expectedTeamCount || targetAssignment.some((ids, i) => {
+        const prevIds = prev[i]?.playerIds || [];
+        return ids.length !== prevIds.length || !ids.every((id, idx) => id === prevIds[idx]);
+      });
+
+      if (!isDifferent) return prev;
+
+      const newTeams: Team[] = [];
+      for (let i = 0; i < expectedTeamCount; i++) {
+        const chunk = targetAssignment[i];
         const existingTeam = prev[i];
 
         newTeams.push({
@@ -2415,7 +2417,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
       const { newTeams: resolvedTeams } = resolveMultipleGoalkeepers(newTeams, players, match?.config?.playersPerTeam);
       return resolvedTeams;
     });
-  }, [teams, autoCompleteTeams, match?.config?.playersPerTeam]);
+  }, [teams, autoCompleteTeams, match?.config?.playersPerTeam, sessionPlayerIds, players]);
 
 
   useEffect(() => {
