@@ -5271,7 +5271,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     </div>
 
                     {/* Main Content Grid */}
-                    <div className="space-y-6">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       {/* Agendar Section */}
                       <div className="bg-white rounded-none border border-black/5 shadow-sm overflow-hidden flex flex-col">
                         <div className="p-8 space-y-6 flex-1">
@@ -5324,6 +5324,97 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <button className="w-full py-5 bg-zinc-50/50 border-t border-black/5 text-emerald-600 text-[10px] font-black uppercase tracking-widest hover:bg-zinc-100 transition-colors">
                           Ver todas as peladas
                         </button>
+                      </div>
+
+                      {/* Pagamentos Section */}
+                      <div className="bg-white rounded-none border border-black/5 shadow-sm overflow-hidden flex flex-col">
+                        <div className="p-8 space-y-8 flex-1">
+                          <div className="flex items-center gap-4">
+                            <div className="w-16 h-16 rounded-none bg-[#f0f9f4] flex items-center justify-center text-emerald-600">
+                              <DollarSign size={32} />
+                            </div>
+                            <div>
+                              <h3 className="text-xl font-black text-zinc-900 tracking-tight">Pagamentos dos jogadores</h3>
+                              <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">SITUAÇÃO DOS PAGAMENTOS.</p>
+                            </div>
+                          </div>
+
+                          <div className="space-y-4">
+                            {/* Paid Row */}
+                            {(() => {
+                              const m = new Date().getMonth();
+                              const y = new Date().getFullYear();
+                              const mName = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"][m];
+                              const paid = players.filter(p => {
+                                const r = payments.find(pay => pay.playerId === p.id && pay.year === y);
+                                return r && r.months && (r.months[mName] || 0) >= (monthlyFee || 30);
+                              });
+                              const unpaid = players.filter(p => !paid.some(pp => pp.id === p.id));
+                              
+                              return (
+                                <div className="space-y-4">
+                                  <div 
+                                    onClick={() => {
+                                      setCurrentScreen('finance');
+                                      setFinanceSubScreen('mensalidade');
+                                    }}
+                                    className="group bg-[#f8fdfb] hover:bg-[#f2faf7] transition-all rounded-none p-6 flex items-center justify-between border border-emerald-100 cursor-pointer"
+                                  >
+                                    <div className="flex items-center gap-4">
+                                      <div className="w-10 h-10 rounded-none bg-emerald-600 text-white flex items-center justify-center shadow-lg shadow-emerald-600/20">
+                                        <Check size={20} />
+                                      </div>
+                                      <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Pagamentos em dia</span>
+                                      <span className="bg-emerald-600 text-white px-2 py-1 rounded-none text-[10px] font-black min-w-8 text-center">{paid.length}</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                      <div className="flex -space-x-1">
+                                        {paid.slice(0, 5).map((p, i) => (
+                                          <div key={p.id} className="w-8 h-8 rounded-none border-2 border-white overflow-hidden bg-zinc-200">
+                                            {p.photo ? <img src={p.photo} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-[10px] font-bold uppercase">{p.name[0]}</div>}
+                                          </div>
+                                        ))}
+                                        {paid.length > 5 && (
+                                          <div className="w-8 h-8 rounded-none border-2 border-white bg-zinc-100 flex items-center justify-center text-[8px] font-black text-zinc-500">+{(paid.length - 5)}</div>
+                                        )}
+                                      </div>
+                                      <MoreVertical size={16} className="text-zinc-300 ml-4" />
+                                    </div>
+                                  </div>
+
+                                  <div 
+                                    onClick={() => {
+                                      setCurrentScreen('finance');
+                                      setFinanceSubScreen('mensalidade');
+                                    }}
+                                    className="group bg-[#fffbf9] hover:bg-[#fff7f2] transition-all rounded-none p-6 flex items-center justify-between border border-orange-100 cursor-pointer"
+                                  >
+                                    <div className="flex items-center gap-4">
+                                      <div className="w-10 h-10 rounded-none bg-orange-600 text-white flex items-center justify-center shadow-lg shadow-orange-600/20">
+                                        <AlertCircle size={20} />
+                                      </div>
+                                      <span className="text-[10px] font-black uppercase tracking-widest text-orange-900">Pagamentos atrasados</span>
+                                      <span className="bg-orange-600 text-white px-2 py-1 rounded-none text-[10px] font-black min-w-8 text-center">{unpaid.length}</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                      <div className="flex -space-x-1">
+                                        {unpaid.slice(0, 5).map((p, i) => (
+                                          <div key={p.id} className="w-8 h-8 rounded-none border-2 border-white overflow-hidden bg-zinc-200">
+                                            {p.photo ? <img src={p.photo} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-[10px] font-bold uppercase">{p.name[0]}</div>}
+                                          </div>
+                                        ))}
+                                        {unpaid.length > 5 && (
+                                          <div className="w-8 h-8 rounded-none border-2 border-white bg-zinc-100 flex items-center justify-center text-[8px] font-black text-zinc-500">+{(unpaid.length - 5)}</div>
+                                        )}
+                                      </div>
+                                      <MoreVertical size={16} className="text-zinc-300 ml-4" />
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })()}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </motion.div>
@@ -10804,7 +10895,35 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           <nav className="w-full bg-[#111111] border-t border-white/5 pt-1 pb-3 sm:pb-4 px-2 sm:px-6 flex items-center justify-around">
             <button 
               onClick={() => {
-                const screens: Screen[] = ['teams', 'ranking', 'finance'];
+                const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
+                const targetIndex = screens.indexOf('players');
+                const currentIndex = screens.indexOf(currentScreen);
+                setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
+                setCurrentScreen('players');
+              }}
+              className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
+                currentScreen === 'players' 
+                  ? 'text-brand-primary bg-white/5 shadow-inner' 
+                  : 'text-white/50 hover:text-white/80 hover:bg-white/5'
+              }`}
+            >
+              {currentScreen === 'players' && (
+                <motion.div layoutId="nav-glow" className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full" />
+              )}
+              {currentScreen === 'players' ? (
+                <div className="mb-1 transition-transform duration-300 -translate-y-0.5">
+                  <PiUserCirclePlusThin size={28} />
+                </div>
+              ) : (
+                <div className="mb-1 transition-transform duration-300">
+                  <PiUserCirclePlusThin size={24} />
+                </div>
+              )}
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'players' ? 'opacity-100 translate-y-0' : 'opacity-70'}`}>CADASTRAR</span>
+            </button>
+            <button 
+              onClick={() => {
+                const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
                 const targetIndex = screens.indexOf('teams');
                 const currentIndex = screens.indexOf(currentScreen);
                 setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
@@ -10834,7 +10953,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             </button>
             <button 
               onClick={() => {
-                const screens: Screen[] = ['teams', 'ranking', 'finance'];
+                const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
                 const targetIndex = screens.indexOf('ranking');
                 const currentIndex = screens.indexOf(currentScreen);
                 setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
@@ -10862,7 +10981,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             </button>
             <button 
               onClick={() => {
-                const screens: Screen[] = ['teams', 'ranking', 'finance'];
+                const screens: Screen[] = ['players', 'teams', 'ranking', 'finance'];
                 const targetIndex = screens.indexOf('finance');
                 const currentIndex = screens.indexOf(currentScreen);
                 setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
