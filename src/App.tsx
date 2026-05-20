@@ -1454,6 +1454,17 @@ interface PaymentRecord {
   monthlyFee: number;
 }
 
+interface ScheduledMatch {
+  id: string;
+  name: string;
+  date: number;
+  location?: string;
+  time?: string;
+  status: 'Confirmada' | 'Pendente';
+  confirmedPlayers: number;
+  maxPlayers: number;
+}
+
 type Screen = 'players' | 'teams' | 'ranking' | 'finance' | 'org-pro';
 
 // --- Utils ---
@@ -1999,6 +2010,54 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
     }
     return [];
   });
+
+  const [scheduledMatches, setScheduledMatches] = useState<ScheduledMatch[]>(() => {
+    const saved = safeLocalStorage.getItem(`futquina_scheduled_matches_${groupId}`);
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        return [];
+      }
+    }
+    return [
+      {
+        id: 'default-1',
+        name: 'Pelada do Domingo',
+        date: new Date(2026, 4, 25).getTime(),
+        location: 'Arena Fut 7',
+        time: '08:00 - 10:00',
+        status: 'Confirmada',
+        confirmedPlayers: 14,
+        maxPlayers: 16
+      }
+    ];
+  });
+
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [newMatchName, setNewMatchName] = useState('');
+
+  useEffect(() => {
+    safeLocalStorage.setItem(`futquina_scheduled_matches_${groupId}`, JSON.stringify(scheduledMatches));
+  }, [scheduledMatches, groupId]);
+
+  const handleScheduleMatch = () => {
+    if (newMatchName.trim()) {
+      const newMatch: ScheduledMatch = {
+        id: generateId(),
+        name: newMatchName.trim(),
+        date: new Date().getTime(), // Default to now
+        location: 'Arena a definir',
+        time: 'Pendente',
+        status: 'Pendente',
+        confirmedPlayers: 0,
+        maxPlayers: 16
+      };
+      setScheduledMatches(prev => [...prev, newMatch]);
+      setNewMatchName('');
+      setShowScheduleModal(false);
+    }
+  };
   const [sessionPlayerIds, setSessionPlayerIds] = useState<string[]>(() => {
     const saved = safeLocalStorage.getItem(`futquina_session_player_ids_${groupId}`);
     if (saved) {
@@ -5285,40 +5344,61 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Crie e gerencie as próximas peladas.</p>
                               </div>
                             </div>
-                            <button className="bg-emerald-600 text-white px-4 py-2.5 rounded-none text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-emerald-700 transition-all active:scale-95 shadow-lg shadow-emerald-600/20">
+                            <button 
+                              onClick={() => setShowScheduleModal(true)}
+                              className="bg-emerald-600 text-white px-4 py-2.5 rounded-none text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-emerald-700 transition-all active:scale-95 shadow-lg shadow-emerald-600/20"
+                            >
                               <Plus size={16} /> Agendar pelada
                             </button>
                           </div>
 
                           <div className="space-y-4">
                             <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Próxima pelada</h4>
-                            <div className="group relative bg-zinc-50 hover:bg-zinc-100 transition-all rounded-none p-5 flex items-center gap-5 border border-black/5 cursor-pointer">
-                              <div className="w-20 h-24 bg-emerald-900 rounded-none flex flex-col items-center justify-center text-white shrink-0 shadow-xl shadow-emerald-900/20 group-hover:scale-105 transition-transform">
-                                <span className="text-3xl font-black leading-none">25</span>
-                                <span className="text-[11px] font-black uppercase tracking-tighter mt-1">MAI</span>
-                                <span className="text-[10px] font-bold uppercase opacity-50 tracking-widest">DOM</span>
-                              </div>
-                              <div className="flex-1 min-w-0 space-y-2">
-                                <div className="flex items-center justify-between">
-                                  <h5 className="font-black text-zinc-900 truncate uppercase tracking-tight text-sm">Pelada do Domingo</h5>
-                                  <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-[9px] font-black uppercase rounded-none border border-emerald-200">Confirmada</span>
+                            {scheduledMatches.map((match) => {
+                              const matchDate = new Date(match.date);
+                              const day = matchDate.getDate();
+                              const month = matchDate.toLocaleString('pt-BR', { month: 'short' }).toUpperCase();
+                              const weekday = matchDate.toLocaleString('pt-BR', { weekday: 'short' }).toUpperCase();
+                              
+                              return (
+                                <div 
+                                  key={match.id}
+                                  onClick={() => {
+                                    setCurrentScreen('teams');
+                                    setTeamsTab('historico');
+                                  }}
+                                  className="group relative bg-zinc-50 hover:bg-zinc-100 transition-all rounded-none p-5 flex items-center gap-5 border border-black/5 cursor-pointer"
+                                >
+                                  <div className="w-20 h-24 bg-emerald-900 rounded-none flex flex-col items-center justify-center text-white shrink-0 shadow-xl shadow-emerald-900/20 group-hover:scale-105 transition-transform">
+                                    <span className="text-3xl font-black leading-none">{day}</span>
+                                    <span className="text-[11px] font-black uppercase tracking-tighter mt-1">{month}</span>
+                                    <span className="text-[10px] font-bold uppercase opacity-50 tracking-widest">{weekday}</span>
+                                  </div>
+                                  <div className="flex-1 min-w-0 space-y-2">
+                                    <div className="flex items-center justify-between">
+                                      <h5 className="font-black text-zinc-900 truncate uppercase tracking-tight text-sm">{match.name}</h5>
+                                      <span className={`px-3 py-1 ${match.status === 'Confirmada' ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-orange-100 text-orange-700 border-orange-200'} text-[9px] font-black uppercase rounded-none border`}>
+                                        {match.status}
+                                      </span>
+                                    </div>
+                                    <div className="grid grid-cols-1 gap-1">
+                                      <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase">
+                                        <div className="text-emerald-500"><PiMapPinFill size={14} /></div> {match.location}
+                                      </div>
+                                      <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase">
+                                        <div className="text-emerald-500"><PiClockFill size={14} /></div> {match.time}
+                                      </div>
+                                      <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase">
+                                        <Users size={14} className="text-emerald-500" /> {match.confirmedPlayers}/{match.maxPlayers} jogadores
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="text-zinc-300 group-hover:text-emerald-500 transition-colors">
+                                    <ChevronRight size={24} />
+                                  </div>
                                 </div>
-                                <div className="grid grid-cols-1 gap-1">
-                                  <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase">
-                                    <div className="text-emerald-500"><PiMapPinFill size={14} /></div> Arena Fut 7
-                                  </div>
-                                  <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase">
-                                    <div className="text-emerald-500"><PiClockFill size={14} /></div> 08:00 - 10:00
-                                  </div>
-                                  <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase">
-                                    <Users size={14} className="text-emerald-500" /> 14/16 jogadores
-                                  </div>
-                                </div>
-                              </div>
-                              <div className="text-zinc-300 group-hover:text-emerald-500 transition-colors">
-                                <ChevronRight size={24} />
-                              </div>
-                            </div>
+                              );
+                            })}
                           </div>
                         </div>
                         <button className="w-full py-5 bg-zinc-50/50 border-t border-black/5 text-emerald-600 text-[10px] font-black uppercase tracking-widest hover:bg-zinc-100 transition-colors">
@@ -11038,7 +11118,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               <div className="flex gap-3 justify-center">
                 <button 
                   onClick={() => setShowAutoCompleteModal(false)}
-                  className="w-full py-3 bg-emerald-500 text-black rounded-xl font-black uppercase tracking-widest text-xs shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] hover:bg-emerald-400 transition-all active:scale-95"
+                  className="w-full py-3 bg-emerald-500 text-black rounded-none font-black uppercase tracking-widest text-xs shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] hover:bg-emerald-400 transition-all active:scale-95"
                 >
                   OK
                 </button>
@@ -11184,6 +11264,56 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
         {/* Auth modal removed */}
       </AnimatePresence>
+
+      {/* Schedule Match Modal */}
+      {showScheduleModal && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+          <motion.div 
+            initial={{ y: 50, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            className="w-full max-w-md p-8 rounded-none shadow-[0_20px_60px_rgba(0,0,0,0.8)] bg-white border border-black/10 relative overflow-hidden"
+          >
+            <div className="relative z-10 text-center mb-8">
+              <div className="w-16 h-16 rounded-none bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4">
+                <PiCalendarBlankBold size={32} />
+              </div>
+              <h3 className="text-2xl font-black uppercase tracking-tighter text-zinc-900">Agendar Pelada</h3>
+              <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] mt-1">Como vai se chamar a pelada?</p>
+            </div>
+
+            <input
+              type="text"
+              value={newMatchName}
+              onChange={e => setNewMatchName(e.target.value)}
+              placeholder="Ex: Pelada do Domingo"
+              className="relative z-10 w-full p-6 rounded-none mb-8 outline-none font-black bg-zinc-50 border border-black/5 text-zinc-900 placeholder:text-zinc-300 focus:border-emerald-500 transition-all text-center text-lg shadow-inner"
+              autoFocus
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') handleScheduleMatch();
+              }}
+            />
+            
+            <div className="relative z-10 flex flex-col gap-4">
+              <button
+                onClick={handleScheduleMatch}
+                disabled={!newMatchName.trim()}
+                className="w-full py-5 rounded-none font-black uppercase tracking-widest text-[11px] bg-emerald-600 text-white hover:opacity-90 transition-all disabled:opacity-50 active:scale-95 shadow-xl shadow-emerald-600/20"
+              >
+                Criar Pelada
+              </button>
+              <button
+                onClick={() => {
+                  setShowScheduleModal(false);
+                  setNewMatchName('');
+                }}
+                className="w-full py-4 rounded-none font-black uppercase tracking-widest text-[10px] transition-all bg-zinc-100 text-zinc-500 hover:bg-zinc-200"
+              >
+                Cancelar
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 }
