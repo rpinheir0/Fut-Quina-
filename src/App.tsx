@@ -58,6 +58,7 @@ import {
   ArrowLeft,
   MoveRight,
   Home,
+  MoreVertical,
   Eye,
   Award,
   LogOut,
@@ -138,7 +139,12 @@ import {
   PiShieldCheckFill,
   PiPaletteBold,
   PiClockBold,
-  PiShuffleAngularBold
+  PiClockFill,
+  PiShuffleAngularBold,
+  PiCalendarBlankFill,
+  PiWarningCircleFill,
+  PiCheckCircleFill,
+  PiMapPinFill
 } from 'react-icons/pi';
 import { supabase } from './lib/supabase';
 import { sounds } from './lib/sounds';
@@ -1715,19 +1721,15 @@ const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, 
   return (
     <div className={`flex items-center gap-2.5 ${alignClass} ${className}`} style={style}>
       <div className="relative shrink-0">
-        <img 
-          src="/logo.png"
-          alt="FutQuina Logo"
-          width={iconSizes[size]} 
-          height={iconSizes[size]} 
-          className=""
-        />
+        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center font-staatliches text-black text-2xl">
+          F
+        </div>
       </div>
-      <div className={`flex flex-col justify-center mt-1.5 ${alignClass}`}>
-        <span className={`${sizeClasses[size]} uppercase tracking-tighter ${titleColorClass || colorClass} font-staatliches leading-none`}>
+      <div className={`flex flex-col justify-center ${alignClass}`}>
+        <span className={`${sizeClasses[size]} uppercase tracking-tighter ${titleColorClass || colorClass} font-black leading-none`}>
           FutQuina
         </span>
-        <span className={`${subSizeClasses[size]} opacity-100 font-readex tracking-widest ${subColorClass || colorClass} uppercase font-bold`}>
+        <span className={`${subSizeClasses[size]} opacity-100 tracking-widest ${subColorClass || colorClass} uppercase font-black`}>
           Gestão de pelada
         </span>
       </div>
@@ -2443,6 +2445,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [showEventModal, setShowEventModal] = useState<{ team: 'A' | 'B' | number } | null>(null);
   const [showInsufficientPlayersModal, setShowInsufficientPlayersModal] = useState(false);
   const [showArrivalStepGuide, setShowArrivalStepGuide] = useState(false);
+  const [showAddPlayerSection, setShowAddPlayerSection] = useState(false);
   const [isFlashingConfig, setIsFlashingConfig] = useState(false);
 
   useEffect(() => {
@@ -4698,7 +4701,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
               <div className="p-6 space-y-4">
                 <p className="text-xs font-bold text-zinc-600 text-center leading-relaxed">
-                  Jogadores insuficientes para formar 2 times. Crie mais jogadores em Gerenciar Jogadores ou altere a quantidade de jogadores por time.
+                  Jogadores insuficientes para formar 2 times. Crie mais jogadores em Cadastrar Jogadores ou altere a quantidade de jogadores por time.
                 </p>
 
                 <div className="space-y-2">
@@ -4710,7 +4713,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg hover:bg-black transition-all active:scale-95 flex items-center justify-center gap-2"
                   >
                     <User size={14} />
-                    Gerenciar Jogadores
+                    Cadastrar Jogadores
                   </button>
                   
                   <button 
@@ -5140,217 +5143,469 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="p-2 sm:p-4 space-y-6 text-white"
+              className="p-4 sm:p-6 space-y-8 bg-zinc-50/30 min-h-full"
             >
-              <div className="w-full space-y-6">
-                <div className="space-y-6">
-                    <section className="space-y-4">
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                        <div className="flex items-center gap-2">
-                          <h2 className="text-sm font-bold uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">Gerenciar jogadores</h2>
-                          {!isOrgProAuthorized && (
-                            <div 
-                              onClick={() => setShowAuthModal(true)}
-                              className="flex items-center gap-1 bg-black/5 text-zinc-800/40 px-2 py-0.5 rounded-full text-[9px] font-black uppercase cursor-pointer hover:bg-black/10 transition-colors"
-                            >
-                              <PiLockFill size={10} /> Local
-                            </div>
-                          )}
+              {/* Dashboard Header */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+                {!showAddPlayerSection ? (
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center gap-2">
+                      <h2 className="text-sm font-black uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">Painel de controle</h2>
+                      {!isOrgProAuthorized && (
+                        <div 
+                          onClick={() => setShowAuthModal(true)}
+                          className="flex items-center gap-1 bg-black/5 text-zinc-800/40 px-2 py-0.5 rounded-none text-[9px] font-black uppercase cursor-pointer hover:bg-black/10 transition-colors"
+                        >
+                          <PiLockFill size={10} /> Local
                         </div>
-                        <div className="flex gap-2 w-full sm:w-auto">
-                          {players.length >= 2 && (
-                            <button 
-                              onClick={() => {
-                                setCurrentScreen('teams');
-                                setTeamsTab('configuracao');
-                                if (!firstSetupDone) {
-                                  setIsInitialSetupFlow(true);
-                                }
-                              }}
-                              className="flex-1 sm:flex-none px-4 py-2.5 bg-[#00FF00] text-black text-[10px] font-black uppercase tracking-widest rounded-xl shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
-                            >
-                              CONFIGURAR PARTIDA
-                            </button>
-                          )}
-                        </div>
-                      </div>
-                <div className="flex flex-col sm:flex-row gap-2">
-                  <div className="flex-1 flex gap-2">
-                    <input 
-                      type="text" 
-                      placeholder="Nome do jogador..."
-                      className={`flex-1 px-4 py-2 rounded-xl border-none outline-none transition-all bg-[#dce3ee] text-[#1E3D2F] placeholder-[#1E3D2F]/50 focus:ring-2 focus:ring-[#1E3D2F]/20 text-sm`}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          addPlayer(e.currentTarget.value);
-                          e.currentTarget.value = '';
-                        }
-                      }}
-                    />
-                    <button 
-                      onClick={handleImportContacts}
-                      className="p-2 bg-[#ffffff] text-[#83A8EF] rounded-xl shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square border-none"
-                      title="Importar dos Contatos"
-                    >
-                      <Contact size={18} />
-                    </button>
-                    <button 
-                      onClick={() => {
-                        const input = document.querySelector('input') as HTMLInputElement;
-                        addPlayer(input.value);
-                        input.value = '';
-                      }}
-                      className="p-2 bg-[#00FF00] text-[#1E3D2F] rounded-xl shadow hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square"
-                    >
-                      <Plus size={18} />
-                    </button>
-                  </div>
-                </div>
-
-                <div className="relative">
-                  <textarea 
-                    placeholder=" "
-                    className={`w-full h-24 px-4 py-3 rounded-xl border-none outline-none transition-all text-sm resize-none bg-[#dce3ee] text-[#1E3D2F] focus:ring-2 focus:ring-[#1E3D2F]/20 peer`}
-                    onChange={(e) => {
-                      if (e.target.value.includes('\n') || e.target.value.length > 10) {
-                        addBulkPlayers(e.target.value);
-                        e.target.value = '';
-                      }
-                    }}
-                  />
-                  <div className="absolute top-3 left-4 pointer-events-none transition-all peer-focus:hidden peer-[:not(:placeholder-shown)]:hidden">
-                    <span className="text-xs font-medium text-[#1E3D2F]/50">
-                      Cole aqui sua lista do WhatsApp (ex: 1. João, 2. Maria...)
-                    </span>
-                  </div>
-                  <div 
-                    className={`absolute right-4 bottom-3 text-[#1E3D2F]/40 cursor-pointer hover:text-[#1E3D2F] transition-colors flex items-center gap-1`}
-                    onClick={async () => {
-                      try {
-                        const text = await navigator.clipboard.readText();
-                        if (text) {
-                          addBulkPlayers(text);
-                          setToast({ message: "Lista colada com sucesso!", type: 'success' });
-                          setTimeout(() => setToast(null), 2000);
-                        }
-                      } catch (err) {
-                        setToast({ message: "Permissão de área de transferência negada.", type: 'warning' });
-                        setTimeout(() => setToast(null), 3000);
-                      }
-                    }}
-                  >
-                    <ClipboardPaste size={14} />
-                    <span className="text-[10px] font-bold uppercase">Caixa Inteligente</span>
-                  </div>
-                </div>
-              </section>
-
-              <section className="w-full relative">
-                {visiblePlayers.length === 0 ? (
-                  <div className="w-full text-center py-20 opacity-50 text-black/50 text-xs flex flex-col items-center justify-center gap-4">
-                    <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-2">
-                       <span className="opacity-30 text-black"><GiLaurelsTrophy size={48} /></span>
+                      )}
                     </div>
-                    <span className="font-bold uppercase tracking-widest text-[10px]">Nenhum jogador adicionado ainda.</span>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">ORGANIZAÇÃO</p>
                   </div>
                 ) : (
-                  <div className="divide-y divide-black/5">
-                    {visiblePlayers.map((player) => (
-                      <motion.div 
-                        layout
-                        key={`player-list-${player.id}`}
-                        className={`flex items-center justify-between p-4 transition-all cursor-pointer hover:bg-black/5 active:bg-black/10 bg-transparent`}
-                        onClick={() => {
-                          if (editingPlayerId !== player.id) {
-                            setPlayerManagementModal(player);
-                          }
-                        }}
-                      >
-                        <div className="flex items-center gap-3 flex-1">
-                          <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-black/10 text-black/80 border border-black/10 overflow-hidden">
-                            {player.photo ? (
-                              <img src={player.photo} alt={player.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                            ) : (
-                              <IoPersonOutline size={16} />
-                            )}
+                  <div className="flex flex-col gap-1">
+                    <h2 className="text-sm font-black uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">GERENCIAMENTO</h2>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">JOGADORES</p>
+                  </div>
+                )}
+                
+                <div className="flex gap-2 w-full sm:w-auto">
+                  <button 
+                    onClick={() => setShowAddPlayerSection(!showAddPlayerSection)}
+                    className="flex-1 sm:flex-none px-6 py-3 bg-zinc-900 text-white text-[10px] font-black uppercase tracking-widest rounded-none shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                  >
+                    <UserPlus size={16} />
+                    {showAddPlayerSection ? 'VOLTAR AO PAINEL' : 'CADASTRAR JOGADORES'}
+                  </button>
+                  <button 
+                    onClick={() => {
+                      setCurrentScreen('teams');
+                      setTeamsTab('configuracao');
+                      if (!firstSetupDone) {
+                        setIsInitialSetupFlow(true);
+                      }
+                    }}
+                    className="flex-1 sm:flex-none px-6 py-3 bg-[#00FF00] text-black text-[10px] font-black uppercase tracking-widest rounded-none shadow shadow-[#00FF00]/20 hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                  >
+                    CONFIGURAR PARTIDA
+                  </button>
+                </div>
+              </div>
+
+              {/* Main View Switcher */}
+              <AnimatePresence mode="wait">
+                {!showAddPlayerSection ? (
+                  <motion.div
+                    key="dashboard-view"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="space-y-8"
+                  >
+                    {/* Summary Cards Grid */}
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                      {[
+                        { 
+                          label: "PRÓXIMA PELADA", 
+                          value: orgProSettings.matchDayOfWeek ? "1" : "0", 
+                          sub: "AGENDADA", 
+                          icon: <PiCalendarBlankFill size={20} />, 
+                          color: "text-emerald-600", 
+                          bg: "bg-emerald-50" 
+                        },
+                        { 
+                          label: "PAGAMENTOS EM DIA", 
+                          value: players.filter(p => {
+                            const m = new Date().getMonth();
+                            const y = new Date().getFullYear();
+                            const mName = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"][m];
+                            const r = payments.find(pay => pay.playerId === p.id && pay.year === y);
+                            return r && r.months && (r.months[mName] || 0) >= (monthlyFee || 30);
+                          }).length, 
+                          sub: "JOGADORES", 
+                          icon: <Users size={20} />, 
+                          color: "text-emerald-600", 
+                          bg: "bg-[#f0f9f4]" 
+                        },
+                        { 
+                          label: "PAGAMENTOS ATRASADOS", 
+                          value: players.filter(p => {
+                            const m = new Date().getMonth();
+                            const y = new Date().getFullYear();
+                            const mName = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"][m];
+                            const r = payments.find(pay => pay.playerId === p.id && pay.year === y);
+                            return !r || !r.months || (r.months[mName] || 0) < (monthlyFee || 30);
+                          }).length, 
+                          sub: "JOGADORES", 
+                          icon: <PiWarningCircleFill size={20} />, 
+                          color: "text-orange-600", 
+                          bg: "bg-orange-50" 
+                        },
+                        { 
+                          label: "TOTAL DE JOGADORES", 
+                          value: players.length, 
+                          sub: "CADASTRADOS", 
+                          icon: <PiClockFill size={20} />, 
+                          color: "text-blue-600", 
+                          bg: "bg-blue-50" 
+                        },
+                      ].map((card, idx) => (
+                        <div key={idx} className="bg-white p-6 rounded-none border border-black/5 shadow-sm space-y-4">
+                          <div className={`w-12 h-12 rounded-none ${card.bg} flex items-center justify-center`}>
+                            <div className={card.color}>{card.icon}</div>
                           </div>
-                          {editingPlayerId === player.id ? (
+                          <div>
+                            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{card.label}</p>
+                            <div className="flex items-baseline gap-2 mt-1">
+                              <span className="text-3xl font-black text-zinc-900 leading-none">{card.value}</span>
+                              <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">{card.sub}</span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Main Content Grid */}
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                      {/* Agendar Section */}
+                      <div className="bg-white rounded-none border border-black/5 shadow-sm overflow-hidden flex flex-col">
+                        <div className="p-8 space-y-6 flex-1">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-4">
+                              <div className="text-emerald-500">
+                                <PiCalendarBlankBold size={32} />
+                              </div>
+                              <div>
+                                <h3 className="text-lg font-black text-zinc-900">Agendar</h3>
+                                <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Crie e gerencie as próximas peladas.</p>
+                              </div>
+                            </div>
+                            <button className="bg-emerald-600 text-white px-4 py-2.5 rounded-none text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-emerald-700 transition-all active:scale-95 shadow-lg shadow-emerald-600/20">
+                              <Plus size={16} /> Agendar pelada
+                            </button>
+                          </div>
+
+                          <div className="space-y-4">
+                            <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Próxima pelada</h4>
+                            <div className="group relative bg-zinc-50 hover:bg-zinc-100 transition-all rounded-none p-5 flex items-center gap-5 border border-black/5 cursor-pointer">
+                              <div className="w-20 h-24 bg-emerald-900 rounded-none flex flex-col items-center justify-center text-white shrink-0 shadow-xl shadow-emerald-900/20 group-hover:scale-105 transition-transform">
+                                <span className="text-3xl font-black leading-none">25</span>
+                                <span className="text-[11px] font-black uppercase tracking-tighter mt-1">MAI</span>
+                                <span className="text-[10px] font-bold uppercase opacity-50 tracking-widest">DOM</span>
+                              </div>
+                              <div className="flex-1 min-w-0 space-y-2">
+                                <div className="flex items-center justify-between">
+                                  <h5 className="font-black text-zinc-900 truncate uppercase tracking-tight text-sm">Pelada do Domingo</h5>
+                                  <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-[9px] font-black uppercase rounded-none border border-emerald-200">Confirmada</span>
+                                </div>
+                                <div className="grid grid-cols-1 gap-1">
+                                  <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase">
+                                    <div className="text-emerald-500"><PiMapPinFill size={14} /></div> Arena Fut 7
+                                  </div>
+                                  <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase">
+                                    <div className="text-emerald-500"><PiClockFill size={14} /></div> 08:00 - 10:00
+                                  </div>
+                                  <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase">
+                                    <Users size={14} className="text-emerald-500" /> 14/16 jogadores
+                                  </div>
+                                </div>
+                              </div>
+                              <div className="text-zinc-300 group-hover:text-emerald-500 transition-colors">
+                                <ChevronRight size={24} />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <button className="w-full py-5 bg-zinc-50/50 border-t border-black/5 text-emerald-600 text-[10px] font-black uppercase tracking-widest hover:bg-zinc-100 transition-colors">
+                          Ver todas as peladas
+                        </button>
+                      </div>
+
+                      {/* Pagamentos Section */}
+                      <div className="bg-white rounded-none border border-black/5 shadow-sm overflow-hidden flex flex-col">
+                        <div className="p-8 space-y-8 flex-1">
+                          <div className="flex items-center gap-4">
+                            <div className="w-16 h-16 rounded-none bg-[#f0f9f4] flex items-center justify-center text-emerald-600">
+                              <DollarSign size={32} />
+                            </div>
+                            <div>
+                              <h3 className="text-xl font-black text-zinc-900 tracking-tight">Pagamentos dos jogadores</h3>
+                              <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">SITUAÇÃO DOS PAGAMENTOS.</p>
+                            </div>
+                          </div>
+
+                          <div className="space-y-4">
+                            {/* Paid Row */}
+                            {(() => {
+                              const m = new Date().getMonth();
+                              const y = new Date().getFullYear();
+                              const mName = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"][m];
+                              const paid = players.filter(p => {
+                                const r = payments.find(pay => pay.playerId === p.id && pay.year === y);
+                                return r && r.months && (r.months[mName] || 0) >= (monthlyFee || 30);
+                              });
+                              const unpaid = players.filter(p => !paid.some(pp => pp.id === p.id));
+                              
+                              return (
+                                <div className="space-y-4">
+                                  <div 
+                                    onClick={() => {
+                                      setCurrentScreen('finance');
+                                      setFinanceSubScreen('mensalidade');
+                                    }}
+                                    className="group bg-[#f8fdfb] hover:bg-[#f2faf7] transition-all rounded-none p-6 flex items-center justify-between border border-emerald-100 cursor-pointer"
+                                  >
+                                    <div className="flex items-center gap-4">
+                                      <div className="w-10 h-10 rounded-none bg-emerald-600 text-white flex items-center justify-center shadow-lg shadow-emerald-600/20">
+                                        <Check size={20} />
+                                      </div>
+                                      <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Pagamentos em dia</span>
+                                      <span className="bg-emerald-600 text-white px-2 py-1 rounded-none text-[10px] font-black min-w-8 text-center">{paid.length}</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                      <div className="flex -space-x-1">
+                                        {paid.slice(0, 5).map((p, i) => (
+                                          <div key={p.id} className="w-8 h-8 rounded-none border-2 border-white overflow-hidden bg-zinc-200">
+                                            {p.photo ? <img src={p.photo} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-[10px] font-bold uppercase">{p.name[0]}</div>}
+                                          </div>
+                                        ))}
+                                        {paid.length > 5 && (
+                                          <div className="w-8 h-8 rounded-none border-2 border-white bg-zinc-100 flex items-center justify-center text-[8px] font-black text-zinc-500">+{(paid.length - 5)}</div>
+                                        )}
+                                      </div>
+                                      <MoreVertical size={16} className="text-zinc-300 ml-4" />
+                                    </div>
+                                  </div>
+
+                                  <div 
+                                    onClick={() => {
+                                      setCurrentScreen('finance');
+                                      setFinanceSubScreen('mensalidade');
+                                    }}
+                                    className="group bg-[#fffbf9] hover:bg-[#fff7f2] transition-all rounded-none p-6 flex items-center justify-between border border-orange-100 cursor-pointer"
+                                  >
+                                    <div className="flex items-center gap-4">
+                                      <div className="w-10 h-10 rounded-none bg-orange-600 text-white flex items-center justify-center shadow-lg shadow-orange-600/20">
+                                        <AlertCircle size={20} />
+                                      </div>
+                                      <span className="text-[10px] font-black uppercase tracking-widest text-orange-900">Pagamentos atrasados</span>
+                                      <span className="bg-orange-600 text-white px-2 py-1 rounded-none text-[10px] font-black min-w-8 text-center">{unpaid.length}</span>
+                                    </div>
+                                    <div className="flex items-center">
+                                      <div className="flex -space-x-1">
+                                        {unpaid.slice(0, 5).map((p, i) => (
+                                          <div key={p.id} className="w-8 h-8 rounded-none border-2 border-white overflow-hidden bg-zinc-200">
+                                            {p.photo ? <img src={p.photo} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-[10px] font-bold uppercase">{p.name[0]}</div>}
+                                          </div>
+                                        ))}
+                                        {unpaid.length > 5 && (
+                                          <div className="w-8 h-8 rounded-none border-2 border-white bg-zinc-100 flex items-center justify-center text-[8px] font-black text-zinc-500">+{(unpaid.length - 5)}</div>
+                                        )}
+                                      </div>
+                                      <MoreVertical size={16} className="text-zinc-300 ml-4" />
+                                    </div>
+                                  </div>
+                                </div>
+                              );
+                            })()}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="management-view"
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="space-y-6"
+                  >
+                    <div className="bg-white p-6 rounded-none border border-black/5 shadow-sm space-y-6">
+                      <div className="bg-[#dce3ee]/30 p-6 rounded-none border border-black/5 space-y-6">
+                        <div className="flex flex-col sm:flex-row gap-3">
+                          <div className="flex-1 flex gap-3">
                             <input 
-                              autoFocus
-                              defaultValue={player.name}
-                              className={`flex-1 bg-black/10 border-b border-[#00FF00] outline-none text-sm font-medium py-1 px-2 rounded-t-sm text-black`}
-                              onClick={(e) => e.stopPropagation()}
+                              type="text" 
+                              placeholder="Nome do jogador..."
+                              className={`flex-1 px-6 py-4 rounded-none border-none outline-none transition-all bg-white text-[#1E3D2F] placeholder-[#1E3D2F]/30 focus:ring-4 focus:ring-emerald-500/10 text-sm font-bold shadow-sm`}
                               onKeyDown={(e) => {
-                                if (e.key === 'Enter') updatePlayerName(player.id, e.currentTarget.value);
-                                if (e.key === 'Escape') setEditingPlayerId(null);
+                                if (e.key === 'Enter') {
+                                  addPlayer(e.currentTarget.value);
+                                  e.currentTarget.value = '';
+                                }
                               }}
-                              onBlur={(e) => updatePlayerName(player.id, e.target.value)}
                             />
+                            <button 
+                              onClick={handleImportContacts}
+                              className="p-4 bg-white text-[#83A8EF] rounded-none shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square border-none"
+                              title="Importar dos Contatos"
+                            >
+                              <Contact size={24} />
+                            </button>
+                            <button 
+                              onClick={() => {
+                                const input = document.querySelector('input') as HTMLInputElement;
+                                if (input.value.trim()) {
+                                  addPlayer(input.value);
+                                  input.value = '';
+                                }
+                              }}
+                              className="p-4 bg-emerald-500 text-white rounded-none shadow hover:bg-emerald-600 transition-all active:scale-95 flex items-center justify-center aspect-square"
+                            >
+                              <Plus size={24} />
+                            </button>
+                          </div>
+                        </div>
+
+                        <div className="relative">
+                          <textarea 
+                            placeholder=" "
+                            className={`w-full h-32 px-6 py-6 rounded-none border-none outline-none transition-all text-sm font-bold resize-none bg-white text-[#1E3D2F] focus:ring-4 focus:ring-emerald-500/10 peer shadow-sm`}
+                            onChange={(e) => {
+                              if (e.target.value.includes('\n') || e.target.value.length > 20) {
+                                addBulkPlayers(e.target.value);
+                                e.target.value = '';
+                              }
+                            }}
+                          />
+                          <div className="absolute top-6 left-6 pointer-events-none transition-all peer-focus:hidden peer-[:not(:placeholder-shown)]:hidden">
+                            <span className="text-xs font-bold text-[#1E3D2F]/30 leading-tight block">
+                              Cole aqui sua lista do WhatsApp<br/>(ex: 1. João, 2. Maria...)
+                            </span>
+                          </div>
+                          <div 
+                            className={`absolute right-6 bottom-6 text-[#1E3D2F]/40 cursor-pointer hover:text-emerald-600 transition-colors flex items-center gap-2`}
+                            onClick={async () => {
+                              try {
+                                const text = await navigator.clipboard.readText();
+                                if (text) {
+                                  addBulkPlayers(text);
+                                  setToast({ message: "Lista colada com sucesso!", type: 'success' });
+                                  setTimeout(() => setToast(null), 2000);
+                                }
+                              } catch (err) {
+                                setToast({ message: "Permissão de área de transferência negada.", type: 'warning' });
+                                setTimeout(() => setToast(null), 3000);
+                              }
+                            }}
+                          >
+                            <ClipboardPaste size={18} />
+                            <span className="text-[10px] font-black uppercase tracking-widest">Caixa Inteligente</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <section className="w-full relative pt-6 border-t border-black/5">
+                        {visiblePlayers.length === 0 ? (
+                          <div className="w-full text-center py-20 opacity-30 text-zinc-400 flex flex-col items-center justify-center gap-4">
+                            <div className="w-20 h-20 rounded-none bg-zinc-100 flex items-center justify-center mb-2">
+                               <GiLaurelsTrophy size={48} />
+                            </div>
+                            <span className="font-black uppercase tracking-[0.2em] text-[10px]">Nenhum jogador adicionado ainda.</span>
+                          </div>
+                        ) : (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                            {visiblePlayers.map((player) => (
+                              <motion.div 
+                                layout
+                                key={`player-list-dash-switch-${player.id}`}
+                                className={`flex items-center justify-between p-4 rounded-none transition-all cursor-pointer hover:bg-zinc-50 active:bg-zinc-100 border border-transparent hover:border-black/5 bg-transparent`}
+                                onClick={() => {
+                                  if (editingPlayerId !== player.id) {
+                                    setPlayerManagementModal(player);
+                                  }
+                                }}
+                              >
+                                <div className="flex items-center gap-4 flex-1">
+                                  <div className="w-10 h-10 rounded-none flex items-center justify-center shrink-0 bg-zinc-100 text-zinc-400 border border-black/5 overflow-hidden">
+                                    {player.photo ? (
+                                      <img src={player.photo} alt={player.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                                    ) : (
+                                      <IoPersonOutline size={20} />
+                                    )}
+                                  </div>
+                                  {editingPlayerId === player.id ? (
+                                    <input 
+                                      autoFocus
+                                      defaultValue={player.name}
+                                      className={`flex-1 bg-zinc-100 border-b border-emerald-500 outline-none text-sm font-bold py-1 px-3 rounded-none text-zinc-900`}
+                                      onClick={(e) => e.stopPropagation()}
+                                      onKeyDown={(e) => {
+                                        if (e.key === 'Enter') updatePlayerName(player.id, e.currentTarget.value);
+                                        if (e.key === 'Escape') setEditingPlayerId(null);
+                                      }}
+                                      onBlur={(e) => updatePlayerName(player.id, e.target.value)}
+                                    />
+                                  ) : (
+                                    <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-sm font-black truncate text-left leading-none text-zinc-900 uppercase tracking-tight">{player.name}</span>
+                                        {orgProData[player.id] && <div className="shrink-0 text-yellow-500"><GiCrown size={16} /></div>}
+                                      </div>
+                                      <div className="flex gap-0.5">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                          <Star 
+                                            key={`star-dash-m-switch-${player.id}-${star}`}
+                                            size={10} 
+                                            className={`${(player.stars || 3) >= star ? 'fill-emerald-500 text-emerald-500' : 'text-zinc-200'}`} 
+                                          />
+                                        ))}
+                                      </div>
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="flex items-center gap-3">
+                                  {editingPlayerId !== player.id && (
+                                    <ChevronRight size={18} className="text-zinc-300" />
+                                  )}
+                                </div>
+                              </motion.div>
+                            ))}
+                          </div>
+                        )}
+                      </section>
+
+                      {players.length > 5 && (
+                        <div className="flex justify-center pt-6 border-t border-black/5">
+                          {!showClearConfirm ? (
+                            <button 
+                              onClick={() => setShowClearConfirm(true)}
+                              className="w-full flex items-center justify-center gap-3 px-8 py-4 bg-red-50 text-red-600 rounded-none border border-red-100 hover:bg-red-100 transition-all active:scale-95 text-[10px] font-black uppercase tracking-[0.2em]"
+                            >
+                              <Trash2 size={16} />
+                              Apagar todos os jogadores
+                            </button>
                           ) : (
-                            <div className="flex flex-col gap-0.5 flex-1 min-w-0">
-                              <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold truncate text-left leading-none text-black">{player.name}</span>
-                                {orgProData[player.id] && <div className="shrink-0"><GiCrown size={16} color="#00FF00" /></div>}
-                              </div>
-                              <div className="flex gap-0.5">
-                                {[1, 2, 3, 4, 5].map((star) => (
-                                  <Star 
-                                    key={`star-m-${player.id}-${star}`}
-                                    size={8} 
-                                    className={`${(player.stars || 3) >= star ? 'fill-[#00FF00] text-zinc-800' : 'text-black/10'}`} 
-                                  />
-                                ))}
-                              </div>
+                            <div className="flex flex-col sm:flex-row items-center gap-3 w-full animate-in fade-in zoom-in duration-200">
+                              <button 
+                                onClick={() => {
+                                  setPlayers([]);
+                                  setSessionPlayerIds([]);
+                                  setShowClearConfirm(false);
+                                }}
+                                className="w-full px-8 py-4 bg-red-600 text-white rounded-none font-black uppercase tracking-widest text-[10px] shadow-lg shadow-red-600/20 active:scale-95 transition-all"
+                              >
+                                Confirmar Exclusão
+                              </button>
+                              <button 
+                                onClick={() => setShowClearConfirm(false)}
+                                className="w-full px-8 py-4 bg-zinc-100 text-zinc-600 rounded-none font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all"
+                              >
+                                Cancelar
+                              </button>
                             </div>
                           )}
                         </div>
-                        {editingPlayerId !== player.id && (
-                          <div className="flex items-center gap-1 opacity-20 text-black">
-                            <ChevronRight size={16} />
-                          </div>
-                        )}
-                      </motion.div>
-                    ))}
-                  </div>
-                )}
-              </section>
-
-              {players.length > 5 && (
-                <div className="flex justify-center pb-4 w-full">
-                  {!showClearConfirm ? (
-                    <button 
-                      onClick={() => setShowClearConfirm(true)}
-                      className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-orange-900/20 text-orange-600 rounded-xl border border-orange-600/30 hover:bg-orange-900/30 transition-all active:scale-95 text-[10px] font-black uppercase tracking-widest glass-3d"
-                    >
-                      <Trash2 size={14} className="text-orange-600" />
-                      Apagar todos os jogadores
-                    </button>
-                  ) : (
-                    <div className="flex flex-col sm:flex-row items-center gap-2 w-full sm:w-auto animate-in fade-in zoom-in duration-200">
-                      <button 
-                        onClick={() => {
-                          setPlayers([]);
-                          setSessionPlayerIds([]);
-                          setShowClearConfirm(false);
-                        }}
-                        className="w-full sm:w-auto px-6 py-3 bg-red-500 text-zinc-800 rounded-xl font-black uppercase tracking-widest text-[10px] shadow shadow-red-500/20 active:scale-95 transition-all"
-                      >
-                        Confirmar Exclusão
-                      </button>
-                      <button 
-                        onClick={() => setShowClearConfirm(false)}
-                        className="w-full sm:w-auto px-6 py-3 bg-black/10 text-brand-text-primary rounded-xl font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all"
-                      >
-                        Cancelar
-                      </button>
+                      )}
                     </div>
-                  )}
-                </div>
-              )}
-            </div>
-          </div>
-        </motion.div>
-      )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          )}
 
           {currentScreen === 'teams' && !isPrintMode && (
             <motion.div 
@@ -8252,7 +8507,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         Configurações de Exigência
                       </h3>
                       <p className="text-[10px] uppercase font-bold text-zinc-500 mb-6 bg-zinc-100 p-3 rounded-xl border border-zinc-200">
-                        Defina os critérios para que os jogadores adicionados apareçam na lista de "Gerenciar Jogadores".
+                        Defina os critérios para que os jogadores adicionados apareçam na lista de "Cadastrar Jogadores".
                       </p>
                       
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
@@ -10660,7 +10915,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <PiUserCirclePlusThin size={24} />
                 </div>
               )}
-              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'players' ? 'opacity-100 translate-y-0' : 'opacity-70'}`}>Gerenciar</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'players' ? 'opacity-100 translate-y-0' : 'opacity-70'}`}>CADASTRAR</span>
             </button>
             <button 
               onClick={() => {
@@ -10690,7 +10945,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <GiSoccerField size={22} />
                 </div>
               )}
-              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'teams' ? 'opacity-100 translate-y-0' : 'opacity-70'}`}>Partida</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'teams' ? 'opacity-100 translate-y-0' : 'opacity-70'}`}>PARTIDA</span>
             </button>
             <button 
               onClick={() => {
@@ -10718,7 +10973,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <GiTrophy size={22} />
                 </div>
               )}
-              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'ranking' ? 'opacity-100 translate-y-0' : 'opacity-70'}`}>Ranking</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'ranking' ? 'opacity-100 translate-y-0' : 'opacity-70'}`}>RANKING</span>
             </button>
             <button 
               onClick={() => {
@@ -10747,7 +11002,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <IoIosWallet size={22} />
                 </div>
               )}
-              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'finance' ? 'opacity-100 translate-y-0' : 'opacity-70'}`}>Financeiro</span>
+              <span className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === 'finance' ? 'opacity-100 translate-y-0' : 'opacity-70'}`}>FINANCEIRO</span>
             </button>
           </nav>
         </div>
