@@ -1709,10 +1709,10 @@ const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, 
     md: "text-[10px]",
     lg: "text-xs"
   };
-  const iconSizes = {
-    sm: 24,
-    md: 40,
-    lg: 48
+  const iconBoxSizes = {
+    sm: "w-7 h-7 text-lg",
+    md: "w-9 h-9 text-xl",
+    lg: "w-11 h-11 text-2xl"
   };
 
   const colorClass = overrideColor || 'text-zinc-500 font-bold';
@@ -1721,7 +1721,7 @@ const FutQuinaLogo = ({ className = "", size = "md", colorClass: overrideColor, 
   return (
     <div className={`flex items-center gap-2.5 ${alignClass} ${className}`} style={style}>
       <div className="relative shrink-0">
-        <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center font-staatliches text-black text-2xl">
+        <div className={`${iconBoxSizes[size]} bg-white rounded-lg flex items-center justify-center font-staatliches text-black`}>
           F
         </div>
       </div>
@@ -4972,7 +4972,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         {/* Sticky Header and Tabs Container */}
         <div className={`sticky top-0 z-50 bg-[#000000]/95 backdrop-blur-2xl ${isPrintMode ? 'hidden' : ''}`}>
         {/* Header */}
-        <header className="px-6 py-4 flex justify-between items-center bg-transparent relative transition-colors duration-300">
+        <header className="px-6 py-2.5 flex justify-between items-center bg-transparent relative transition-colors duration-300">
           <div className="flex items-center gap-3 overflow-hidden relative z-10">
             <AnimatePresence mode="wait">
               {(match.isActive && !match.isPaused && !match.hasEnded && teamsTab !== 'historico') ? (
@@ -5033,13 +5033,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           </div>
           
           {/* Header Actions */}
-          <div className="flex items-center gap-3 relative z-10">
+          <div className="flex items-center gap-2 relative z-10">
             {/* Settings Button */}
             <button 
               onClick={() => {
                 setShowGlobalSettings(true);
               }}
-              className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all active:scale-90"
+              className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all active:scale-90"
               title="Configurar aplicativo"
             >
               <PiGearBold size={20} />
@@ -5143,38 +5143,38 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="p-4 sm:p-6 space-y-8 bg-zinc-50/30 min-h-full"
+              className="p-4 sm:p-6 space-y-6 bg-zinc-50/30 min-h-full"
             >
               {/* Dashboard Header */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 {!showAddPlayerSection ? (
-                  <div className="flex flex-col gap-1">
+                  <div className="flex flex-col gap-0.5">
                     <div className="flex items-center gap-2">
-                      <h2 className="text-sm font-black uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">Painel de controle</h2>
+                      <h2 className="text-[12px] font-black uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">Painel de controle</h2>
                       {!isOrgProAuthorized && (
                         <div 
                           onClick={() => setShowAuthModal(true)}
-                          className="flex items-center gap-1 bg-black/5 text-zinc-800/40 px-2 py-0.5 rounded-none text-[9px] font-black uppercase cursor-pointer hover:bg-black/10 transition-colors"
+                          className="flex items-center gap-1 bg-black/5 text-zinc-800/40 px-2 py-0.5 rounded-none text-[8px] font-black uppercase cursor-pointer hover:bg-black/10 transition-colors"
                         >
                           <PiLockFill size={10} /> Local
                         </div>
                       )}
                     </div>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">ORGANIZAÇÃO</p>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-zinc-400">ORGANIZAÇÃO</p>
                   </div>
                 ) : (
-                  <div className="flex flex-col gap-1">
-                    <h2 className="text-sm font-black uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">GERENCIAMENTO</h2>
-                    <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">JOGADORES</p>
+                  <div className="flex flex-col gap-0.5">
+                    <h2 className="text-[12px] font-black uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">GERENCIAMENTO</h2>
+                    <p className="text-[9px] font-black uppercase tracking-widest text-zinc-400">JOGADORES</p>
                   </div>
                 )}
                 
                 <div className="flex gap-2 w-full sm:w-auto">
                   <button 
                     onClick={() => setShowAddPlayerSection(!showAddPlayerSection)}
-                    className="flex-1 sm:flex-none px-6 py-3 bg-zinc-900 text-white text-[10px] font-black uppercase tracking-widest rounded-none shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                    className="flex-1 sm:flex-none px-4 py-2.5 bg-zinc-900 text-white text-[9px] font-black uppercase tracking-widest rounded-none shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                   >
-                    <UserPlus size={16} />
+                    <UserPlus size={14} />
                     {showAddPlayerSection ? 'VOLTAR AO PAINEL' : 'CADASTRAR JOGADORES'}
                   </button>
                   <button 
@@ -5185,7 +5185,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         setIsInitialSetupFlow(true);
                       }
                     }}
-                    className="flex-1 sm:flex-none px-6 py-3 bg-[#00FF00] text-black text-[10px] font-black uppercase tracking-widest rounded-none shadow shadow-[#00FF00]/20 hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                    className="flex-1 sm:flex-none px-4 py-2.5 bg-[#00FF00] text-black text-[9px] font-black uppercase tracking-widest rounded-none shadow shadow-[#00FF00]/20 hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                   >
                     CONFIGURAR PARTIDA
                   </button>
@@ -5201,7 +5201,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.2 }}
-                    className="space-y-8"
+                    className="space-y-6"
                   >
                     {/* Summary Cards Grid */}
                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
@@ -5251,15 +5251,15 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           bg: "bg-blue-50" 
                         },
                       ].map((card, idx) => (
-                        <div key={idx} className="bg-white p-6 rounded-none border border-black/5 shadow-sm space-y-4">
-                          <div className={`w-12 h-12 rounded-none ${card.bg} flex items-center justify-center`}>
+                        <div key={idx} className="bg-white p-4 rounded-none border border-black/5 shadow-sm space-y-3">
+                          <div className={`w-10 h-10 rounded-none ${card.bg} flex items-center justify-center`}>
                             <div className={card.color}>{card.icon}</div>
                           </div>
                           <div>
-                            <p className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{card.label}</p>
+                            <p className="text-[9px] font-black uppercase tracking-widest text-zinc-400">{card.label}</p>
                             <div className="flex items-baseline gap-2 mt-1">
-                              <span className="text-3xl font-black text-zinc-900 leading-none">{card.value}</span>
-                              <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">{card.sub}</span>
+                              <span className="text-2xl font-black text-zinc-900 leading-none">{card.value}</span>
+                              <span className="text-[8px] font-bold text-zinc-400 uppercase tracking-widest">{card.sub}</span>
                             </div>
                           </div>
                         </div>
@@ -5267,7 +5267,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     </div>
 
                     {/* Main Content Grid */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       {/* Agendar Section */}
                       <div className="bg-white rounded-none border border-black/5 shadow-sm overflow-hidden flex flex-col">
                         <div className="p-8 space-y-6 flex-1">
