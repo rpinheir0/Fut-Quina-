@@ -1463,6 +1463,7 @@ interface ScheduledMatch {
   status: 'Confirmada' | 'Pendente';
   confirmedPlayers: number;
   maxPlayers: number;
+  imageUrl?: string;
 }
 
 type Screen = 'players' | 'teams' | 'ranking' | 'finance' | 'org-pro';
@@ -1883,6 +1884,67 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [isOrgProAuthorized, setIsOrgProAuthorized] = useState<boolean>(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [adminPin, setAdminPin] = useState<string>('');
+  const [selectedMatchId, setSelectedMatchId] = useState<string | null>(() => {
+    return safeLocalStorage.getItem(`futquina_selected_match_${groupId}`);
+  });
+  const isSwitchingMatch = useRef(false);
+
+  useEffect(() => {
+    if (selectedMatchId) {
+      safeLocalStorage.setItem(`futquina_selected_match_${groupId}`, selectedMatchId);
+    } else {
+      safeLocalStorage.removeItem(`futquina_selected_match_${groupId}`);
+    }
+  }, [selectedMatchId, groupId]);
+
+  useEffect(() => {
+    isSwitchingMatch.current = true;
+    
+    const loadFromKey = (prefix: string, setter: any, defaultVal: any) => {
+      const key = selectedMatchId ? `${prefix}_${groupId}_${selectedMatchId}` : `${prefix}_${groupId}`;
+      // When no match selected, we clear the states for "Organization Dashboard" privacy/clarity
+      if (!selectedMatchId) {
+        setter(defaultVal);
+        return;
+      }
+
+      const saved = safeLocalStorage.getItem(key);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          setter(parsed);
+        } catch(e) {
+          setter(defaultVal);
+        }
+      } else {
+        setter(defaultVal);
+      }
+    };
+
+    loadFromKey('futquina_players', setPlayers, []);
+    loadFromKey('futquina_expenses', setExpenses, []);
+    loadFromKey('futquina_payments', setPayments, []);
+    loadFromKey('futquina_teams', setTeams, []);
+    loadFromKey('futquina_match_history', setMatchHistory, []);
+    loadFromKey('futquina_match', setMatch, {
+      isActive: false,
+      isPaused: true,
+      timeRemaining: 600,
+      config: { duration: 10, playersPerTeam: 5, goalLimit: 5 },
+      scoreA: 0,
+      scoreB: 0,
+      events: [],
+      startTime: null,
+      hasEnded: false,
+      teamAIndex: -1,
+      teamBIndex: -1
+    });
+    loadFromKey('futquina_session_player_ids', setSessionPlayerIds, []);
+
+    setTimeout(() => {
+      isSwitchingMatch.current = false;
+    }, 100);
+  }, [selectedMatchId, groupId]);
 
   useEffect(() => {
     safeLocalStorage.setItem(`futquina_org_pro_authorized_${groupId}`, isOrgProAuthorized ? 'true' : 'false');
@@ -1983,8 +2045,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [panelModal, setPanelModal] = useState<'cadastrados' | 'externos' | 'assist' | 'confirmados' | 'admins' | null>(null);
 
   useEffect(() => {
-    safeLocalStorage.setItem(`futquina_expenses_${groupId}`, JSON.stringify(expenses));
-  }, [expenses]);
+    if (isSwitchingMatch.current) return;
+    const key = selectedMatchId ? `futquina_expenses_${groupId}_${selectedMatchId}` : `futquina_expenses_${groupId}`;
+    safeLocalStorage.setItem(key, JSON.stringify(expenses));
+  }, [expenses, selectedMatchId, groupId]);
   const [players, setPlayers] = useState<Player[]>(() => {
     const saved = safeLocalStorage.getItem(`futquina_players_${groupId}`);
     if (saved) {
@@ -2035,7 +2099,23 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   });
 
   const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [matchToDelete, setMatchToDelete] = useState<ScheduledMatch | null>(null);
   const [newMatchName, setNewMatchName] = useState('');
+  const [newMatchDay, setNewMatchDay] = useState('Segunda');
+  const [newMatchTime, setNewMatchTime] = useState('08:00 - 10:00');
+  const [newMatchImage, setNewMatchImage] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setNewMatchImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   useEffect(() => {
     safeLocalStorage.setItem(`futquina_scheduled_matches_${groupId}`, JSON.stringify(scheduledMatches));
@@ -2043,19 +2123,38 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
   const handleScheduleMatch = () => {
     if (newMatchName.trim()) {
+      const days = ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'];
+      const today = new Date();
+      const currentDayIndex = today.getDay();
+      const targetDayIndex = days.indexOf(newMatchDay);
+      
+      let diff = targetDayIndex - currentDayIndex;
+      if (diff < 0) diff += 7;
+      
+      const matchDate = new Date();
+      matchDate.setDate(today.getDate() + diff);
+      matchDate.setHours(8, 0, 0, 0); // Reset time to 8am for the date calculation
+
       const newMatch: ScheduledMatch = {
         id: generateId(),
         name: newMatchName.trim(),
-        date: new Date().getTime(), // Default to now
+        date: matchDate.getTime(),
         location: 'Arena a definir',
-        time: 'Pendente',
+        time: newMatchTime,
         status: 'Pendente',
         confirmedPlayers: 0,
-        maxPlayers: 16
+        maxPlayers: 16,
+        imageUrl: newMatchImage || undefined
       };
       setScheduledMatches(prev => [...prev, newMatch]);
       setNewMatchName('');
+      setNewMatchDay('Segunda');
+      setNewMatchTime('08:00 - 10:00');
+      setNewMatchImage('');
       setShowScheduleModal(false);
+      setSelectedMatchId(newMatch.id);
+      setCurrentScreen('players');
+      setShowAddPlayerSection(true);
     }
   };
   const [sessionPlayerIds, setSessionPlayerIds] = useState<string[]>(() => {
@@ -2509,6 +2608,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   const [showInsufficientPlayersModal, setShowInsufficientPlayersModal] = useState(false);
   const [showArrivalStepGuide, setShowArrivalStepGuide] = useState(false);
   const [showAddPlayerSection, setShowAddPlayerSection] = useState(false);
+  const [showPlayerSummary, setShowPlayerSummary] = useState(false);
   const [isFlashingConfig, setIsFlashingConfig] = useState(false);
 
   useEffect(() => {
@@ -2953,32 +3053,44 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   }, [players, teams.length, match.isActive, match.teamAIndex, match.teamBIndex]);
 
   useEffect(() => {
-    safeLocalStorage.setItem(`futquina_players_${groupId}`, JSON.stringify(players));
-  }, [players]);
+    if (isSwitchingMatch.current) return;
+    const key = selectedMatchId ? `futquina_players_${groupId}_${selectedMatchId}` : `futquina_players_${groupId}`;
+    safeLocalStorage.setItem(key, JSON.stringify(players));
+  }, [players, selectedMatchId, groupId]);
 
   useEffect(() => {
-    safeLocalStorage.setItem(`futquina_teams_${groupId}`, JSON.stringify(teams));
+    if (isSwitchingMatch.current) return;
+    const key = selectedMatchId ? `futquina_teams_${groupId}_${selectedMatchId}` : `futquina_teams_${groupId}`;
+    safeLocalStorage.setItem(key, JSON.stringify(teams));
     // Automatically remove empty teams
     if (teams.some(t => (t.playerIds?.length || 0) === 0)) {
       setTeams(prev => prev.filter(t => (t.playerIds?.length || 0) > 0));
     }
-  }, [teams]);
+  }, [teams, selectedMatchId, groupId]);
 
   useEffect(() => {
-    safeLocalStorage.setItem(`futquina_match_${groupId}`, JSON.stringify(match));
-  }, [match]);
+    if (isSwitchingMatch.current) return;
+    const key = selectedMatchId ? `futquina_match_${groupId}_${selectedMatchId}` : `futquina_match_${groupId}`;
+    safeLocalStorage.setItem(key, JSON.stringify(match));
+  }, [match, selectedMatchId, groupId]);
 
   useEffect(() => {
-    safeLocalStorage.setItem(`futquina_last_result_${groupId}`, JSON.stringify(lastMatchResult));
-  }, [lastMatchResult]);
+    if (isSwitchingMatch.current) return;
+    const key = selectedMatchId ? `futquina_last_result_${groupId}_${selectedMatchId}` : `futquina_last_result_${groupId}`;
+    safeLocalStorage.setItem(key, JSON.stringify(lastMatchResult));
+  }, [lastMatchResult, selectedMatchId, groupId]);
 
   useEffect(() => {
-    safeLocalStorage.setItem(`futquina_payments_${groupId}`, JSON.stringify(payments));
-  }, [payments]);
+    if (isSwitchingMatch.current) return;
+    const key = selectedMatchId ? `futquina_payments_${groupId}_${selectedMatchId}` : `futquina_payments_${groupId}`;
+    safeLocalStorage.setItem(key, JSON.stringify(payments));
+  }, [payments, selectedMatchId, groupId]);
 
   useEffect(() => {
-    safeLocalStorage.setItem(`futquina_session_player_ids_${groupId}`, JSON.stringify(sessionPlayerIds));
-  }, [sessionPlayerIds]);
+    if (isSwitchingMatch.current) return;
+    const key = selectedMatchId ? `futquina_session_player_ids_${groupId}_${selectedMatchId}` : `futquina_session_player_ids_${groupId}`;
+    safeLocalStorage.setItem(key, JSON.stringify(sessionPlayerIds));
+  }, [sessionPlayerIds, selectedMatchId, groupId]);
 
   useEffect(() => {
     safeLocalStorage.setItem(`futquina_monthly_fee_${groupId}`, monthlyFee.toString());
@@ -2993,8 +3105,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   }, [availableYears]);
 
   useEffect(() => {
-    safeLocalStorage.setItem(`futquina_match_history_${groupId}`, JSON.stringify(matchHistory));
-  }, [matchHistory]);
+    if (isSwitchingMatch.current) return;
+    const key = selectedMatchId ? `futquina_match_history_${groupId}_${selectedMatchId}` : `futquina_match_history_${groupId}`;
+    safeLocalStorage.setItem(key, JSON.stringify(matchHistory));
+  }, [matchHistory, selectedMatchId, groupId]);
 
   useEffect(() => {
     safeLocalStorage.setItem(`futquina_has_randomized_${groupId}`, String(hasRandomized));
@@ -4772,6 +4886,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     onClick={() => {
                       setShowInsufficientPlayersModal(false);
                       setCurrentScreen('players');
+                      setShowAddPlayerSection(true);
                     }}
                     className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg hover:bg-black transition-all active:scale-95 flex items-center justify-center gap-2"
                   >
@@ -5097,16 +5212,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           
           {/* Header Actions */}
           <div className="flex items-center gap-2 relative z-10">
-            {/* Settings Button */}
-            <button 
-              onClick={() => {
-                setShowGlobalSettings(true);
-              }}
-              className="w-9 h-9 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/10 transition-all active:scale-90"
-              title="Configurar aplicativo"
-            >
-              <PiGearBold size={20} />
-            </button>
+            {/* Header Title Space */}
           </div>
         </header>
 
@@ -5233,25 +5339,32 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 )}
                 
                 <div className="flex gap-2 w-full sm:w-auto">
-                  <button 
-                    onClick={() => setShowAddPlayerSection(!showAddPlayerSection)}
-                    className="flex-1 sm:flex-none px-3 py-2 bg-zinc-900 text-white text-[8px] font-black uppercase tracking-widest rounded-none shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
-                  >
-                    <UserPlus size={12} />
-                    {showAddPlayerSection ? 'VOLTAR AO PAINEL' : 'CADASTRAR JOGADORES'}
-                  </button>
-                  <button 
-                    onClick={() => {
-                      setCurrentScreen('teams');
-                      setTeamsTab('configuracao');
-                      if (!firstSetupDone) {
-                        setIsInitialSetupFlow(true);
-                      }
-                    }}
-                    className="flex-1 sm:flex-none px-3 py-2 bg-[#00FF00] text-black text-[8px] font-black uppercase tracking-widest rounded-none shadow shadow-[#00FF00]/20 hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
-                  >
-                    CONFIGURAR PARTIDA
-                  </button>
+                  {showAddPlayerSection ? (
+                    <>
+                      <button 
+                        onClick={() => {
+                          setShowAddPlayerSection(false);
+                          setSelectedMatchId(null);
+                        }}
+                        className="flex-1 sm:flex-none px-3 py-2 bg-zinc-900 text-white text-[8px] font-black uppercase tracking-widest rounded-none shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                      >
+                        <UserPlus size={12} />
+                        VOLTAR AO PAINEL
+                      </button>
+                      <button 
+                        onClick={() => {
+                          setCurrentScreen('teams');
+                          setTeamsTab('configuracao');
+                          if (!firstSetupDone) {
+                            setIsInitialSetupFlow(true);
+                          }
+                        }}
+                        className="flex-1 sm:flex-none px-3 py-2 bg-[#00FF00] text-black text-[8px] font-black uppercase tracking-widest rounded-none shadow shadow-[#00FF00]/20 hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                      >
+                        CONFIGURAR PARTIDA
+                      </button>
+                    </>
+                  ) : null}
                 </div>
               </div>
 
@@ -5266,69 +5379,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     transition={{ duration: 0.2 }}
                     className="space-y-4"
                   >
-                    {/* Summary Cards Grid */}
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                      {[
-                        { 
-                          label: "PRÓXIMA PELADA", 
-                          value: orgProSettings.matchDayOfWeek ? "1" : "0", 
-                          sub: "AGENDADA", 
-                          icon: <PiCalendarBlankFill size={16} />, 
-                          color: "text-emerald-600", 
-                          bg: "bg-emerald-50" 
-                        },
-                        { 
-                          label: "PAGAMENTOS EM DIA", 
-                          value: players.filter(p => {
-                            const m = new Date().getMonth();
-                            const y = new Date().getFullYear();
-                            const mName = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"][m];
-                            const r = payments.find(pay => pay.playerId === p.id && pay.year === y);
-                            return r && r.months && (r.months[mName] || 0) >= (monthlyFee || 30);
-                          }).length, 
-                          sub: "JOGADORES", 
-                          icon: <Users size={16} />, 
-                          color: "text-emerald-600", 
-                          bg: "bg-[#f0f9f4]" 
-                        },
-                        { 
-                          label: "PAGAMENTOS ATRASADOS", 
-                          value: players.filter(p => {
-                            const m = new Date().getMonth();
-                            const y = new Date().getFullYear();
-                            const mName = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"][m];
-                            const r = payments.find(pay => pay.playerId === p.id && pay.year === y);
-                            return !r || !r.months || (r.months[mName] || 0) < (monthlyFee || 30);
-                          }).length, 
-                          sub: "JOGADORES", 
-                          icon: <PiWarningCircleFill size={16} />, 
-                          color: "text-orange-600", 
-                          bg: "bg-orange-50" 
-                        },
-                        { 
-                          label: "TOTAL DE JOGADORES", 
-                          value: players.length, 
-                          sub: "CADASTRADOS", 
-                          icon: <PiClockFill size={16} />, 
-                          color: "text-blue-600", 
-                          bg: "bg-blue-50" 
-                        },
-                      ].map((card, idx) => (
-                        <div key={idx} className="bg-white p-3 rounded-none border border-black/5 shadow-sm space-y-2">
-                          <div className={`w-8 h-8 rounded-none ${card.bg} flex items-center justify-center`}>
-                            <div className={card.color}>{card.icon}</div>
-                          </div>
-                          <div>
-                            <p className="text-[8px] font-black uppercase tracking-widest text-zinc-400">{card.label}</p>
-                            <div className="flex items-baseline gap-1.5 mt-0.5">
-                              <span className="text-xl font-black text-zinc-900 leading-none">{card.value}</span>
-                              <span className="text-[7px] font-bold text-zinc-400 uppercase tracking-widest">{card.sub}</span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-
                     {/* Main Content Grid */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       {/* Agendar Section */}
@@ -5336,24 +5386,24 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="p-8 space-y-6 flex-1">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
-                              <div className="text-emerald-500">
-                                <PiCalendarBlankBold size={32} />
+                              <div className="text-[#dce3ee]">
+                                <GiSoccerBall size={32} />
                               </div>
                               <div>
-                                <h3 className="text-lg font-black text-zinc-900">Agendar</h3>
+                                <h3 className="text-lg font-black text-zinc-900">Crie sua Pelada</h3>
                                 <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Crie e gerencie as próximas peladas.</p>
                               </div>
                             </div>
                             <button 
                               onClick={() => setShowScheduleModal(true)}
-                              className="bg-emerald-600 text-white px-4 py-2.5 rounded-none text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:bg-emerald-700 transition-all active:scale-95 shadow-lg shadow-emerald-600/20"
+                              className="bg-brand-gradient text-black px-4 py-2.5 rounded-none text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow-lg"
                             >
-                              <Plus size={16} /> Agendar pelada
+                              <Plus size={16} /> CRIAR
                             </button>
                           </div>
 
                           <div className="space-y-4">
-                            <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Próxima pelada</h4>
+                            <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Suas peladas</h4>
                             {scheduledMatches.map((match) => {
                               const matchDate = new Date(match.date);
                               const day = matchDate.getDate();
@@ -5364,27 +5414,35 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 <div 
                                   key={match.id}
                                   onClick={() => {
-                                    setCurrentScreen('teams');
-                                    setTeamsTab('historico');
+                                    setSelectedMatchId(match.id);
+                                    setCurrentScreen('players');
+                                    setShowAddPlayerSection(true);
                                   }}
                                   className="group relative bg-zinc-50 hover:bg-zinc-100 transition-all rounded-none p-5 flex items-center gap-5 border border-black/5 cursor-pointer"
                                 >
-                                  <div className="w-20 h-24 bg-emerald-900 rounded-none flex flex-col items-center justify-center text-white shrink-0 shadow-xl shadow-emerald-900/20 group-hover:scale-105 transition-transform">
-                                    <span className="text-3xl font-black leading-none">{day}</span>
-                                    <span className="text-[11px] font-black uppercase tracking-tighter mt-1">{month}</span>
-                                    <span className="text-[10px] font-bold uppercase opacity-50 tracking-widest">{weekday}</span>
+                                  <div className="w-20 h-24 bg-emerald-900 rounded-none flex flex-col items-center justify-center text-white shrink-0 shadow-xl shadow-emerald-900/20 group-hover:scale-105 transition-transform relative overflow-hidden">
+                                    {match.imageUrl ? (
+                                      <>
+                                        <img 
+                                          src={match.imageUrl} 
+                                          alt="" 
+                                          className="absolute inset-0 w-full h-full object-cover"
+                                          referrerPolicy="no-referrer"
+                                        />
+                                        <div className="absolute inset-0 bg-emerald-900/60" />
+                                      </>
+                                    ) : null}
+                                    <div className="relative z-10 flex flex-col items-center">
+                                      <span className="text-3xl font-black leading-none">{day}</span>
+                                      <span className="text-[11px] font-black uppercase tracking-tighter mt-1">{month}</span>
+                                      <span className="text-[10px] font-bold uppercase opacity-50 tracking-widest">{weekday}</span>
+                                    </div>
                                   </div>
                                   <div className="flex-1 min-w-0 space-y-2">
                                     <div className="flex items-center justify-between">
                                       <h5 className="font-black text-zinc-900 truncate uppercase tracking-tight text-sm">{match.name}</h5>
-                                      <span className={`px-3 py-1 ${match.status === 'Confirmada' ? 'bg-emerald-100 text-emerald-700 border-emerald-200' : 'bg-orange-100 text-orange-700 border-orange-200'} text-[9px] font-black uppercase rounded-none border`}>
-                                        {match.status}
-                                      </span>
                                     </div>
                                     <div className="grid grid-cols-1 gap-1">
-                                      <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase">
-                                        <div className="text-emerald-500"><PiMapPinFill size={14} /></div> {match.location}
-                                      </div>
                                       <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase">
                                         <div className="text-emerald-500"><PiClockFill size={14} /></div> {match.time}
                                       </div>
@@ -5393,8 +5451,19 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       </div>
                                     </div>
                                   </div>
-                                  <div className="text-zinc-300 group-hover:text-emerald-500 transition-colors">
-                                    <ChevronRight size={24} />
+                                  <div className="flex items-center gap-2">
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setMatchToDelete(match);
+                                      }}
+                                      className="p-2 text-zinc-300 hover:text-red-500 hover:bg-red-50 transition-all rounded-none"
+                                    >
+                                      <Trash2 size={18} />
+                                    </button>
+                                    <div className="text-zinc-300 group-hover:text-emerald-500 transition-colors">
+                                      <ChevronRight size={24} />
+                                    </div>
                                   </div>
                                 </div>
                               );
@@ -5406,96 +5475,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         </button>
                       </div>
 
-                      {/* Pagamentos Section */}
-                      <div className="bg-white rounded-none border border-black/5 shadow-sm overflow-hidden flex flex-col">
-                        <div className="p-8 space-y-8 flex-1">
-                          <div className="flex items-center gap-4">
-                            <div className="w-16 h-16 rounded-none bg-[#f0f9f4] flex items-center justify-center text-emerald-600">
-                              <DollarSign size={32} />
-                            </div>
-                            <div>
-                              <h3 className="text-xl font-black text-zinc-900 tracking-tight">Pagamentos dos jogadores</h3>
-                              <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">SITUAÇÃO DOS PAGAMENTOS.</p>
-                            </div>
-                          </div>
 
-                          <div className="space-y-4">
-                            {/* Paid Row */}
-                            {(() => {
-                              const m = new Date().getMonth();
-                              const y = new Date().getFullYear();
-                              const mName = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"][m];
-                              const paid = players.filter(p => {
-                                const r = payments.find(pay => pay.playerId === p.id && pay.year === y);
-                                return r && r.months && (r.months[mName] || 0) >= (monthlyFee || 30);
-                              });
-                              const unpaid = players.filter(p => !paid.some(pp => pp.id === p.id));
-                              
-                              return (
-                                <div className="space-y-4">
-                                  <div 
-                                    onClick={() => {
-                                      setCurrentScreen('finance');
-                                      setFinanceSubScreen('mensalidade');
-                                    }}
-                                    className="group bg-[#f8fdfb] hover:bg-[#f2faf7] transition-all rounded-none p-6 flex items-center justify-between border border-emerald-100 cursor-pointer"
-                                  >
-                                    <div className="flex items-center gap-4">
-                                      <div className="w-10 h-10 rounded-none bg-emerald-600 text-white flex items-center justify-center shadow-lg shadow-emerald-600/20">
-                                        <Check size={20} />
-                                      </div>
-                                      <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Pagamentos em dia</span>
-                                      <span className="bg-emerald-600 text-white px-2 py-1 rounded-none text-[10px] font-black min-w-8 text-center">{paid.length}</span>
-                                    </div>
-                                    <div className="flex items-center">
-                                      <div className="flex -space-x-1">
-                                        {paid.slice(0, 5).map((p, i) => (
-                                          <div key={p.id} className="w-8 h-8 rounded-none border-2 border-white overflow-hidden bg-zinc-200">
-                                            {p.photo ? <img src={p.photo} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-[10px] font-bold uppercase">{p.name[0]}</div>}
-                                          </div>
-                                        ))}
-                                        {paid.length > 5 && (
-                                          <div className="w-8 h-8 rounded-none border-2 border-white bg-zinc-100 flex items-center justify-center text-[8px] font-black text-zinc-500">+{(paid.length - 5)}</div>
-                                        )}
-                                      </div>
-                                      <MoreVertical size={16} className="text-zinc-300 ml-4" />
-                                    </div>
-                                  </div>
-
-                                  <div 
-                                    onClick={() => {
-                                      setCurrentScreen('finance');
-                                      setFinanceSubScreen('mensalidade');
-                                    }}
-                                    className="group bg-[#fffbf9] hover:bg-[#fff7f2] transition-all rounded-none p-6 flex items-center justify-between border border-orange-100 cursor-pointer"
-                                  >
-                                    <div className="flex items-center gap-4">
-                                      <div className="w-10 h-10 rounded-none bg-orange-600 text-white flex items-center justify-center shadow-lg shadow-orange-600/20">
-                                        <AlertCircle size={20} />
-                                      </div>
-                                      <span className="text-[10px] font-black uppercase tracking-widest text-orange-900">Pagamentos atrasados</span>
-                                      <span className="bg-orange-600 text-white px-2 py-1 rounded-none text-[10px] font-black min-w-8 text-center">{unpaid.length}</span>
-                                    </div>
-                                    <div className="flex items-center">
-                                      <div className="flex -space-x-1">
-                                        {unpaid.slice(0, 5).map((p, i) => (
-                                          <div key={p.id} className="w-8 h-8 rounded-none border-2 border-white overflow-hidden bg-zinc-200">
-                                            {p.photo ? <img src={p.photo} alt="" className="w-full h-full object-cover" /> : <div className="w-full h-full flex items-center justify-center text-[10px] font-bold uppercase">{p.name[0]}</div>}
-                                          </div>
-                                        ))}
-                                        {unpaid.length > 5 && (
-                                          <div className="w-8 h-8 rounded-none border-2 border-white bg-zinc-100 flex items-center justify-center text-[8px] font-black text-zinc-500">+{(unpaid.length - 5)}</div>
-                                        )}
-                                      </div>
-                                      <MoreVertical size={16} className="text-zinc-300 ml-4" />
-                                    </div>
-                                  </div>
-                                </div>
-                              );
-                            })()}
-                          </div>
-                        </div>
-                      </div>
                     </div>
                   </motion.div>
                 ) : (
@@ -5507,6 +5487,92 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     transition={{ duration: 0.2 }}
                     className="space-y-6"
                   >
+                    {/* Collapsible Summary Bar */}
+                    <button 
+                      onClick={() => setShowPlayerSummary(!showPlayerSummary)}
+                      className="w-full flex items-center justify-between p-3 bg-zinc-50 border border-zinc-200 hover:bg-zinc-100 transition-colors group"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
+                        <span className="text-[10px] font-black uppercase tracking-widest text-zinc-600">Resumo da Organização</span>
+                      </div>
+                      <div className={`transition-transform duration-300 ${showPlayerSummary ? 'rotate-180' : ''}`}>
+                        <ChevronDown size={14} className="text-zinc-400 group-hover:text-zinc-600" />
+                      </div>
+                    </button>
+
+                    {showPlayerSummary && (
+                      <motion.div 
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="overflow-hidden"
+                      >
+                        {/* Summary Cards Grid */}
+                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 py-1">
+                          {[
+                            { 
+                              label: "PRÓXIMA PELADA", 
+                              value: orgProSettings.matchDayOfWeek ? "1" : "0", 
+                              sub: "AGENDADA", 
+                              icon: <PiCalendarBlankFill size={16} />, 
+                              color: "text-emerald-600", 
+                              bg: "bg-emerald-50" 
+                            },
+                            { 
+                              label: "PAGAMENTOS EM DIA", 
+                              value: players.filter(p => {
+                                const m = new Date().getMonth();
+                                const y = new Date().getFullYear();
+                                const mName = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"][m];
+                                const r = payments.find(pay => pay.playerId === p.id && pay.year === y);
+                                return r && r.months && (r.months[mName] || 0) >= (monthlyFee || 30);
+                              }).length, 
+                              sub: "JOGADORES", 
+                              icon: <Users size={16} />, 
+                              color: "text-emerald-600", 
+                              bg: "bg-[#f0f9f4]" 
+                            },
+                            { 
+                              label: "PAGAMENTOS ATRASADOS", 
+                              value: players.filter(p => {
+                                const m = new Date().getMonth();
+                                const y = new Date().getFullYear();
+                                const mName = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"][m];
+                                const r = payments.find(pay => pay.playerId === p.id && pay.year === y);
+                                return !r || !r.months || (r.months[mName] || 0) < (monthlyFee || 30);
+                              }).length, 
+                              sub: "JOGADORES", 
+                              icon: <PiWarningCircleFill size={16} />, 
+                              color: "text-orange-600", 
+                              bg: "bg-orange-50" 
+                            },
+                            { 
+                              label: "TOTAL DE JOGADORES", 
+                              value: players.length, 
+                              sub: "CADASTRADOS", 
+                              icon: <PiClockFill size={16} />, 
+                              color: "text-blue-600", 
+                              bg: "bg-blue-50" 
+                            },
+                          ].map((card, idx) => (
+                            <div key={idx} className="bg-white p-3 rounded-none border border-black/5 shadow-sm space-y-2">
+                              <div className={`w-8 h-8 rounded-none ${card.bg} flex items-center justify-center`}>
+                                <div className={card.color}>{card.icon}</div>
+                              </div>
+                              <div>
+                                <p className="text-[8px] font-black uppercase tracking-widest text-zinc-400">{card.label}</p>
+                                <div className="flex items-baseline gap-1.5 mt-0.5">
+                                  <span className="text-xl font-black text-zinc-900 leading-none">{card.value}</span>
+                                  <span className="text-[7px] font-bold text-zinc-400 uppercase tracking-widest">{card.sub}</span>
+                                </div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+
                     <div className="bg-white p-6 rounded-none border border-black/5 shadow-sm space-y-6">
                       <div className="bg-[#dce3ee]/30 p-6 rounded-none border border-black/5 space-y-6">
                         <div className="flex flex-col sm:flex-row gap-3">
@@ -11265,6 +11331,41 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
         {/* Auth modal removed */}
       </AnimatePresence>
 
+      {matchToDelete && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm shadow-2xl">
+          <div className="w-full max-w-sm bg-white p-6 rounded-none shadow-[0_20px_60px_rgba(0,0,0,0.8)] border border-black/10 relative overflow-hidden">
+            <div className="relative z-10 text-center space-y-4">
+              <div className="w-16 h-16 rounded-none bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-4">
+                <Trash2 size={32} />
+              </div>
+              <h3 className="text-2xl font-black uppercase tracking-tighter text-zinc-900">Excluir Pelada</h3>
+              <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em] mt-1 leading-relaxed">
+                Tem certeza que deseja excluir a pelada "{matchToDelete.name}"?
+              </p>
+
+              <div className="grid grid-cols-2 gap-4 mt-8">
+                <button
+                  onClick={() => setMatchToDelete(null)}
+                  className="w-full py-4 rounded-none font-black uppercase tracking-widest text-[10px] transition-all bg-zinc-50 text-zinc-400 hover:bg-zinc-100 border border-black/5"
+                >
+                  Cancelar
+                </button>
+                <button
+                  onClick={() => {
+                    setScheduledMatches(prev => prev.filter(m => m.id !== matchToDelete.id));
+                    setToast({ message: 'Pelada deletada com sucesso!', type: 'success' });
+                    setMatchToDelete(null);
+                  }}
+                  className="w-full py-4 rounded-none font-black uppercase tracking-widest text-[11px] bg-red-600/10 text-red-600 border border-red-600/20 hover:bg-red-600 hover:text-white transition-all active:scale-95 shadow-xl disabled:opacity-50"
+                >
+                  Excluir
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Schedule Match Modal */}
       {showScheduleModal && (
         <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
@@ -11275,38 +11376,94 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           >
             <div className="relative z-10 text-center mb-8">
               <div className="w-16 h-16 rounded-none bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4">
-                <PiCalendarBlankBold size={32} />
+                <GiSoccerBall size={32} />
               </div>
-              <h3 className="text-2xl font-black uppercase tracking-tighter text-zinc-900">Agendar Pelada</h3>
+              <h3 className="text-2xl font-black uppercase tracking-tighter text-zinc-900">Criar pelada</h3>
               <p className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] mt-1">Como vai se chamar a pelada?</p>
             </div>
 
-            <input
-              type="text"
-              value={newMatchName}
-              onChange={e => setNewMatchName(e.target.value)}
-              placeholder="Ex: Pelada do Domingo"
-              className="relative z-10 w-full p-6 rounded-none mb-8 outline-none font-black bg-zinc-50 border border-black/5 text-zinc-900 placeholder:text-zinc-300 focus:border-emerald-500 transition-all text-center text-lg shadow-inner"
-              autoFocus
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') handleScheduleMatch();
-              }}
-            />
+            <div className="space-y-6 relative z-10">
+              <div className="space-y-2">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={newMatchName}
+                    onChange={e => setNewMatchName(e.target.value)}
+                    placeholder="Ex: Pelada do Domingo"
+                    className="flex-1 p-4 rounded-none outline-none font-medium bg-zinc-50 border border-black/5 text-zinc-900 placeholder:text-zinc-300 focus:border-emerald-500 transition-all text-center text-base shadow-inner"
+                    autoFocus
+                  />
+                  <button
+                    onClick={() => fileInputRef.current?.click()}
+                    className="px-4 bg-zinc-50 border border-black/5 rounded-none text-zinc-400 hover:text-emerald-600 transition-all flex items-center justify-center group"
+                    title="Adicionar imagem de fundo"
+                  >
+                    <Camera size={20} className="group-hover:scale-110 transition-transform" />
+                  </button>
+                </div>
+                <input 
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  accept="image/*"
+                  className="hidden"
+                />
+                {newMatchImage && newMatchImage.startsWith('data:') && (
+                  <div className="flex items-center justify-center gap-1 mt-1">
+                    <span className="text-[9px] font-black text-emerald-600 uppercase tracking-tighter">Imagem da galeria carregada</span>
+                    <button 
+                      onClick={() => setNewMatchImage('')}
+                      className="text-red-500 hover:text-red-600"
+                    >
+                      <X size={10} />
+                    </button>
+                  </div>
+                )}
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest block text-center">Dia da Semana</label>
+                  <select 
+                    value={newMatchDay}
+                    onChange={e => setNewMatchDay(e.target.value)}
+                    className="w-full p-4 bg-zinc-50 border border-black/5 rounded-none font-bold text-center text-xs outline-none focus:border-emerald-500 appearance-none"
+                  >
+                    {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map(day => (
+                      <option key={day} value={day}>{day}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest block text-center">Horário</label>
+                  <input 
+                    type="text"
+                    value={newMatchTime}
+                    onChange={e => setNewMatchTime(e.target.value)}
+                    placeholder="08:00 - 10:00"
+                    className="w-full p-4 bg-zinc-50 border border-black/5 rounded-none font-bold text-center text-xs outline-none focus:border-emerald-500"
+                  />
+                </div>
+              </div>
+            </div>
             
-            <div className="relative z-10 flex flex-col gap-4">
+            <div className="relative z-10 flex flex-col gap-4 mt-8">
               <button
                 onClick={handleScheduleMatch}
                 disabled={!newMatchName.trim()}
-                className="w-full py-5 rounded-none font-black uppercase tracking-widest text-[11px] bg-emerald-600 text-white hover:opacity-90 transition-all disabled:opacity-50 active:scale-95 shadow-xl shadow-emerald-600/20"
+                className="w-full py-5 rounded-none font-black uppercase tracking-widest text-[11px] bg-emerald-600/50 text-emerald-900 hover:bg-emerald-600 hover:text-white transition-all disabled:opacity-50 active:scale-95 shadow-xl shadow-emerald-600/10 border border-emerald-600/10"
               >
-                Criar Pelada
+                CRIAR
               </button>
               <button
                 onClick={() => {
                   setShowScheduleModal(false);
                   setNewMatchName('');
+                  setNewMatchDay('Segunda');
+                  setNewMatchTime('08:00 - 10:00');
+                  setNewMatchImage('');
                 }}
-                className="w-full py-4 rounded-none font-black uppercase tracking-widest text-[10px] transition-all bg-zinc-100 text-zinc-500 hover:bg-zinc-200"
+                className="w-full py-4 rounded-none font-black uppercase tracking-widest text-[10px] transition-all bg-zinc-50 text-zinc-400 hover:bg-zinc-100"
               >
                 Cancelar
               </button>
