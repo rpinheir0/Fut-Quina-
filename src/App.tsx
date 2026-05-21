@@ -5381,11 +5381,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     className="space-y-4"
                   >
                     {/* Main Content Grid */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div className="flex flex-col gap-6">
                       {/* Agendar Section */}
                       <div className="flex flex-col">
                         <div className="p-8 space-y-6 flex-1">
-                          <div className="flex items-center justify-between">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-2">
                             <div className="flex items-center gap-4">
                               <div className="text-[#dce3ee]">
                                 <GiSoccerBall size={32} />
@@ -5397,7 +5397,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             </div>
                             <button 
                               onClick={() => setShowScheduleModal(true)}
-                              className="bg-brand-gradient text-black px-4 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow-lg"
+                              className="w-full sm:w-auto bg-brand-gradient text-black px-4 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow-lg"
                             >
                               <Plus size={16} /> CRIAR
                             </button>
@@ -5419,9 +5419,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     setCurrentScreen('players');
                                     setShowAddPlayerSection(true);
                                   }}
-                                  className="group relative bg-zinc-50 hover:bg-zinc-100 transition-all rounded-xl p-5 flex items-center gap-5 border border-black/5 cursor-pointer"
+                                  className="group relative bg-zinc-50 hover:bg-zinc-100 transition-all rounded-xl p-3 flex items-center gap-4 border border-black/5 cursor-pointer"
                                 >
-                                  <div className="w-20 h-24 bg-emerald-900 rounded-lg flex flex-col items-center justify-center text-white shrink-0 shadow-xl shadow-emerald-900/20 group-hover:scale-105 transition-transform relative overflow-hidden">
+                                  <div className="w-14 h-16 sm:w-16 sm:h-20 bg-emerald-900 rounded-lg flex flex-col items-center justify-center text-white shrink-0 shadow-lg shadow-emerald-900/20 group-hover:scale-105 transition-transform relative overflow-hidden">
                                     {match.imageUrl ? (
                                       <>
                                         <img 
@@ -5434,21 +5434,21 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       </>
                                     ) : null}
                                     <div className="relative z-10 flex flex-col items-center">
-                                      <span className="text-3xl font-black leading-none">{day}</span>
-                                      <span className="text-[11px] font-black uppercase tracking-tighter mt-1">{month}</span>
-                                      <span className="text-[10px] font-bold uppercase opacity-50 tracking-widest">{weekday}</span>
+                                      <span className="text-xl sm:text-2xl font-black leading-none">{day}</span>
+                                      <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-tighter mt-1">{month}</span>
+                                      <span className="text-[7px] sm:text-[8px] font-bold uppercase opacity-50 tracking-widest">{weekday}</span>
                                     </div>
                                   </div>
-                                  <div className="flex-1 min-w-0 space-y-2">
-                                    <div className="flex items-center justify-between">
-                                      <h5 className="font-black text-zinc-900 truncate uppercase tracking-tight text-sm">{match.name}</h5>
-                                    </div>
-                                    <div className="grid grid-cols-1 gap-1">
-                                      <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase">
-                                        <div className="text-emerald-500"><BsClockHistory size={14} /></div> {match.time}
-                                      </div>
-                                      <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase">
-                                        <BsPersonFillAdd size={14} className="text-emerald-500" /> {match.confirmedPlayers}/{match.maxPlayers} jogadores
+                                  <div className="flex-1 min-w-0 flex flex-col sm:flex-row sm:items-center justify-between gap-1 sm:gap-3">
+                                    <div className="space-y-1 min-w-0 flex-1">
+                                      <h5 className="font-black text-zinc-900 truncate uppercase tracking-tight text-[11px] sm:text-xs">{match.name}</h5>
+                                      <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-3">
+                                        <div className="flex items-center gap-1.5 text-[8px] sm:text-[9px] text-zinc-500 font-bold uppercase truncate">
+                                          <div className="text-emerald-500 shrink-0"><BsClockHistory size={10} className="sm:w-3 sm:h-3" /></div> {match.time}
+                                        </div>
+                                        <div className="flex items-center gap-1.5 text-[8px] sm:text-[9px] text-zinc-500 font-bold uppercase truncate">
+                                          <BsPersonFillAdd size={10} className="text-emerald-500 shrink-0 sm:w-3 sm:h-3" /> {match.confirmedPlayers}/{match.maxPlayers} jogadores
+                                        </div>
                                       </div>
                                     </div>
                                   </div>
@@ -5483,9 +5483,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             })}
                           </div>
                         </div>
-                        <button className="w-full py-5 text-emerald-600 text-[10px] font-black uppercase tracking-widest hover:bg-zinc-100 transition-colors">
-                          Ver todas as peladas
-                        </button>
                       </div>
 
 
