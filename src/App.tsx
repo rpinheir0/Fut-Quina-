@@ -72,7 +72,7 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { IoPersonOutline, IoFootballOutline, IoCheckmarkCircle } from 'react-icons/io5';
-import { BsArrowUpRightCircle } from 'react-icons/bs';
+import { BsArrowUpRightCircle, BsClockHistory, BsPersonFillAdd } from 'react-icons/bs';
 import { IoIosTrophy, IoIosWallet, IoIosFootball, IoMdSwap, IoMdArrowUp, IoMdArrowDown } from 'react-icons/io';
 import { PiUserCirclePlusThin, PiUserCirclePlusLight, PiUserCirclePlus } from 'react-icons/pi';
 import { ImSpinner9 } from 'react-icons/im';
@@ -2099,6 +2099,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
   });
 
   const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [matchConfigOpenId, setMatchConfigOpenId] = useState<string | null>(null);
   const [matchToDelete, setMatchToDelete] = useState<ScheduledMatch | null>(null);
   const [newMatchName, setNewMatchName] = useState('');
   const [newMatchDay, setNewMatchDay] = useState('Segunda');
@@ -5382,7 +5383,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     {/* Main Content Grid */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                       {/* Agendar Section */}
-                      <div className="bg-white rounded-none border border-black/5 shadow-sm overflow-hidden flex flex-col">
+                      <div className="flex flex-col">
                         <div className="p-8 space-y-6 flex-1">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-4">
@@ -5396,7 +5397,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             </div>
                             <button 
                               onClick={() => setShowScheduleModal(true)}
-                              className="bg-brand-gradient text-black px-4 py-2.5 rounded-none text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow-lg"
+                              className="bg-brand-gradient text-black px-4 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-widest flex items-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow-lg"
                             >
                               <Plus size={16} /> CRIAR
                             </button>
@@ -5404,7 +5405,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                           <div className="space-y-4">
                             <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">Suas peladas</h4>
-                            {scheduledMatches.map((match) => {
+                            {scheduledMatches.map(match => {
                               const matchDate = new Date(match.date);
                               const day = matchDate.getDate();
                               const month = matchDate.toLocaleString('pt-BR', { month: 'short' }).toUpperCase();
@@ -5418,9 +5419,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     setCurrentScreen('players');
                                     setShowAddPlayerSection(true);
                                   }}
-                                  className="group relative bg-zinc-50 hover:bg-zinc-100 transition-all rounded-none p-5 flex items-center gap-5 border border-black/5 cursor-pointer"
+                                  className="group relative bg-zinc-50 hover:bg-zinc-100 transition-all rounded-xl p-5 flex items-center gap-5 border border-black/5 cursor-pointer"
                                 >
-                                  <div className="w-20 h-24 bg-emerald-900 rounded-none flex flex-col items-center justify-center text-white shrink-0 shadow-xl shadow-emerald-900/20 group-hover:scale-105 transition-transform relative overflow-hidden">
+                                  <div className="w-20 h-24 bg-emerald-900 rounded-lg flex flex-col items-center justify-center text-white shrink-0 shadow-xl shadow-emerald-900/20 group-hover:scale-105 transition-transform relative overflow-hidden">
                                     {match.imageUrl ? (
                                       <>
                                         <img 
@@ -5444,24 +5445,36 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     </div>
                                     <div className="grid grid-cols-1 gap-1">
                                       <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase">
-                                        <div className="text-emerald-500"><PiClockFill size={14} /></div> {match.time}
+                                        <div className="text-emerald-500"><BsClockHistory size={14} /></div> {match.time}
                                       </div>
                                       <div className="flex items-center gap-2 text-[10px] text-zinc-500 font-bold uppercase">
-                                        <Users size={14} className="text-emerald-500" /> {match.confirmedPlayers}/{match.maxPlayers} jogadores
+                                        <BsPersonFillAdd size={14} className="text-emerald-500" /> {match.confirmedPlayers}/{match.maxPlayers} jogadores
                                       </div>
                                     </div>
                                   </div>
                                   <div className="flex items-center gap-2">
+                                    {matchConfigOpenId === match.id && (
+                                      <button
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setMatchToDelete(match);
+                                          setMatchConfigOpenId(null);
+                                        }}
+                                        className="p-2 text-zinc-300 hover:text-red-500 hover:bg-red-50 transition-all rounded-none animate-in fade-in zoom-in"
+                                      >
+                                        <Trash2 size={18} />
+                                      </button>
+                                    )}
                                     <button
                                       onClick={(e) => {
                                         e.stopPropagation();
-                                        setMatchToDelete(match);
+                                        setMatchConfigOpenId(prev => prev === match.id ? null : match.id);
                                       }}
-                                      className="p-2 text-zinc-300 hover:text-red-500 hover:bg-red-50 transition-all rounded-none"
+                                      className={`p-2 transition-all rounded-none ${matchConfigOpenId === match.id ? 'text-zinc-600 bg-zinc-100' : 'text-zinc-300 hover:text-zinc-600'}`}
                                     >
-                                      <Trash2 size={18} />
+                                      <Settings size={18} />
                                     </button>
-                                    <div className="text-zinc-300 group-hover:text-emerald-500 transition-colors">
+                                    <div className="text-zinc-300 group-hover:text-emerald-500 transition-colors ml-2">
                                       <ChevronRight size={24} />
                                     </div>
                                   </div>
@@ -5470,7 +5483,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             })}
                           </div>
                         </div>
-                        <button className="w-full py-5 bg-zinc-50/50 border-t border-black/5 text-emerald-600 text-[10px] font-black uppercase tracking-widest hover:bg-zinc-100 transition-colors">
+                        <button className="w-full py-5 text-emerald-600 text-[10px] font-black uppercase tracking-widest hover:bg-zinc-100 transition-colors">
                           Ver todas as peladas
                         </button>
                       </div>
@@ -5573,7 +5586,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                       </motion.div>
                     )}
 
-                    <div className="bg-white p-6 rounded-none border border-black/5 shadow-sm space-y-6">
+                    <div className="space-y-6">
                       <div className="bg-[#dce3ee]/30 p-6 rounded-none border border-black/5 space-y-6">
                         <div className="flex flex-col sm:flex-row gap-3">
                           <div className="flex-1 flex gap-3">
@@ -5662,14 +5675,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               <motion.div 
                                 layout
                                 key={`player-list-dash-switch-${player.id}`}
-                                className={`flex items-center justify-between p-4 rounded-none transition-all cursor-pointer hover:bg-zinc-50 active:bg-zinc-100 border border-transparent hover:border-black/5 bg-transparent`}
+                                className={`flex items-center justify-between p-4 rounded-none transition-all cursor-pointer hover:bg-zinc-50 active:bg-zinc-100 border border-black/5 bg-white shadow-sm`}
                                 onClick={() => {
                                   if (editingPlayerId !== player.id) {
                                     setPlayerManagementModal(player);
                                   }
                                 }}
                               >
-                                <div className="flex items-center gap-4 flex-1">
+                                <div className="flex items-center gap-4 flex-1 min-w-0">
                                   <div className="w-10 h-10 rounded-none flex items-center justify-center shrink-0 bg-zinc-100 text-zinc-400 border border-black/5 overflow-hidden">
                                     {player.photo ? (
                                       <img src={player.photo} alt={player.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
@@ -5681,7 +5694,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     <input 
                                       autoFocus
                                       defaultValue={player.name}
-                                      className={`flex-1 bg-zinc-100 border-b border-emerald-500 outline-none text-sm font-bold py-1 px-3 rounded-none text-zinc-900`}
+                                      className={`flex-1 bg-zinc-100 border-b border-emerald-500 outline-none text-sm font-bold py-1 px-3 rounded-none text-zinc-900 min-w-0`}
                                       onClick={(e) => e.stopPropagation()}
                                       onKeyDown={(e) => {
                                         if (e.key === 'Enter') updatePlayerName(player.id, e.currentTarget.value);
@@ -5692,7 +5705,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   ) : (
                                     <div className="flex flex-col gap-0.5 flex-1 min-w-0">
                                       <div className="flex items-center gap-2">
-                                        <span className="text-sm font-black truncate text-left leading-none text-zinc-900 uppercase tracking-tight">{player.name}</span>
+                                        <span className="text-sm font-normal truncate text-left leading-none text-zinc-900 uppercase tracking-tight">{player.name}</span>
                                         {orgProData[player.id] && <div className="shrink-0 text-yellow-500"><GiCrown size={16} /></div>}
                                       </div>
                                       <div className="flex gap-0.5">
@@ -7587,15 +7600,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 >
                   <div className="flex items-center justify-between pb-2 border-b border-dashed border-black/10 mb-4 px-2">
                     <div className="flex items-center gap-1">
-                      <button 
-                        onClick={() => setIsPrintMode(true)} 
-                        className="flex items-center gap-2 p-2 px-3 rounded-xl border border-black/10 bg-black/5 hover:bg-black/10 transition-colors shadow-sm"
-                      >
-                        <span className="text-zinc-800">
-                          <GiPodiumWinner size={20} />
-                        </span>
-                        <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Ranking</span>
-                      </button>
+                      {/* Ranking print button removed */}
                     </div>
                     <div className="text-zinc-800/30 text-xs font-bold font-mono tracking-tighter uppercase"></div>
                     <div className={`flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-zinc-800/50 ${rankingTab === 'artilharia' ? 'flex-row-reverse' : ''}`}>
@@ -11375,7 +11380,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
             className="w-full max-w-md p-8 rounded-none shadow-[0_20px_60px_rgba(0,0,0,0.8)] bg-white border border-black/10 relative overflow-hidden"
           >
             <div className="relative z-10 text-center mb-8">
-              <div className="w-16 h-16 rounded-none bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-none text-[#dce3ee] flex items-center justify-center mx-auto mb-4">
                 <GiSoccerBall size={32} />
               </div>
               <h3 className="text-2xl font-black uppercase tracking-tighter text-zinc-900">Criar pelada</h3>
