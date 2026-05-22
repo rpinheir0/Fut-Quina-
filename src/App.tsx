@@ -5540,13 +5540,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         })}
                         
                         {/* Alert Banner */}
-                        <div className="bg-[#eff5e8] rounded-[20px] p-4 flex items-center gap-4 border border-black/5 shadow-sm">
+                        <div className="bg-[#eff5e8] rounded-[20px] p-4 flex items-center gap-4 border border-black/5 shadow-sm mt-2">
                           <div className="w-10 h-10 rounded-full bg-[#d0e4c2] text-[#25660e] flex items-center justify-center shrink-0">
                             <Shirt size={20} />
                           </div>
                           <div className="flex-1 flex flex-col">
-                            <h5 className="text-[13px] font-bold text-zinc-900 border-black/10">Faltam <span className="text-[#348011]">2 jogadores</span> para fechar a pelada!</h5>
-                            <p className="text-[11px] text-zinc-600 mt-0.5">Convide seus amigos e complete o time.</p>
+                            <h5 className="text-[13px] font-bold text-zinc-900 border-black/10 leading-tight">Clique na pelada que você criou para começar</h5>
                           </div>
                           <div className="text-[#5eba25]">
                             <ChevronRight size={20} />
@@ -5652,13 +5651,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     )}
 
                     <div className="space-y-6">
-                      <div className="bg-[#dce3ee]/30 p-6 rounded-none border border-black/5 space-y-6">
-                        <div className="flex flex-col sm:flex-row gap-3">
-                          <div className="flex-1 flex gap-3">
+                      <div className="bg-[#dce3ee]/30 p-4 sm:p-6 rounded-[24px] border border-black/5 space-y-4 sm:space-y-6">
+                        <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+                          <div className="flex-1 flex gap-2 sm:gap-3">
                             <input 
                               type="text" 
                               placeholder="Nome do jogador..."
-                              className={`flex-1 px-6 py-4 rounded-none border-none outline-none transition-all bg-white text-[#1E3D2F] placeholder-[#1E3D2F]/30 focus:ring-4 focus:ring-emerald-500/10 text-sm font-bold shadow-sm`}
+                              className={`flex-1 px-4 sm:px-5 py-3 rounded-[14px] border border-black/5 outline-none transition-all bg-white text-[#1E3D2F] placeholder-[#1E3D2F]/30 focus:ring-4 focus:ring-emerald-500/10 text-[13px] sm:text-sm font-bold shadow-sm h-[48px]`}
                               onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
                                   addPlayer(e.currentTarget.value);
@@ -5668,10 +5667,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             />
                             <button 
                               onClick={handleImportContacts}
-                              className="p-4 bg-white text-[#83A8EF] rounded-none shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center aspect-square border-none"
+                              className="w-[48px] h-[48px] bg-white text-[#83A8EF] rounded-[14px] shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center border border-black/5 shrink-0"
                               title="Importar dos Contatos"
                             >
-                              <Contact size={24} />
+                              <Contact size={20} />
                             </button>
                             <button 
                               onClick={() => {
@@ -5681,9 +5680,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                   input.value = '';
                                 }
                               }}
-                              className="p-4 bg-emerald-500 text-white rounded-none shadow hover:bg-emerald-600 transition-all active:scale-95 flex items-center justify-center aspect-square"
+                              className="w-[48px] h-[48px] bg-emerald-500 text-white rounded-[14px] shadow hover:bg-emerald-600 transition-all active:scale-95 flex items-center justify-center shrink-0"
                             >
-                              <Plus size={24} />
+                              <Plus size={22} />
                             </button>
                           </div>
                         </div>
@@ -5691,7 +5690,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="relative">
                           <textarea 
                             placeholder=" "
-                            className={`w-full h-32 px-6 py-6 rounded-none border-none outline-none transition-all text-sm font-bold resize-none bg-white text-[#1E3D2F] focus:ring-4 focus:ring-emerald-500/10 peer shadow-sm`}
+                            className={`w-full h-28 sm:h-32 px-5 sm:px-6 py-5 sm:py-6 rounded-[20px] border border-black/5 outline-none transition-all text-sm font-bold resize-none bg-white text-[#1E3D2F] focus:ring-4 focus:ring-emerald-500/10 peer shadow-sm`}
                             onChange={(e) => {
                               if (e.target.value.includes('\n') || e.target.value.length > 20) {
                                 addBulkPlayers(e.target.value);
@@ -5699,13 +5698,13 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               }
                             }}
                           />
-                          <div className="absolute top-6 left-6 pointer-events-none transition-all peer-focus:hidden peer-[:not(:placeholder-shown)]:hidden">
-                            <span className="text-xs font-bold text-[#1E3D2F]/30 leading-tight block">
+                          <div className="absolute top-5 sm:top-6 left-5 sm:left-6 pointer-events-none transition-all peer-focus:hidden peer-[:not(:placeholder-shown)]:hidden">
+                            <span className="text-[11px] sm:text-xs font-bold text-[#1E3D2F]/30 leading-tight block">
                               Cole aqui sua lista do WhatsApp<br/>(ex: 1. João, 2. Maria...)
                             </span>
                           </div>
                           <div 
-                            className={`absolute right-6 bottom-6 text-[#1E3D2F]/40 cursor-pointer hover:text-emerald-600 transition-colors flex items-center gap-2`}
+                            className={`absolute right-5 sm:right-6 bottom-4 sm:bottom-6 text-[#1E3D2F]/40 cursor-pointer hover:text-emerald-600 transition-colors flex items-center gap-1.5 sm:gap-2 bg-white/80 backdrop-blur-sm p-1.5 sm:p-2 pl-3 sm:pl-3 rounded-xl`}
                             onClick={async () => {
                               try {
                                 const text = await navigator.clipboard.readText();
@@ -5720,8 +5719,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               }
                             }}
                           >
-                            <ClipboardPaste size={18} />
-                            <span className="text-[10px] font-black uppercase tracking-widest">Caixa Inteligente</span>
+                            <ClipboardPaste size={14} className="sm:w-4 sm:h-4" />
+                            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">Caixa Inteligente</span>
                           </div>
                         </div>
                       </div>
@@ -6177,6 +6176,21 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             </div>
                           </div>
                         )}
+                        
+                        {players.filter(p => p.isAvailable).length < (match.config.playersPerTeam * 2) && players.filter(p => sessionPlayerIds.includes(p.id)).length > 0 && (
+                          <div className="bg-[#eff5e8] rounded-[20px] p-4 flex items-center gap-4 border border-black/5 shadow-sm mb-4">
+                            <div className="w-10 h-10 rounded-full bg-[#d0e4c2] text-[#25660e] flex items-center justify-center shrink-0">
+                              <Shirt size={20} />
+                            </div>
+                            <div className="flex-1 flex flex-col">
+                              <h5 className="text-[13px] font-bold text-zinc-900 border-black/10 leading-tight">Marque os jogadores que já estão presentes na pelada</h5>
+                            </div>
+                            <div className="text-[#5eba25]">
+                              <ChevronRight size={20} />
+                            </div>
+                          </div>
+                        )}
+
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                           {players.filter(p => sessionPlayerIds.includes(p.id)).length === 0 ? (
                             <div className="col-span-full py-20 flex flex-col items-center justify-center gap-6 w-full">
