@@ -4870,37 +4870,52 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 </div>
 
                 <h3 className="text-xl font-black uppercase tracking-tighter text-black leading-none mb-1">
-                  Ops! Quase lá...
+                  {scheduledMatches.length === 0 ? "Crie uma Pelada" : "Ops! Quase lá..."}
                 </h3>
-                <p className="text-[10px] text-black/60 font-black uppercase tracking-[0.2em]">
-                  JOGADORES INSUFICIENTES
-                </p>
+                {scheduledMatches.length > 0 && (
+                  <p className="text-[10px] text-black/60 font-black uppercase tracking-[0.2em]">
+                    JOGADORES INSUFICIENTES
+                  </p>
+                )}
               </div>
 
               <div className="p-6 space-y-4">
                 <p className="text-xs font-bold text-zinc-600 text-center leading-relaxed">
-                  Jogadores insuficientes para formar 2 times. Crie mais jogadores em Cadastrar Jogadores ou altere a quantidade de jogadores por time.
+                  {scheduledMatches.length === 0 
+                    ? "Você precisa criar uma pelada no Painel de Controle para continuar."
+                    : "Jogadores insuficientes para formar 2 times. Crie mais jogadores em Cadastrar Jogadores ou altere a quantidade de jogadores por time."
+                  }
                 </p>
 
                 <div className="space-y-2">
                   <button 
                     onClick={() => {
-                      setShowInsufficientPlayersModal(false);
-                      setCurrentScreen('players');
-                      setShowAddPlayerSection(true);
+                      if (scheduledMatches.length === 0) {
+                        setShowInsufficientPlayersModal(false);
+                        setCurrentScreen('dashboard');
+                        setShowScheduleModal(true);
+                      } else {
+                        setShowInsufficientPlayersModal(false);
+                        setCurrentScreen('players');
+                        setShowAddPlayerSection(true);
+                      }
                     }}
                     className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg hover:bg-black transition-all active:scale-95 flex items-center justify-center gap-2"
                   >
-                    <User size={14} />
-                    Cadastrar Jogadores
+                    {scheduledMatches.length === 0 ? <Plus size={14} /> : <User size={14} />}
+                    {scheduledMatches.length === 0 ? "Criar Pelada" : "Cadastrar Jogadores"}
                   </button>
                   
                   <button 
                     onClick={() => {
                       setShowInsufficientPlayersModal(false);
-                      setCurrentScreen('teams');
-                      setTeamsTab('configuracao');
-                      setIsFlashingConfig(true);
+                      if (scheduledMatches.length === 0) {
+                        setCurrentScreen('dashboard');
+                      } else {
+                        setCurrentScreen('teams');
+                        setTeamsTab('configuracao');
+                        setIsFlashingConfig(true);
+                      }
                     }}
                     className="w-full py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-zinc-50 transition-all active:scale-95 shadow-sm"
                   >
