@@ -71,7 +71,7 @@ import {
   Shirt
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { IoPersonOutline, IoFootballOutline, IoCheckmarkCircle } from 'react-icons/io5';
+import { IoPersonOutline, IoFootballOutline, IoCheckmarkCircle, IoInformationCircleOutline } from 'react-icons/io5';
 import { BsArrowUpRightCircle, BsClockHistory, BsPersonFillAdd } from 'react-icons/bs';
 import { IoIosTrophy, IoIosWallet, IoIosFootball, IoMdSwap, IoMdArrowUp, IoMdArrowDown } from 'react-icons/io';
 import { PiUserCirclePlusThin, PiUserCirclePlusLight, PiUserCirclePlus } from 'react-icons/pi';
@@ -5864,9 +5864,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     {!selectedMatchId ? (
                       <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
                         <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-6">
-                            <IoPersonOutline size={32} className="text-black/30" />
+                            <IoInformationCircleOutline size={32} className="text-black/30" />
                         </div>
-                        <span className="font-bold uppercase tracking-widest text-[#4d5e46] text-xs mb-8 max-w-sm">
+                        <span className="font-bold uppercase tracking-widest text-zinc-500 text-xs mb-8 max-w-sm">
                           {scheduledMatches.length > 0 
                             ? "Para iniciar, selecione a pelada que você criou no painel de controle."
                             : "Você precisa criar uma pelada no painel de controle para continuar."}
