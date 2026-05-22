@@ -71,7 +71,7 @@ import {
   Shirt
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { IoPersonOutline, IoFootballOutline, IoCheckmarkCircle, IoInformationCircleOutline } from 'react-icons/io5';
+import { IoPersonOutline, IoFootballOutline, IoCheckmarkCircle, IoInformationCircleOutline, IoCheckmarkCircleOutline, IoPeopleCircleOutline, IoLogoWhatsapp } from 'react-icons/io5';
 import { BsArrowUpRightCircle, BsClockHistory, BsPersonFillAdd } from 'react-icons/bs';
 import { IoIosTrophy, IoIosWallet, IoIosFootball, IoMdSwap, IoMdArrowUp, IoMdArrowDown } from 'react-icons/io';
 import { PiUserCirclePlusThin, PiUserCirclePlusLight, PiUserCirclePlus } from 'react-icons/pi';
@@ -5375,7 +5375,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             setIsInitialSetupFlow(true);
                           }
                         }}
-                        className="flex-1 sm:flex-none px-3 py-2 bg-[#00FF00] text-black text-[8px] font-black uppercase tracking-widest rounded-none shadow shadow-[#00FF00]/20 hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                        className="flex-1 sm:flex-none px-3 py-2 bg-[#00FF00] text-black text-[10px] font-black uppercase tracking-widest rounded-none shadow shadow-[#00FF00]/20 hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                       >
                         CONFIGURAR PARTIDA
                       </button>
@@ -5481,18 +5481,24 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     </div>
                                     
                                     <div className="flex items-center gap-1.5">
-                                      {matchConfigOpenId === match.id && (
-                                        <button
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            setMatchToDelete(match);
-                                            setMatchConfigOpenId(null);
-                                          }}
-                                          className="p-1.5 text-zinc-600 hover:text-red-500 hover:bg-black/5 transition-all rounded-full animate-in fade-in zoom-in"
-                                        >
-                                          <Trash2 size={14} />
-                                        </button>
-                                      )}
+                                      <AnimatePresence>
+                                        {matchConfigOpenId === match.id && (
+                                          <motion.button
+                                            initial={{ opacity: 0, scale: 0.5 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.5 }}
+                                            transition={{ duration: 0.2 }}
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              setMatchToDelete(match);
+                                              setMatchConfigOpenId(null);
+                                            }}
+                                            className="p-1.5 text-zinc-600 hover:text-red-500 hover:bg-black/5 transition-colors rounded-full"
+                                          >
+                                            <Trash2 size={14} />
+                                          </motion.button>
+                                        )}
+                                      </AnimatePresence>
                                       <button
                                         onClick={(e) => {
                                           e.stopPropagation();
@@ -5606,24 +5612,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 py-1">
                           {[
                             { 
-                              label: "PRÓXIMA PELADA", 
-                              value: orgProSettings.matchDayOfWeek ? "1" : "0", 
-                              sub: "AGENDADA", 
-                              icon: <PiCalendarBlankFill size={16} />, 
-                              color: "text-emerald-600", 
-                              bg: "bg-emerald-50" 
-                            },
-                            { 
-                              label: "PAGAMENTOS EM DIA", 
-                              value: players.filter(p => {
-                                const m = new Date().getMonth();
-                                const y = new Date().getFullYear();
-                                const mName = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"][m];
-                                const r = payments.find(pay => pay.playerId === p.id && pay.year === y);
-                                return r && r.months && (r.months[mName] || 0) >= (monthlyFee || 30);
-                              }).length, 
+                              label: "PRESENÇAS", 
+                              value: players.filter(p => sessionPlayerIds.includes(p.id)).length, 
                               sub: "JOGADORES", 
-                              icon: <Users size={16} />, 
+                              icon: <IoCheckmarkCircleOutline size={16} />, 
                               color: "text-emerald-600", 
                               bg: "bg-[#f0f9f4]" 
                             },
@@ -5645,20 +5637,20 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               label: "TOTAL DE JOGADORES", 
                               value: players.length, 
                               sub: "CADASTRADOS", 
-                              icon: <PiClockFill size={16} />, 
+                              icon: <IoPeopleCircleOutline size={16} />, 
                               color: "text-blue-600", 
-                              bg: "bg-blue-50" 
+                              bg: "bg-[#dce3ee]/30" 
                             },
                           ].map((card, idx) => (
                             <div key={idx} className="bg-white p-3 rounded-none border border-black/5 shadow-sm space-y-2">
-                              <div className={`w-8 h-8 rounded-none ${card.bg} flex items-center justify-center`}>
+                              <div className={`w-8 h-8 rounded-full ${card.bg} flex items-center justify-center`}>
                                 <div className={card.color}>{card.icon}</div>
                               </div>
                               <div>
                                 <p className="text-[8px] font-black uppercase tracking-widest text-zinc-400">{card.label}</p>
                                 <div className="flex items-baseline gap-1.5 mt-0.5">
                                   <span className="text-xl font-black text-zinc-900 leading-none">{card.value}</span>
-                                  <span className="text-[7px] font-bold text-zinc-400 uppercase tracking-widest">{card.sub}</span>
+                                  <span className="text-[10px] font-bold text-zinc-400 capitalize tracking-widest">{card.sub.toLowerCase()}</span>
                                 </div>
                               </div>
                             </div>
@@ -5668,7 +5660,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     )}
 
                     <div className="space-y-6">
-                      <div className="bg-[#dce3ee]/30 p-4 sm:p-6 rounded-[24px] border border-black/5 space-y-4 sm:space-y-6">
+                      <div className="bg-[#dce3ee]/30 p-4 sm:p-6 rounded-none border border-black/5 space-y-4 sm:space-y-6">
                         <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                           <div className="flex-1 flex gap-2 sm:gap-3">
                             <input 
@@ -5716,9 +5708,12 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             }}
                           />
                           <div className="absolute top-5 sm:top-6 left-5 sm:left-6 pointer-events-none transition-all peer-focus:hidden peer-[:not(:placeholder-shown)]:hidden">
-                            <span className="text-[11px] sm:text-xs font-bold text-[#1E3D2F]/30 leading-tight block">
-                              Cole aqui sua lista do WhatsApp<br/>(ex: 1. João, 2. Maria...)
-                            </span>
+                            <div className="flex items-start gap-2">
+                              <IoLogoWhatsapp size={16} className="text-emerald-500/50 mt-0.5" />
+                              <span className="text-[11px] sm:text-xs font-bold text-[#1E3D2F]/30 leading-tight block">
+                                Cole aqui sua lista do WhatsApp<br/>(ex: 1. João, 2. Maria...)
+                              </span>
+                            </div>
                           </div>
                           <div 
                             className={`absolute right-5 sm:right-6 bottom-4 sm:bottom-6 text-[#1E3D2F]/40 cursor-pointer hover:text-emerald-600 transition-colors flex items-center gap-1.5 sm:gap-2 bg-white/80 backdrop-blur-sm p-1.5 sm:p-2 pl-3 sm:pl-3 rounded-xl`}
@@ -5764,7 +5759,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 }}
                               >
                                 <div className="flex items-center gap-4 flex-1 min-w-0">
-                                  <div className="w-10 h-10 rounded-none flex items-center justify-center shrink-0 bg-zinc-100 text-zinc-400 border border-black/5 overflow-hidden">
+                                  <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-zinc-100 text-zinc-400 border border-black/5 overflow-hidden">
                                     {player.photo ? (
                                       <img src={player.photo} alt={player.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                                     ) : (
@@ -5866,7 +5861,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-6">
                             <IoInformationCircleOutline size={32} className="text-black/30" />
                         </div>
-                        <span className="font-bold uppercase tracking-widest text-zinc-500 text-xs mb-8 max-w-sm">
+                        <span className="font-bold uppercase tracking-widest text-zinc-500 text-[10px] mb-8 max-w-sm">
                           {scheduledMatches.length > 0 
                             ? "Para iniciar, selecione a pelada que você criou no painel de controle."
                             : "Você precisa criar uma pelada no painel de controle para continuar."}
