@@ -5545,7 +5545,9 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             <Shirt size={20} />
                           </div>
                           <div className="flex-1 flex flex-col">
-                            <h5 className="text-[13px] font-bold text-zinc-900 border-black/10 leading-tight">Clique na pelada que você criou para começar</h5>
+                            <h5 className="text-[13px] font-bold text-zinc-900 border-black/10 leading-tight">
+                              {scheduledMatches.length === 0 ? "Clique no botão Crie sua Pelada" : "Clique na pelada que você criou para começar"}
+                            </h5>
                           </div>
                           <div className="text-[#5eba25]">
                             <ChevronRight size={20} />
