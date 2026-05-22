@@ -1687,10 +1687,10 @@ const PlayerManagementModalComponent = ({
         className="w-full max-w-[300px] bg-white rounded-xl relative overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="bg-zinc-50 border-b border-zinc-100 p-6 flex flex-col items-center gap-4 relative">
+        <div className="bg-[#dce3ee] border-b border-zinc-200 p-6 flex flex-col items-center gap-4 relative">
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 bg-white rounded-full shadow-sm text-zinc-400 hover:text-black transition-all"
+            className="absolute top-4 right-4 p-2 bg-white/50 hover:bg-white rounded-full shadow-sm text-zinc-500 hover:text-black transition-all"
           >
             <X size={16} />
           </button>
@@ -1737,7 +1737,7 @@ const PlayerManagementModalComponent = ({
                     e.currentTarget.blur();
                   }
                 }}
-                className={`w-full bg-transparent text-2xl font-black uppercase tracking-tighter text-black leading-none text-center outline-none border-b border-transparent focus:border-zinc-300 transition-all placeholder:text-zinc-300 py-1`}
+                className={`w-full bg-transparent text-2xl font-black uppercase tracking-tighter text-black leading-none text-center outline-none border-b border-transparent focus:border-black/20 transition-all placeholder:text-zinc-500 py-1`}
               />
               <div className="flex flex-wrap items-center justify-center gap-1 mt-2">
                 {[1, 2, 3, 4, 5].map((star) => (
@@ -1750,7 +1750,7 @@ const PlayerManagementModalComponent = ({
                   >
                     <Star
                       size={20}
-                      className={`${(player.stars || 0) >= star ? "fill-yellow-400 text-yellow-400" : "text-zinc-300"}`}
+                      className={`${(player.stars || 0) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10"}`}
                     />
                   </button>
                 ))}
@@ -1762,7 +1762,7 @@ const PlayerManagementModalComponent = ({
         <div className="p-4 space-y-4">
           <div className="grid grid-cols-2 gap-2">
             <div className="p-3 bg-zinc-50 rounded-xl border border-zinc-100 flex flex-col items-center justify-center">
-              <div className="text-xl font-black text-[#00FF00] leading-none mb-1">
+              <div className="text-xl font-black text-black leading-none mb-1">
                 {player.goals}
               </div>
               <div className="text-[8px] font-bold uppercase tracking-widest text-zinc-500">
@@ -1770,7 +1770,7 @@ const PlayerManagementModalComponent = ({
               </div>
             </div>
             <div className="p-3 bg-zinc-50 rounded-xl border border-zinc-100 flex flex-col items-center justify-center">
-              <div className="text-xl font-black text-[#00FF00] leading-none mb-1">
+              <div className="text-xl font-black text-black leading-none mb-1">
                 {player.assists}
               </div>
               <div className="text-[8px] font-bold uppercase tracking-widest text-zinc-500">
@@ -1782,7 +1782,7 @@ const PlayerManagementModalComponent = ({
           <div className="flex flex-col gap-2 pt-2">
             <button
               onClick={onClose}
-              className="w-full py-3.5 bg-[#00FF00] text-[#1E3D2F] rounded-xl font-black uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all text-[11px]"
+              className="w-full py-3.5 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white shadow-lg rounded-xl font-black uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all text-[11px]"
             >
               Confirmar
             </button>
@@ -3231,7 +3231,6 @@ function GroupApp({
       return resolvedTeams;
     });
   }, [
-    teams,
     autoCompleteTeams,
     match?.config?.playersPerTeam,
     sessionPlayerIds,
@@ -3953,7 +3952,11 @@ function GroupApp({
     safeLocalStorage.setItem(key, JSON.stringify(teams));
     // Automatically remove empty teams
     if (teams.some((t) => (t.playerIds?.length || 0) === 0)) {
-      setTeams((prev) => prev.filter((t) => (t.playerIds?.length || 0) > 0));
+      setTeams((prev) => {
+        const filtered = prev.filter((t) => (t.playerIds?.length || 0) > 0);
+        if (prev.length <= 2 && filtered.length < 2) return prev;
+        return filtered;
+      });
     }
   }, [teams, selectedMatchId, groupId]);
 
@@ -6943,7 +6946,7 @@ function GroupApp({
                             const matchDate = new Date(match.date);
                             const day = matchDate.getDate();
                             const month = matchDate
-                              .toLocaleString("pt-BR", { month: "short" })
+                              .toLocaleString("pt-BR", { month: "long" })
                               .toUpperCase();
                             const weekday = matchDate
                               .toLocaleString("pt-BR", { weekday: "long" })
@@ -6994,8 +6997,44 @@ function GroupApp({
                                 }}
                                 className="group relative bg-[#dce3ee] rounded-[24px] flex flex-col sm:flex-row items-stretch overflow-hidden border border-black/10 cursor-pointer shadow-sm hover:shadow-md transition-all"
                               >
+                                {/* Settings and Delete Actions - Absolute Top Right */}
+                                <div className="absolute top-1 sm:top-3 right-1 sm:right-3 flex items-center gap-0 z-20">
+                                  <AnimatePresence>
+                                    {matchConfigOpenId === match.id && (
+                                      <motion.button
+                                        initial={{ opacity: 0, scale: 0.5 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.5 }}
+                                        transition={{ duration: 0.2 }}
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setMatchToDelete(match);
+                                          setMatchConfigOpenId(null);
+                                        }}
+                                        className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-zinc-600 hover:text-red-500 hover:bg-black/5 transition-colors rounded-full"
+                                      >
+                                        <Trash2
+                                          size={13}
+                                          className="sm:w-3.5 sm:h-3.5"
+                                        />
+                                      </motion.button>
+                                    )}
+                                  </AnimatePresence>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setMatchConfigOpenId((prev) =>
+                                        prev === match.id ? null : match.id,
+                                      );
+                                    }}
+                                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all text-zinc-600 hover:text-black hover:bg-black/5"
+                                  >
+                                    <Settings size={14} />
+                                  </button>
+                                </div>
+
                                 {/* Left Match Name Section */}
-                                <div className="w-full sm:w-28 bg-black/5 flex items-center justify-center p-4 border-b sm:border-b-0 sm:border-r border-black/5 relative overflow-hidden text-center text-wrap break-words">
+                                <div className="w-full sm:w-28 bg-black/5 flex items-center justify-center py-1.5 px-4 sm:p-4 border-b sm:border-b-0 sm:border-r border-black/5 relative overflow-hidden text-center text-wrap break-words pr-10 sm:pr-4">
                                   <span className="text-[12px] sm:text-[14px] font-black text-zinc-800 uppercase tracking-tighter leading-tight break-words line-clamp-3">
                                     {match.name}
                                   </span>
@@ -7004,55 +7043,18 @@ function GroupApp({
                                 {/* Right Content */}
                                 <div className="flex-1 p-4 sm:p-5 relative overflow-hidden">
                                   {/* Subtle background texture pattern */}
-                                  <div className="absolute inset-0 opacity-5 pointer-events-none overflow-hidden">
-                                    <div className="absolute -top-10 left-10 text-black mix-blend-overlay rotate-12">
-                                      <GiSoccerField size={300} />
+                                  <div className="absolute inset-0 opacity-5 pointer-events-none overflow-hidden flex items-center justify-center">
+                                    <div className="text-black mix-blend-overlay">
+                                      <GiSoccerField size={220} />
                                     </div>
                                   </div>
 
                                   <div className="relative z-10 flex flex-col h-full justify-between gap-4">
                                     <div className="flex justify-between items-start">
-                                      <div className="flex flex-col gap-2 mt-1">
+                                      <div className="flex flex-col gap-2 mt-0 sm:mt-1">
                                         <h5 className="font-bold text-zinc-800 text-[11px] sm:text-[12px] tracking-tight uppercase">
-                                          {day} {month}. - {weekday}
+                                          {day} {month} - {weekday}
                                         </h5>
-                                      </div>
-
-                                      <div className="flex items-center gap-1.5">
-                                        <AnimatePresence>
-                                          {matchConfigOpenId === match.id && (
-                                            <motion.button
-                                              initial={{
-                                                opacity: 0,
-                                                scale: 0.5,
-                                              }}
-                                              animate={{ opacity: 1, scale: 1 }}
-                                              exit={{ opacity: 0, scale: 0.5 }}
-                                              transition={{ duration: 0.2 }}
-                                              onClick={(e) => {
-                                                e.stopPropagation();
-                                                setMatchToDelete(match);
-                                                setMatchConfigOpenId(null);
-                                              }}
-                                              className="p-1.5 text-zinc-600 hover:text-red-500 hover:bg-black/5 transition-colors rounded-full"
-                                            >
-                                              <Trash2 size={14} />
-                                            </motion.button>
-                                          )}
-                                        </AnimatePresence>
-                                        <button
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            setMatchConfigOpenId((prev) =>
-                                              prev === match.id
-                                                ? null
-                                                : match.id,
-                                            );
-                                          }}
-                                          className={`w-7 h-7 rounded-full flex items-center justify-center transition-all bg-white/60 hover:bg-white/80 text-zinc-800 border border-black/5 backdrop-blur-sm shadow-sm`}
-                                        >
-                                          <Settings size={12} />
-                                        </button>
                                       </div>
                                     </div>
 
@@ -7167,118 +7169,6 @@ function GroupApp({
                       transition={{ duration: 0.2 }}
                       className="space-y-6"
                     >
-                      {/* Collapsible Summary Bar */}
-                      <button
-                        onClick={() => setShowPlayerSummary(!showPlayerSummary)}
-                        className="w-full flex items-center justify-between p-3 bg-zinc-50 border border-zinc-200 hover:bg-zinc-100 transition-colors group"
-                      >
-                        <div className="flex items-center gap-2">
-                          <div className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse" />
-                          <span className="text-[10px] font-black uppercase tracking-widest text-zinc-600">
-                            Resumo da Organização
-                          </span>
-                        </div>
-                        <div
-                          className={`transition-transform duration-300 ${showPlayerSummary ? "rotate-180" : ""}`}
-                        >
-                          <ChevronDown
-                            size={14}
-                            className="text-zinc-400 group-hover:text-zinc-600"
-                          />
-                        </div>
-                      </button>
-
-                      {showPlayerSummary && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          className="overflow-hidden"
-                        >
-                          {/* Summary Cards Grid */}
-                          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 py-1">
-                            {[
-                              {
-                                label: "PRESENÇAS",
-                                value: players.filter((p) =>
-                                  sessionPlayerIds.includes(p.id),
-                                ).length,
-                                sub: "JOGADORES",
-                                icon: <IoCheckmarkCircleOutline size={16} />,
-                                color: "text-emerald-600",
-                                bg: "bg-[#f0f9f4]",
-                              },
-                              {
-                                label: "PAGAMENTOS ATRASADOS",
-                                value: players.filter((p) => {
-                                  const m = new Date().getMonth();
-                                  const y = new Date().getFullYear();
-                                  const mName = [
-                                    "jan",
-                                    "fev",
-                                    "mar",
-                                    "abr",
-                                    "mai",
-                                    "jun",
-                                    "jul",
-                                    "ago",
-                                    "set",
-                                    "out",
-                                    "nov",
-                                    "dez",
-                                  ][m];
-                                  const r = payments.find(
-                                    (pay) =>
-                                      pay.playerId === p.id && pay.year === y,
-                                  );
-                                  return (
-                                    !r ||
-                                    !r.months ||
-                                    (r.months[mName] || 0) < (monthlyFee || 30)
-                                  );
-                                }).length,
-                                sub: "JOGADORES",
-                                icon: <PiWarningCircleFill size={16} />,
-                                color: "text-orange-600",
-                                bg: "bg-orange-50",
-                              },
-                              {
-                                label: "TOTAL DE JOGADORES",
-                                value: players.length,
-                                sub: "CADASTRADOS",
-                                icon: <IoPeopleCircleOutline size={16} />,
-                                color: "text-blue-600",
-                                bg: "bg-[#dce3ee]/30",
-                              },
-                            ].map((card, idx) => (
-                              <div
-                                key={idx}
-                                className="bg-white p-3 rounded-none border border-black/5 shadow-sm space-y-2"
-                              >
-                                <div
-                                  className={`w-8 h-8 rounded-full ${card.bg} flex items-center justify-center`}
-                                >
-                                  <div className={card.color}>{card.icon}</div>
-                                </div>
-                                <div>
-                                  <p className="text-[8px] font-black uppercase tracking-widest text-zinc-400">
-                                    {card.label}
-                                  </p>
-                                  <div className="flex items-baseline gap-1.5 mt-0.5">
-                                    <span className="text-xl font-black text-zinc-900 leading-none">
-                                      {card.value}
-                                    </span>
-                                    <span className="text-[10px] font-bold text-zinc-400 capitalize tracking-widest">
-                                      {card.sub.toLowerCase()}
-                                    </span>
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </motion.div>
-                      )}
-
                       <div className="space-y-6">
                         <div className="bg-[#dce3ee]/30 p-4 sm:p-6 rounded-none border border-black/5 space-y-4 sm:space-y-6">
                           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
@@ -7286,7 +7176,7 @@ function GroupApp({
                               <input
                                 type="text"
                                 placeholder="Nome do jogador..."
-                                className={`flex-1 px-4 sm:px-5 py-3 rounded-[14px] border border-black/5 outline-none transition-all bg-white text-[#1E3D2F] placeholder-[#1E3D2F]/30 focus:ring-4 focus:ring-emerald-500/10 text-[13px] sm:text-sm font-bold shadow-sm h-[48px]`}
+                                className={`flex-1 px-4 sm:px-5 py-3 rounded-[14px] border border-black/5 outline-none transition-all bg-white text-[#1E3D2F] placeholder-[#1E3D2F]/30 focus:ring-4 focus:ring-emerald-500/10 text-[13px] sm:text-sm font-bold shadow-sm h-[40px]`}
                                 onKeyDown={(e) => {
                                   if (e.key === "Enter") {
                                     addPlayer(e.currentTarget.value);
@@ -7296,7 +7186,7 @@ function GroupApp({
                               />
                               <button
                                 onClick={handleImportContacts}
-                                className="w-[48px] h-[48px] bg-white text-[#83A8EF] rounded-[14px] shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center border border-black/5 shrink-0"
+                                className="w-[40px] h-[40px] bg-white text-[#83A8EF] rounded-[14px] shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center border border-black/5 shrink-0"
                                 title="Importar dos Contatos"
                               >
                                 <Contact size={20} />
@@ -7311,7 +7201,7 @@ function GroupApp({
                                     input.value = "";
                                   }
                                 }}
-                                className="w-[48px] h-[48px] bg-emerald-500 text-white rounded-[14px] shadow hover:bg-emerald-600 transition-all active:scale-95 flex items-center justify-center shrink-0"
+                                className="w-[40px] h-[40px] bg-emerald-500 text-white rounded-[14px] shadow hover:bg-emerald-600 transition-all active:scale-95 flex items-center justify-center shrink-0"
                               >
                                 <Plus size={22} />
                               </button>
@@ -7332,15 +7222,13 @@ function GroupApp({
                                 }
                               }}
                             />
-                            <div className="absolute top-5 sm:top-6 left-5 sm:left-6 pointer-events-none transition-all peer-focus:hidden peer-[:not(:placeholder-shown)]:hidden">
-                              <div className="flex items-start gap-2">
-                                <div className="text-emerald-500/50 mt-0.5">
+                            <div className="absolute inset-0 flex items-center justify-center pb-8 sm:pb-8 pointer-events-none transition-all peer-focus:hidden peer-[:not(:placeholder-shown)]:hidden">
+                              <div className="flex items-center gap-2">
+                                <div className="text-emerald-500/50">
                                   <IoLogoWhatsapp size={16} />
                                 </div>
-                                <span className="text-[11px] sm:text-xs font-bold text-[#1E3D2F]/30 leading-tight block">
-                                  Cole aqui sua lista do WhatsApp
-                                  <br />
-                                  (ex: 1. João, 2. Maria...)
+                                <span className="text-[11px] sm:text-xs font-bold text-[#1E3D2F]/30 leading-tight block text-center">
+                                  Cole aqui a lista do whatsapp.
                                 </span>
                               </div>
                             </div>
@@ -7395,15 +7283,15 @@ function GroupApp({
                                 <motion.div
                                   layout
                                   key={`player-list-dash-switch-${player.id}`}
-                                  className={`flex items-center justify-between p-4 rounded-none transition-all cursor-pointer hover:bg-zinc-50 active:bg-zinc-100 border border-black/5 bg-white shadow-sm`}
+                                  className={`flex items-center justify-between p-2 px-3 rounded-none transition-all cursor-pointer hover:bg-zinc-50 active:bg-zinc-100 border border-black/5 bg-white shadow-sm`}
                                   onClick={() => {
                                     if (editingPlayerId !== player.id) {
                                       setPlayerManagementModal(player);
                                     }
                                   }}
                                 >
-                                  <div className="flex items-center gap-4 flex-1 min-w-0">
-                                    <div className="w-10 h-10 rounded-full flex items-center justify-center shrink-0 bg-zinc-100 text-zinc-400 border border-black/5 overflow-hidden">
+                                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                                    <div className="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 bg-zinc-100 text-zinc-400 border border-black/5 overflow-hidden">
                                       {player.photo ? (
                                         <img
                                           src={player.photo}
@@ -7412,14 +7300,17 @@ function GroupApp({
                                           referrerPolicy="no-referrer"
                                         />
                                       ) : (
-                                        <IoPersonOutline size={20} />
+                                        <IoPersonOutline
+                                          size={16}
+                                          className="w-4 h-4 sm:w-4 sm:h-4"
+                                        />
                                       )}
                                     </div>
                                     {editingPlayerId === player.id ? (
                                       <input
                                         autoFocus
                                         defaultValue={player.name}
-                                        className={`flex-1 bg-zinc-100 border-b border-emerald-500 outline-none text-sm font-bold py-1 px-3 rounded-none text-zinc-900 min-w-0`}
+                                        className={`flex-1 bg-zinc-100 border-b border-emerald-500 outline-none text-xs font-bold py-1 px-3 rounded-none text-zinc-900 min-w-0`}
                                         onClick={(e) => e.stopPropagation()}
                                         onKeyDown={(e) => {
                                           if (e.key === "Enter")
@@ -7438,14 +7329,14 @@ function GroupApp({
                                         }
                                       />
                                     ) : (
-                                      <div className="flex flex-col gap-0.5 flex-1 min-w-0">
+                                      <div className="flex flex-col gap-0 flex-1 min-w-0">
                                         <div className="flex items-center gap-2">
-                                          <span className="text-sm font-normal truncate text-left leading-none text-zinc-900 uppercase tracking-tight">
+                                          <span className="text-xs font-normal truncate text-left leading-none text-zinc-900 uppercase tracking-tight">
                                             {player.name}
                                           </span>
                                           {orgProData[player.id] && (
                                             <div className="shrink-0 text-yellow-500">
-                                              <GiCrown size={16} />
+                                              <GiCrown size={14} />
                                             </div>
                                           )}
                                         </div>
@@ -7453,7 +7344,7 @@ function GroupApp({
                                           {[1, 2, 3, 4, 5].map((star) => (
                                             <Star
                                               key={`star-dash-m-switch-${player.id}-${star}`}
-                                              size={10}
+                                              size={8}
                                               className={`${(player.stars || 3) >= star ? "fill-emerald-500 text-emerald-500" : "text-zinc-200"}`}
                                             />
                                           ))}
@@ -7464,7 +7355,7 @@ function GroupApp({
                                   <div className="flex items-center gap-3">
                                     {editingPlayerId !== player.id && (
                                       <ChevronRight
-                                        size={18}
+                                        size={14}
                                         className="text-zinc-300"
                                       />
                                     )}
