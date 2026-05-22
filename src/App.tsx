@@ -5226,6 +5226,18 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           
           {/* Header Actions */}
           <div className="flex items-center gap-2 relative z-10">
+            {showAddPlayerSection && currentScreen === 'players' && (
+              <button
+                onClick={() => {
+                  setShowAddPlayerSection(false);
+                  setSelectedMatchId(null);
+                }}
+                className="text-white hover:opacity-80 transition-opacity flex items-center justify-center cursor-pointer p-2"
+                title="Voltar ao Painel"
+              >
+                <LogOut size={20} />
+              </button>
+            )}
             {/* Header Title Space */}
           </div>
         </header>
@@ -5355,16 +5367,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 <div className="flex gap-2 w-full sm:w-auto">
                   {showAddPlayerSection ? (
                     <>
-                      <button 
-                        onClick={() => {
-                          setShowAddPlayerSection(false);
-                          setSelectedMatchId(null);
-                        }}
-                        className="flex-1 sm:flex-none px-3 py-2 bg-zinc-900 text-white text-[8px] font-black uppercase tracking-widest rounded-none shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
-                      >
-                        <UserPlus size={12} />
-                        VOLTAR AO PAINEL
-                      </button>
                       <button 
                         onClick={() => {
                           setCurrentScreen('teams');
@@ -5859,7 +5861,27 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
               className="px-2 sm:px-4 pb-6 pt-4 space-y-4 min-h-full bg-transparent flex flex-col text-white"
             >
                   <div id="teams-list-section" className="w-full space-y-4">
-                    {teamsTab === 'configuracao' ? (
+                    {!selectedMatchId ? (
+                      <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
+                        <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-6">
+                            <IoPersonOutline size={32} className="text-black/30" />
+                        </div>
+                        <span className="font-bold uppercase tracking-widest text-[#4d5e46] text-xs mb-8 max-w-sm">
+                          {scheduledMatches.length > 0 
+                            ? "Para iniciar, selecione a pelada que você criou no painel de controle."
+                            : "Você precisa criar uma pelada no painel de controle para continuar."}
+                        </span>
+                        <button
+                          onClick={() => {
+                            setCurrentScreen('players');
+                            setShowAddPlayerSection(false);
+                          }}
+                          className="px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 w-32"
+                        >
+                          Ir
+                        </button>
+                      </div>
+                    ) : teamsTab === 'configuracao' ? (
                       <div className="space-y-6">
                         <div className="sticky top-[-1px] z-40 bg-white/90 backdrop-blur-md py-4 -mx-6 px-6 flex justify-between items-center border-b border-black/5">
                           <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">Configuração</h3>
@@ -6225,7 +6247,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     setTeamsTab('configuracao');
                                   }
                                 }}
-                                className="px-4 py-2 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
+                                className="px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
                               >
                                 {players.length < 2 ? 'CRIAR JOGADORES' : 'CONFIGURAR PARTIDA'}
                               </button>
@@ -6344,7 +6366,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       }
                                     }
                                   }}
-                                  className="px-4 py-2 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
+                                  className="px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
                                 >
                                   {players.length < 2 ? 'CRIAR JOGADORES' : 'CONFIGURAR PARTIDA'}
                                 </button>
@@ -6356,7 +6378,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                 </p>
                                 <button
                                   onClick={() => setTeamsTab('chegada')}
-                                  className="px-4 py-2 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
+                                  className="px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
                                 >
                                   Confirmar Chegada
                                 </button>
@@ -6453,7 +6475,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     }
                                     setTeamsTab('proximos');
                                   }}
-                                  className="px-4 py-2 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
+                                  className="px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
                                 >
                                   Ir para Próximos
                                 </button>
@@ -6986,7 +7008,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                     }
                                   }
                                 }}
-                                className="px-4 py-2 bg-brand-gradient text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
+                                className="px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
                               >
                                 {players.filter(p => sessionPlayerIds.includes(p.id)).length > 0 
                                   ? 'Confirmar Chegada'
