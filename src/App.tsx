@@ -5375,7 +5375,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             setIsInitialSetupFlow(true);
                           }
                         }}
-                        className="flex-1 sm:flex-none px-3 py-2 bg-[#00FF00] text-black text-[10px] font-black uppercase tracking-widest rounded-none shadow shadow-[#00FF00]/20 hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                        className="flex-1 sm:flex-none px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                       >
                         CONFIGURAR PARTIDA
                       </button>
@@ -6094,7 +6094,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               // Sync session players without resetting isAvailable
                               setSessionPlayerIds(players.map(p => p.id));
                             }}
-                            className="w-full py-4 bg-brand-gradient text-black font-black uppercase tracking-widest text-xs rounded-none shadow hover:opacity-90 transition-all active:scale-95 glass-3d"
+                            className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
                           >
                             Aplicar Configurações
                           </button>
@@ -6132,10 +6132,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                         return newTeams;
                                       });
                                     }}
-                                    className="p-2.5 rounded-xl transition-all active:scale-95 hover:bg-black/10 bg-black/5 backdrop-blur shadow-sm border border-black/10 flex items-center gap-2"
+                                    className="px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center gap-2"
                                   >
-                                    <span className="text-zinc-800"><CheckCircle2 size={18} /></span>
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Todos Presentes</span>
+                                    <span className="text-white"><CheckCircle2 size={16} /></span>
+                                    <span>Todos Presentes</span>
                                   </button>
                               )}
                               {players.filter(p => p.isAvailable).length >= (match.config.playersPerTeam * 2) && (
@@ -6199,10 +6199,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       
                                       setTeamsTab('proximos');
                                     }}
-                                    className="p-2.5 rounded-xl transition-all active:scale-95 hover:bg-black/10 bg-black/5 backdrop-blur shadow-sm border border-black/10 flex items-center gap-2"
+                                    className="px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center gap-2"
                                   >
-                                    <span className="text-zinc-800"><CheckCircle2 size={18} /></span>
-                                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">Pronto</span>
+                                    <span className="text-white"><CheckCircle2 size={16} /></span>
+                                    <span>Pronto</span>
                                   </button>
                               )}
                             </div>
