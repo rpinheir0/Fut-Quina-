@@ -1682,7 +1682,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, ease: "easeOut" }}
-        className="flex flex-col items-center gap-6"
+        className="flex flex-col items-center gap-2"
       >
         <motion.img 
           src="/logo.png"
