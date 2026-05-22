@@ -4909,9 +4909,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <button 
                     onClick={() => {
                       setShowInsufficientPlayersModal(false);
-                      if (scheduledMatches.length === 0) {
-                        setCurrentScreen('dashboard');
-                      } else {
+                      if (scheduledMatches.length !== 0) {
                         setCurrentScreen('teams');
                         setTeamsTab('configuracao');
                         setIsFlashingConfig(true);
@@ -4919,7 +4917,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                     }}
                     className="w-full py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-zinc-50 transition-all active:scale-95 shadow-sm"
                   >
-                    OK, Entendido
+                    {scheduledMatches.length === 0 ? "OK, ENTENDIDO" : "ALTERAR CONFIGURAÇÃO"}
                   </button>
                 </div>
               </div>
@@ -5417,9 +5415,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                             </p>
                           </div>
                         </div>
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/40 flex items-center justify-center backdrop-blur-sm shrink-0">
-                          <ChevronRight size={20} className="text-white" />
-                        </div>
                       </div>
                     </div>
 
@@ -5439,13 +5434,10 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           const month = matchDate.toLocaleString('pt-BR', { month: 'short' }).toUpperCase();
                           const weekday = matchDate.toLocaleString('pt-BR', { weekday: 'long' }).substring(0, 7).toUpperCase();
                           
-                          // Mock avatars for UI match
-                          const avatarPics = [
-                            "https://i.pravatar.cc/150?u=1",
-                            "https://i.pravatar.cc/150?u=2",
-                            "https://i.pravatar.cc/150?u=3",
-                            "https://i.pravatar.cc/150?u=4"
-                          ];
+                          // Actual players in the app
+                          const matchPlayers = players.filter(p => p.isAvailable).slice(0, 4);
+                          const totalAvailablePlayers = players.filter(p => p.isAvailable).length;
+                          const extraPlayersCount = Math.max(0, totalAvailablePlayers - 4);
 
                           return (
                             <div 
@@ -5457,15 +5449,11 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                               }}
                               className="group relative bg-[#dce3ee] rounded-[24px] flex flex-col sm:flex-row items-stretch overflow-hidden border border-black/10 cursor-pointer shadow-sm hover:shadow-md transition-all"
                             >
-                              {/* Left Date Section */}
-                              <div className="w-full sm:w-28 bg-black/5 flex flex-row sm:flex-col items-center justify-center p-4 border-b sm:border-b-0 sm:border-r border-black/5 relative overflow-hidden">
-                                <div className="relative z-10 flex sm:flex-col items-center gap-3 sm:gap-0">
-                                  <span className="text-4xl sm:text-5xl font-black text-zinc-800 leading-none tracking-tighter">{day}</span>
-                                  <div className="flex flex-col items-start sm:items-center mt-1">
-                                    <span className="text-[12px] sm:text-[14px] font-black text-zinc-600 mb-0.5 uppercase tracking-widest">{month}.</span>
-                                    <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">{weekday}</span>
-                                  </div>
-                                </div>
+                              {/* Left Match Name Section */}
+                              <div className="w-full sm:w-28 bg-black/5 flex items-center justify-center p-4 border-b sm:border-b-0 sm:border-r border-black/5 relative overflow-hidden text-center text-wrap break-words">
+                                <span className="text-[12px] sm:text-[14px] font-black text-zinc-800 uppercase tracking-tighter leading-tight break-words line-clamp-3">
+                                  {match.name}
+                                </span>
                               </div>
                               
                               {/* Right Content */}
@@ -5477,12 +5465,8 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
                                 <div className="relative z-10 flex flex-col h-full justify-between gap-4">
                                   <div className="flex justify-between items-start">
-                                    <div className="flex flex-col gap-2">
-                                      <div className="flex items-center gap-1.5 bg-black/5 border border-black/5 px-2 py-1 rounded-lg w-max shadow-sm">
-                                        <div className="bg-emerald-600 rounded-full p-0.5"><Check size={8} className="text-white font-black" /></div>
-                                        <span className="text-[8px] font-bold text-zinc-700 uppercase tracking-widest">Confirmada</span>
-                                      </div>
-                                      <h5 className="font-bold text-zinc-800 text-base tracking-tight uppercase">{match.name}</h5>
+                                    <div className="flex flex-col gap-2 mt-1">
+                                      <h5 className="font-bold text-zinc-800 text-[11px] sm:text-[12px] tracking-tight uppercase">{day} {month}. - {weekday}</h5>
                                     </div>
                                     
                                     <div className="flex items-center gap-1.5">
@@ -5507,9 +5491,6 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                       >
                                         <Settings size={12} />
                                       </button>
-                                      <div className="w-7 h-7 rounded-full flex items-center justify-center bg-white/60 hover:bg-white/80 text-zinc-800 border border-black/5 backdrop-blur-sm shadow-sm">
-                                        <ChevronRight size={14} />
-                                      </div>
                                     </div>
                                   </div>
 
@@ -5522,29 +5503,40 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                                         <div className="text-emerald-600"><GiSoccerField size={12} /></div> {match.field || 'Quadra do bairro'}
                                       </div>
                                       <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-zinc-600 font-medium uppercase">
-                                        <div className="text-emerald-600"><BsPersonFillAdd size={12} /></div> {match.confirmedPlayers}/{match.maxPlayers} jogadores
+                                        <div className="text-emerald-600"><BsPersonFillAdd size={12} /></div> {totalAvailablePlayers}/{match.maxPlayers} jogadores
                                       </div>
                                     </div>
 
                                     <div className="flex flex-col sm:items-end gap-2 w-full sm:w-auto mt-3 sm:mt-0">
                                       {/* Avatars */}
                                       <div className="flex -space-x-2">
-                                        {avatarPics.map((pic, i) => (
-                                          <div key={i} className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border border-[#dce3ee] overflow-hidden bg-zinc-200 shadow-sm relative z-10">
-                                            <img src={pic} className="w-full h-full object-cover" alt="avatar" />
+                                        {matchPlayers.map((p) => (
+                                          <div key={p.id} className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border border-[#dce3ee] overflow-hidden bg-zinc-200 shadow-sm relative z-10 flex items-center justify-center">
+                                            {p.photo ? (
+                                              <img src={p.photo} className="w-full h-full object-cover" alt="avatar" />
+                                            ) : (
+                                              <span className="text-black/40"><IoPersonOutline size={12} /></span>
+                                            )}
                                           </div>
                                         ))}
-                                        <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border border-[#dce3ee] bg-white/50 flex items-center justify-center text-[9px] font-black text-zinc-700 relative z-20 backdrop-blur-md">
-                                          +6
-                                        </div>
+                                        {extraPlayersCount > 0 && (
+                                          <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border border-[#dce3ee] bg-white/50 flex items-center justify-center text-[9px] font-black text-zinc-700 relative z-20 backdrop-blur-md">
+                                            +{extraPlayersCount}
+                                          </div>
+                                        )}
+                                        {matchPlayers.length === 0 && (
+                                          <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border border-[#dce3ee] bg-white/50 flex items-center justify-center text-[9px] font-black text-zinc-400 relative z-20 backdrop-blur-md">
+                                            0
+                                          </div>
+                                        )}
                                       </div>
 
                                       {/* Progress */}
                                       <div className="w-full sm:w-36 flex flex-col gap-1 sm:items-end">
                                         <div className="w-full h-1 bg-black/10 rounded-full overflow-hidden border border-black/5">
-                                          <div className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full" style={{width: '87%'}} />
+                                          <div className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full" style={{width: `${Math.min(100, Math.round((totalAvailablePlayers / match.maxPlayers) * 100))}%`}} />
                                         </div>
-                                        <span className="text-[8px] text-zinc-500 font-black uppercase tracking-widest"><span className="text-zinc-800">87%</span> Confirmados</span>
+                                        <span className="text-[8px] text-zinc-500 font-black uppercase tracking-widest"><span className="text-zinc-800">{Math.round((totalAvailablePlayers / match.maxPlayers) * 100)}%</span> Confirmados</span>
                                       </div>
                                     </div>
                                   </div>
@@ -5555,17 +5547,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                         })}
                         
                         {/* Alert Banner */}
-                        <div className="bg-[#eff5e8] rounded-[20px] p-4 flex items-center gap-4 border border-black/5 shadow-sm mt-2">
-                          <div className="w-10 h-10 rounded-full bg-[#d0e4c2] text-[#25660e] flex items-center justify-center shrink-0">
-                            <Shirt size={20} />
+                        <div className="bg-[#eff5e8] rounded-[20px] p-4 flex items-center gap-4 shadow-sm mt-2">
+                          <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
+                            <AlertCircle size={24} />
                           </div>
                           <div className="flex-1 flex flex-col">
-                            <h5 className="text-[13px] font-bold text-zinc-900 border-black/10 leading-tight">
-                              {scheduledMatches.length === 0 ? "Clique no botão Crie sua Pelada" : "Clique na pelada que você criou para começar"}
-                            </h5>
-                          </div>
-                          <div className="text-[#5eba25]">
-                            <ChevronRight size={20} />
+                            <p className="text-[12px] font-medium text-zinc-600 leading-tight">
+                              {scheduledMatches.length === 0 ? "Você precisa criar uma pelada no botão acima para continuar." : "Para iniciar, selecione a pelada que você criou no painel acima."}
+                            </p>
                           </div>
                         </div>
 
