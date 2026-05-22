@@ -5434,9 +5434,18 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                           const month = matchDate.toLocaleString('pt-BR', { month: 'short' }).toUpperCase();
                           const weekday = matchDate.toLocaleString('pt-BR', { weekday: 'long' }).substring(0, 7).toUpperCase();
                           
-                          // Actual players in the app
-                          const matchPlayers = players.filter(p => p.isAvailable).slice(0, 4);
-                          const totalAvailablePlayers = players.filter(p => p.isAvailable).length;
+                          // Get specific match players and session
+                          const specificSessionSaved = safeLocalStorage.getItem(`futquina_session_player_ids_${groupId}_${match.id}`);
+                          const matchSessionIds = specificSessionSaved ? JSON.parse(specificSessionSaved) : [];
+                          
+                          const specificPlayersSaved = safeLocalStorage.getItem(`futquina_players_${groupId}_${match.id}`);
+                          let matchSpecificPlayers = specificPlayersSaved ? JSON.parse(specificPlayersSaved) : [];
+                          if (!Array.isArray(matchSpecificPlayers)) matchSpecificPlayers = [];
+
+                          const confirmedPlayers = matchSpecificPlayers.filter((p: any) => matchSessionIds.includes(p.id) && p.isAvailable);
+                          
+                          const matchPlayers = confirmedPlayers.slice(0, 4);
+                          const totalAvailablePlayers = confirmedPlayers.length;
                           const extraPlayersCount = Math.max(0, totalAvailablePlayers - 4);
 
                           return (
@@ -11462,7 +11471,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
           <motion.div 
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="w-full max-w-md p-8 rounded-none shadow-[0_20px_60px_rgba(0,0,0,0.8)] bg-white border border-black/10 relative overflow-hidden"
+            className="w-full max-w-md p-8 rounded-[24px] shadow-[0_20px_60px_rgba(0,0,0,0.8)] bg-white border border-black/10 relative overflow-hidden"
           >
             <div className="relative z-10 text-center mb-8">
               <div className="w-16 h-16 rounded-none text-[#dce3ee] flex items-center justify-center mx-auto mb-4">
@@ -11474,41 +11483,14 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
 
             <div className="space-y-6 relative z-10">
               <div className="space-y-2">
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newMatchName}
-                    onChange={e => setNewMatchName(e.target.value)}
-                    placeholder="Ex: Pelada do Domingo"
-                    className="flex-1 p-4 rounded-none outline-none font-medium bg-zinc-50 border border-black/5 text-zinc-900 placeholder:text-zinc-300 focus:border-emerald-500 transition-all text-center text-base shadow-inner"
-                    autoFocus
-                  />
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    className="px-4 bg-zinc-50 border border-black/5 rounded-none text-zinc-400 hover:text-emerald-600 transition-all flex items-center justify-center group"
-                    title="Adicionar imagem de fundo"
-                  >
-                    <Camera size={20} className="group-hover:scale-110 transition-transform" />
-                  </button>
-                </div>
-                <input 
-                  type="file"
-                  ref={fileInputRef}
-                  onChange={handleImageUpload}
-                  accept="image/*"
-                  className="hidden"
+                <input
+                  type="text"
+                  value={newMatchName}
+                  onChange={e => setNewMatchName(e.target.value)}
+                  placeholder="Ex: Pelada do Domingo"
+                  className="w-full p-4 rounded-xl outline-none font-bold bg-zinc-50 border border-black/5 text-zinc-900 placeholder:text-zinc-300 focus:border-emerald-500 transition-all text-center text-base shadow-sm"
+                  autoFocus
                 />
-                {newMatchImage && newMatchImage.startsWith('data:') && (
-                  <div className="flex items-center justify-center gap-1 mt-1">
-                    <span className="text-[9px] font-black text-emerald-600 uppercase tracking-tighter">Imagem da galeria carregada</span>
-                    <button 
-                      onClick={() => setNewMatchImage('')}
-                      className="text-red-500 hover:text-red-600"
-                    >
-                      <X size={10} />
-                    </button>
-                  </div>
-                )}
               </div>
 
               <div className="grid grid-cols-2 gap-4">
@@ -11517,7 +11499,7 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                   <select 
                     value={newMatchDay}
                     onChange={e => setNewMatchDay(e.target.value)}
-                    className="w-full p-4 bg-zinc-50 border border-black/5 rounded-none font-bold text-center text-xs outline-none focus:border-emerald-500 appearance-none"
+                    className="w-full p-4 bg-zinc-50 border border-black/5 rounded-xl font-bold text-center text-xs outline-none focus:border-emerald-500 appearance-none shadow-sm cursor-pointer"
                   >
                     {['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'].map(day => (
                       <option key={day} value={day}>{day}</option>
@@ -11526,13 +11508,27 @@ function GroupApp({ groupId, onBackToHome }: { groupId: string, onBackToHome: ()
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest block text-center">Horário</label>
-                  <input 
-                    type="text"
-                    value={newMatchTime}
-                    onChange={e => setNewMatchTime(e.target.value)}
-                    placeholder="08:00 - 10:00"
-                    className="w-full p-4 bg-zinc-50 border border-black/5 rounded-none font-bold text-center text-xs outline-none focus:border-emerald-500"
-                  />
+                  <div className="flex items-center justify-center bg-zinc-50 border border-black/5 px-2 rounded-xl shadow-sm w-full h-[50px] overflow-hidden">
+                    <input 
+                      type="time"
+                      value={newMatchTime.split(' - ')[0] || ''}
+                      onChange={e => {
+                        const end = newMatchTime.split(' - ')[1] || '10:00';
+                        setNewMatchTime(`${e.target.value} - ${end}`);
+                      }}
+                      className="bg-transparent font-bold text-center text-[11px] sm:text-xs outline-none focus:text-emerald-500 cursor-pointer w-[65px] sm:w-[70px]"
+                    />
+                    <span className="text-zinc-300 font-bold mx-1">-</span>
+                    <input 
+                      type="time"
+                      value={newMatchTime.split(' - ')[1] || ''}
+                      onChange={e => {
+                        const start = newMatchTime.split(' - ')[0] || '08:00';
+                        setNewMatchTime(`${start} - ${e.target.value}`);
+                      }}
+                      className="bg-transparent font-bold text-center text-[11px] sm:text-xs outline-none focus:text-emerald-500 cursor-pointer w-[65px] sm:w-[70px]"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
