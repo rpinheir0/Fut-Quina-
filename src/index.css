@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Silkscreen&family=VT323&family=Megrim&family=Julius+Sans+One&family=Staatliches&family=Readex+Pro:wght@400;500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Silkscreen&family=VT323&family=Megrim&family=Julius+Sans+One&family=Staatliches&family=Readex+Pro:wght@400;500&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -17,34 +17,46 @@
   --color-brand-text-secondary: var(--brand-text-secondary);
   --color-brand-border: var(--brand-border);
   --color-brand-glass: var(--brand-glass);
-  
-  --background-image-brand-gradient: linear-gradient(to right, var(--brand-primary), var(--brand-primary-hover));
-  --background-image-team-gradient: linear-gradient(135deg, var(--brand-card), var(--brand-dark));
-  --background-image-glass-gradient: linear-gradient(135deg, var(--brand-glass), transparent);
+
+  --background-image-brand-gradient: linear-gradient(
+    to right,
+    var(--brand-primary),
+    var(--brand-primary-hover)
+  );
+  --background-image-team-gradient: linear-gradient(
+    135deg,
+    var(--brand-card),
+    var(--brand-dark)
+  );
+  --background-image-glass-gradient: linear-gradient(
+    135deg,
+    var(--brand-glass),
+    transparent
+  );
 }
 
 :root {
   /* Modern Green Theme */
-  --brand-primary: #B7D96C;
-  --brand-primary-hover: #A3D900;
-  --brand-dark: #CFE5C3;
-  --brand-card: #FFFFFF;
-  --brand-surface: #B7D96C;
-  --brand-surface-light: #B7D96C;
-  --brand-text-primary: #2F5D50;
+  --brand-primary: #b7d96c;
+  --brand-primary-hover: #a3d900;
+  --brand-dark: #cfe5c3;
+  --brand-card: #ffffff;
+  --brand-surface: #b7d96c;
+  --brand-surface-light: #b7d96c;
+  --brand-text-primary: #2f5d50;
   --brand-text-secondary: rgba(47, 93, 80, 0.7);
   --brand-border: rgba(47, 93, 80, 0.15);
   --brand-glass: rgba(255, 255, 255, 0.5);
 }
 
 .dark {
-  --brand-primary: #00FF00;
-  --brand-primary-hover: #39FF14;
+  --brand-primary: #00ff00;
+  --brand-primary-hover: #39ff14;
   --brand-dark: #050806;
-  --brand-card: #0D1612;
-  --brand-surface: #1E3D2F;
-  --brand-surface-light: #2A4D3F;
-  --brand-text-primary: #FFFFFF;
+  --brand-card: #0d1612;
+  --brand-surface: #1e3d2f;
+  --brand-surface-light: #2a4d3f;
+  --brand-text-primary: #ffffff;
   --brand-text-secondary: rgba(255, 255, 255, 0.7);
   --brand-border: rgba(255, 255, 255, 0.1);
   --brand-glass: rgba(0, 0, 0, 0.5);
@@ -63,14 +75,28 @@
   .glass-icon-container {
     @apply relative flex items-center justify-center w-12 h-12 border border-brand-border bg-brand-card shadow-[1px_1px_0_0_var(--brand-border)] transition-all duration-75 rounded-xl;
   }
-  
+
   @keyframes flash {
-    0%, 100% { opacity: 1; transform: scale(1); filter: brightness(1); }
-    50% { opacity: 0; transform: scale(1); filter: brightness(1); }
+    0%,
+    100% {
+      opacity: 1;
+      transform: scale(1);
+      filter: brightness(1);
+    }
+    50% {
+      opacity: 0;
+      transform: scale(1);
+      filter: brightness(1);
+    }
   }
   @keyframes flash-highlight {
-    0%, 100% { background-color: #dce3ee; }
-    50% { background-color: white; }
+    0%,
+    100% {
+      background-color: #dce3ee;
+    }
+    50% {
+      background-color: white;
+    }
   }
   .animate-flash {
     animation: flash 0.2s steps(2, end) infinite;
@@ -81,14 +107,14 @@
   .animate-flash-highlight {
     animation: flash-highlight 1s ease-in-out infinite;
   }
-  
+
   .field-container {
     @apply flex items-center justify-center relative w-full border border-brand-border max-w-sm aspect-video mx-auto my-8 bg-brand-dark shadow-[2px_2px_0_0_var(--brand-border)] rounded-3xl;
   }
 
   .field-3d {
     @apply w-full h-full relative border border-brand-border;
-    background-image: 
+    background-image:
       linear-gradient(var(--brand-border) 2px, transparent 2px),
       linear-gradient(90deg, var(--brand-border) 2px, transparent 2px);
     background-size: 30px 30px;
@@ -102,15 +128,33 @@
     @apply absolute left-1/2 top-0 w-0.5 h-full bg-brand-border;
   }
 
-  .field-goal-left { @apply absolute left-0 top-1/4 w-12 h-1/2 border border-l-0 border-brand-border; }
-  .field-goal-right { @apply absolute right-0 top-1/4 w-12 h-1/2 border border-r-0 border-brand-border; }
-  .field-box-left { @apply absolute left-0 top-[37.5%] w-4 h-1/4 border border-l-0 border-brand-border bg-brand-dark; }
-  .field-box-right { @apply absolute right-0 top-[37.5%] w-4 h-1/4 border border-r-0 border-brand-border bg-brand-dark; }
+  .field-goal-left {
+    @apply absolute left-0 top-1/4 w-12 h-1/2 border border-l-0 border-brand-border;
+  }
+  .field-goal-right {
+    @apply absolute right-0 top-1/4 w-12 h-1/2 border border-r-0 border-brand-border;
+  }
+  .field-box-left {
+    @apply absolute left-0 top-[37.5%] w-4 h-1/4 border border-l-0 border-brand-border bg-brand-dark;
+  }
+  .field-box-right {
+    @apply absolute right-0 top-[37.5%] w-4 h-1/4 border border-r-0 border-brand-border bg-brand-dark;
+  }
 
-  .custom-scrollbar::-webkit-scrollbar { width: 10px; }
-  .custom-scrollbar::-webkit-scrollbar-track { background: var(--brand-dark); border-left: 2px solid var(--brand-border); }
-  .custom-scrollbar::-webkit-scrollbar-thumb { background: var(--brand-primary); border: 2px solid var(--brand-border); }
-  .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: var(--brand-primary-hover); }
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 10px;
+  }
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: var(--brand-dark);
+    border-left: 2px solid var(--brand-border);
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--brand-primary);
+    border: 2px solid var(--brand-border);
+  }
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: var(--brand-primary-hover);
+  }
 
   .player-pitch-card {
     @apply flex flex-col items-center justify-center gap-0 w-16 transition-none hover:bg-brand-primary hover:text-brand-dark border border-transparent hover:border-brand-border shadow-[1px_1px_0_0_var(--brand-border)] rounded-xl overflow-hidden;
@@ -140,12 +184,24 @@
     );
   }
 
-  .pitch-line { @apply border border-brand-border pointer-events-none; }
-  .pitch-center-circle { @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 border border-brand-border rounded-none; }
-  .pitch-center-line { @apply absolute top-1/2 left-0 w-full h-0.5 bg-brand-border; }
-  .pitch-penalty-area { @apply absolute left-1/2 -translate-x-1/2 w-3/4 h-16 border border-brand-border; }
-  .pitch-penalty-area-top { @apply top-0 border-t-0; }
-  .pitch-penalty-area-bottom { @apply bottom-0 border-b-0; }
+  .pitch-line {
+    @apply border border-brand-border pointer-events-none;
+  }
+  .pitch-center-circle {
+    @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 border border-brand-border rounded-none;
+  }
+  .pitch-center-line {
+    @apply absolute top-1/2 left-0 w-full h-0.5 bg-brand-border;
+  }
+  .pitch-penalty-area {
+    @apply absolute left-1/2 -translate-x-1/2 w-3/4 h-16 border border-brand-border;
+  }
+  .pitch-penalty-area-top {
+    @apply top-0 border-t-0;
+  }
+  .pitch-penalty-area-bottom {
+    @apply bottom-0 border-b-0;
+  }
 
   .bg-noise {
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
@@ -154,18 +210,34 @@
   }
 
   .bg-pattern-dots {
-    background-image: radial-gradient(var(--brand-text-secondary) 2px, transparent 2px);
+    background-image: radial-gradient(
+      var(--brand-text-secondary) 2px,
+      transparent 2px
+    );
     background-size: 16px 16px;
   }
 
   .bg-pattern-diagonal {
-    background-image: repeating-linear-gradient(45deg, transparent, transparent 10px, var(--brand-border) 10px, var(--brand-border) 20px);
+    background-image: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 10px,
+      var(--brand-border) 10px,
+      var(--brand-border) 20px
+    );
     opacity: 0.2;
   }
 
   .btn-silver-3d {
-    background: linear-gradient(180deg, #f8f9fa 0%, #e9ecef 25%, #dee2e6 50%, #ced4da 75%, #adb5bd 100%);
-    box-shadow: 
+    background: linear-gradient(
+      180deg,
+      #f8f9fa 0%,
+      #e9ecef 25%,
+      #dee2e6 50%,
+      #ced4da 75%,
+      #adb5bd 100%
+    );
+    box-shadow:
       inset 0 2px 3px rgba(255, 255, 255, 0.8),
       inset 0 -2px 3px rgba(0, 0, 0, 0.2),
       0 4px 6px rgba(0, 0, 0, 0.3),
@@ -175,10 +247,16 @@
     text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
     transition: all 0.1s ease;
   }
-  
+
   .btn-silver-3d:active {
-    background: linear-gradient(180deg, #dee2e6 0%, #ced4da 25%, #adb5bd 50%, #6c757d 100%);
-    box-shadow: 
+    background: linear-gradient(
+      180deg,
+      #dee2e6 0%,
+      #ced4da 25%,
+      #adb5bd 50%,
+      #6c757d 100%
+    );
+    box-shadow:
       inset 0 2px 4px rgba(0, 0, 0, 0.3),
       inset 0 4px 8px rgba(0, 0, 0, 0.2),
       0 1px 2px rgba(0, 0, 0, 0.2);
@@ -187,12 +265,19 @@
 }
 
 @layer base {
+  html,
+  body {
+    @apply overflow-x-hidden w-full max-w-[100vw];
+  }
+
   body {
     @apply bg-brand-dark text-brand-text-primary antialiased selection:bg-brand-dark selection:text-brand-primary;
     font-size: 1.1rem;
   }
-  
-  input, select, textarea {
+
+  input,
+  select,
+  textarea {
     @apply bg-brand-dark px-3 py-2 text-lg focus:outline-none focus:bg-brand-primary/10 transition-none;
   }
 
