@@ -274,13 +274,13 @@
 
   body {
     @apply bg-brand-dark text-brand-text-primary antialiased selection:bg-brand-dark selection:text-brand-primary;
-    font-size: 1.1rem;
+    font-size: 1rem;
   }
 
   input,
   select,
   textarea {
-    @apply bg-brand-dark px-3 py-2 text-lg focus:outline-none focus:bg-brand-primary/10 transition-none;
+    @apply bg-brand-dark px-3 py-2 text-base focus:outline-none focus:bg-brand-primary/10 transition-none;
   }
 
   button {

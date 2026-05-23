@@ -2368,21 +2368,8 @@ function GroupApp({
   const [isOrgProAuthorized, setIsOrgProAuthorized] = useState<boolean>(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [adminPin, setAdminPin] = useState<string>("");
-  const [selectedMatchId, setSelectedMatchId] = useState<string | null>(() => {
-    return safeLocalStorage.getItem(`futquina_selected_match_${groupId}`);
-  });
+  const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null);
   const isSwitchingMatch = useRef(false);
-
-  useEffect(() => {
-    if (selectedMatchId) {
-      safeLocalStorage.setItem(
-        `futquina_selected_match_${groupId}`,
-        selectedMatchId,
-      );
-    } else {
-      safeLocalStorage.removeItem(`futquina_selected_match_${groupId}`);
-    }
-  }, [selectedMatchId, groupId]);
 
   useEffect(() => {
     isSwitchingMatch.current = true;
@@ -2456,19 +2443,8 @@ function GroupApp({
     fetchGroupData();
   }, [groupId]);
 
-  const [currentScreen, setCurrentScreen] = useState<Screen>(() => {
-    const saved = safeLocalStorage.getItem(
-      `futquina_current_screen_${groupId}`,
-    );
-    return (saved as Screen) || "players";
-  });
+  const [currentScreen, setCurrentScreen] = useState<Screen>("players");
 
-  useEffect(() => {
-    safeLocalStorage.setItem(
-      `futquina_current_screen_${groupId}`,
-      currentScreen,
-    );
-  }, [currentScreen, groupId]);
   const [isInitialSetupFlow, setIsInitialSetupFlow] = useState(false);
   const [firstSetupDone, setFirstSetupDone] = useState(() => {
     const saved = safeLocalStorage.getItem(
@@ -2693,6 +2669,8 @@ function GroupApp({
         imageUrl: newMatchImage || undefined,
       };
       setScheduledMatches((prev) => [...prev, newMatch]);
+      setFixedColors({ teamA: null, teamB: null, enabled: false });
+      setOrgProSettings((prev) => ({ ...prev, allowFixedGoalkeeper: false }));
       setNewMatchName("");
       setNewMatchDay("Segunda");
       setNewMatchTime("08:00");
@@ -2740,11 +2718,11 @@ function GroupApp({
   }>(() => {
     const saved = safeLocalStorage.getItem(`futquina_org_settings_${groupId}`);
     return saved
-      ? { allowFixedGoalkeeper: true, ...JSON.parse(saved) }
+      ? { allowFixedGoalkeeper: false, ...JSON.parse(saved) }
       : {
           maxAbsences: null,
           requirePaymentUpToDate: false,
-          allowFixedGoalkeeper: true,
+          allowFixedGoalkeeper: false,
           matchDayOfWeek: null,
           matchTime: "",
           appliedDate: null,
@@ -3309,36 +3287,13 @@ function GroupApp({
     lottery: { isSpinning: false, winnerId: null },
   });
   const [playersTab, setPlayersTab] = useState<"jogadores" | "configuracao">(
-    () => {
-      const saved = safeLocalStorage.getItem(`futquina_players_tab_${groupId}`);
-      return (saved as "jogadores" | "configuracao") || "jogadores";
-    },
+    "configuracao",
   );
-
-  useEffect(() => {
-    safeLocalStorage.setItem(`futquina_players_tab_${groupId}`, playersTab);
-  }, [playersTab, groupId]);
 
   const [teamsTab, setTeamsTab] = useState<
     "configuracao" | "chegada" | "historico" | "proximos"
-  >(() => {
-    const savedTab = safeLocalStorage.getItem(`futquina_teams_tab_${groupId}`);
-    if (savedTab)
-      return savedTab as "configuracao" | "chegada" | "historico" | "proximos";
+  >("configuracao");
 
-    const saved = safeLocalStorage.getItem(`futquina_match_${groupId}`);
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        return parsed.isActive ? "historico" : "proximos";
-      } catch (e) {}
-    }
-    return "proximos";
-  });
-
-  useEffect(() => {
-    safeLocalStorage.setItem(`futquina_teams_tab_${groupId}`, teamsTab);
-  }, [teamsTab, groupId]);
   const [swipeDirection, setSwipeDirection] = useState(0);
 
   const navigateTeamsTab = (
@@ -4192,33 +4147,47 @@ function GroupApp({
       setDuplicatePlayerName({
         name: trimmedName,
         callback: (newName) => {
+          const isAnyAvailable = players.some((p) => p.isAvailable);
           const newPlayer: Player = {
             id: generateId(),
             name: newName.trim(),
             goals: 0,
             assists: 0,
-            isAvailable: false,
+            isAvailable: isAnyAvailable,
             photo: photo,
-            arrivedAt: undefined,
+            arrivedAt: isAnyAvailable ? Date.now() : undefined,
             stars: 3,
           };
           setPlayers((prev) => [...prev, newPlayer]);
+          if (isAnyAvailable) {
+            setSessionPlayerIds((prev) => [...prev, newPlayer.id]);
+          }
         },
       });
       return;
     }
+
+    const isAnyAvailable = players.some((p) => p.isAvailable);
 
     const newPlayer: Player = {
       id: generateId(),
       name: trimmedName,
       goals: 0,
       assists: 0,
-      isAvailable: false,
+      isAvailable: isAnyAvailable,
       photo: photo,
-      arrivedAt: undefined,
+      arrivedAt: isAnyAvailable ? Date.now() : undefined,
       stars: 3,
     };
     setPlayers((prev) => [...prev, newPlayer]);
+    if (isAnyAvailable) {
+      setSessionPlayerIds((prev) => [...prev, newPlayer.id]);
+    }
+    setToast({
+      message: `${trimmedName} adicionado com sucesso!`,
+      type: "success",
+    });
+    setTimeout(() => setToast(null), 3000);
   };
 
   const handleImportContacts = async () => {
@@ -4280,6 +4249,8 @@ function GroupApp({
 
     const existingNames = new Set(players.map((p) => p.name.toLowerCase()));
 
+    const isAnyAvailable = players.some((p) => p.isAvailable);
+
     lines.forEach((line, i) => {
       // Remove common prefixes: "1.", "1-", "-", "*", "•" but keep numbers that are part of the name
       let name = line.replace(/^[\d\.\-\*\•\s]+(?=\s|[A-Z])/, "").trim();
@@ -4297,8 +4268,8 @@ function GroupApp({
           name,
           goals: 0,
           assists: 0,
-          isAvailable: false,
-          arrivedAt: undefined,
+          isAvailable: isAnyAvailable,
+          arrivedAt: isAnyAvailable ? Date.now() + i : undefined,
           stars: 3,
         });
       }
@@ -4306,6 +4277,12 @@ function GroupApp({
 
     if (newPlayers.length > 0) {
       setPlayers((prev) => [...prev, ...newPlayers]);
+      if (isAnyAvailable) {
+        setSessionPlayerIds((prev) => [
+          ...prev,
+          ...newPlayers.map((p) => p.id),
+        ]);
+      }
     }
   };
 
@@ -4320,6 +4297,7 @@ function GroupApp({
       stars: 3,
     };
     setPlayers((prev) => [...prev, newPlayer]);
+    setSessionPlayerIds((prev) => [...prev, newPlayer.id]);
 
     const team = teams[teamIndex];
     if (team && team.playerIds.length >= match.config.playersPerTeam) {
@@ -6084,29 +6062,39 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
+            onClick={() => setShowExpenseModal(false)}
           >
             <motion.div
-              initial={{ scale: 0.9, y: 20 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.9, y: 20 }}
-              className="bg-zinc-100 rounded-xl p-6 w-full max-w-sm border border-zinc-200 shadow-sm"
+              initial={{ scale: 0.9, y: 30, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 30, opacity: 0 }}
+              className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-2xl bg-zinc-50 border border-zinc-200"
+              onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900">
+              {/* Header */}
+              <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
+                {/* Decorative Elements */}
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
+
+                <div className="w-20 h-20 mx-auto rounded-full bg-white flex items-center justify-center overflow-hidden border-4 border-zinc-300 shadow-xl relative z-10 mb-6">
+                  <span className="text-zinc-200 flex items-center shrink-0">
+                    <ClipboardPaste size={40} />
+                  </span>
+                </div>
+
+                <h3 className="text-2xl font-black uppercase tracking-tighter text-black leading-none">
                   Nova Despesa
                 </h3>
-                <button
-                  onClick={() => setShowExpenseModal(false)}
-                  className="p-2 hover:bg-zinc-200 rounded-full transition-colors"
-                >
-                  <X size={20} />
-                </button>
+                <p className="text-[10px] text-black/60 font-black mt-2 uppercase tracking-[0.2em]">
+                  GESTÃO FINANCEIRA
+                </p>
               </div>
 
-              <div className="space-y-4">
+              <div className="p-6 space-y-5">
                 <div>
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-1.5 block">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-1.5 block">
                     Nome da Despesa
                   </label>
                   <input
@@ -6119,11 +6107,11 @@ function GroupApp({
                       }))
                     }
                     placeholder="Ex: Aluguel da quadra"
-                    className="w-full p-4 bg-zinc-200 rounded-xl outline-none focus:ring-2 ring-[#1E3D2F]/20 font-bold text-sm"
+                    className="w-full p-4 bg-zinc-100 rounded-xl outline-none focus:ring-2 ring-black/5 font-bold text-sm border border-zinc-200"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-500 mb-1.5 block">
+                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-1.5 block">
                     Valor (R$)
                   </label>
                   <input
@@ -6135,30 +6123,44 @@ function GroupApp({
                         amount: e.target.value,
                       }))
                     }
-                    placeholder="00"
-                    className="w-full p-4 bg-zinc-200 rounded-xl outline-none focus:ring-2 ring-[#1E3D2F]/20 font-black text-xl"
+                    placeholder="0.00"
+                    className="w-full p-4 bg-zinc-100 rounded-xl outline-none focus:ring-2 ring-black/5 font-black text-xl border border-zinc-200"
                   />
                 </div>
 
-                <button
-                  onClick={() => {
-                    if (!newExpense.name || !newExpense.amount) return;
-                    setExpenses((prev) => [
-                      ...prev,
-                      {
-                        id: generateId(),
-                        name: newExpense.name,
-                        amount: parseInt(newExpense.amount),
-                        date: Date.now(),
-                      },
-                    ]);
-                    setNewExpense({ name: "", amount: "" });
-                    setShowExpenseModal(false);
-                  }}
-                  className="w-full py-4 bg-[#1E3D2F] text-white rounded-xl font-black uppercase tracking-widest text-xs shadow-lg hover:opacity-90 transition-all active:scale-95"
-                >
-                  Confirmar Despesa
-                </button>
+                <div className="flex flex-col gap-2 pt-2">
+                  <button
+                    onClick={() => {
+                      if (!newExpense.name || !newExpense.amount) return;
+                      setExpenses((prev) => [
+                        ...prev,
+                        {
+                          id: generateId(),
+                          name: newExpense.name,
+                          amount: parseInt(newExpense.amount),
+                          date: Date.now(),
+                        },
+                      ]);
+                      setNewExpense({ name: "", amount: "" });
+                      setShowExpenseModal(false);
+                      setToast({
+                        message: "Despesa adicionada!",
+                        type: "success",
+                      });
+                      setTimeout(() => setToast(null), 3000);
+                    }}
+                    className="w-full h-11 bg-gradient-to-r from-[#1E3D2F] via-[#2a5541] to-[#1E3D2F] text-white rounded-xl font-black uppercase text-[10px] tracking-widest flex items-center justify-center px-4 transition-all hover:opacity-90 active:scale-[0.98] shadow-md shadow-black/10 group font-roboto-flex"
+                  >
+                    Confirmar Despesa
+                  </button>
+
+                  <button
+                    onClick={() => setShowExpenseModal(false)}
+                    className="w-full h-11 bg-zinc-200 text-zinc-600 rounded-xl font-black uppercase text-[10px] tracking-widest flex items-center justify-center px-4 transition-all hover:bg-zinc-300 active:scale-[0.98]"
+                  >
+                    Cancelar
+                  </button>
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -6313,7 +6315,7 @@ function GroupApp({
                         setIsFlashingConfig(true);
                       }
                     }}
-                    className="w-full py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-zinc-50 transition-all active:scale-95 shadow-sm"
+                    className={`w-full py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-zinc-50 transition-all active:scale-95 shadow-sm ${scheduledMatches.length > 0 && players.length === 0 ? "hidden" : "block"}`}
                   >
                     {scheduledMatches.length === 0
                       ? "OK, ENTENDIDO"
@@ -6698,6 +6700,7 @@ function GroupApp({
                   onClick={() => {
                     setShowAddPlayerSection(false);
                     setSelectedMatchId(null);
+                    setPlayersTab("configuracao");
                   }}
                   className="text-white hover:opacity-80 transition-opacity flex items-center justify-center cursor-pointer p-2"
                   title="Voltar ao Painel"
@@ -6732,7 +6735,7 @@ function GroupApp({
                   className={`px-4 py-2 flex items-center justify-center rounded-none transition-all border ${teamsTab === "chegada" ? "bg-[#00FF00] text-[#1E3D2F] border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
                 >
                   <span
-                    className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === "chegada" ? "text-[#1E3D2F]" : "text-white"}`}
+                    className={`text-[11px] font-black uppercase tracking-widest text-center w-full transition-colors font-roboto-flex ${teamsTab === "chegada" ? "text-[#1E3D2F]" : "text-white"}`}
                   >
                     Presença
                   </span>
@@ -6742,7 +6745,7 @@ function GroupApp({
                   className={`px-4 py-2 flex items-center justify-center rounded-none transition-all border ${teamsTab === "historico" ? "bg-[#00FF00] text-[#1E3D2F] border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
                 >
                   <span
-                    className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === "historico" ? "text-[#1E3D2F]" : "text-white"}`}
+                    className={`text-[11px] font-black uppercase tracking-widest text-center w-full transition-colors font-roboto-flex ${teamsTab === "historico" ? "text-[#1E3D2F]" : "text-white"}`}
                   >
                     Confrontos
                   </span>
@@ -6752,7 +6755,7 @@ function GroupApp({
                   className={`px-4 py-2 flex items-center justify-center rounded-none transition-all border ${teamsTab === "proximos" ? "bg-[#00FF00] text-[#1E3D2F] border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
                 >
                   <span
-                    className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${teamsTab === "proximos" ? "text-[#1E3D2F]" : "text-white"}`}
+                    className={`text-[11px] font-black uppercase tracking-widest text-center w-full transition-colors font-roboto-flex ${teamsTab === "proximos" ? "text-[#1E3D2F]" : "text-white"}`}
                   >
                     Próximos
                   </span>
@@ -6770,7 +6773,7 @@ function GroupApp({
                   className={`px-4 py-2 flex items-center justify-center rounded-none transition-all border ${rankingTab === "geral" ? "bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
                 >
                   <span
-                    className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === "geral" ? "text-[#1E3D2F]" : "text-white"}`}
+                    className={`text-[11px] font-black uppercase tracking-widest text-center w-full transition-colors font-roboto-flex ${rankingTab === "geral" ? "text-[#1E3D2F]" : "text-white"}`}
                   >
                     Geral
                   </span>
@@ -6780,7 +6783,7 @@ function GroupApp({
                   className={`px-4 py-2 flex items-center justify-center rounded-none transition-all border ${rankingTab === "artilharia" ? "bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
                 >
                   <span
-                    className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === "artilharia" ? "text-[#1E3D2F]" : "text-white"}`}
+                    className={`text-[11px] font-black uppercase tracking-widest text-center w-full transition-colors font-roboto-flex ${rankingTab === "artilharia" ? "text-[#1E3D2F]" : "text-white"}`}
                   >
                     Artilharia
                   </span>
@@ -6790,7 +6793,7 @@ function GroupApp({
                   className={`px-4 py-2 flex items-center justify-center rounded-none transition-all border ${rankingTab === "assistencias" ? "bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
                 >
                   <span
-                    className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${rankingTab === "assistencias" ? "text-[#1E3D2F]" : "text-white"}`}
+                    className={`text-[11px] font-black uppercase tracking-widest text-center w-full transition-colors font-roboto-flex ${rankingTab === "assistencias" ? "text-[#1E3D2F]" : "text-white"}`}
                   >
                     Assistências
                   </span>
@@ -6860,7 +6863,7 @@ function GroupApp({
                           </div>
                         )}
                       </div>
-                      <p className="text-[9px] font-black tracking-widest text-zinc-400 font-roboto-flex">
+                      <p className="text-[11px] font-black tracking-widest text-zinc-400 font-roboto-flex">
                         Organização
                       </p>
                     </div>
@@ -6938,7 +6941,7 @@ function GroupApp({
                       {/* Matches Section */}
                       <div className="space-y-4">
                         <div className="flex items-center justify-between px-1">
-                          <h4 className="text-[13px] font-black tracking-widest text-black font-roboto-flex">
+                          <h4 className="text-sm font-black tracking-widest text-black font-roboto-flex">
                             Suas peladas
                           </h4>
                         </div>
@@ -7011,6 +7014,7 @@ function GroupApp({
                                     setSelectedMatchId(match.id);
                                     setCurrentScreen("players");
                                     setShowAddPlayerSection(true);
+                                    setTeamsTab("configuracao");
                                   }
                                 }}
                                 className={`group relative bg-[#dce3ee] rounded-none flex flex-col sm:flex-row items-stretch border border-black/10 cursor-pointer shadow-sm hover:shadow-md transition-all duration-500 ease-in-out overflow-hidden ${isExpanded ? "opacity-100 max-h-[500px]" : "opacity-60 max-h-[56px] sm:max-h-[64px]"}`}
@@ -7077,7 +7081,7 @@ function GroupApp({
                                   <div className="relative z-10 flex flex-col h-full justify-between gap-4">
                                     <div className="flex justify-between items-start">
                                       <div className="flex flex-col gap-2 mt-0 sm:mt-1">
-                                        <h5 className="font-bold text-zinc-800 text-[11px] sm:text-[12px] tracking-tight font-roboto-flex">
+                                        <h5 className="font-bold text-zinc-800 text-sm sm:text-[12px] tracking-tight font-roboto-flex">
                                           {day} {month} - {weekday}
                                         </h5>
                                       </div>
@@ -7091,7 +7095,7 @@ function GroupApp({
                                           </div>{" "}
                                           {match.time}
                                         </div>
-                                        <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-zinc-600 font-medium font-roboto-flex">
+                                        <div className="flex items-center gap-2 text-xs sm:text-[11px] text-zinc-600 font-medium font-roboto-flex">
                                           <div className="text-emerald-600">
                                             <BsPersonFillAdd size={12} />
                                           </div>{" "}
@@ -7115,7 +7119,7 @@ function GroupApp({
                                                       className="w-full h-full object-cover"
                                                     />
                                                   ) : (
-                                                    <div className="w-full h-full flex items-center justify-center text-[7px] sm:text-[8px] font-bold text-zinc-500 uppercase">
+                                                    <div className="w-full h-full flex items-center justify-center text-[10px] sm:text-[8px] font-bold text-zinc-500 uppercase">
                                                       {player.name[0]}
                                                     </div>
                                                   )}
@@ -7123,7 +7127,7 @@ function GroupApp({
                                               ))}
                                             {matchSpecificPlayers.length >
                                               10 && (
-                                              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-white bg-zinc-50 flex items-center justify-center text-[8px] font-black text-zinc-400">
+                                              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-white bg-zinc-50 flex items-center justify-center text-[10px] font-black text-zinc-400">
                                                 +
                                                 {matchSpecificPlayers.length -
                                                   10}
@@ -7297,10 +7301,9 @@ function GroupApp({
                                           referrerPolicy="no-referrer"
                                         />
                                       ) : (
-                                        <IoPersonOutline
-                                          size={16}
-                                          className="w-4 h-4 sm:w-4 sm:h-4"
-                                        />
+                                        <span className="flex items-center justify-center">
+                                          <IoPersonOutline size={16} />
+                                        </span>
                                       )}
                                     </div>
                                     {editingPlayerId === player.id ? (
@@ -7884,6 +7887,15 @@ function GroupApp({
                                 match.config.playersPerTeam * 2 && (
                                 <button
                                   onClick={() => {
+                                    if (teams.some((t) => t.playerIds.length > 0)) {
+                                      if (match.isActive) {
+                                        setTeamsTab("historico");
+                                      } else {
+                                        setTeamsTab("proximos");
+                                      }
+                                      return;
+                                    }
+
                                     // Ensure teams are generated from all available players in arrival order
                                     const availablePlayers = [...players]
                                       .filter((p) => p.isAvailable)
@@ -10990,7 +11002,18 @@ function GroupApp({
                         {!isPrintMode && (
                           <div className="flex justify-end px-4">
                             <button
-                              onClick={() => setIsPrintMode(true)}
+                              onClick={() => {
+                                if (players.length === 0) {
+                                  setToast({
+                                    message:
+                                      "Adicione jogadores para detalhar despesas",
+                                    type: "info",
+                                  });
+                                  setTimeout(() => setToast(null), 3000);
+                                  return;
+                                }
+                                setIsPrintMode(true);
+                              }}
                               className="text-zinc-400 p-2 hover:bg-zinc-800 rounded-full transition-colors"
                               title="Gerar Print"
                             >
@@ -11188,9 +11211,17 @@ function GroupApp({
 
                               {/* Despesas Card */}
                               <div
-                                onClick={() =>
-                                  !isPrintMode && setShowExpenseModal(true)
-                                }
+                                onClick={() => {
+                                  if (players.length === 0) {
+                                    setToast({
+                                      message: "Adicione jogadores para detalhar despesas",
+                                      type: "info"
+                                    });
+                                    setTimeout(() => setToast(null), 3000);
+                                    return;
+                                  }
+                                  !isPrintMode && setShowExpenseModal(true);
+                                }}
                                 className={`p-5 transition-all order-3 lg:order-none ${isPrintMode ? "bg-white border-zinc-300 border rounded-none" : "cursor-pointer hover:opacity-90 bg-red-500/10 border border-white/10 rounded-none"}`}
                               >
                                 <p
@@ -11251,7 +11282,17 @@ function GroupApp({
                                 </h3>
                                 {!isPrintMode && (
                                   <button
-                                    onClick={() => setShowExpenseModal(true)}
+                                    onClick={() => {
+                                      if (players.length === 0) {
+                                        setToast({
+                                          message: "Adicione jogadores para detalhar despesas",
+                                          type: "info"
+                                        });
+                                        setTimeout(() => setToast(null), 3000);
+                                        return;
+                                      }
+                                      setShowExpenseModal(true);
+                                    }}
                                     className="p-1.5 bg-[#ffffff] text-[#1E3D2F] rounded-lg hover:opacity-90 transition-all active:scale-90"
                                   >
                                     <Plus size={16} />
@@ -11339,6 +11380,15 @@ function GroupApp({
                                 {!isPrintMode && (
                                   <button
                                     onClick={() => {
+                                      if (players.length === 0) {
+                                        setToast({
+                                          message:
+                                            "Adicione jogadores para gerar relatórios",
+                                          type: "info",
+                                        });
+                                        setTimeout(() => setToast(null), 3000);
+                                        return;
+                                      }
                                       setIsPrintMode(true);
                                       setIsPrintPaymentsOnly(true);
                                     }}
@@ -11413,6 +11463,15 @@ function GroupApp({
                                 {!isPrintMode && (
                                   <button
                                     onClick={() => {
+                                      if (players.length === 0) {
+                                        setToast({
+                                          message:
+                                            "Adicione jogadores para gerar relatórios",
+                                          type: "info",
+                                        });
+                                        setTimeout(() => setToast(null), 3000);
+                                        return;
+                                      }
                                       setIsPrintMode(true);
                                       setIsPrintPaymentsOnly(true);
                                     }}
@@ -11483,7 +11542,17 @@ function GroupApp({
                       <div className="flex justify-end px-4">
                         <div className="flex gap-1.5">
                           <button
-                            onClick={() => setIsPrintMode(true)}
+                            onClick={() => {
+                              if (players.length === 0) {
+                                setToast({
+                                  message: "Adicione jogadores para gerar relatórios",
+                                  type: "info"
+                                });
+                                setTimeout(() => setToast(null), 3000);
+                                return;
+                              }
+                              setIsPrintMode(true);
+                            }}
                             className="text-zinc-400 p-2 hover:bg-zinc-800 rounded-full transition-colors"
                           >
                             <Eye size={20} />
@@ -13544,7 +13613,7 @@ function GroupApp({
                           match.scoreA >= match.config.goalLimit ||
                           match.scoreB >= match.config.goalLimit
                         }
-                        className="w-full h-10 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white rounded-xl font-black uppercase text-[10px] flex items-center justify-center px-4 transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-[#59b823]/20 group"
+                        className="w-full h-10 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white rounded-xl font-black uppercase text-xs flex items-center justify-center px-4 transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-[#59b823]/20 group font-roboto-flex"
                       >
                         <div className="flex items-center gap-2">
                           <span className="text-emerald-200 group-hover:scale-110 transition-transform flex items-center">
@@ -13607,7 +13676,7 @@ function GroupApp({
                           setSwappingPlayerId(null);
                           setShowPlayerActionsModal(null);
                         }}
-                        className="w-full h-10 bg-amber-500 text-black rounded-xl font-black uppercase text-[10px] flex items-center justify-between px-4 transition-all hover:bg-amber-600 active:scale-[0.98] shadow-md shadow-amber-500/10 group"
+                        className="w-full h-10 bg-amber-500 text-black rounded-xl font-black uppercase text-xs flex items-center justify-between px-4 transition-all hover:bg-amber-600 active:scale-[0.98] shadow-md shadow-amber-500/10 group font-roboto-flex"
                       >
                         <div className="flex items-center gap-2">
                           <RefreshCw
@@ -13668,7 +13737,7 @@ function GroupApp({
 
                           setShowPlayerActionsModal(null);
                         }}
-                        className={`w-full h-10 mt-2 text-black rounded-xl font-black text-[10px] flex items-center justify-center px-4 transition-all active:scale-[0.98] shadow-md group ${players.find((p) => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? "bg-sky-200 hover:bg-sky-300" : "bg-sky-100 hover:bg-sky-200"}`}
+                        className={`w-full h-10 mt-2 text-black rounded-xl font-black text-xs flex items-center justify-center px-4 transition-all active:scale-[0.98] shadow-md group font-roboto-flex ${players.find((p) => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? "bg-sky-200 hover:bg-sky-300" : "bg-sky-100 hover:bg-sky-200"}`}
                       >
                         <div className="flex items-center gap-2">
                           <span
@@ -15899,7 +15968,7 @@ function GroupApp({
                 </div>
               )}
               <span
-                className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === "players" ? "opacity-100 translate-y-0" : "opacity-70"}`}
+                className={`text-[11px] font-black uppercase tracking-widest leading-none transition-all duration-300 font-roboto-flex ${currentScreen === "players" ? "opacity-100 translate-y-0" : "opacity-70"}`}
               >
                 CADASTRAR
               </span>
@@ -15916,8 +15985,8 @@ function GroupApp({
                 const currentIndex = screens.indexOf(currentScreen);
                 setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
                 setCurrentScreen("teams");
-                // Open 'Confrontos' if match is active, otherwise 'Próximos'
-                setTeamsTab(match.isActive ? "historico" : "proximos");
+                // Reset PARTIDA tabs
+                setTeamsTab("configuracao");
               }}
               className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
                 currentScreen === "teams"
@@ -15941,7 +16010,7 @@ function GroupApp({
                 </div>
               )}
               <span
-                className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === "teams" ? "opacity-100 translate-y-0" : "opacity-70"}`}
+                className={`text-[11px] font-black uppercase tracking-widest leading-none transition-all duration-300 font-roboto-flex ${currentScreen === "teams" ? "opacity-100 translate-y-0" : "opacity-70"}`}
               >
                 PARTIDA
               </span>
@@ -15981,7 +16050,7 @@ function GroupApp({
                 </div>
               )}
               <span
-                className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === "ranking" ? "opacity-100 translate-y-0" : "opacity-70"}`}
+                className={`text-[11px] font-black uppercase tracking-widest leading-none transition-all duration-300 font-roboto-flex ${currentScreen === "ranking" ? "opacity-100 translate-y-0" : "opacity-70"}`}
               >
                 RANKING
               </span>
@@ -16022,7 +16091,7 @@ function GroupApp({
                 </div>
               )}
               <span
-                className={`text-[10px] font-black uppercase tracking-widest leading-none transition-all duration-300 ${currentScreen === "finance" ? "opacity-100 translate-y-0" : "opacity-70"}`}
+                className={`text-[11px] font-black uppercase tracking-widest leading-none transition-all duration-300 font-roboto-flex ${currentScreen === "finance" ? "opacity-100 translate-y-0" : "opacity-70"}`}
               >
                 FINANCEIRO
               </span>
