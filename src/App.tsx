@@ -7513,7 +7513,7 @@ function GroupApp({
                                         fixedColors.teamA || TEAM_COLORS[0],
                                     })
                                   }
-                                  className="w-full h-12 rounded-none flex items-center justify-between px-4 bg-black/5 border border-black/5 hover:border-white/20 transition-all"
+                                  className="w-full h-12 rounded-full flex items-center justify-between px-4 bg-black/5 border border-black/5 hover:border-white/20 transition-all"
                                 >
                                   <div className="flex items-center gap-2">
                                     <span
@@ -7544,7 +7544,7 @@ function GroupApp({
                                         fixedColors.teamB || TEAM_COLORS[1],
                                     })
                                   }
-                                  className="w-full h-12 rounded-none flex items-center justify-between px-4 bg-black/5 border border-black/5 hover:border-white/20 transition-all"
+                                  className="w-full h-12 rounded-full flex items-center justify-between px-4 bg-black/5 border border-black/5 hover:border-white/20 transition-all"
                                 >
                                   <div className="flex items-center gap-2">
                                     <span
@@ -8803,7 +8803,7 @@ function GroupApp({
                                             </span>
                                           )}
                                           {playerEvents[p.id].type === "up" && (
-                                            <span className="text-emerald-500 animate-bounce">
+                                            <span className="text-green-800 animate-bounce">
                                               <IoMdArrowUp size={12} />
                                             </span>
                                           )}
@@ -9097,7 +9097,7 @@ function GroupApp({
                                             </span>
                                           )}
                                           {playerEvents[p.id].type === "up" && (
-                                            <span className="text-emerald-500 animate-bounce">
+                                            <span className="text-green-800 animate-bounce">
                                               <IoMdArrowUp size={12} />
                                             </span>
                                           )}
@@ -10374,7 +10374,7 @@ function GroupApp({
                                                       )}
                                                       {playerEvents[p.id]
                                                         .type === "up" && (
-                                                        <span className="text-emerald-500 animate-bounce">
+                                                        <span className="text-green-800 animate-bounce">
                                                           <IoMdArrowUp
                                                             size={12}
                                                           />
@@ -13529,7 +13529,7 @@ function GroupApp({
                           match.scoreA >= match.config.goalLimit ||
                           match.scoreB >= match.config.goalLimit
                         }
-                        className="w-full h-10 bg-emerald-600 text-white rounded-xl font-black uppercase text-[10px] flex items-center justify-between px-4 transition-all hover:bg-emerald-700 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-emerald-500/10 group"
+                        className="w-full h-10 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white rounded-xl font-black uppercase text-[10px] flex items-center justify-center px-4 transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-[#59b823]/20 group"
                       >
                         <div className="flex items-center gap-2">
                           <span className="text-emerald-200 group-hover:scale-110 transition-transform flex items-center">
@@ -13537,7 +13537,6 @@ function GroupApp({
                           </span>
                           <span className="tracking-widest">Registrar Gol</span>
                         </div>
-                        <Plus size={12} className="opacity-50" />
                       </button>
                     )}
 
@@ -13654,7 +13653,7 @@ function GroupApp({
 
                           setShowPlayerActionsModal(null);
                         }}
-                        className={`w-full h-10 mt-2 text-black rounded-xl font-black text-[10px] flex items-center justify-between px-4 transition-all active:scale-[0.98] shadow-md group ${players.find((p) => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? "bg-sky-200 hover:bg-sky-300" : "bg-sky-100 hover:bg-sky-200"}`}
+                        className={`w-full h-10 mt-2 text-black rounded-xl font-black text-[10px] flex items-center justify-center px-4 transition-all active:scale-[0.98] shadow-md group ${players.find((p) => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? "bg-sky-200 hover:bg-sky-300" : "bg-sky-100 hover:bg-sky-200"}`}
                       >
                         <div className="flex items-center gap-2">
                           <span
@@ -14107,9 +14106,9 @@ function GroupApp({
             <motion.div
               initial={{ scale: 0.9, y: 30 }}
               animate={{ scale: 1, y: 0 }}
-              className="w-full max-w-sm rounded-[32px] overflow-hidden shadow-2xl bg-zinc-50 border border-zinc-200"
+              className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-2xl bg-zinc-50 border border-zinc-200"
             >
-              <div className="bg-brand-primary p-10 text-center relative overflow-hidden">
+              <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
@@ -14123,10 +14122,10 @@ function GroupApp({
                     stiffness: 200,
                     delay: 0.2,
                   }}
-                  className="w-16 h-16 bg-white rounded-full flex items-center justify-center mx-auto mb-4 shadow-xl border-4 border-black/5"
+                  className="w-20 h-20 mx-auto rounded-full flex items-center justify-center relative z-10 mb-6"
                 >
                   <span className="text-black">
-                    <IoIosFootball size={32} />
+                    <IoIosFootball size={40} />
                   </span>
                 </motion.div>
 
@@ -14135,12 +14134,10 @@ function GroupApp({
                 </h3>
                 <p className="text-[10px] text-black/60 font-black mt-2 uppercase tracking-[0.2em]">
                   GOL DE{" "}
-                  <span className="bg-white/30 px-2 py-0.5 rounded text-black">
-                    {
-                      players.find((p) => p.id === showAssistSelection.scorerId)
-                        ?.name
-                    }
-                  </span>
+                  {
+                    players.find((p) => p.id === showAssistSelection.scorerId)
+                      ?.name
+                  }
                 </p>
               </div>
 
@@ -14158,12 +14155,9 @@ function GroupApp({
                       registerGoal(team, showAssistSelection.scorerId);
                       setShowAssistSelection(null);
                     }}
-                    className="w-full p-4 rounded-2xl border-2 border-dashed transition-all text-center flex items-center justify-center gap-3 bg-white border-zinc-200 hover:border-zinc-400 hover:bg-zinc-50 group"
+                    className="w-full h-12 rounded-xl border border-zinc-200 transition-all text-center flex items-center justify-center bg-white hover:border-zinc-300 hover:bg-zinc-50 group shadow-sm"
                   >
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center bg-zinc-100 text-zinc-400 group-hover:bg-zinc-200 transition-colors">
-                      <PiXBold size={16} />
-                    </div>
-                    <span className="text-xs font-black uppercase tracking-widest text-zinc-500 group-hover:text-zinc-700">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-zinc-500 group-hover:text-zinc-700">
                       Sem Assistência
                     </span>
                   </motion.button>
@@ -14234,7 +14228,7 @@ function GroupApp({
 
                 <button
                   onClick={() => setShowAssistSelection(null)}
-                  className="w-full py-4 text-[10px] font-black uppercase tracking-[0.3em] transition-all hover:bg-red-50 rounded-2xl text-zinc-400 hover:text-red-500 text-center"
+                  className="w-full py-4 text-[10px] font-black uppercase tracking-[0.3em] transition-all bg-white hover:bg-red-50 rounded-2xl text-zinc-400 hover:text-red-500 border border-zinc-200 hover:border-red-200 text-center shadow-sm"
                 >
                   Cancelar Gol
                 </button>
