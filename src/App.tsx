@@ -13665,7 +13665,7 @@ function GroupApp({
                             {players.find(
                               (p) => p.id === showPlayerActionsModal.playerId,
                             )?.isGoalkeeper
-                              ? "Remover de goleiro fixo"
+                              ? "Remover goleiro fixo"
                               : "Definir como goleiro fixo"}
                           </span>
                         </div>
@@ -13927,7 +13927,7 @@ function GroupApp({
                             {players.find(
                               (p) => p.id === showQueuePlayerModal.playerId,
                             )?.isGoalkeeper
-                              ? "Remover de goleiro fixo"
+                              ? "Remover goleiro fixo"
                               : "Definir como goleiro fixo"}
                           </button>
                         )}
