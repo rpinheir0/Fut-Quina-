@@ -7822,7 +7822,7 @@ function GroupApp({
                             <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">
                               Ordem de Chegada
                             </h3>
-                            <div className="flex flex-col sm:flex-row items-center gap-3">
+                            <div className="flex flex-row items-center gap-2">
                               {players.some(
                                 (p) =>
                                   sessionPlayerIds.includes(p.id) &&
@@ -7880,7 +7880,7 @@ function GroupApp({
                                   <span className="text-white">
                                     <CheckCircle2 size={16} />
                                   </span>
-                                  <span>Todos Presentes</span>
+                                  <span>Todos</span>
                                 </button>
                               )}
                               {players.filter((p) => p.isAvailable).length >=
@@ -8171,7 +8171,7 @@ function GroupApp({
                                     <Star
                                       key={`star-a-${p.id}-${star}`}
                                       size={8}
-                                      className={`${(p.stars || 3) >= star ? "fill-[#00FF00] text-zinc-800" : "text-black/20"}`}
+                                      className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/20"}`}
                                     />
                                   ))}
                                 </div>
@@ -8380,7 +8380,7 @@ function GroupApp({
                                                       <Star
                                                         key={`star-h-${p.id}-${star}`}
                                                         size={6}
-                                                        className={`${(p.stars || 3) >= star ? "fill-[#00FF00] text-zinc-800" : "text-black/10"}`}
+                                                        className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10"}`}
                                                       />
                                                     ),
                                                   )}
@@ -8791,7 +8791,7 @@ function GroupApp({
                                           <Star
                                             key={`star-${p.id}-${star}`}
                                             size={6}
-                                            className={`${(p.stars || 3) >= star ? "fill-[#00FF00] text-zinc-800" : "text-black/10"}`}
+                                            className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10"}`}
                                           />
                                         ))}
                                       </div>
@@ -8800,7 +8800,7 @@ function GroupApp({
                                       {p.isGoalkeeper &&
                                         orgProSettings.allowFixedGoalkeeper !==
                                           false && (
-                                          <div className="flex items-center justify-center shrink-0 mr-1 ml-1 text-sky-500 drop-shadow-sm">
+                                          <div className="flex items-center justify-center shrink-0 mr-1 ml-1 text-[#dce3ee] drop-shadow-sm">
                                             <GiGloves size={14} />
                                           </div>
                                         )}
@@ -9096,7 +9096,7 @@ function GroupApp({
                                           <Star
                                             key={`star-b-${p.id}-${star}`}
                                             size={6}
-                                            className={`${(p.stars || 3) >= star ? "fill-[#00FF00] text-zinc-800" : "text-black/10"}`}
+                                            className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10"}`}
                                           />
                                         ))}
                                       </div>
@@ -9105,7 +9105,7 @@ function GroupApp({
                                       {p.isGoalkeeper &&
                                         orgProSettings.allowFixedGoalkeeper !==
                                           false && (
-                                          <div className="flex items-center justify-center shrink-0 mr-1 ml-1 text-sky-500 drop-shadow-sm">
+                                          <div className="flex items-center justify-center shrink-0 mr-1 ml-1 text-[#dce3ee] drop-shadow-sm">
                                             <GiGloves size={14} />
                                           </div>
                                         )}
@@ -10340,9 +10340,7 @@ function GroupApp({
                                                     : undefined,
                                                 }}
                                               >
-                                                <div
-                                                  className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 border overflow-hidden ${isCurrent ? "border-black/20 bg-black/5" : "bg-transparent border-black/10"}`}
-                                                >
+                                                <div className="w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 border overflow-hidden border-black/20 bg-gradient-to-br from-zinc-100 to-zinc-300">
                                                   {p.photo ? (
                                                     <img
                                                       src={p.photo}
@@ -10371,7 +10369,7 @@ function GroupApp({
                                                         <Star
                                                           key={`star-q-${p.id}-${star}`}
                                                           size={8}
-                                                          className={`${(p.stars || 3) >= star ? "fill-[#00FF00] text-zinc-800" : "text-black/20"}`}
+                                                          className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/20"}`}
                                                         />
                                                       ),
                                                     )}
@@ -10381,7 +10379,9 @@ function GroupApp({
                                                   {p.isGoalkeeper &&
                                                     orgProSettings.allowFixedGoalkeeper !==
                                                       false && (
-                                                      <div className="flex items-center justify-center shrink-0 drop-shadow-sm text-sky-500">
+                                                      <div
+                                                        className={`flex items-center justify-center shrink-0 drop-shadow-sm ${isCurrent ? "text-[#dce3ee]" : "text-black/30"}`}
+                                                      >
                                                         <GiGloves size={14} />
                                                       </div>
                                                     )}
@@ -10636,7 +10636,7 @@ function GroupApp({
                                   >
                                     <div className="flex items-center gap-2 overflow-hidden">
                                       <div
-                                        className={`w-6 h-6 rounded-full bg-zinc-100 flex items-center justify-center overflow-hidden border shrink-0 ${match.teamAIndex === tIndex || match.teamBIndex === tIndex ? "border-[#53B986] ring-1 ring-[#53B986]" : "border-zinc-200"}`}
+                                        className={`w-6 h-6 rounded-full bg-gradient-to-br from-zinc-100 to-zinc-300 flex items-center justify-center overflow-hidden border shrink-0 ${match.teamAIndex === tIndex || match.teamBIndex === tIndex ? "border-[#53B986] ring-1 ring-[#53B986]" : "border-zinc-200"}`}
                                       >
                                         {p.photo ? (
                                           <img
@@ -10837,7 +10837,7 @@ function GroupApp({
                                 <Star
                                   key={`star-rank-${player.id}-${star}`}
                                   size={8}
-                                  className={`${(player.stars || 3) >= star ? "fill-[#00FF00] text-zinc-800" : "text-zinc-800/10"}`}
+                                  className={`${(player.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-zinc-800/10"}`}
                                 />
                               ))}
                             </div>
