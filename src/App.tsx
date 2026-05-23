@@ -7421,7 +7421,7 @@ function GroupApp({
                     </div>
                   ) : teamsTab === "configuracao" ? (
                     <div className="space-y-6">
-                      <div className="sticky top-[-1px] z-40 bg-white/90 backdrop-blur-md py-4 -mx-6 px-6 flex justify-between items-center border-b border-black/5">
+                      <div className="sticky top-[-1px] z-40 bg-white/90 backdrop-blur-md py-4 -mx-2 px-2 sm:-mx-4 sm:px-4 flex justify-between items-center border-b border-black/5">
                         <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">
                           Configuração
                         </h3>
@@ -8422,7 +8422,7 @@ function GroupApp({
                           {match.hasEnded && (
                             <div className="absolute inset-0 z-40 bg-black/10 backdrop-blur-[1px] rounded-2xl pointer-events-auto cursor-default" />
                           )}
-                          <div className="sticky top-[-1px] z-40 bg-[#dce3ee] backdrop-blur-md border-b border-black/10 ring-1 ring-white/5 py-6 -mx-6 px-6 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-2xl w-full max-w-3xl mx-auto relative overflow-hidden">
+                          <div className="sticky top-[-1px] z-40 bg-[#dce3ee] backdrop-blur-md border-b border-black/10 ring-1 ring-white/5 py-6 -mx-2 px-2 sm:-mx-4 sm:px-4 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-2xl w-full max-w-3xl mx-auto relative overflow-hidden">
                             <div className="flex-1 flex flex-col items-center text-center space-y-2 sm:space-y-4">
                               <button
                                 className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm"
@@ -9563,7 +9563,7 @@ function GroupApp({
                                       return;
                                     }
                                   }}
-                                  className={`p-4 rounded-xl border-2 transition-all relative min-h-[110px] flex flex-col justify-center overflow-hidden ${
+                                  className={`p-4 rounded-none border-2 transition-all relative min-h-[110px] flex flex-col justify-center overflow-hidden ${
                                     movingPlayers && isSelectingDestination
                                       ? "cursor-pointer hover:opacity-90"
                                       : "cursor-default"
@@ -10412,7 +10412,7 @@ function GroupApp({
                           initial={{ opacity: 0, scale: 0.95 }}
                           animate={{ opacity: 1, scale: 1 }}
                           whileHover={{ y: -5 }}
-                          className={`group p-3 sm:p-4 rounded-xl transition-all relative cursor-pointer flex flex-col border ${
+                          className={`group p-3 sm:p-4 rounded-none transition-all relative cursor-pointer flex flex-col border ${
                             match.teamAIndex === tIndex ||
                             match.teamBIndex === tIndex
                               ? "bg-emerald-900 border-[#53B986] shadow-[0_0_30px_rgba(83,185,134,0.2)]"
