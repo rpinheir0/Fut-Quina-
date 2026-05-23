@@ -6906,7 +6906,7 @@ function GroupApp({
                       {/* CTA Banner */}
                       <div
                         onClick={() => setShowScheduleModal(true)}
-                        className="cursor-pointer relative overflow-hidden bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] rounded-[24px] p-5 sm:p-6 shadow-xl hover:shadow-2xl transition-all hover:scale-[1.01] active:scale-[0.99]"
+                        className="cursor-pointer relative overflow-hidden bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] rounded-full p-4 shadow-xl hover:shadow-2xl transition-all hover:scale-[1.01] active:scale-[0.99]"
                       >
                         {/* Background pattern */}
                         <div className="absolute top-0 right-0 h-full w-2/3 opacity-20 mix-blend-overlay flex justify-end items-center px-10">
@@ -6938,9 +6938,6 @@ function GroupApp({
                           <h4 className="text-[13px] font-black uppercase tracking-widest text-black">
                             Suas peladas
                           </h4>
-                          <button className="text-[10px] font-bold uppercase tracking-widest text-[#25660e] hover:text-green-800 transition-colors">
-                            Ver todas
-                          </button>
                         </div>
 
                         <div className="space-y-4">
@@ -7013,7 +7010,7 @@ function GroupApp({
                                     setShowAddPlayerSection(true);
                                   }
                                 }}
-                                className={`group relative bg-[#dce3ee] rounded-[24px] flex flex-col sm:flex-row items-stretch border border-black/10 cursor-pointer shadow-sm hover:shadow-md transition-all duration-500 ease-in-out overflow-hidden ${isExpanded ? "opacity-100 max-h-[500px]" : "opacity-60 max-h-[56px] sm:max-h-[64px]"}`}
+                                className={`group relative bg-[#dce3ee] rounded-none flex flex-col sm:flex-row items-stretch border border-black/10 cursor-pointer shadow-sm hover:shadow-md transition-all duration-500 ease-in-out overflow-hidden ${isExpanded ? "opacity-100 max-h-[500px]" : "opacity-60 max-h-[56px] sm:max-h-[64px]"}`}
                               >
                                 {/* Settings and Delete Actions - Absolute Top Right */}
                                 <div className="absolute top-[14px] sm:top-[16px] right-3 sm:right-4 flex items-center gap-0 z-20">
