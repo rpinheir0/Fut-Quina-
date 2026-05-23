@@ -1,8 +1,9 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Silkscreen&family=VT323&family=Megrim&family=Julius+Sans+One&family=Staatliches&family=Readex+Pro:wght@400;500&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Silkscreen&family=VT323&family=Megrim&family=Julius+Sans+One&family=Staatliches&family=Readex+Pro:wght@400;500&display=swap");
 @import "tailwindcss";
 
 @theme {
   --font-sans: "Roboto", ui-sans-serif, system-ui, sans-serif;
+  --font-roboto-flex: "Roboto Flex", sans-serif;
   --font-megrim: "Megrim", serif;
   --font-julius: "Julius Sans One", sans-serif;
   --font-staatliches: "Staatliches", sans-serif;

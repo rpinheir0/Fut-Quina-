@@ -99,6 +99,9 @@ import {
   PiUserCirclePlusLight,
   PiUserCirclePlus,
 } from "react-icons/pi";
+import {
+  MdOutlinePlayForWork,
+} from "react-icons/md";
 import { ImSpinner9 } from "react-icons/im";
 import {
   GiGloves,
@@ -6857,8 +6860,8 @@ function GroupApp({
                           </div>
                         )}
                       </div>
-                      <p className="text-[9px] font-black uppercase tracking-widest text-zinc-400">
-                        ORGANIZAÇÃO
+                      <p className="text-[9px] font-black tracking-widest text-zinc-400 font-roboto-flex">
+                        Organização
                       </p>
                     </div>
                   ) : (
@@ -6935,7 +6938,7 @@ function GroupApp({
                       {/* Matches Section */}
                       <div className="space-y-4">
                         <div className="flex items-center justify-between px-1">
-                          <h4 className="text-[13px] font-black uppercase tracking-widest text-black">
+                          <h4 className="text-[13px] font-black tracking-widest text-black font-roboto-flex">
                             Suas peladas
                           </h4>
                         </div>
@@ -6946,11 +6949,11 @@ function GroupApp({
                             const day = matchDate.getDate();
                             const month = matchDate
                               .toLocaleString("pt-BR", { month: "long" })
-                              .toUpperCase();
+                              .replace(/^\w/, (c) => c.toUpperCase());
                             const weekday = matchDate
                               .toLocaleString("pt-BR", { weekday: "long" })
                               .substring(0, 7)
-                              .toUpperCase();
+                              .replace(/^\w/, (c) => c.toUpperCase());
 
                             // Get specific match players and session
                             const specificSessionSaved =
@@ -7060,16 +7063,21 @@ function GroupApp({
                                   className={`flex-1 p-4 sm:p-5 relative overflow-hidden transition-opacity duration-300 ${isExpanded ? "opacity-100" : "opacity-0"}`}
                                 >
                                   {/* Subtle background texture pattern */}
-                                  <div className="absolute inset-0 opacity-5 pointer-events-none overflow-hidden flex items-center justify-center">
+                                  <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden flex items-center justify-center">
                                     <div className="text-black mix-blend-overlay">
                                       <GiSoccerField size={220} />
+                                    </div>
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                      <div className="text-[#59b823]/20">
+                                        <MdOutlinePlayForWork size={120} />
+                                      </div>
                                     </div>
                                   </div>
 
                                   <div className="relative z-10 flex flex-col h-full justify-between gap-4">
                                     <div className="flex justify-between items-start">
                                       <div className="flex flex-col gap-2 mt-0 sm:mt-1">
-                                        <h5 className="font-bold text-zinc-800 text-[11px] sm:text-[12px] tracking-tight uppercase">
+                                        <h5 className="font-bold text-zinc-800 text-[11px] sm:text-[12px] tracking-tight font-roboto-flex">
                                           {day} {month} - {weekday}
                                         </h5>
                                       </div>
@@ -7083,39 +7091,49 @@ function GroupApp({
                                           </div>{" "}
                                           {match.time}
                                         </div>
-                                        <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-zinc-600 font-medium uppercase">
+                                        <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-zinc-600 font-medium font-roboto-flex">
                                           <div className="text-emerald-600">
                                             <BsPersonFillAdd size={12} />
                                           </div>{" "}
                                           {matchSpecificPlayers.length}{" "}
-                                          JOGADORES
+                                          jogadores
                                         </div>
+                                        {/* Avatar Stack */}
+                                        {matchSpecificPlayers.length > 0 && (
+                                          <div className="flex -space-x-1.5 sm:-space-x-2 mt-1 sm:mt-1.5">
+                                            {matchSpecificPlayers
+                                              .slice(0, 10)
+                                              .map((player) => (
+                                                <div
+                                                  key={`scheduled-match-player-${player.id}-${match.id}`}
+                                                  className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-white bg-zinc-200 overflow-hidden shadow-sm"
+                                                >
+                                                  {player.avatar ? (
+                                                    <img
+                                                      src={player.avatar}
+                                                      alt={player.name}
+                                                      className="w-full h-full object-cover"
+                                                    />
+                                                  ) : (
+                                                    <div className="w-full h-full flex items-center justify-center text-[7px] sm:text-[8px] font-bold text-zinc-500 uppercase">
+                                                      {player.name[0]}
+                                                    </div>
+                                                  )}
+                                                </div>
+                                              ))}
+                                            {matchSpecificPlayers.length >
+                                              10 && (
+                                              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-white bg-zinc-50 flex items-center justify-center text-[8px] font-black text-zinc-400">
+                                                +
+                                                {matchSpecificPlayers.length -
+                                                  10}
+                                              </div>
+                                            )}
+                                          </div>
+                                        )}
                                       </div>
 
-                                      <div className="flex flex-col sm:items-end gap-2 w-full sm:w-auto mt-3 sm:mt-0">
-                                        {/* Progress */}
-                                        <div className="w-full sm:w-36 flex flex-col gap-1 sm:items-end">
-                                          <div className="w-full h-1 bg-black/10 rounded-full overflow-hidden border border-black/5">
-                                            <div
-                                              className="h-full bg-gradient-to-r from-emerald-500 to-emerald-400 rounded-full"
-                                              style={{
-                                                width: `${Math.min(100, Math.round((totalAvailablePlayers / match.maxPlayers) * 100))}%`,
-                                              }}
-                                            />
-                                          </div>
-                                          <span className="text-[8px] text-zinc-500 font-black uppercase tracking-widest">
-                                            <span className="text-zinc-800">
-                                              {Math.round(
-                                                (totalAvailablePlayers /
-                                                  match.maxPlayers) *
-                                                  100,
-                                              )}
-                                              %
-                                            </span>{" "}
-                                            Confirmados
-                                          </span>
-                                        </div>
-                                      </div>
+
                                     </div>
                                   </div>
                                 </div>
