@@ -2679,6 +2679,8 @@ function GroupApp({
       setSelectedMatchId(newMatch.id);
       setCurrentScreen("players");
       setShowAddPlayerSection(true);
+      setTeamsTab("configuracao");
+      setPlayersTab("configuracao");
     }
   };
   const [sessionPlayerIds, setSessionPlayerIds] = useState<string[]>(() => {
@@ -3135,48 +3137,88 @@ function GroupApp({
 
   useEffect(() => {
     // Only run auto-complete if enabled and there are players to assign
-    const availableTotal = players.filter(
-      (p) => p.isAvailable && sessionPlayerIds.includes(p.id),
-    ).length;
+    const availableSessionPlayersList = players
+      .filter((p) => p.isAvailable && sessionPlayerIds.includes(p.id))
+      .sort((a, b) => (a.arrivedAt || 0) - (b.arrivedAt || 0));
+
     if (
       !autoCompleteTeams ||
       !match.config.playersPerTeam ||
-      players.length === 0 ||
-      availableTotal === 0
+      availableSessionPlayersList.length === 0
     )
       return;
 
     setTeams((prev) => {
       const limit = match.config.playersPerTeam;
-
-      // Use only AVAILABLE session players as the source for teams
-      // Sort by arrivedAt to maintain queue order
-      const availableSessionPlayers = players
-        .filter((p) => p.isAvailable && sessionPlayerIds.includes(p.id))
-        .sort((a, b) => (a.arrivedAt || 0) - (b.arrivedAt || 0));
-
-      const allPlayerIds = availableSessionPlayers.map((p) => p.id);
-      const allGks = availableSessionPlayers
-        .filter((p) => p.isGoalkeeper)
-        .map((p) => p.id);
-      const allLine = availableSessionPlayers
-        .filter((p) => !p.isGoalkeeper)
-        .map((p) => p.id);
-
+      const allPlayerIds = availableSessionPlayersList.map((p) => p.id);
+      
       const expectedTeamCount = Math.max(
         2,
         Math.ceil(allPlayerIds.length / limit),
       );
 
+      // Separate GKs and Line, maintaining order within each group
+      const allGks = availableSessionPlayersList
+        .filter((p) => p.isGoalkeeper)
+        .map((p) => p.id);
+      const allLine = availableSessionPlayersList
+        .filter((p) => !p.isGoalkeeper)
+        .map((p) => p.id);
+
       // Generate the target assignment to check if we need an update
       const targetAssignment: string[][] = [];
-      let lp = 0;
+      let gkPtr = 0;
+      let linePtr = 0;
+
       for (let i = 0; i < expectedTeamCount; i++) {
-        const teamGk = allGks[i] ? [allGks[i]] : [];
-        const lineNeeded = limit - teamGk.length;
-        const teamLine = allLine.slice(lp, lp + lineNeeded);
-        lp += lineNeeded;
-        targetAssignment.push([...teamGk, ...teamLine]);
+        const teamIds: string[] = [];
+        
+        // 1. Try to take one GK if available
+        if (gkPtr < allGks.length) {
+          teamIds.push(allGks[gkPtr]);
+          gkPtr++;
+        }
+        
+        // 2. Fill the rest with Line players
+        while (teamIds.length < limit && linePtr < allLine.length) {
+          teamIds.push(allLine[linePtr]);
+          linePtr++;
+        }
+
+        // 3. If still has space and we have extra GKs (not assigned to future teams yet), use them as line players
+        // This is a backup to ensure everyone gets assigned
+        const remainingTeams = expectedTeamCount - 1 - i;
+        const extraGksCount = allGks.length - gkPtr;
+        const gksNeededForFuture = Math.min(extraGksCount, remainingTeams);
+        const gksAvailableNow = extraGksCount - gksNeededForFuture;
+
+        for (let j = 0; j < gksAvailableNow && teamIds.length < limit; j++) {
+          teamIds.push(allGks[gkPtr]);
+          gkPtr++;
+        }
+
+        targetAssignment.push(teamIds);
+      }
+
+      // Special case: if we still have players left (extreme case), push them somewhere
+      while (linePtr < allLine.length) {
+        // Find first team with space
+        const teamWithSpace = targetAssignment.find(t => t.length < limit);
+        if (teamWithSpace) {
+          teamWithSpace.push(allLine[linePtr]);
+        } else {
+          break; // No more space anywhere
+        }
+        linePtr++;
+      }
+      while (gkPtr < allGks.length) {
+        const teamWithSpace = targetAssignment.find(t => t.length < limit);
+        if (teamWithSpace) {
+          teamWithSpace.push(allGks[gkPtr]);
+        } else {
+          break; // No more space anywhere
+        }
+        gkPtr++;
       }
 
       const isDifferent =
@@ -3218,6 +3260,7 @@ function GroupApp({
     match?.config?.playersPerTeam,
     sessionPlayerIds,
     players,
+    teams,
   ]);
 
   useEffect(() => {
@@ -6701,6 +6744,7 @@ function GroupApp({
                     setShowAddPlayerSection(false);
                     setSelectedMatchId(null);
                     setPlayersTab("configuracao");
+                    setTeamsTab("configuracao");
                   }}
                   className="text-white hover:opacity-80 transition-opacity flex items-center justify-center cursor-pointer p-2"
                   title="Voltar ao Painel"
@@ -6926,7 +6970,7 @@ function GroupApp({
                             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#0a180f] flex items-center justify-center shrink-0 shadow-lg">
                               <Plus size={24} className="text-[#a1fd2b]" />
                             </div>
-                            <div className="flex flex-col text-white">
+                            <div className="flex flex-col text-black">
                               <h3 className="text-lg sm:text-xl font-bold tracking-tight">
                                 Crie sua Pelada
                               </h3>
@@ -6941,7 +6985,7 @@ function GroupApp({
                       {/* Matches Section */}
                       <div className="space-y-4">
                         <div className="flex items-center justify-between px-1">
-                          <h4 className="text-sm font-black tracking-widest text-black font-roboto-flex">
+                          <h4 className="text-sm font-bold text-[#7e7e7e] font-roboto leading-[21px] w-[102.875px]">
                             Suas peladas
                           </h4>
                         </div>
@@ -7015,9 +7059,10 @@ function GroupApp({
                                     setCurrentScreen("players");
                                     setShowAddPlayerSection(true);
                                     setTeamsTab("configuracao");
+                                    setPlayersTab("configuracao");
                                   }
                                 }}
-                                className={`group relative bg-[#dce3ee] rounded-none flex flex-col sm:flex-row items-stretch border border-black/10 cursor-pointer shadow-sm hover:shadow-md transition-all duration-500 ease-in-out overflow-hidden ${isExpanded ? "opacity-100 max-h-[500px]" : "opacity-60 max-h-[56px] sm:max-h-[64px]"}`}
+                                className={`group relative bg-white rounded-xl flex flex-col sm:flex-row items-stretch border border-black/10 cursor-pointer shadow-sm hover:shadow-md transition-all duration-500 ease-in-out overflow-hidden ${isExpanded ? "opacity-100 max-h-[500px]" : "opacity-60 max-h-[56px] sm:max-h-[64px]"}`}
                               >
                                 {/* Settings and Delete Actions - Absolute Top Right */}
                                 <div className="absolute top-[14px] sm:top-[16px] right-3 sm:right-4 flex items-center gap-0 z-20">
@@ -9272,15 +9317,18 @@ function GroupApp({
                     <div className="space-y-6 relative overflow-hidden w-full">
                       {firstSetupDone && teams.length >= 2 && (
                         <div className="flex justify-between items-center relative z-10 bg-zinc-100/80 backdrop-blur-sm rounded-2xl p-1 mb-2 shadow-sm border border-black/5">
-                          <div className="flex gap-1">
+                          <div className="flex gap-1 bg-white rounded-[11px]">
                             <button
                               onClick={() => setTeamsTab("configuracao")}
-                              className="p-2 rounded-xl transition-all active:scale-90 hover:bg-black/5 text-zinc-800 flex items-center justify-center"
+                              className="p-2 rounded-xl transition-all active:scale-90 hover:bg-black/5 text-zinc-800 flex items-center justify-center bg-white"
                               title="Configurações"
                             >
                               <Settings size={20} className="text-zinc-800" />
                             </button>
-                            <div className="flex items-center justify-center px-2">
+                            <div className="flex items-center gap-1.5 ml-1 bg-white rounded-[11px] px-1">
+                              <span className="text-[8px] font-black uppercase tracking-tight text-[#1E3D2F]/60 leading-[1.1] text-right max-w-[75px]">
+                                Subir automaticamente
+                              </span>
                               <button
                                 onClick={() => {
                                   const newState = !autoCompleteTeams;
@@ -9294,16 +9342,16 @@ function GroupApp({
                                     });
                                   }
                                 }}
-                                className={`w-12 h-6 rounded-full p-1 transition-colors relative ${autoCompleteTeams ? "bg-[#dce3ee]" : "bg-black/10"}`}
+                                className={`w-9 h-5 rounded-full p-0.5 transition-all duration-300 relative ${autoCompleteTeams ? "bg-[#00FF00]" : "bg-zinc-300"}`}
                                 title="Subir automaticamente"
                               >
                                 <div
-                                  className={`w-4 h-4 bg-white rounded-full transition-transform ${autoCompleteTeams ? "translate-x-6" : "translate-x-0"} shadow-sm`}
+                                  className={`w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 transform ${autoCompleteTeams ? "translate-x-4" : "translate-x-0"}`}
                                 />
                               </button>
                             </div>
                           </div>
-                          <div className="flex gap-1">
+                          <div className="flex gap-1 bg-white rounded-[11px] border-0">
                             <button
                               onClick={() => {
                                 if (match.isActive && !match.hasEnded) return;
@@ -9338,9 +9386,9 @@ function GroupApp({
                               className="px-3 py-2 rounded-xl transition-all active:scale-95 hover:bg-black/5 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
                             >
                               <span className="text-zinc-800">
-                                <PiShuffleAngularBold size={18} />
+                                <PiShuffleAngularBold size={16} />
                               </span>
-                              <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">
+                              <span className="text-[8px] font-black uppercase tracking-tight text-zinc-800">
                                 Sortear
                               </span>
                             </button>
@@ -9378,9 +9426,9 @@ function GroupApp({
                               className="px-3 py-2 rounded-xl transition-all active:scale-95 hover:bg-black/5 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
                             >
                               <span className="text-zinc-800">
-                                <IoFootballOutline size={18} />
+                                <IoFootballOutline size={16} />
                               </span>
-                              <span className="text-[10px] font-black uppercase tracking-widest text-zinc-800">
+                              <span className="text-[8px] font-black uppercase tracking-tight text-zinc-800">
                                 Iniciar
                               </span>
                             </button>
@@ -9885,10 +9933,10 @@ function GroupApp({
                                             size={12}
                                           />
                                         </div>
-                                        <h3 className="text-sm font-black text-black uppercase tracking-tighter">
+                                        <h3 className="text-sm font-black text-[#302f2f] uppercase tracking-tighter">
                                           Time Incompleto!
                                         </h3>
-                                        <p className="text-[8px] font-bold uppercase tracking-widest text-black/70 leading-tight text-center mt-1">
+                                        <p className="text-[8px] font-bold uppercase tracking-widest text-[#302f2f] leading-tight text-center mt-1">
                                           Times devem estar equilibrados.
                                           <br />
                                           <span className="text-amber-600 font-black">
@@ -15987,6 +16035,7 @@ function GroupApp({
                 setCurrentScreen("teams");
                 // Reset PARTIDA tabs
                 setTeamsTab("configuracao");
+                setPlayersTab("configuracao");
               }}
               className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
                 currentScreen === "teams"
