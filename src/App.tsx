@@ -6764,7 +6764,7 @@ function GroupApp({
               <div className="flex gap-2 justify-center">
                 <button
                   onClick={() => navigateTeamsTab("configuracao")}
-                  className={`w-12 py-2 flex items-center justify-center rounded-none transition-all border ${teamsTab === "configuracao" ? "bg-[#00FF00] text-[#1E3D2F] border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80"}`}
+                  className={`w-12 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === "configuracao" ? "bg-[#00FF00] text-[#1E3D2F] border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80"}`}
                 >
                   <div
                     className={
@@ -6778,7 +6778,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("chegada")}
-                  className={`px-4 py-2 flex items-center justify-center rounded-none transition-all border ${teamsTab === "chegada" ? "bg-[#00FF00] text-[#1E3D2F] border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
+                  className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === "chegada" ? "bg-[#00FF00] text-[#1E3D2F] border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
                 >
                   <span
                     className={`text-[11px] font-black uppercase tracking-widest text-center w-full transition-colors font-roboto-flex ${teamsTab === "chegada" ? "text-[#1E3D2F]" : "text-white"}`}
@@ -6788,7 +6788,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("historico")}
-                  className={`px-4 py-2 flex items-center justify-center rounded-none transition-all border ${teamsTab === "historico" ? "bg-[#00FF00] text-[#1E3D2F] border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
+                  className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === "historico" ? "bg-[#00FF00] text-[#1E3D2F] border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
                 >
                   <span
                     className={`text-[11px] font-black uppercase tracking-widest text-center w-full transition-colors font-roboto-flex ${teamsTab === "historico" ? "text-[#1E3D2F]" : "text-white"}`}
@@ -6798,7 +6798,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("proximos")}
-                  className={`px-4 py-2 flex items-center justify-center rounded-none transition-all border ${teamsTab === "proximos" ? "bg-[#00FF00] text-[#1E3D2F] border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
+                  className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === "proximos" ? "bg-[#00FF00] text-[#1E3D2F] border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
                 >
                   <span
                     className={`text-[11px] font-black uppercase tracking-widest text-center w-full transition-colors font-roboto-flex ${teamsTab === "proximos" ? "text-[#1E3D2F]" : "text-white"}`}
@@ -7469,7 +7469,7 @@ function GroupApp({
                           <IoInformationCircleOutline size={32} />
                         </div>
                       </div>
-                      <span className="font-bold uppercase tracking-widest text-zinc-500 text-[10px] mb-8 max-w-sm">
+                      <span className="font-bold uppercase tracking-wide text-zinc-500 text-[10px] mb-4 max-w-sm">
                         {scheduledMatches.length > 0
                           ? "Para iniciar, selecione a pelada que você criou no painel de controle."
                           : "Você precisa criar uma pelada no painel de controle para continuar."}
@@ -10880,7 +10880,7 @@ function GroupApp({
 
                           <div className="relative ml-2 mr-4 shrink-0">
                             <div
-                              className={`w-10 h-10 rounded-xl overflow-hidden flex items-center justify-center bg-black/10 border border-black/10 relative z-10`}
+                              className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-black/10 border border-black/10 relative z-10`}
                             >
                               {player.photo ? (
                                 <img
