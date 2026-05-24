@@ -7112,13 +7112,13 @@ function GroupApp({
                                   className={`flex-1 p-4 sm:p-5 relative overflow-hidden transition-opacity duration-300 ${isExpanded ? "opacity-100" : "opacity-0"}`}
                                 >
                                   {/* Subtle background texture pattern */}
-                                  <div className="absolute inset-0 opacity-10 pointer-events-none overflow-hidden flex items-center justify-center">
-                                    <div className="text-black mix-blend-overlay">
-                                      <GiSoccerField size={220} />
+                                  <div className="absolute inset-0 opacity-5 pointer-events-none overflow-hidden flex items-center justify-end">
+                                    <div className="text-black mix-blend-overlay pr-2 sm:pr-4">
+                                      <GiSoccerField size={140} />
                                     </div>
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                      <div className="text-[#59b823]/20">
-                                        <MdOutlinePlayForWork size={120} />
+                                    <div className="absolute inset-0 flex items-center justify-end">
+                                      <div className="text-[#59b823]/10 pr-6 sm:pr-12">
+                                        <MdOutlinePlayForWork size={80} />
                                       </div>
                                     </div>
                                   </div>
@@ -7191,7 +7191,7 @@ function GroupApp({
                           })}
 
                           {/* Alert Banner */}
-                          <div className="bg-[#eff5e8] rounded-[20px] p-4 flex items-center gap-4 shadow-sm mt-2">
+                          <div className="bg-gradient-to-br from-[#eff5e8] to-[#e1ebd5] rounded-[20px] p-4 flex items-center gap-4 shadow-sm mt-2">
                             <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
                               <AlertCircle size={24} />
                             </div>
