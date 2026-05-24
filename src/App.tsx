@@ -8701,8 +8701,27 @@ function GroupApp({
                             </div>
                           </div>
 
-                          <div className="grid grid-cols-2 gap-4 bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef] p-4 rounded-xl border border-black/5 shadow-inner mb-8">
-                            <div className="space-y-2">
+                          <div className="grid grid-cols-2 gap-4 bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef] p-4 pt-6 rounded-xl border border-black/5 shadow-inner mb-8 relative overflow-hidden">
+                            {/* Team Color Top Bars */}
+                            <div
+                              className="absolute top-0 left-0 w-1/2 h-1 z-10"
+                              style={{
+                                backgroundColor:
+                                  (fixedColors.enabled && fixedColors.teamA) ||
+                                  teams[match.teamAIndex]?.color ||
+                                  TEAM_COLORS[0],
+                              }}
+                            />
+                            <div
+                              className="absolute top-0 right-0 w-1/2 h-1 z-10"
+                              style={{
+                                backgroundColor:
+                                  (fixedColors.enabled && fixedColors.teamB) ||
+                                  teams[match.teamBIndex]?.color ||
+                                  TEAM_COLORS[1],
+                              }}
+                            />
+                            <div className="space-y-2 relative z-20">
                               {sortedTeamAPlayers.map((pid, idx) => {
                                 const p = players.find((pl) => pl.id === pid);
                                 if (!p) return null;
@@ -8823,7 +8842,11 @@ function GroupApp({
                                     }}
                                   >
                                     <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-transparent flex items-center justify-center shrink-0 border border-black/10 overflow-hidden ml-3">
-                                      {p.photo ? (
+                                      {p.isGoalkeeper ? (
+                                        <span className="text-[10px] font-black text-black">
+                                          G
+                                        </span>
+                                      ) : p.photo ? (
                                         <img
                                           src={p.photo}
                                           className="w-full h-full object-cover rounded-full"
@@ -8850,13 +8873,6 @@ function GroupApp({
                                       </div>
                                     </div>
                                     <div className="flex items-center gap-1 mr-auto">
-                                      {p.isGoalkeeper &&
-                                        orgProSettings.allowFixedGoalkeeper !==
-                                          false && (
-                                          <div className="flex items-center justify-center shrink-0 border border-current rounded-full w-4 h-4 text-[9px] font-black leading-none text-black/30 drop-shadow-sm">
-                                            G
-                                          </div>
-                                        )}
                                       {matchAssists > 0 && (
                                         <div className="flex items-center gap-0.5 text-[10px] font-bold text-black/50">
                                           <Footprints size={10} />{" "}
@@ -9128,7 +9144,11 @@ function GroupApp({
                                     }}
                                   >
                                     <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-transparent flex items-center justify-center shrink-0 border border-black/10 overflow-hidden mr-3">
-                                      {p.photo ? (
+                                      {p.isGoalkeeper ? (
+                                        <span className="text-[10px] font-black text-black">
+                                          G
+                                        </span>
+                                      ) : p.photo ? (
                                         <img
                                           src={p.photo}
                                           className="w-full h-full object-cover rounded-full"
@@ -9155,13 +9175,6 @@ function GroupApp({
                                       </div>
                                     </div>
                                     <div className="flex items-center gap-1 ml-auto">
-                                      {p.isGoalkeeper &&
-                                        orgProSettings.allowFixedGoalkeeper !==
-                                          false && (
-                                          <div className="flex items-center justify-center shrink-0 border border-current rounded-full w-4 h-4 text-[9px] font-black leading-none text-black/30 drop-shadow-sm">
-                                            G
-                                          </div>
-                                        )}
                                       {playerEvents[p.id] && (
                                         <div className="flex items-center justify-center shrink-0 w-5 h-5 bg-white/50 rounded-full shadow-sm mr-1">
                                           {playerEvents[p.id].type ===
@@ -9660,7 +9673,7 @@ function GroupApp({
                                 >
                                   {/* Team Color Top Bar */}
                                   <div
-                                    className="absolute top-0 left-0 right-0 h-3 z-10"
+                                    className="absolute top-0 left-0 right-0 h-1 z-10"
                                     style={{ backgroundColor: teamColor }}
                                   />
 
@@ -10397,7 +10410,15 @@ function GroupApp({
                                                 }}
                                               >
                                                 <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 border overflow-hidden ${isCurrent ? "border-black/10 bg-black/5" : "border-black/20 bg-gradient-to-br from-zinc-100 to-zinc-300"}`}>
-                                                  {p.photo ? (
+                                                  {p.isGoalkeeper &&
+                                                  orgProSettings.allowFixedGoalkeeper !==
+                                                    false ? (
+                                                    <span
+                                                      className={`text-[10px] font-black leading-none drop-shadow-sm ${isCurrent ? "text-white" : "text-black/30"}`}
+                                                    >
+                                                      G
+                                                    </span>
+                                                  ) : p.photo ? (
                                                     <img
                                                       src={p.photo}
                                                       className="w-full h-full object-cover"
@@ -10432,15 +10453,6 @@ function GroupApp({
                                                   </div>
                                                 </div>
                                                 <div className="ml-auto flex items-center gap-1">
-                                                  {p.isGoalkeeper &&
-                                                    orgProSettings.allowFixedGoalkeeper !==
-                                                      false && (
-                                                      <div
-                                                        className={`flex items-center justify-center shrink-0 border border-current rounded-full w-4 h-4 text-[9px] font-black leading-none drop-shadow-sm ${isCurrent ? "text-white" : "text-black/30"}`}
-                                                      >
-                                                        G
-                                                      </div>
-                                                    )}
                                                   {playerEvents[p.id] && (
                                                     <div className="flex items-center justify-center shrink-0 w-5 h-5 bg-white/50 rounded-full shadow-sm">
                                                       {playerEvents[p.id]
