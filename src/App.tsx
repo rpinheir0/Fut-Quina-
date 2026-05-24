@@ -8841,11 +8841,11 @@ function GroupApp({
                                           : undefined,
                                     }}
                                   >
-                                    <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-transparent flex items-center justify-center shrink-0 border border-black/10 overflow-hidden ml-3">
+                                    <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-transparent flex items-center justify-center shrink-0 overflow-hidden ml-3">
                                       {p.isGoalkeeper ? (
-                                        <span className="text-[10px] font-black text-black">
+                                        <div className="flex items-center justify-center rounded-full w-4 h-4 text-[9px] font-black leading-none text-black/70">
                                           G
-                                        </span>
+                                        </div>
                                       ) : p.photo ? (
                                         <img
                                           src={p.photo}
@@ -9143,11 +9143,11 @@ function GroupApp({
                                           : undefined,
                                     }}
                                   >
-                                    <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-transparent flex items-center justify-center shrink-0 border border-black/10 overflow-hidden mr-3">
+                                    <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-transparent flex items-center justify-center shrink-0 overflow-hidden mr-3">
                                       {p.isGoalkeeper ? (
-                                        <span className="text-[10px] font-black text-black">
+                                        <div className="flex items-center justify-center rounded-full w-4 h-4 text-[9px] font-black leading-none text-black/70">
                                           G
-                                        </span>
+                                        </div>
                                       ) : p.photo ? (
                                         <img
                                           src={p.photo}
@@ -9706,7 +9706,7 @@ function GroupApp({
 
                                   {/* Jersey Icon Top Left */}
                                   <div
-                                    className={`absolute top-2 left-2 w-8 h-8 rounded-full border flex items-center justify-center transition-all cursor-pointer z-50 ${isCurrent ? "border-brand-primary/50 bg-white/20 shadow-[0_0_8px_rgba(183,217,108,0.3)]" : "border-black/10 bg-black/5 hover:bg-black/10 hover:border-white/20 hover:scale-110"}`}
+                                    className={`absolute top-2 left-2 w-8 h-8 rounded-full flex items-center justify-center transition-all cursor-pointer z-50 ${isCurrent ? "" : "hover:scale-110"}`}
                                     onClick={(e) => {
                                       e.stopPropagation();
                                       if (
@@ -10409,15 +10409,15 @@ function GroupApp({
                                                     : undefined,
                                                 }}
                                               >
-                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 border overflow-hidden ${isCurrent ? "border-black/10 bg-black/5" : "border-black/20 bg-gradient-to-br from-zinc-100 to-zinc-300"}`}>
+                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden ${isCurrent ? "bg-black/5" : "bg-gradient-to-br from-zinc-100 to-zinc-300"}`}>
                                                   {p.isGoalkeeper &&
                                                   orgProSettings.allowFixedGoalkeeper !==
                                                     false ? (
-                                                    <span
-                                                      className={`text-[10px] font-black leading-none drop-shadow-sm ${isCurrent ? "text-white" : "text-black/30"}`}
+                                                    <div
+                                                      className={`flex items-center justify-center shrink-0 rounded-full w-4 h-4 text-[9px] font-black leading-none ${isCurrent ? "text-white" : "text-black/30"}`}
                                                     >
                                                       G
-                                                    </span>
+                                                    </div>
                                                   ) : p.photo ? (
                                                     <img
                                                       src={p.photo}
