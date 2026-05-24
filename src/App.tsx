@@ -71,6 +71,7 @@ import {
   Shirt,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { FcHighPriority } from "react-icons/fc";
 import {
   IoPersonOutline,
   IoFootballOutline,
@@ -102,6 +103,7 @@ import {
 import {
   MdOutlinePlayForWork,
 } from "react-icons/md";
+import { CiSaveUp1 } from "react-icons/ci";
 import { ImSpinner9 } from "react-icons/im";
 import {
   GiGloves,
@@ -7634,8 +7636,8 @@ function GroupApp({
                           <div className="flex items-center justify-between">
                             <div className="flex flex-col">
                               <div className="flex items-center gap-1.5">
-                                <span className="text-black/70">
-                                  <GiGloves size={16} />
+                                <span className="flex items-center justify-center border border-black/40 rounded-full w-5 h-5 text-[10px] font-black text-black/70">
+                                  G
                                 </span>
                                 <span className="text-[11px] font-black uppercase tracking-widest text-black/90">
                                   Goleiro Fixo.
@@ -8851,8 +8853,8 @@ function GroupApp({
                                       {p.isGoalkeeper &&
                                         orgProSettings.allowFixedGoalkeeper !==
                                           false && (
-                                          <div className="flex items-center justify-center shrink-0 mr-1 ml-1 text-[#dce3ee] drop-shadow-sm">
-                                            <GiGloves size={14} />
+                                          <div className="flex items-center justify-center shrink-0 border border-current rounded-full w-4 h-4 text-[9px] font-black leading-none text-black/30 drop-shadow-sm">
+                                            G
                                           </div>
                                         )}
                                       {matchAssists > 0 && (
@@ -9156,8 +9158,8 @@ function GroupApp({
                                       {p.isGoalkeeper &&
                                         orgProSettings.allowFixedGoalkeeper !==
                                           false && (
-                                          <div className="flex items-center justify-center shrink-0 mr-1 ml-1 text-[#dce3ee] drop-shadow-sm">
-                                            <GiGloves size={14} />
+                                          <div className="flex items-center justify-center shrink-0 border border-current rounded-full w-4 h-4 text-[9px] font-black leading-none text-black/30 drop-shadow-sm">
+                                            G
                                           </div>
                                         )}
                                       {playerEvents[p.id] && (
@@ -9658,7 +9660,7 @@ function GroupApp({
                                 >
                                   {/* Team Color Top Bar */}
                                   <div
-                                    className="absolute top-0 left-0 right-0 h-1.5 z-10"
+                                    className="absolute top-0 left-0 right-0 h-3 z-10"
                                     style={{ backgroundColor: teamColor }}
                                   />
 
@@ -10394,7 +10396,7 @@ function GroupApp({
                                                     : undefined,
                                                 }}
                                               >
-                                                <div className="w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 border overflow-hidden border-black/20 bg-gradient-to-br from-zinc-100 to-zinc-300">
+                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 border overflow-hidden ${isCurrent ? "border-black/10 bg-black/5" : "border-black/20 bg-gradient-to-br from-zinc-100 to-zinc-300"}`}>
                                                   {p.photo ? (
                                                     <img
                                                       src={p.photo}
@@ -10434,9 +10436,9 @@ function GroupApp({
                                                     orgProSettings.allowFixedGoalkeeper !==
                                                       false && (
                                                       <div
-                                                        className={`flex items-center justify-center shrink-0 drop-shadow-sm ${isCurrent ? "text-[#dce3ee]" : "text-black/30"}`}
+                                                        className={`flex items-center justify-center shrink-0 border border-current rounded-full w-4 h-4 text-[9px] font-black leading-none drop-shadow-sm ${isCurrent ? "text-white" : "text-black/30"}`}
                                                       >
-                                                        <GiGloves size={14} />
+                                                        G
                                                       </div>
                                                     )}
                                                   {playerEvents[p.id] && (
@@ -10690,7 +10692,7 @@ function GroupApp({
                                   >
                                     <div className="flex items-center gap-2 overflow-hidden">
                                       <div
-                                        className={`w-6 h-6 rounded-full bg-gradient-to-br from-zinc-100 to-zinc-300 flex items-center justify-center overflow-hidden border shrink-0 ${match.teamAIndex === tIndex || match.teamBIndex === tIndex ? "border-[#53B986] ring-1 ring-[#53B986]" : "border-zinc-200"}`}
+                                        className={`w-6 h-6 rounded-full flex items-center justify-center overflow-hidden border shrink-0 ${match.teamAIndex === tIndex || match.teamBIndex === tIndex ? "border-black/10 bg-black/5" : "bg-gradient-to-br from-zinc-100 to-zinc-300 border-zinc-200"}`}
                                       >
                                         {p.photo ? (
                                           <img
@@ -13789,9 +13791,9 @@ function GroupApp({
                       >
                         <div className="flex items-center gap-2">
                           <span
-                            className={`${players.find((p) => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? "text-sky-800" : "text-sky-600"} flex items-center`}
+                            className={`${players.find((p) => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? "text-sky-800" : "text-sky-600"} flex items-center shrink-0 border border-current rounded-full w-5 h-5 justify-center text-[10px] font-black leading-none`}
                           >
-                            <GiGloves size={14} />
+                            G
                           </span>
                           <span className="tracking-widest">
                             {players.find(
@@ -14052,9 +14054,9 @@ function GroupApp({
                             className={`col-span-2 p-4 rounded-2xl font-bold text-[9px] flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 border group ${players.find((p) => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? "bg-sky-50 text-sky-600 border-sky-100 hover:bg-sky-100" : "bg-zinc-50 text-zinc-900 border-zinc-100 hover:border-zinc-300 hover:bg-zinc-100"}`}
                           >
                             <span
-                              className={`${players.find((p) => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? "text-sky-500" : "text-zinc-400 group-hover:text-zinc-600 transition-colors"} flex items-center`}
+                              className={`${players.find((p) => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? "text-sky-500" : "text-zinc-400 group-hover:text-zinc-600 transition-colors"} flex items-center border border-current rounded-full w-5 h-5 justify-center text-[10px] font-black leading-none`}
                             >
-                              <GiGloves size={18} />
+                              G
                             </span>
                             {players.find(
                               (p) => p.id === showQueuePlayerModal.playerId,
@@ -16154,33 +16156,37 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
             onClick={() => setShowAutoCompleteModal(false)}
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-brand-dark border border-emerald-500/30 rounded-lg p-6 max-w-sm w-full shadow-2xl shadow-emerald-500/20"
+              initial={{ scale: 0.9, y: 30, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 30, opacity: 0 }}
+              className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-2xl bg-[#eff5e8] border border-black/5"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center mx-auto mb-4">
-                <IoCheckmarkCircle size={32} />
-              </div>
-              <h2 className="text-xl font-black text-center mb-2 uppercase tracking-tighter text-white">
-                Subida Automática
-              </h2>
-              <p className="text-center text-brand-text-secondary mb-6 text-sm">
-                Os jogadores subirão na fila automaticamente nos times.
-              </p>
+              <div className="p-8 text-center">
+                <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center mx-auto mb-6 shadow-sm">
+                  <CiSaveUp1 size={36} color="black" />
+                </div>
+                <h2 className="text-sm font-normal text-center mb-2 uppercase tracking-widest text-black">
+                  Subida Automática
+                </h2>
+                <p className="text-center text-black/60 mb-8 text-[11px] leading-relaxed">
+                  Os jogadores subirão na fila automaticamente
+                  <br />
+                  nos times.
+                </p>
 
-              <div className="flex gap-3 justify-center">
-                <button
-                  onClick={() => setShowAutoCompleteModal(false)}
-                  className="w-full py-3 bg-emerald-500 text-black rounded-none font-black uppercase tracking-widest text-xs shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:shadow-[0_0_25px_rgba(16,185,129,0.6)] hover:bg-emerald-400 transition-all active:scale-95"
-                >
-                  OK
-                </button>
+                <div className="flex justify-center">
+                  <button
+                    onClick={() => setShowAutoCompleteModal(false)}
+                    className="w-full h-12 bg-[#00FF00] text-[#1E3D2F] rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg shadow-[#00FF00]/20 hover:scale-[1.02] transition-all active:scale-95"
+                  >
+                    OK
+                  </button>
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -16348,25 +16354,34 @@ function GroupApp({
       </AnimatePresence>
 
       {matchToDelete && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm shadow-2xl">
-          <div className="w-full max-w-sm bg-white p-6 rounded-none shadow-[0_20px_60px_rgba(0,0,0,0.8)] border border-black/10 relative overflow-hidden">
-            <div className="relative z-10 text-center space-y-4">
-              <div className="text-red-500 flex items-center justify-center mx-auto mb-4">
-                <Trash2 size={24} />
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="w-full max-w-sm bg-white p-8 rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.3)] border border-black/5 relative overflow-hidden"
+          >
+            <div className="relative z-10 text-center space-y-6">
+              <div className="flex items-center justify-center mx-auto scale-90">
+                <FcHighPriority size={36} />
               </div>
-              <h3 className="text-2xl font-black uppercase tracking-tighter text-zinc-900">
-                Excluir Pelada
-              </h3>
-              <p className="text-sm font-medium text-zinc-600 mt-1 leading-relaxed">
-                Tem certeza que deseja excluir a pelada "{matchToDelete.name}"?
-              </p>
+              
+              <div className="space-y-1">
+                <h3 className="text-xl font-bold uppercase tracking-tight text-zinc-900">
+                  EXCLUIR PELADA
+                </h3>
+                <p className="text-sm font-medium text-zinc-500 max-w-[260px] mx-auto leading-normal">
+                  Tem certeza que deseja excluir a pelada
+                  <br />
+                  <span className="text-zinc-800 font-bold">"{matchToDelete.name}"?</span>
+                </p>
+              </div>
 
-              <div className="grid grid-cols-2 gap-4 mt-8">
+              <div className="grid grid-cols-2 gap-3 pt-2">
                 <button
                   onClick={() => setMatchToDelete(null)}
-                  className="w-full py-4 rounded-lg font-black uppercase tracking-widest text-[10px] transition-all bg-zinc-50 text-zinc-400 hover:bg-zinc-100 border border-black/5"
+                  className="w-full h-12 rounded-2xl font-bold uppercase tracking-widest text-[10px] transition-all bg-zinc-50 text-zinc-400 hover:bg-zinc-100 active:scale-95 border border-black/5"
                 >
-                  Cancelar
+                  CANCELAR
                 </button>
                 <button
                   onClick={() => {
@@ -16379,13 +16394,13 @@ function GroupApp({
                     });
                     setMatchToDelete(null);
                   }}
-                  className="w-full py-4 rounded-lg font-black uppercase tracking-widest text-[11px] bg-red-600/10 text-red-600 hover:bg-red-600 hover:text-white transition-all active:scale-95 shadow-xl disabled:opacity-50"
+                  className="w-full h-12 rounded-2xl font-bold uppercase tracking-widest text-[10px] bg-gradient-to-br from-red-50 to-red-100 text-red-600 hover:shadow-lg hover:shadow-red-500/10 transition-all active:scale-95 border border-red-200/50"
                 >
-                  Excluir
+                  EXCLUIR
                 </button>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
       )}
 
