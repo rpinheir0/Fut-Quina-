@@ -2182,34 +2182,28 @@ const FutQuinaLogo = ({
   };
 
   const colorClass = overrideColor || "text-zinc-500 font-bold";
-  const alignClass =
-    align === "start"
-      ? "items-start text-left"
-      : align === "end"
-        ? "items-end text-right"
-        : "items-center text-center";
+  const textAlignmentClass =
+    align === "start" ? "text-left" : align === "end" ? "text-right" : "text-center";
 
   return (
     <div
-      className={`flex items-center gap-2.5 ${alignClass} ${className}`}
+      className={`flex items-center gap-1.5 ${textAlignmentClass} ${className}`}
       style={style}
     >
-      <div className="relative shrink-0">
+      <div className="relative shrink-0 flex items-center justify-center">
         <img
           src="/logo.png"
           alt="FutQuina Logo"
           width={iconSizes[size]}
           height={iconSizes[size]}
-          className=""
+          className="object-contain"
         />
       </div>
-      <div className={`flex flex-col justify-center ${alignClass}`}>
-        <span
-          className={`${sizeClasses[size]} uppercase tracking-tighter ${titleColorClass || colorClass} font-staatliches leading-none`}
-        >
-          FutQuina
-        </span>
-      </div>
+      <span
+        className={`${size === "sm" ? "text-sm" : size === "md" ? "text-xl" : "text-3xl"} uppercase tracking-tighter font-staatliches leading-none bg-gradient-to-br from-zinc-400 to-zinc-200 bg-clip-text text-transparent py-1`}
+      >
+        FutQuina
+      </span>
     </div>
   );
 };
@@ -6760,13 +6754,13 @@ function GroupApp({
               <div className="flex gap-1.5 justify-center">
                 <button
                   onClick={() => navigateTeamsTab("configuracao")}
-                  className={`w-10 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "configuracao" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10"}`}
+                  className={`w-10 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "configuracao" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10"}`}
                 >
                   <PiGearBold size={16} />
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("chegada")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "chegada" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "chegada" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -6776,7 +6770,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("historico")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "historico" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "historico" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -6786,7 +6780,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("proximos")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "proximos" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "proximos" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -6804,7 +6798,7 @@ function GroupApp({
               <div className="flex gap-1.5 justify-center">
                 <button
                   onClick={() => setRankingTab("geral")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "geral" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "geral" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -6814,7 +6808,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => setRankingTab("artilharia")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "artilharia" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "artilharia" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -6824,7 +6818,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => setRankingTab("assistencias")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "assistencias" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "assistencias" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -6842,7 +6836,7 @@ function GroupApp({
               <div className="flex gap-1.5 justify-center">
                 <button
                   onClick={() => setFinanceSubScreen("balanco")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${financeSubScreen === "balanco" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${financeSubScreen === "balanco" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors`}
@@ -6852,7 +6846,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => setFinanceSubScreen("mensalidade")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${financeSubScreen === "mensalidade" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${financeSubScreen === "mensalidade" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors`}
@@ -9438,6 +9432,7 @@ function GroupApp({
                           </div>
                         </div>
                       )}
+
                       <div className="space-y-4">
                         {teams.length < 2 ? (
                           <div className="py-20 flex flex-col items-center justify-center gap-6 w-full">
