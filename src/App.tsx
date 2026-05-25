@@ -118,6 +118,7 @@ import {
   GiAbstract042,
   GiSoccerBall,
   GiCrown,
+  GiSportMedal,
   GiQueenCrown,
   GiCrossShield,
   GiDragonShield,
@@ -2207,11 +2208,6 @@ const FutQuinaLogo = ({
           className={`${sizeClasses[size]} uppercase tracking-tighter ${titleColorClass || colorClass} font-staatliches leading-none`}
         >
           FutQuina
-        </span>
-        <span
-          className={`${subSizeClasses[size]} opacity-100 tracking-widest ${subColorClass || colorClass} uppercase font-readex font-bold`}
-        >
-          Gestão de pelada
         </span>
       </div>
     </div>
@@ -6760,48 +6756,40 @@ function GroupApp({
 
           {/* Tabs for Teams */}
           {currentScreen === "teams" && (
-            <div className="pt-4 px-6 pb-4 bg-white">
-              <div className="flex gap-2 justify-center">
+            <div className="px-6 pb-3">
+              <div className="flex gap-1.5 justify-center">
                 <button
                   onClick={() => navigateTeamsTab("configuracao")}
-                  className={`w-12 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === "configuracao" ? "bg-[#00FF00] text-[#1E3D2F] border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80"}`}
+                  className={`w-10 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "configuracao" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10"}`}
                 >
-                  <div
-                    className={
-                      teamsTab === "configuracao"
-                        ? "text-[#1E3D2F]"
-                        : "text-white"
-                    }
-                  >
-                    <PiGearBold size={18} />
-                  </div>
+                  <PiGearBold size={16} />
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("chegada")}
-                  className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === "chegada" ? "bg-[#00FF00] text-[#1E3D2F] border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "chegada" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10 font-medium"}`}
                 >
                   <span
-                    className={`text-[11px] font-black uppercase tracking-widest text-center w-full transition-colors font-roboto-flex ${teamsTab === "chegada" ? "text-[#1E3D2F]" : "text-white"}`}
+                    className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
                   >
                     Presença
                   </span>
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("historico")}
-                  className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === "historico" ? "bg-[#00FF00] text-[#1E3D2F] border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "historico" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10 font-medium"}`}
                 >
                   <span
-                    className={`text-[11px] font-black uppercase tracking-widest text-center w-full transition-colors font-roboto-flex ${teamsTab === "historico" ? "text-[#1E3D2F]" : "text-white"}`}
+                    className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
                   >
                     Confrontos
                   </span>
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("proximos")}
-                  className={`px-4 py-2 flex items-center justify-center rounded-xl transition-all border ${teamsTab === "proximos" ? "bg-[#00FF00] text-[#1E3D2F] border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "proximos" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10 font-medium"}`}
                 >
                   <span
-                    className={`text-[11px] font-black uppercase tracking-widest text-center w-full transition-colors font-roboto-flex ${teamsTab === "proximos" ? "text-[#1E3D2F]" : "text-white"}`}
+                    className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
                   >
                     Próximos
                   </span>
@@ -6812,34 +6800,34 @@ function GroupApp({
 
           {/* Tabs for Ranking */}
           {currentScreen === "ranking" && (
-            <div className="pt-4 px-6 pb-4 bg-white">
-              <div className="flex gap-2 justify-center">
+            <div className="px-6 pb-3">
+              <div className="flex gap-1.5 justify-center">
                 <button
                   onClick={() => setRankingTab("geral")}
-                  className={`px-4 py-2 flex items-center justify-center rounded-none transition-all border ${rankingTab === "geral" ? "bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "geral" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10 font-medium"}`}
                 >
                   <span
-                    className={`text-[11px] font-black uppercase tracking-widest text-center w-full transition-colors font-roboto-flex ${rankingTab === "geral" ? "text-[#1E3D2F]" : "text-white"}`}
+                    className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
                   >
                     Geral
                   </span>
                 </button>
                 <button
                   onClick={() => setRankingTab("artilharia")}
-                  className={`px-4 py-2 flex items-center justify-center rounded-none transition-all border ${rankingTab === "artilharia" ? "bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "artilharia" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10 font-medium"}`}
                 >
                   <span
-                    className={`text-[11px] font-black uppercase tracking-widest text-center w-full transition-colors font-roboto-flex ${rankingTab === "artilharia" ? "text-[#1E3D2F]" : "text-white"}`}
+                    className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
                   >
                     Artilharia
                   </span>
                 </button>
                 <button
                   onClick={() => setRankingTab("assistencias")}
-                  className={`px-4 py-2 flex items-center justify-center rounded-none transition-all border ${rankingTab === "assistencias" ? "bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "assistencias" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10 font-medium"}`}
                 >
                   <span
-                    className={`text-[11px] font-black uppercase tracking-widest text-center w-full transition-colors font-roboto-flex ${rankingTab === "assistencias" ? "text-[#1E3D2F]" : "text-white"}`}
+                    className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
                   >
                     Assistências
                   </span>
@@ -6850,24 +6838,24 @@ function GroupApp({
 
           {/* Tabs for Finance */}
           {currentScreen === "finance" && !isPrintMode && (
-            <div className="pt-4 px-6 pb-4 bg-white">
-              <div className="flex gap-2 justify-center">
+            <div className="px-6 pb-3">
+              <div className="flex gap-1.5 justify-center">
                 <button
                   onClick={() => setFinanceSubScreen("balanco")}
-                  className={`px-4 py-2 flex items-center justify-center rounded-none transition-all border ${financeSubScreen === "balanco" ? "bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${financeSubScreen === "balanco" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10 font-medium"}`}
                 >
                   <span
-                    className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === "balanco" ? "text-[#1E3D2F]" : "text-white"}`}
+                    className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors`}
                   >
                     Balanço
                   </span>
                 </button>
                 <button
                   onClick={() => setFinanceSubScreen("mensalidade")}
-                  className={`px-4 py-2 flex items-center justify-center rounded-none transition-all border ${financeSubScreen === "mensalidade" ? "bg-[#00FF00] text-[#1E3D2F] shadow-lg shadow-[#00FF00]/30 border-transparent" : "bg-black/60 backdrop-blur-md border-black/20 text-white hover:bg-black/80 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${financeSubScreen === "mensalidade" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white/40 hover:bg-white/10 font-medium"}`}
                 >
                   <span
-                    className={`text-[10px] font-black uppercase tracking-widest text-center w-full transition-colors ${financeSubScreen === "mensalidade" ? "text-[#1E3D2F]" : "text-white"}`}
+                    className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors`}
                   >
                     Mensalidade
                   </span>
@@ -7535,18 +7523,18 @@ function GroupApp({
                         </div>
 
                         <div className="p-5 bg-black/5 rounded-none border border-black/10 space-y-4 shadow-inner">
-                          <div className="flex items-center justify-between">
+                          <div className="flex items-start justify-between">
                             <div className="flex flex-col">
-                              <div className="flex items-center gap-1.5">
+                              <div className="flex items-center gap-1.5 h-6">
                                 <span className="text-black/70">
                                   <Shirt size={14} />
                                 </span>
                                 <span className="text-[11px] font-black uppercase tracking-widest text-black/90">
-                                  Fixar Cores.
+                                  Fixar cores.
                                 </span>
                               </div>
-                              <p className="text-[9px] text-black/40 font-bold uppercase tracking-wider mt-0.5">
-                                Define cores permanentes para o Time A e Time B
+                              <p className="text-[11px] text-black/40 font-bold mt-0.5">
+                                Defina as cores permanentes para os times selecionados.
                               </p>
                             </div>
                             <button
@@ -7556,7 +7544,7 @@ function GroupApp({
                                   enabled: !prev.enabled,
                                 }))
                               }
-                              className={`w-12 h-6 rounded-full p-1 transition-colors relative ${fixedColors.enabled ? "bg-[#dce3ee]" : "bg-black/10"}`}
+                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 ${fixedColors.enabled ? "bg-[#00FF00]" : "bg-black/10"}`}
                             >
                               <div
                                 className={`w-4 h-4 bg-white rounded-full transition-transform ${fixedColors.enabled ? "translate-x-6" : "translate-x-0"} shadow-sm`}
@@ -7633,17 +7621,17 @@ function GroupApp({
                         </div>
 
                         <div className="p-5 bg-black/5 rounded-none border border-black/10 space-y-4 shadow-inner">
-                          <div className="flex items-center justify-between">
+                          <div className="flex items-start justify-between">
                             <div className="flex flex-col">
-                              <div className="flex items-center gap-1.5">
+                              <div className="flex items-center gap-1.5 h-6">
                                 <span className="flex items-center justify-center border border-black/40 rounded-full w-5 h-5 text-[10px] font-black text-black/70">
                                   G
                                 </span>
                                 <span className="text-[11px] font-black uppercase tracking-widest text-black/90">
-                                  Goleiro Fixo.
+                                  Goleiro fixo.
                                 </span>
                               </div>
-                              <p className="text-[9px] text-black/40 font-bold uppercase tracking-wider mt-0.5">
+                              <p className="text-[11px] text-black/40 font-bold mt-0.5">
                                 Ativa a opção de definir goleiros nas ações do
                                 jogador
                               </p>
@@ -7656,7 +7644,7 @@ function GroupApp({
                                     !prev.allowFixedGoalkeeper,
                                 }))
                               }
-                              className={`w-12 h-6 rounded-full p-1 transition-colors relative ${orgProSettings.allowFixedGoalkeeper !== false ? "bg-[#dce3ee]" : "bg-black/10"}`}
+                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 ${orgProSettings.allowFixedGoalkeeper !== false ? "bg-[#00FF00]" : "bg-black/10"}`}
                             >
                               <div
                                 className={`w-4 h-4 bg-white rounded-full transition-transform ${orgProSettings.allowFixedGoalkeeper !== false ? "translate-x-6" : "translate-x-0"} shadow-sm`}
@@ -10931,7 +10919,7 @@ function GroupApp({
                         <div className="w-full text-center py-20 opacity-50 text-black/50 text-xs flex flex-col items-center justify-center gap-4">
                           <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-2">
                             <span className="opacity-30 text-black">
-                              <GiCrown size={48} />
+                              <GiSportMedal size={48} />
                             </span>
                           </div>
                           <span className="font-bold uppercase tracking-widest text-[10px]">
