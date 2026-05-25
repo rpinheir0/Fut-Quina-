@@ -69,6 +69,7 @@ import {
   Palette,
   Power,
   Shirt,
+  LayoutPanelLeft,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { FcHighPriority } from "react-icons/fc";
@@ -94,6 +95,7 @@ import {
   IoMdArrowUp,
   IoMdArrowDown,
   IoMdDoneAll,
+  IoIosMenu,
 } from "react-icons/io";
 import {
   PiUserCirclePlusThin,
@@ -103,8 +105,8 @@ import {
 import {
   MdOutlinePlayForWork,
 } from "react-icons/md";
-import { CiSaveUp1 } from "react-icons/ci";
-import { ImSpinner9 } from "react-icons/im";
+import { CiSaveUp1, CiMemoPad } from "react-icons/ci";
+import { TiMap } from "react-icons/ti";
 import {
   GiGloves,
   GiGoalKeeper,
@@ -6402,143 +6404,140 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[200] flex items-center justify-center p-4 sm:p-6"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex justify-end"
+            onClick={() => setShowGlobalSettings(false)}
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 20 }}
-              className="w-full max-w-2xl bg-brand-card rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-brand-border overflow-hidden flex flex-col max-h-[90vh]"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="w-full max-w-[320px] bg-[#F8F9FB] h-full shadow-2xl flex flex-col overflow-hidden"
+              onClick={(e) => e.stopPropagation()}
             >
-              {/* Header */}
-              <div className="px-8 py-6 border-b border-brand-border flex justify-between items-center bg-brand-card sticky top-0 z-10">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-brand-dark flex items-center justify-center">
-                    <span className="text-brand-text-secondary">
-                      <PiGearBold size={20} />
-                    </span>
-                  </div>
-                  <h3 className="text-sm font-black uppercase tracking-widest text-brand-text-primary">
-                    Configuração
-                  </h3>
-                </div>
-                <button
-                  onClick={() => setShowGlobalSettings(false)}
-                  className="w-10 h-10 rounded-full hover:bg-brand-dark flex items-center justify-center transition-colors text-brand-text-secondary"
-                >
-                  <PiXBold size={20} />
-                </button>
-              </div>
+              {/* Top Spacing instead of Header */}
+              <div className="h-4" />
 
-              {/* Scrollable Content */}
-              <div className="flex-1 overflow-y-auto p-8 space-y-8 custom-scrollbar">
-                {/* Additional Options */}
-                <div className="space-y-3">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-brand-text-secondary px-2 opacity-60">
-                    Ferramentas & Sistema
-                  </span>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Scrollable Content (Card Groups) */}
+              <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+                
+                {/* General Tools Card */}
+                <div className="bg-white rounded p-2 shadow-sm border border-zinc-100/50">
+                  {showAddPlayerSection && currentScreen === "players" && (
                     <button
                       onClick={() => {
-                        setToast({
-                          message: "Calendário de peladas em breve!",
-                          type: "info",
-                        });
-                        setTimeout(() => setToast(null), 3000);
+                        setShowAddPlayerSection(false);
+                        setSelectedMatchId(null);
+                        setPlayersTab("configuracao");
+                        setTeamsTab("configuracao");
+                        setShowGlobalSettings(false);
                       }}
-                      className="flex items-center gap-3 p-4 rounded-2xl bg-brand-dark hover:opacity-80 border border-brand-border transition-all text-left"
+                      className="w-full flex items-center gap-4 p-4 hover:bg-zinc-50 rounded-none transition-all group border-b border-zinc-50"
                     >
-                      <div className="w-10 h-10 rounded-xl bg-brand-card shadow-sm flex items-center justify-center text-brand-text-primary">
-                        <PiClockBold size={20} />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-xs font-black uppercase tracking-wide text-brand-text-primary">
-                          Agendar Pelada
-                        </span>
-                        <span className="text-[9px] text-brand-text-secondary font-bold uppercase tracking-tight opacity-70">
-                          Definir data e horário
-                        </span>
-                      </div>
-                    </button>
-
-                    <button
-                      onClick={() =>
-                        setTheme(theme === "dark" ? "light" : "dark")
-                      }
-                      className="flex items-center gap-3 p-4 rounded-2xl bg-brand-dark hover:opacity-80 border border-brand-border transition-all text-left"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-brand-card shadow-sm flex items-center justify-center text-brand-text-primary">
-                        <PiPaletteBold size={20} />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-xs font-black uppercase tracking-wide text-brand-text-primary">
-                          Alterar Tema
-                        </span>
-                        <span className="text-[9px] text-brand-text-secondary font-bold uppercase tracking-tight opacity-70">
-                          Modo: {theme === "light" ? "Claro" : "Escuro"}
-                        </span>
-                      </div>
-                    </button>
-
-                    <button
-                      onClick={() => setShowSetupGuide(true)}
-                      className="flex items-center gap-3 p-4 rounded-2xl bg-brand-dark hover:opacity-80 border border-brand-border transition-all text-left"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-brand-card shadow-sm flex items-center justify-center text-brand-text-primary">
-                        <PiUserPlusBold size={20} />
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-xs font-black uppercase tracking-wide text-brand-text-primary">
-                          Configurar App
-                        </span>
-                        <span className="text-[9px] text-brand-text-secondary font-bold uppercase tracking-tight opacity-70">
-                          Guia de configuração inicial
-                        </span>
-                      </div>
-                    </button>
-
-                    <div className="relative">
-                      {!showResetAppConfirm ? (
-                        <button
-                          onClick={() => setShowResetAppConfirm(true)}
-                          className="flex items-center gap-3 p-4 rounded-xl bg-red-500/10 hover:bg-red-500/20 border border-red-500/20 transition-all text-left group w-full"
-                        >
-                          <div className="w-10 h-10 rounded-xl bg-brand-card shadow-sm flex items-center justify-center text-red-500 group-hover:scale-110 transition-transform">
-                            <PiTrashBold size={20} />
-                          </div>
-                          <div className="flex flex-col">
-                            <span className="text-xs font-black uppercase tracking-wide text-red-500">
-                              Zerar Aplicativo
-                            </span>
-                            <span className="text-[9px] text-red-400 font-bold uppercase tracking-tight opacity-70">
-                              Limpar todos os dados
-                            </span>
-                          </div>
-                        </button>
-                      ) : (
-                        <div className="flex flex-col gap-2 p-3 bg-red-500/5 rounded-xl border border-red-500/20 animate-in fade-in zoom-in duration-200">
-                          <p className="text-[9px] font-black uppercase tracking-widest text-red-500 text-center mb-1">
-                            CUIDADO! Isso apagará TUDO.
-                          </p>
-                          <div className="flex gap-2">
-                            <button
-                              onClick={handleResetApp}
-                              className="flex-1 py-3 bg-red-600 text-white rounded-xl font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all"
-                            >
-                              Zerar
-                            </button>
-                            <button
-                              onClick={() => setShowResetAppConfirm(false)}
-                              className="flex-1 py-3 bg-black/10 text-brand-text-primary rounded-xl font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all"
-                            >
-                              Voltar
-                            </button>
-                          </div>
+                      <div className="flex items-center gap-4 text-left">
+                        <div className="text-red-400 group-hover:scale-110 transition-transform">
+                          <LayoutPanelLeft size={20} />
                         </div>
-                      )}
+                        <span className="text-[14px] font-semibold text-zinc-800">Painel de controle</span>
+                      </div>
+                    </button>
+                  )}
+
+                  <button
+                    onClick={() => {
+                      setToast({ message: "Calendário em breve!", type: "info" });
+                      setTimeout(() => setToast(null), 3000);
+                    }}
+                    className="w-full flex items-center justify-between p-4 hover:bg-zinc-50 rounded-none transition-all group"
+                  >
+                    <div className="flex items-center gap-4 text-left">
+                      <div className="text-amber-500 group-hover:scale-110 transition-transform">
+                        <CiMemoPad size={20} />
+                      </div>
+                      <span className="text-[14px] font-semibold text-zinc-800">Agendar Pelada</span>
                     </div>
+                    <span className="text-[12px] font-bold text-zinc-400">5</span>
+                  </button>
+
+                  <button
+                    onClick={() => setShowSetupGuide(true)}
+                    className="w-full flex items-center justify-between p-4 hover:bg-zinc-50 rounded-none transition-all group"
+                  >
+                    <div className="flex items-center gap-4 text-left">
+                      <div className="text-blue-500 group-hover:scale-110 transition-transform">
+                        <TiMap size={20} />
+                      </div>
+                      <span className="text-[14px] font-semibold text-zinc-800">Guia Inicial</span>
+                    </div>
+                    <ChevronRight size={14} className="text-zinc-300" />
+                  </button>
+                </div>
+
+                {/* Session Actions (Ref Image "Work" Section) */}
+                <div className="space-y-2">
+                  <div className="px-4 py-1 flex justify-between items-center group cursor-pointer">
+                    <span className="text-[12px] font-bold text-zinc-400 uppercase tracking-widest">Pelada Atual</span>
+                    <ChevronDown size={16} className="text-zinc-300 group-hover:text-zinc-500 transition-colors" />
+                  </div>
+                  
+                  <div className="bg-white rounded p-6 shadow-sm border border-zinc-100/50 text-center">
+                    <span className="text-[12px] font-medium text-zinc-400 italic">
+                      Nenhuma pelada aberta agora
+                    </span>
                   </div>
                 </div>
+
+                {/* System Section (Ref Image "Personal" Section) */}
+                <div className="space-y-2">
+                  <div className="px-4 py-1 flex justify-between items-center group cursor-pointer">
+                    <span className="text-[12px] font-bold text-zinc-400 uppercase tracking-widest">Sistema</span>
+                    <ChevronDown size={16} className="text-zinc-300 group-hover:text-zinc-500 transition-colors" />
+                  </div>
+
+                  <div className="bg-white rounded p-2 shadow-sm border border-zinc-100/50">
+                    {!showResetAppConfirm ? (
+                      <button
+                        onClick={() => setShowResetAppConfirm(true)}
+                        className="w-full flex items-center gap-4 p-4 hover:bg-red-50 rounded-none transition-all group"
+                      >
+                        <div className="text-zinc-400 group-hover:text-red-500 group-hover:scale-110 transition-transform">
+                          <PiTrashBold size={20} />
+                        </div>
+                        <span className="text-[14px] font-semibold text-zinc-800">Zerar Aplicativo</span>
+                      </button>
+                    ) : (
+                      <div className="p-4 space-y-4 animate-in fade-in slide-in-from-top-1 duration-200">
+                        <p className="text-[11px] font-bold text-red-500 uppercase leading-tight text-center bg-red-50 py-2 rounded-xl">
+                          Confirmar limpeza total?
+                        </p>
+                        <div className="flex gap-2">
+                          <button
+                            onClick={handleResetApp}
+                            className="flex-1 py-3 bg-red-500 text-white rounded text-[11px] font-black uppercase active:scale-95 transition-all shadow-md shadow-red-200"
+                          >
+                            Zerar
+                          </button>
+                          <button
+                            onClick={() => setShowResetAppConfirm(false)}
+                            className="flex-1 py-3 bg-zinc-100 text-zinc-500 rounded text-[11px] font-black uppercase active:scale-95 transition-all"
+                          >
+                            Não
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Close Button Footer */}
+              <div className="p-6 bg-white border-t border-zinc-100">
+                <button
+                  onClick={() => setShowGlobalSettings(false)}
+                  className="w-full py-4 bg-zinc-900 text-white rounded font-bold text-[13px] uppercase tracking-widest active:scale-[0.98] transition-all shadow-lg shadow-zinc-200 hover:bg-black"
+                >
+                  Fechar Menu
+                </button>
               </div>
             </motion.div>
           </motion.div>
@@ -6730,21 +6729,12 @@ function GroupApp({
 
             {/* Header Actions */}
             <div className="flex items-center gap-2 relative z-10">
-              {showAddPlayerSection && currentScreen === "players" && (
-                <button
-                  onClick={() => {
-                    setShowAddPlayerSection(false);
-                    setSelectedMatchId(null);
-                    setPlayersTab("configuracao");
-                    setTeamsTab("configuracao");
-                  }}
-                  className="text-white hover:opacity-80 transition-opacity flex items-center justify-center cursor-pointer p-2"
-                  title="Voltar ao Painel"
-                >
-                  <LogOut size={20} />
-                </button>
-              )}
-              {/* Header Title Space */}
+              <button 
+                onClick={() => setShowGlobalSettings(true)}
+                className="text-white hover:opacity-80 transition-opacity p-2 flex items-center justify-center cursor-pointer"
+              >
+                <IoIosMenu size={28} />
+              </button>
             </div>
           </header>
 
