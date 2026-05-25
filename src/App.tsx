@@ -9305,17 +9305,7 @@ function GroupApp({
                       {firstSetupDone && teams.length >= 2 && (
                         <div className="flex justify-between items-center relative z-10 bg-zinc-100/80 backdrop-blur-sm rounded-2xl p-1 mb-2 shadow-sm border border-black/5">
                           <div className="flex gap-1 bg-white rounded-[11px]">
-                            <button
-                              onClick={() => setTeamsTab("configuracao")}
-                              className="p-2 rounded-xl transition-all active:scale-90 hover:bg-black/5 text-zinc-800 flex items-center justify-center bg-white"
-                              title="Configurações"
-                            >
-                              <Settings size={20} className="text-zinc-800" />
-                            </button>
-                            <div className="flex items-center gap-1.5 ml-1 bg-white rounded-[11px] px-1">
-                              <span className="text-[8px] font-black uppercase tracking-tight text-[#1E3D2F]/60 leading-[1.1] text-right max-w-[75px]">
-                                Subir automaticamente
-                              </span>
+                            <div className="flex items-center gap-1.5 ml-1 bg-white rounded-[11px] px-1 py-1">
                               <button
                                 onClick={() => {
                                   const newState = !autoCompleteTeams;
@@ -9336,6 +9326,9 @@ function GroupApp({
                                   className={`w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 transform ${autoCompleteTeams ? "translate-x-4" : "translate-x-0"}`}
                                 />
                               </button>
+                              <span className="text-[8px] font-black uppercase tracking-tight text-[#1E3D2F]/60 leading-[1.1] text-left max-w-[75px]">
+                                Subir automaticamente
+                              </span>
                             </div>
                           </div>
                           <div className="flex gap-1 bg-white rounded-[11px] border-0">
