@@ -5789,7 +5789,7 @@ function GroupApp({
     }
 
     return (
-      <div className="h-screen bg-brand-dark text-white font-sans overflow-y-auto flex flex-col p-6 items-center justify-center">
+      <div className="h-[100dvh] bg-brand-dark text-white font-sans overflow-y-auto flex flex-col p-6 items-center justify-center">
         <AnimatePresence>
           {toast && (
             <motion.div
@@ -6034,7 +6034,7 @@ function GroupApp({
 
   return (
     <div
-      className={`min-h-screen bg-brand-dark text-brand-text-primary font-sans flex flex-col transition-colors duration-500 dark`}
+      className={`min-h-[100dvh] bg-brand-dark text-brand-text-primary font-sans flex flex-col transition-colors duration-500 dark`}
     >
       {/* Logo Animation Overlay */}
       <AnimatePresence>
@@ -10762,7 +10762,7 @@ function GroupApp({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className={`p-2 sm:p-4 space-y-6 pb-24 ${isPrintMode ? "bg-white min-h-screen p-0" : ""}`}
+                className={`p-2 sm:p-4 space-y-6 pb-24 ${isPrintMode ? "bg-white min-h-[100dvh] p-0" : ""}`}
               >
                 {!isPrintMode ? (
                   <motion.div className={`w-full overflow-hidden`}>
@@ -10874,7 +10874,7 @@ function GroupApp({
                 ) : (
                   <div
                     key="ranking-print"
-                    className="p-8 bg-[#dce3ee] min-h-screen text-black space-y-8"
+                    className="p-8 bg-[#dce3ee] min-h-[100dvh] text-black space-y-8"
                   >
                     <div className="flex items-center justify-between border-b border-black/10 pb-3">
                       <div className="flex items-center gap-2">
@@ -10967,7 +10967,7 @@ function GroupApp({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className={`space-y-4 ${isPrintMode ? "space-y-0 bg-white text-black min-h-screen" : ""}`}
+                className={`space-y-4 ${isPrintMode ? "space-y-0 bg-white text-black min-h-[100dvh]" : ""}`}
               >
                 {financeSubScreen === "balanco" &&
                   (() => {
@@ -10989,7 +10989,7 @@ function GroupApp({
 
                     return (
                       <div
-                        className={`space-y-6 ${isPrintMode ? "bg-white min-h-screen text-black p-4 pb-12 font-mono" : "font-mono"}`}
+                        className={`space-y-6 ${isPrintMode ? "bg-white min-h-[100dvh] text-black p-4 pb-12 font-mono" : "font-mono"}`}
                       >
                         {!isPrintMode && (
                           <div className="h-4" />
@@ -14932,7 +14932,7 @@ function AuthScreen() {
   };
 
   return (
-    <div className="min-h-screen font-sans transition-colors duration-300 flex items-center justify-center p-6 bg-zinc-100 text-zinc-900">
+    <div className="min-h-[100dvh] font-sans transition-colors duration-300 flex items-center justify-center p-6 bg-zinc-100 text-zinc-900">
       <div className="w-full max-w-md space-y-8">
         <div className="flex flex-col items-center justify-center gap-4 text-center relative">
           <FutQuinaLogo size="lg" colorClass="text-zinc-900" />
@@ -15084,8 +15084,8 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen font-sans transition-colors duration-500 flex flex-col justify-center p-0 sm:p-2 bg-[#050806] overflow-x-hidden relative w-full dark">
-      <div className="w-full sm:w-[98%] sm:max-w-7xl mx-auto px-1 py-4 sm:px-10 sm:py-16 flex flex-col min-h-screen sm:min-h-0 justify-between relative bg-transparent">
+    <div className="min-h-[100dvh] font-sans transition-colors duration-500 flex flex-col justify-center p-0 sm:p-2 bg-[#050806] overflow-x-hidden relative w-full dark">
+      <div className="w-full sm:w-[98%] sm:max-w-7xl mx-auto px-1 py-4 sm:px-10 sm:py-16 flex flex-col min-h-[100dvh] sm:min-h-0 justify-between relative bg-transparent">
         {/* Animated Background Polish */}
         <div className="absolute inset-0 pointer-events-none z-0">
           <div
