@@ -903,14 +903,14 @@ const TieBreakerModal = ({
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="w-full max-w-md h-auto max-h-[90vh] flex flex-col bg-[#dce3ee] rounded-2xl overflow-x-hidden overflow-y-auto border border-black/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative"
+        className="w-full max-w-md h-auto max-h-[90vh] flex flex-col bg-[#dce3ee] rounded-2xl overflow-hidden border border-black/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative"
       >
         {/* Background Decorative Elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-[100px] -mr-32 -mt-32" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/20 rounded-full blur-[80px] -ml-32 -mb-32" />
 
         {/* Header Section */}
-        <div className="pt-10 pb-4 px-6 relative z-10">
+        <div className="pt-10 pb-4 px-6 relative z-10 shrink-0">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-3">
               <div className="w-2 h-8 bg-zinc-900 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.1)]" />
@@ -935,7 +935,7 @@ const TieBreakerModal = ({
         </div>
 
         {/* Content Section */}
-        <div className="p-6 pt-0 relative z-10">
+        <div className="flex-1 overflow-y-auto p-6 pt-0 relative z-10 custom-scrollbar">
           {state.type === "none" && !showQueueOrder && (
             <div className="space-y-4">
               <div className="flex items-center gap-4 bg-white/40 p-5 rounded-xl border border-black/5 mb-6 backdrop-blur-sm">
@@ -1083,7 +1083,7 @@ const TieBreakerModal = ({
                 <div className="pt-6">
                   <button
                     onClick={() => onConfirm()}
-                    className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-3 group"
+                    className="w-full p-4 mt-4 rounded-2xl bg-zinc-200 text-black font-black uppercase tracking-widest text-[10px] transition-all hover:bg-zinc-300 active:scale-95 flex items-center justify-center gap-3 group shadow-sm"
                   >
                     <span>Manter o resultado atual</span>
                     <ChevronRight size={14} className="text-black/30 group-hover:translate-x-1 transition-transform" />
@@ -1214,9 +1214,6 @@ const TieBreakerModal = ({
               <div className="grid grid-cols-2 gap-4 h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                 {/* Team A Penalties */}
                 <div className="space-y-2">
-                  <div className="text-[9px] font-black text-black uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#dce3ee] py-1 border-b border-black/5">
-                    Time A
-                  </div>
                   {state.penalties.teamA.map((shot, idx) => {
                     const p = players.find(
                       (player) => player.id === shot.playerId,
@@ -1224,23 +1221,9 @@ const TieBreakerModal = ({
                     return (
                       <div
                         key={`pen-a-${idx}`}
-                        className="p-3 bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 border border-white/5 rounded-xl space-y-3 relative overflow-hidden group shadow-xl"
+                        className="p-3 bg-gradient-to-br from-zinc-100 to-zinc-200 border border-black/5 rounded-2xl space-y-3 relative overflow-hidden group shadow-sm"
                       >
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0 overflow-hidden">
-                            {p?.photo ? (
-                              <img
-                                src={p.photo}
-                                alt={p.name}
-                                className="w-full h-full object-cover"
-                                referrerPolicy="no-referrer"
-                              />
-                            ) : (
-                              <span className="text-white/30">
-                                <IoPersonOutline size={16} />
-                              </span>
-                            )}
-                          </div>
                           <div className="flex flex-col min-w-0">
                             <span className="text-[10px] font-black text-black truncate uppercase tracking-tight leading-none">
                               {p?.name}
@@ -1253,13 +1236,13 @@ const TieBreakerModal = ({
                         <div className="flex gap-2">
                           <button
                             onClick={() => onPenaltyToggle("A", idx)}
-                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-white/5 text-emerald-500/30 hover:bg-white/10"}`}
+                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? "bg-emerald-500/20 text-emerald-600 border border-emerald-500/30 shadow-sm" : "bg-black/5 text-emerald-500/30 hover:bg-black/10"}`}
                           >
                             <PiCheckCircleBold size={18} />
                           </button>
                           <button
                             onClick={() => onPenaltyToggle("A", idx)}
-                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === false ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-white/5 text-red-500/30 hover:bg-white/10"}`}
+                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === false ? "bg-red-500/20 text-red-600 border border-red-500/30 shadow-sm" : "bg-black/5 text-red-500/30 hover:bg-black/10"}`}
                           >
                             <X size={18} />
                           </button>
@@ -1271,9 +1254,6 @@ const TieBreakerModal = ({
 
                 {/* Team B Penalties */}
                 <div className="space-y-2">
-                  <div className="text-[9px] font-black text-black uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#dce3ee] py-1 border-b border-black/5">
-                    Time B
-                  </div>
                   {state.penalties.teamB.map((shot, idx) => {
                     const p = players.find(
                       (player) => player.id === shot.playerId,
@@ -1281,23 +1261,9 @@ const TieBreakerModal = ({
                     return (
                       <div
                         key={`pen-b-${idx}`}
-                        className="p-3 bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 border border-white/5 rounded-xl space-y-3 relative overflow-hidden group shadow-xl"
+                        className="p-3 bg-gradient-to-br from-zinc-100 to-zinc-200 border border-black/5 rounded-2xl space-y-3 relative overflow-hidden group shadow-sm"
                       >
                         <div className="flex items-center gap-2">
-                          <div className="w-8 h-8 rounded-xl bg-white/5 flex items-center justify-center shrink-0 overflow-hidden">
-                            {p?.photo ? (
-                              <img
-                                src={p.photo}
-                                alt={p.name}
-                                className="w-full h-full object-cover"
-                                referrerPolicy="no-referrer"
-                              />
-                            ) : (
-                              <span className="text-white/30">
-                                <IoPersonOutline size={16} />
-                              </span>
-                            )}
-                          </div>
                           <div className="flex flex-col min-w-0">
                             <span className="text-[10px] font-black text-black truncate uppercase tracking-tight leading-none">
                               {p?.name}
@@ -1310,13 +1276,13 @@ const TieBreakerModal = ({
                         <div className="flex gap-2">
                           <button
                             onClick={() => onPenaltyToggle("B", idx)}
-                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30" : "bg-white/5 text-emerald-500/30 hover:bg-white/10"}`}
+                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? "bg-emerald-500/20 text-emerald-600 border border-emerald-500/30 shadow-sm" : "bg-black/5 text-emerald-500/30 hover:bg-black/10"}`}
                           >
                             <PiCheckCircleBold size={18} />
                           </button>
                           <button
                             onClick={() => onPenaltyToggle("B", idx)}
-                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === false ? "bg-red-500/20 text-red-400 border border-red-500/30" : "bg-white/5 text-red-500/30 hover:bg-white/10"}`}
+                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === false ? "bg-red-500/20 text-red-600 border border-red-500/30 shadow-sm" : "bg-black/5 text-red-500/30 hover:bg-black/10"}`}
                           >
                             <X size={18} />
                           </button>
@@ -1552,12 +1518,6 @@ const TieBreakerModal = ({
           )}
         </div>
 
-        {/* Footer info */}
-        <div className="pb-8 px-8 flex justify-center opacity-20">
-          <span className="text-[8px] font-black text-white uppercase tracking-[0.3em]">
-            FutQuina Engine
-          </span>
-        </div>
       </motion.div>
     </div>
   );
