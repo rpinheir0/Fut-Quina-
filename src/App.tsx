@@ -6449,21 +6449,6 @@ function GroupApp({
                     </button>
                   )}
 
-                  <button
-                    onClick={() => {
-                      setToast({ message: "Calendário em breve!", type: "info" });
-                      setTimeout(() => setToast(null), 3000);
-                    }}
-                    className="w-full flex items-center justify-between p-4 hover:bg-zinc-50 rounded-none transition-all group"
-                  >
-                    <div className="flex items-center gap-4 text-left">
-                      <div className="text-amber-500 group-hover:scale-110 transition-transform">
-                        <CiMemoPad size={20} />
-                      </div>
-                      <span className="text-[14px] font-semibold text-zinc-800">Agendar Pelada</span>
-                    </div>
-                    <span className="text-[12px] font-bold text-zinc-400">5</span>
-                  </button>
 
                   <button
                     onClick={() => setShowSetupGuide(true)}
