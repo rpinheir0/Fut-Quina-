@@ -4404,10 +4404,10 @@ function GroupApp({
       let newA = prev.teamAIndex;
       let newB = prev.teamBIndex;
 
-      if (newA >= teams.length || newA < 0) newA = teams.length > 0 ? 0 : -1;
-      if (newB >= teams.length || newB < 0) newB = teams.length > 1 ? 1 : -1;
+      if (newA >= teams.length) newA = 0;
+      if (newB >= teams.length) newB = teams.length > 1 ? 1 : 0;
 
-      if (newA === newB && teams.length > 1) {
+      if (newA !== -1 && newA === newB && teams.length > 1) {
         newB = (newA + 1) % teams.length;
       }
 
@@ -7733,11 +7733,11 @@ function GroupApp({
                                 }
 
                                 setTeams(newTeams);
-                                if (newTeams.length > 0) {
+                                if (newTeams.length >= 2) {
                                   setMatch((prev) => ({
                                     ...prev,
                                     teamAIndex: 0,
-                                    teamBIndex: newTeams.length > 1 ? 1 : -1,
+                                    teamBIndex: 1,
                                     scoreA: 0,
                                     scoreB: 0,
                                     timeRemaining: prev.config.duration * 60,
@@ -7852,6 +7852,20 @@ function GroupApp({
                                       if (match.isActive) {
                                         setTeamsTab("historico");
                                       } else {
+                                        if (match.teamAIndex === -1 && match.teamBIndex === -1 && teams.length >= 2) {
+                                          setMatch((prev) => ({
+                                            ...prev,
+                                            teamAIndex: 0,
+                                            teamBIndex: 1,
+                                            scoreA: 0,
+                                            scoreB: 0,
+                                            timeRemaining: prev.config.duration * 60,
+                                            isActive: false,
+                                            isPaused: true,
+                                            hasEnded: false,
+                                            events: [],
+                                          }));
+                                        }
                                         setTeamsTab("proximos");
                                       }
                                       return;
@@ -7915,11 +7929,11 @@ function GroupApp({
                                     setTeams(newTeams);
 
                                     // Pre-select first two complete teams for a match
-                                    if (newTeams.length > 0) {
+                                    if (newTeams.length >= 2) {
                                       setMatch((prev) => ({
                                         ...prev,
                                         teamAIndex: 0,
-                                        teamBIndex: newTeams.length > 1 ? 1 : -1,
+                                        teamBIndex: 1,
                                         scoreA: 0,
                                         scoreB: 0,
                                         timeRemaining:
@@ -8389,11 +8403,11 @@ function GroupApp({
                               <button
                                 onClick={() => {
                                   // Select first two teams if available
-                                  if (teams.length > 0) {
+                                  if (teams.length >= 2) {
                                     setMatch((prev) => ({
                                       ...prev,
                                       teamAIndex: 0,
-                                      teamBIndex: teams.length > 1 ? 1 : -1,
+                                      teamBIndex: 1,
                                     }));
                                   }
                                   setTeamsTab("proximos");
