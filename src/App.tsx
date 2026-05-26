@@ -6817,7 +6817,7 @@ function GroupApp({
                 {/* Dashboard Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   {!showAddPlayerSection ? (
-                    <div className="flex flex-col gap-0.5">
+                    <div className="flex flex-col gap-0">
                       <div className="flex items-center gap-2">
                         <h2 className="text-[12px] font-black uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">
                           Painel de controle
@@ -6878,7 +6878,10 @@ function GroupApp({
                       className="space-y-8"
                     >
                       {/* CTA Banner */}
-                      <div
+                      <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1 }}
                         onClick={() => setShowScheduleModal(true)}
                         className="cursor-pointer relative overflow-hidden bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] rounded-full p-4 shadow-xl hover:shadow-2xl transition-all hover:scale-[1.01] active:scale-[0.99]"
                       >
@@ -6898,23 +6901,50 @@ function GroupApp({
                               <h3 className="text-lg sm:text-xl font-bold tracking-tight">
                                 Crie sua Pelada
                               </h3>
-                              <p className="text-xs font-medium tracking-wide uppercase opacity-90 mt-1 max-w-[250px] leading-snug">
+                              <p className="text-xs font-medium tracking-wide uppercase opacity-90 mt-0 max-w-[250px] leading-snug">
                                 Crie e gerencie as próximas peladas.
                               </p>
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </motion.div>
 
                       {/* Matches Section */}
                       <div className="space-y-4">
-                        <div className="flex items-center justify-between px-1">
+                        <motion.div 
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: 0.2 }}
+                          className="flex items-center justify-between px-1"
+                        >
                           <h4 className="text-sm font-bold text-[#7e7e7e] font-roboto leading-[21px] w-[102.875px]">
                             Suas peladas
                           </h4>
-                        </div>
+                        </motion.div>
 
                         <div className="space-y-4">
+                          {scheduledMatches.length === 0 && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 10 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{ delay: 0.3 }}
+                              className="bg-white/40 border border-dashed border-zinc-200 rounded-xl h-[64px] flex items-center px-4 gap-4 relative overflow-hidden mb-2"
+                            >
+                              <div className="w-10 h-10 rounded-full bg-zinc-100/50 flex items-center justify-center text-zinc-300">
+                                <GiSoccerField size={20} />
+                              </div>
+                              <div className="flex-1 space-y-2">
+                                <div className="h-2.5 w-24 bg-zinc-100 rounded-full" />
+                                <div className="h-2 w-16 bg-zinc-50 rounded-full" />
+                              </div>
+                              <motion.div
+                                animate={{ x: ["-100%", "200%"] }}
+                                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent"
+                              />
+                            </motion.div>
+                          )}
+
                           {scheduledMatches.map((match, index) => {
                             const matchDate = new Date(match.date);
                             const day = matchDate.getDate();
@@ -6965,7 +6995,10 @@ function GroupApp({
                               expandedMatchCards.includes(match.id);
 
                             return (
-                              <div
+                              <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.2 + index * 0.05 }}
                                 key={match.id}
                                 onClick={() => {
                                   if (!isExpanded) {
@@ -7110,12 +7143,23 @@ function GroupApp({
                                     </div>
                                   </div>
                                 </div>
-                              </div>
+                              </motion.div>
                             );
                           })}
 
                           {/* Alert Banner */}
-                          <div className="bg-gradient-to-br from-[#eff5e8] to-[#e1ebd5] rounded-[20px] p-4 flex items-center gap-4 shadow-sm mt-2">
+                          <motion.div 
+                            initial={{ opacity: 0, scale: 0.95 }}
+                            animate={scheduledMatches.length === 0 ? {
+                              opacity: 1,
+                              scale: [1, 1.02, 1],
+                            } : { opacity: 1, scale: 1 }}
+                            transition={scheduledMatches.length === 0 ? {
+                              opacity: { duration: 0.4 },
+                              scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                            } : { delay: 0.4 }}
+                            className="bg-gradient-to-br from-[#eff5e8] to-[#e1ebd5] rounded-lg p-4 flex items-center gap-4 shadow-sm mt-2 border border-[#d4e2c0]/50"
+                          >
                             <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
                               <AlertCircle size={24} />
                             </div>
@@ -7126,7 +7170,7 @@ function GroupApp({
                                   : "Para iniciar, selecione a pelada que você criou no painel acima."}
                               </p>
                             </div>
-                          </div>
+                          </motion.div>
                         </div>
                       </div>
                     </motion.div>
