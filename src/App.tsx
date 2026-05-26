@@ -4404,8 +4404,8 @@ function GroupApp({
       let newA = prev.teamAIndex;
       let newB = prev.teamBIndex;
 
-      if (newA >= teams.length) newA = 0;
-      if (newB >= teams.length) newB = teams.length > 1 ? 1 : 0;
+      if (newA >= teams.length || newA < 0) newA = teams.length > 0 ? 0 : -1;
+      if (newB >= teams.length || newB < 0) newB = teams.length > 1 ? 1 : -1;
 
       if (newA === newB && teams.length > 1) {
         newB = (newA + 1) % teams.length;
@@ -7733,11 +7733,11 @@ function GroupApp({
                                 }
 
                                 setTeams(newTeams);
-                                if (newTeams.length >= 2) {
+                                if (newTeams.length > 0) {
                                   setMatch((prev) => ({
                                     ...prev,
                                     teamAIndex: 0,
-                                    teamBIndex: 1,
+                                    teamBIndex: newTeams.length > 1 ? 1 : -1,
                                     scoreA: 0,
                                     scoreB: 0,
                                     timeRemaining: prev.config.duration * 60,
@@ -7915,11 +7915,11 @@ function GroupApp({
                                     setTeams(newTeams);
 
                                     // Pre-select first two complete teams for a match
-                                    if (newTeams.length >= 2) {
+                                    if (newTeams.length > 0) {
                                       setMatch((prev) => ({
                                         ...prev,
                                         teamAIndex: 0,
-                                        teamBIndex: 1,
+                                        teamBIndex: newTeams.length > 1 ? 1 : -1,
                                         scoreA: 0,
                                         scoreB: 0,
                                         timeRemaining:
@@ -8389,11 +8389,11 @@ function GroupApp({
                               <button
                                 onClick={() => {
                                   // Select first two teams if available
-                                  if (teams.length >= 2) {
+                                  if (teams.length > 0) {
                                     setMatch((prev) => ({
                                       ...prev,
                                       teamAIndex: 0,
-                                      teamBIndex: 1,
+                                      teamBIndex: teams.length > 1 ? 1 : -1,
                                     }));
                                   }
                                   setTeamsTab("proximos");
