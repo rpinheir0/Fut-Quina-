@@ -7852,6 +7852,18 @@ function GroupApp({
                                       if (match.isActive) {
                                         setTeamsTab("historico");
                                       } else {
+                                        // Ensure first two teams are selected if not already
+                                        if (
+                                          teams.length >= 2 &&
+                                          (match.teamAIndex === -1 ||
+                                            match.teamBIndex === -1)
+                                        ) {
+                                          setMatch((prev) => ({
+                                            ...prev,
+                                            teamAIndex: 0,
+                                            teamBIndex: 1,
+                                          }));
+                                        }
                                         setTeamsTab("proximos");
                                       }
                                       return;
