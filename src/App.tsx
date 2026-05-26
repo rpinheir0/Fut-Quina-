@@ -2077,7 +2077,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
   }, [onComplete]);
 
   return (
-    <div className="fixed inset-0 z-[3000] flex flex-col items-center justify-center bg-[#14301F]">
+    <div className="fixed inset-0 z-[3000] flex flex-col items-center justify-center bg-[#050806]">
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -15074,7 +15074,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen font-sans transition-colors duration-500 flex flex-col justify-center p-0 sm:p-2 bg-brand-dark dark:bg-[#050806] overflow-x-hidden relative w-full">
+    <div className="min-h-screen font-sans transition-colors duration-500 flex flex-col justify-center p-0 sm:p-2 bg-[#050806] overflow-x-hidden relative w-full dark">
       <div className="w-full sm:w-[98%] sm:max-w-7xl mx-auto px-1 py-4 sm:px-10 sm:py-16 flex flex-col min-h-screen sm:min-h-0 justify-between relative bg-transparent">
         {/* Animated Background Polish */}
         <div className="absolute inset-0 pointer-events-none z-0">
