@@ -358,7 +358,7 @@ const TutorialCarousel = () => {
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={`carousel-item-${index}`}
+          key={index}
           initial={{ opacity: 0, x: 50, filter: "blur(5px)" }}
           animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
           exit={{ opacity: 0, x: -50, filter: "blur(5px)" }}
@@ -383,7 +383,7 @@ const TutorialCarousel = () => {
       <div className="absolute bottom-5 left-0 right-0 flex justify-center gap-3 z-20">
         {items.map((_, i) => (
           <div
-            key={`carousel-dot-${i}`}
+            key={i}
             className={`transition-all duration-700 ease-out flex items-center justify-center ${
               i === index ? "w-8" : "w-2"
             } h-1 rounded-full overflow-hidden bg-white/20 backdrop-blur-sm`}
@@ -747,15 +747,15 @@ const AssistModal = ({
                       <div className="text-sm font-black uppercase truncate text-zinc-800 transition-colors group-hover:text-brand-primary leading-none">
                         {player?.name}
                       </div>
-                          <div className="flex gap-0.5 mt-0.5">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                              <Star
-                                key={`star-assist-modal-${player?.id}-${star}`}
-                                size={8}
-                                className={`${(player?.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-zinc-300"}`}
-                              />
-                            ))}
-                          </div>
+                      <div className="flex gap-0.5 mt-0.5">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Star
+                            key={`star-assist-${player?.id}-${star}`}
+                            size={8}
+                            className={`${(player?.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-zinc-300"}`}
+                          />
+                        ))}
+                      </div>
                     </div>
 
                     <div className="w-8 h-8 rounded-full border border-zinc-100 flex items-center justify-center bg-zinc-50 group-hover:bg-brand-primary/10 group-hover:border-brand-primary/20 text-zinc-300 group-hover:text-brand-primary transition-all">
@@ -839,7 +839,7 @@ const ScorerModal = ({
               <div className="flex gap-0.5 mt-0.5">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
-                    key={`star-scorer-modal-${pid}-${star}`}
+                    key={`star-scorer-${pid}-${star}`}
                     size={8}
                     className={`${(players.find((p) => p.id === pid)?.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-zinc-300"}`}
                   />
@@ -966,7 +966,7 @@ const TieBreakerModal = ({
                         const p = players.find((player) => player.id === pid);
                         return (
                           <span
-                            key={`vs-list-a-${pid}`}
+                            key={pid}
                             className="text-[7px] font-black text-black uppercase tracking-tighter"
                           >
                             {p?.name}
@@ -1003,7 +1003,7 @@ const TieBreakerModal = ({
                         const p = players.find((player) => player.id === pid);
                         return (
                           <span
-                            key={`vs-list-b-${pid}`}
+                            key={pid}
                             className="text-[7px] font-black text-black uppercase tracking-tighter"
                           >
                             {p?.name}
@@ -1125,7 +1125,7 @@ const TieBreakerModal = ({
                     <div className="flex flex-wrap gap-x-1.5 mt-1">
                       {(teamA.playerIds || []).map((pid, idx) => (
                         <span
-                          key={`queue-order-a-${pid}`}
+                          key={pid}
                           className="text-[8px] text-black/60 font-black tracking-tight"
                         >
                           {players.find((p) => p.id === pid)?.name}
@@ -1155,7 +1155,7 @@ const TieBreakerModal = ({
                     <div className="flex flex-wrap gap-x-1.5 mt-1">
                       {(teamB.playerIds || []).map((pid, idx) => (
                         <span
-                          key={`queue-order-b-${pid}`}
+                          key={pid}
                           className="text-[8px] text-black/60 font-black tracking-tight"
                         >
                           {players.find((p) => p.id === pid)?.name}
@@ -1395,7 +1395,7 @@ const TieBreakerModal = ({
                             );
                             return (
                               <span
-                                key={`lottery-list-a-${pid}`}
+                                key={pid}
                                 className="text-[6px] font-bold text-zinc-400 uppercase"
                               >
                                 {p?.name}
@@ -1437,7 +1437,7 @@ const TieBreakerModal = ({
                             );
                             return (
                               <span
-                                key={`lottery-list-b-${pid}`}
+                                key={pid}
                                 className="text-[6px] font-bold text-zinc-400 uppercase"
                               >
                                 {p?.name}
@@ -1496,7 +1496,7 @@ const TieBreakerModal = ({
                           const p = players.find((player) => player.id === pid);
                           return (
                             <span
-                              key={`lottery-winner-${pid}`}
+                              key={pid}
                               className="text-[8px] font-black text-black uppercase tracking-widest"
                             >
                               {p?.name}
@@ -1711,7 +1711,7 @@ const PlayerManagementModalComponent = ({
               <div className="flex flex-wrap items-center justify-center gap-1 mt-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
-                    key={`modal-star-${player.id}-${star}`}
+                    key={`modal-star-${star}`}
                     onClick={() =>
                       onUpdateStars && onUpdateStars(player.id, star)
                     }
@@ -2072,12 +2072,12 @@ const SpinningBall = ({
 
 const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
   useEffect(() => {
-    const timer = setTimeout(onComplete, 1000);
+    const timer = setTimeout(onComplete, 3000);
     return () => clearTimeout(timer);
   }, [onComplete]);
 
   return (
-    <div className="fixed inset-0 z-[3000] flex flex-col items-center justify-center bg-[#050806]">
+    <div className="fixed inset-0 z-[3000] flex flex-col items-center justify-center bg-[#dce3ee]">
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -2303,7 +2303,7 @@ function GroupApp({
 }) {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     const saved = safeLocalStorage.getItem(`futquina_theme_${groupId}`);
-    return (saved as "light" | "dark") || "dark";
+    return (saved as "light" | "dark") || "light";
   });
 
   useEffect(() => {
@@ -2530,21 +2530,7 @@ function GroupApp({
       );
       if (saved) {
         try {
-          const parsed = JSON.parse(saved);
-          if (!Array.isArray(parsed)) return [];
-          const uniqueMatches: ScheduledMatch[] = [];
-          const seenIds = new Set<string>();
-          for (const m of parsed) {
-            if (!m || typeof m !== "object") continue;
-            const id = m.id || generateId();
-            if (!seenIds.has(id)) {
-              uniqueMatches.push({ ...m, id });
-              seenIds.add(id);
-            } else {
-              uniqueMatches.push({ ...m, id: generateId() });
-            }
-          }
-          return uniqueMatches;
+          return JSON.parse(saved);
         } catch (e) {
           return [];
         }
@@ -5789,7 +5775,7 @@ function GroupApp({
     }
 
     return (
-      <div className="h-[100dvh] bg-brand-dark text-white font-sans overflow-y-auto flex flex-col p-6 items-center justify-center">
+      <div className="h-screen bg-brand-dark text-white font-sans overflow-y-auto flex flex-col p-6 items-center justify-center">
         <AnimatePresence>
           {toast && (
             <motion.div
@@ -6034,7 +6020,7 @@ function GroupApp({
 
   return (
     <div
-      className={`min-h-[100dvh] bg-brand-dark text-brand-text-primary font-sans flex flex-col transition-colors duration-500 dark`}
+      className={`h-screen bg-brand-dark text-brand-text-primary font-sans overflow-hidden flex flex-col transition-colors duration-500 ${theme === "dark" ? "dark" : ""}`}
     >
       {/* Logo Animation Overlay */}
       <AnimatePresence>
@@ -6539,7 +6525,7 @@ function GroupApp({
         )}
       </AnimatePresence>
 
-      <div className="flex-1 flex flex-col">
+      <div className="h-full flex flex-col overflow-hidden">
         {/* Sticky Header and Tabs Container */}
         <div
           className={`sticky top-0 z-50 bg-[#000000]/95 backdrop-blur-2xl ${isPrintMode ? "hidden" : ""}`}
@@ -7866,14 +7852,6 @@ function GroupApp({
                                       if (match.isActive) {
                                         setTeamsTab("historico");
                                       } else {
-                                        // Force first two teams to be selected if available
-                                        if (teams.length >= 2) {
-                                          setMatch((prev) => ({
-                                            ...prev,
-                                            teamAIndex: 0,
-                                            teamBIndex: 1,
-                                          }));
-                                        }
                                         setTeamsTab("proximos");
                                       }
                                       return;
@@ -8801,7 +8779,7 @@ function GroupApp({
                                       <div className="flex flex-row-reverse gap-0.5">
                                         {[1, 2, 3, 4, 5].map((star) => (
                                           <Star
-                                            key={`star-match-a-${p.id}-${star}`}
+                                            key={`star-${p.id}-${star}`}
                                             size={6}
                                             className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10"}`}
                                           />
@@ -8854,7 +8832,7 @@ function GroupApp({
                                 ),
                               }).map((_, i) => (
                                 <button
-                                  key={`empty-slot-a-${i}`}
+                                  key={`empty-a-${i}`}
                                   onClick={() => {
                                     if (
                                       movingPlayers &&
@@ -9156,7 +9134,7 @@ function GroupApp({
                                 ),
                               }).map((_, i) => (
                                 <button
-                                  key={`empty-slot-b-${i}`}
+                                  key={`empty-b-${i}`}
                                   onClick={() => {
                                     if (
                                       movingPlayers &&
@@ -10762,7 +10740,7 @@ function GroupApp({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className={`p-2 sm:p-4 space-y-6 pb-24 ${isPrintMode ? "bg-white min-h-[100dvh] p-0" : ""}`}
+                className={`p-2 sm:p-4 space-y-6 pb-24 ${isPrintMode ? "bg-white min-h-screen p-0" : ""}`}
               >
                 {!isPrintMode ? (
                   <motion.div className={`w-full overflow-hidden`}>
@@ -10801,7 +10779,7 @@ function GroupApp({
                             },
                             opacity: { duration: 0.2 },
                           }}
-                          key={`ranking-row-${player.id}`}
+                          key={player.id}
                           className="flex items-center py-3 px-2 transition-colors rounded-xl bg-transparent border-b border-black/5"
                         >
                           <div className="w-8 text-sm font-black text-zinc-800/40 text-center shrink-0">
@@ -10874,7 +10852,7 @@ function GroupApp({
                 ) : (
                   <div
                     key="ranking-print"
-                    className="p-8 bg-[#dce3ee] min-h-[100dvh] text-black space-y-8"
+                    className="p-8 bg-[#dce3ee] min-h-screen text-black space-y-8"
                   >
                     <div className="flex items-center justify-between border-b border-black/10 pb-3">
                       <div className="flex items-center gap-2">
@@ -10967,7 +10945,7 @@ function GroupApp({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className={`space-y-4 ${isPrintMode ? "space-y-0 bg-white text-black min-h-[100dvh]" : ""}`}
+                className={`space-y-4 ${isPrintMode ? "space-y-0 bg-white text-black min-h-screen" : ""}`}
               >
                 {financeSubScreen === "balanco" &&
                   (() => {
@@ -10989,7 +10967,7 @@ function GroupApp({
 
                     return (
                       <div
-                        className={`space-y-6 ${isPrintMode ? "bg-white min-h-[100dvh] text-black p-4 pb-12 font-mono" : "font-mono"}`}
+                        className={`space-y-6 ${isPrintMode ? "bg-white min-h-screen text-black p-4 pb-12 font-mono" : "font-mono"}`}
                       >
                         {!isPrintMode && (
                           <div className="h-4" />
@@ -12600,7 +12578,7 @@ function GroupApp({
                             return null;
                           return (
                             <button
-                              key={`move-team-target-${t.id}-${idx}`}
+                              key={`move-to-${t.id}`}
                               onClick={() => {
                                 setTeams((prev) => {
                                   const newTeams = [...prev].map((team) => ({
@@ -14932,7 +14910,7 @@ function AuthScreen() {
   };
 
   return (
-    <div className="min-h-[100dvh] font-sans transition-colors duration-300 flex items-center justify-center p-6 bg-zinc-100 text-zinc-900">
+    <div className="min-h-screen font-sans transition-colors duration-300 flex items-center justify-center p-6 bg-zinc-100 text-zinc-900">
       <div className="w-full max-w-md space-y-8">
         <div className="flex flex-col items-center justify-center gap-4 text-center relative">
           <FutQuinaLogo size="lg" colorClass="text-zinc-900" />
@@ -15062,8 +15040,8 @@ export default function App() {
     name: string;
   } | null>(null);
   const [renameValue, setRenameValue] = useState("");
-  // Use dark theme by default for premium look
-  const theme = "dark";
+  // Remove theme state and use a constant for logic cleanup or just remove completely
+  const theme = "light";
 
   // Keep offline logic purely local
   useEffect(() => {
@@ -15084,8 +15062,8 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-[100dvh] font-sans transition-colors duration-500 flex flex-col justify-center p-0 sm:p-2 bg-[#050806] overflow-x-hidden relative w-full dark">
-      <div className="w-full sm:w-[98%] sm:max-w-7xl mx-auto px-1 py-4 sm:px-10 sm:py-16 flex flex-col min-h-[100dvh] sm:min-h-0 justify-between relative bg-transparent">
+    <div className="min-h-screen font-sans transition-colors duration-500 flex flex-col justify-center p-0 sm:p-2 bg-[#14301F] overflow-x-hidden relative w-full">
+      <div className="w-full sm:w-[98%] sm:max-w-7xl mx-auto px-1 py-4 sm:px-10 sm:py-16 flex flex-col min-h-screen sm:min-h-0 justify-between relative bg-transparent">
         {/* Animated Background Polish */}
         <div className="absolute inset-0 pointer-events-none z-0">
           <div

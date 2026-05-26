@@ -1,8 +1,5 @@
 {
   "name": "FutQuina - Gestão de Peladas",
   "description": "Organizador de peladas de futebol com visualização tática em campo, gerenciamento de jogadores, times, placar em tempo real, ranking e controle financeiro.",
-  "requestFramePermissions": [],
-  "majorCapabilities": [
-    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
-  ]
+  "requestFramePermissions": []
 }
