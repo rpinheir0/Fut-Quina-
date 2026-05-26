@@ -358,7 +358,7 @@ const TutorialCarousel = () => {
 
       <AnimatePresence mode="wait">
         <motion.div
-          key={index}
+          key={`carousel-item-${index}`}
           initial={{ opacity: 0, x: 50, filter: "blur(5px)" }}
           animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
           exit={{ opacity: 0, x: -50, filter: "blur(5px)" }}
@@ -383,7 +383,7 @@ const TutorialCarousel = () => {
       <div className="absolute bottom-5 left-0 right-0 flex justify-center gap-3 z-20">
         {items.map((_, i) => (
           <div
-            key={i}
+            key={`carousel-dot-${i}`}
             className={`transition-all duration-700 ease-out flex items-center justify-center ${
               i === index ? "w-8" : "w-2"
             } h-1 rounded-full overflow-hidden bg-white/20 backdrop-blur-sm`}
@@ -747,15 +747,15 @@ const AssistModal = ({
                       <div className="text-sm font-black uppercase truncate text-zinc-800 transition-colors group-hover:text-brand-primary leading-none">
                         {player?.name}
                       </div>
-                      <div className="flex gap-0.5 mt-0.5">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <Star
-                            key={`star-assist-${player?.id}-${star}`}
-                            size={8}
-                            className={`${(player?.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-zinc-300"}`}
-                          />
-                        ))}
-                      </div>
+                          <div className="flex gap-0.5 mt-0.5">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                              <Star
+                                key={`star-assist-modal-${player?.id}-${star}`}
+                                size={8}
+                                className={`${(player?.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-zinc-300"}`}
+                              />
+                            ))}
+                          </div>
                     </div>
 
                     <div className="w-8 h-8 rounded-full border border-zinc-100 flex items-center justify-center bg-zinc-50 group-hover:bg-brand-primary/10 group-hover:border-brand-primary/20 text-zinc-300 group-hover:text-brand-primary transition-all">
@@ -839,7 +839,7 @@ const ScorerModal = ({
               <div className="flex gap-0.5 mt-0.5">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star
-                    key={`star-scorer-${pid}-${star}`}
+                    key={`star-scorer-modal-${pid}-${star}`}
                     size={8}
                     className={`${(players.find((p) => p.id === pid)?.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-zinc-300"}`}
                   />
@@ -2530,7 +2530,21 @@ function GroupApp({
       );
       if (saved) {
         try {
-          return JSON.parse(saved);
+          const parsed = JSON.parse(saved);
+          if (!Array.isArray(parsed)) return [];
+          const uniqueMatches: ScheduledMatch[] = [];
+          const seenIds = new Set<string>();
+          for (const m of parsed) {
+            if (!m || typeof m !== "object") continue;
+            const id = m.id || generateId();
+            if (!seenIds.has(id)) {
+              uniqueMatches.push({ ...m, id });
+              seenIds.add(id);
+            } else {
+              uniqueMatches.push({ ...m, id: generateId() });
+            }
+          }
+          return uniqueMatches;
         } catch (e) {
           return [];
         }
@@ -7852,12 +7866,8 @@ function GroupApp({
                                       if (match.isActive) {
                                         setTeamsTab("historico");
                                       } else {
-                                        // Ensure first two teams are selected if not already
-                                        if (
-                                          teams.length >= 2 &&
-                                          (match.teamAIndex === -1 ||
-                                            match.teamBIndex === -1)
-                                        ) {
+                                        // Force first two teams to be selected if available
+                                        if (teams.length >= 2) {
                                           setMatch((prev) => ({
                                             ...prev,
                                             teamAIndex: 0,
@@ -8844,7 +8854,7 @@ function GroupApp({
                                 ),
                               }).map((_, i) => (
                                 <button
-                                  key={`empty-a-${i}`}
+                                  key={`empty-slot-a-${i}`}
                                   onClick={() => {
                                     if (
                                       movingPlayers &&
@@ -9146,7 +9156,7 @@ function GroupApp({
                                 ),
                               }).map((_, i) => (
                                 <button
-                                  key={`empty-b-${i}`}
+                                  key={`empty-slot-b-${i}`}
                                   onClick={() => {
                                     if (
                                       movingPlayers &&
@@ -10791,7 +10801,7 @@ function GroupApp({
                             },
                             opacity: { duration: 0.2 },
                           }}
-                          key={player.id}
+                          key={`ranking-row-${player.id}`}
                           className="flex items-center py-3 px-2 transition-colors rounded-xl bg-transparent border-b border-black/5"
                         >
                           <div className="w-8 text-sm font-black text-zinc-800/40 text-center shrink-0">
@@ -12590,7 +12600,7 @@ function GroupApp({
                             return null;
                           return (
                             <button
-                              key={`move-to-${t.id}`}
+                              key={`move-team-target-${t.id}-${idx}`}
                               onClick={() => {
                                 setTeams((prev) => {
                                   const newTeams = [...prev].map((team) => ({
