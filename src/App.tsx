@@ -7226,7 +7226,7 @@ function GroupApp({
                                 <div className="text-emerald-500/40">
                                   <IoLogoWhatsapp size={20} />
                                 </div>
-                                <span className="text-base sm:text-lg text-[#1E3D2F]/40 leading-tight block text-center">
+                                <span className="text-xs sm:text-sm text-[#1E3D2F]/40 leading-tight block text-center">
                                   Cole aqui a lista do whatsapp.
                                 </span>
                               </div>
@@ -7274,7 +7274,7 @@ function GroupApp({
                                   <GiLaurelsTrophy size={40} />
                                 </div>
                               </div>
-                              <span className="font-medium text-zinc-600 text-[12px] max-w-sm">
+                              <span className="font-bold text-zinc-600 text-[10px] sm:text-[11px] max-w-sm uppercase tracking-widest">
                                 Nenhum jogador adicionado ainda.
                               </span>
                             </div>
@@ -10881,7 +10881,7 @@ function GroupApp({
                               <GiLaurelsTrophy size={40} />
                             </div>
                           </div>
-                          <span className="font-medium text-zinc-600 text-[12px] max-w-sm">
+                          <span className="font-bold text-zinc-600 text-[10px] sm:text-[11px] max-w-sm uppercase tracking-widest">
                             Nenhum jogador adicionado ainda.
                           </span>
                         </div>
