@@ -966,7 +966,7 @@ const TieBreakerModal = ({
                         return (
                           <span
                             key={pid}
-                            className="text-[7px] font-bold text-zinc-500 uppercase tracking-tighter"
+                            className="text-[7px] font-black text-black uppercase tracking-tighter"
                           >
                             {p?.name}
                             {idx < arr.length - 1 ? " •" : ""}
@@ -1003,7 +1003,7 @@ const TieBreakerModal = ({
                         return (
                           <span
                             key={pid}
-                            className="text-[7px] font-bold text-zinc-500 uppercase tracking-tighter"
+                            className="text-[7px] font-black text-black uppercase tracking-tighter"
                           >
                             {p?.name}
                             {idx < arr.length - 1 ? " •" : ""}
@@ -1018,74 +1018,75 @@ const TieBreakerModal = ({
                 {queueCount >= 2 && (
                   <button
                     onClick={() => setShowQueueOrder(true)}
-                    className="group w-full flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 transition-all duration-400 transform active:scale-95 text-left border border-white/5 shadow-2xl"
+                    className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] transition-all duration-400 transform active:scale-95 text-left shadow-lg hover:opacity-90"
                   >
-                    <div className="w-12 h-12 text-[#00FF00] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <div className="w-12 h-12 text-black flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                       <LogOut size={28} />
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-normal uppercase tracking-widest text-[11px] text-white">
+                      <span className="font-black uppercase tracking-widest text-[11px] text-black">
                         Os dois times deixam a partida
                       </span>
-                      <span className="text-[10px] text-white/50 font-medium tracking-tight mt-0.5">
+                      <span className="text-[10px] text-black/60 font-bold tracking-tight mt-0.5">
                         Ambos vão para o final da fila
                       </span>
                     </div>
                     <ChevronRight
                       size={18}
-                      className="ml-auto text-white/20 group-hover:text-white transition-colors"
+                      className="ml-auto text-black/30 group-hover:text-black transition-colors"
                     />
                   </button>
                 )}
 
                 <button
                   onClick={() => onTypeSelect("penalties")}
-                  className="group w-full flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 transition-all duration-400 transform active:scale-95 text-left border border-white/5 shadow-2xl"
+                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] transition-all duration-400 transform active:scale-95 text-left shadow-lg hover:opacity-90"
                 >
-                  <div className="w-12 h-12 text-[#00FF00] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 text-black flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                     <GiSoccerKick size={28} />
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-normal uppercase tracking-widest text-[11px] text-white">
+                    <span className="font-black uppercase tracking-widest text-[11px] text-black">
                       Disputa de Pênaltis
                     </span>
-                    <span className="text-[10px] text-white/50 font-medium tracking-tight mt-0.5">
+                    <span className="text-[10px] text-black/60 font-bold tracking-tight mt-0.5">
                       Marcar acertos e erros
                     </span>
                   </div>
                   <ChevronRight
                     size={18}
-                    className="ml-auto text-white/20 group-hover:text-white transition-colors"
+                    className="ml-auto text-black/30 group-hover:text-black transition-colors"
                   />
                 </button>
 
                 <button
                   onClick={() => onTypeSelect("lottery")}
-                  className="group w-full flex items-center gap-4 p-4 rounded-xl bg-gradient-to-br from-zinc-800/80 to-zinc-900/80 transition-all duration-400 transform active:scale-95 text-left border border-white/5 shadow-2xl"
+                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] transition-all duration-400 transform active:scale-95 text-left shadow-lg hover:opacity-90"
                 >
-                  <div className="w-12 h-12 text-[#00FF00] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                  <div className="w-12 h-12 text-black flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                     <RefreshCw size={28} strokeWidth={2} />
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-normal uppercase tracking-widest text-[11px] text-white">
+                    <span className="font-black uppercase tracking-widest text-[11px] text-black">
                       Sorteio Aleatório
                     </span>
-                    <span className="text-[10px] text-white/50 font-medium tracking-tight mt-0.5">
+                    <span className="text-[10px] text-black/60 font-bold tracking-tight mt-0.5">
                       Roleta da sorte
                     </span>
                   </div>
                   <ChevronRight
                     size={18}
-                    className="ml-auto text-white/20 group-hover:text-white transition-colors"
+                    className="ml-auto text-black/30 group-hover:text-black transition-colors"
                   />
                 </button>
 
-                <div className="pt-4">
+                <div className="pt-6">
                   <button
                     onClick={() => onConfirm()}
-                    className="w-full p-4 rounded-xl bg-gradient-to-br from-zinc-100 to-zinc-300 border border-white/20 text-[#112F24] text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:from-white hover:to-zinc-200 shadow-xl active:scale-95"
+                    className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-3 group"
                   >
-                    Manter o resultado atual
+                    <span>Manter o resultado atual</span>
+                    <ChevronRight size={14} className="text-black/30 group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
               </div>
@@ -1106,11 +1107,10 @@ const TieBreakerModal = ({
               <div className="grid grid-cols-1 gap-3">
                 <button
                   onClick={() => onBothLeave("A")}
-                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-zinc-500/80 via-zinc-600/80 to-zinc-700/80 hover:scale-[1.01] transition-all duration-400 transform active:scale-95 text-left border border-white/5"
+                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] transition-all duration-400 transform active:scale-95 hover:scale-[1.02] text-left shadow-lg hover:opacity-90"
                 >
                   <div
-                    className="w-12 h-12 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform drop-shadow-lg"
-                    style={{ color: resolvedColorA }}
+                    className="w-12 h-12 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform text-black shadow-black/20 drop-shadow-sm"
                   >
                     {(() => {
                       const IconA = TEAM_ICONS[teamA.iconIdx ?? 0];
@@ -1118,14 +1118,14 @@ const TieBreakerModal = ({
                     })()}
                   </div>
                   <div className="flex flex-col overflow-hidden">
-                    <span className="font-normal uppercase tracking-widest text-xs text-brand-primary truncate">
+                    <span className="font-black uppercase tracking-widest text-xs text-black truncate">
                       {teamA.name} primeiro
                     </span>
                     <div className="flex flex-wrap gap-x-1.5 mt-1">
                       {(teamA.playerIds || []).map((pid, idx) => (
                         <span
                           key={pid}
-                          className="text-[8px] text-brand-primary/60 font-bold tracking-tight"
+                          className="text-[8px] text-black/60 font-black tracking-tight"
                         >
                           {players.find((p) => p.id === pid)?.name}
                           {idx < (teamA.playerIds?.length || 0) - 1 ? " •" : ""}
@@ -1137,11 +1137,10 @@ const TieBreakerModal = ({
 
                 <button
                   onClick={() => onBothLeave("B")}
-                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-zinc-500/80 via-zinc-600/80 to-zinc-700/80 hover:scale-[1.01] transition-all duration-400 transform active:scale-95 text-left border border-white/5"
+                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] transition-all duration-400 transform active:scale-95 hover:scale-[1.02] text-left shadow-lg hover:opacity-90"
                 >
                   <div
-                    className="w-12 h-12 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform drop-shadow-lg"
-                    style={{ color: resolvedColorB }}
+                    className="w-12 h-12 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform text-black shadow-black/20 drop-shadow-sm"
                   >
                     {(() => {
                       const IconB = TEAM_ICONS[teamB.iconIdx ?? 1];
@@ -1149,14 +1148,14 @@ const TieBreakerModal = ({
                     })()}
                   </div>
                   <div className="flex flex-col overflow-hidden">
-                    <span className="font-normal uppercase tracking-widest text-xs text-brand-primary truncate">
+                    <span className="font-black uppercase tracking-widest text-xs text-black truncate">
                       {teamB.name} primeiro
                     </span>
                     <div className="flex flex-wrap gap-x-1.5 mt-1">
                       {(teamB.playerIds || []).map((pid, idx) => (
                         <span
                           key={pid}
-                          className="text-[8px] text-brand-primary/60 font-bold tracking-tight"
+                          className="text-[8px] text-black/60 font-black tracking-tight"
                         >
                           {players.find((p) => p.id === pid)?.name}
                           {idx < (teamB.playerIds?.length || 0) - 1 ? " •" : ""}
@@ -1168,7 +1167,7 @@ const TieBreakerModal = ({
 
                 <button
                   onClick={() => setShowQueueOrder(false)}
-                  className="w-full p-4 mt-4 rounded-[20px] bg-zinc-200 text-zinc-500 text-[10px] font-black uppercase tracking-[0.2em] transition-all hover:bg-zinc-300 active:scale-95 text-center"
+                  className="w-full p-4 mt-4 rounded-2xl bg-zinc-200 text-black font-black uppercase tracking-widest text-[10px] transition-all hover:bg-zinc-300 active:scale-95 text-center shadow-sm"
                 >
                   Voltar
                 </button>
@@ -1215,7 +1214,7 @@ const TieBreakerModal = ({
               <div className="grid grid-cols-2 gap-4 h-[300px] overflow-y-auto pr-2 custom-scrollbar">
                 {/* Team A Penalties */}
                 <div className="space-y-2">
-                  <div className="text-[9px] font-bold text-zinc-500 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#dce3ee] py-1">
+                  <div className="text-[9px] font-black text-black uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#dce3ee] py-1 border-b border-black/5">
                     Time A
                   </div>
                   {state.penalties.teamA.map((shot, idx) => {
@@ -1243,10 +1242,10 @@ const TieBreakerModal = ({
                             )}
                           </div>
                           <div className="flex flex-col min-w-0">
-                            <span className="text-[10px] font-normal text-brand-primary truncate uppercase tracking-tight leading-none">
+                            <span className="text-[10px] font-black text-black truncate uppercase tracking-tight leading-none">
                               {p?.name}
                             </span>
-                            <span className="text-[7px] text-white/30 font-bold uppercase tracking-widest mt-0.5">
+                            <span className="text-[7px] text-black/40 font-black uppercase tracking-widest mt-0.5">
                               Batedor {idx + 1}
                             </span>
                           </div>
@@ -1272,7 +1271,7 @@ const TieBreakerModal = ({
 
                 {/* Team B Penalties */}
                 <div className="space-y-2">
-                  <div className="text-[9px] font-bold text-zinc-500 uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#dce3ee] py-1">
+                  <div className="text-[9px] font-black text-black uppercase tracking-[0.2em] mb-3 sticky top-0 bg-[#dce3ee] py-1 border-b border-black/5">
                     Time B
                   </div>
                   {state.penalties.teamB.map((shot, idx) => {
@@ -1300,10 +1299,10 @@ const TieBreakerModal = ({
                             )}
                           </div>
                           <div className="flex flex-col min-w-0">
-                            <span className="text-[10px] font-normal text-brand-primary truncate uppercase tracking-tight leading-none">
+                            <span className="text-[10px] font-black text-black truncate uppercase tracking-tight leading-none">
                               {p?.name}
                             </span>
-                            <span className="text-[7px] text-white/30 font-bold uppercase tracking-widest mt-0.5">
+                            <span className="text-[7px] text-black/40 font-black uppercase tracking-widest mt-0.5">
                               Batedor {idx + 1}
                             </span>
                           </div>
@@ -1331,7 +1330,7 @@ const TieBreakerModal = ({
               <button
                 disabled={teamAGoals === teamBGoals}
                 onClick={() => onConfirm()}
-                className="w-full py-5 bg-brand-primary text-brand-text-primary rounded-xl font-black uppercase tracking-widest text-xs shadow-lg shadow-brand-primary/20 active:scale-95 transition-all disabled:opacity-20 disabled:grayscale"
+                className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 disabled:opacity-30 disabled:saturate-50"
               >
                 {teamAGoals === teamBGoals
                   ? "Placar Empatado"
@@ -1484,7 +1483,7 @@ const TieBreakerModal = ({
                   </div>
                   <button
                     onClick={onLotterySpin}
-                    className="w-full py-5 bg-brand-primary text-brand-text-primary rounded-[24px] font-black uppercase tracking-widest text-xs shadow-lg shadow-brand-primary/20 active:scale-95 transition-all"
+                    className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
                   >
                     Girar Roleta
                   </button>
@@ -1531,7 +1530,7 @@ const TieBreakerModal = ({
                           return (
                             <span
                               key={pid}
-                              className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest"
+                              className="text-[8px] font-black text-black uppercase tracking-widest"
                             >
                               {p?.name}
                               {idx < arr.length - 1 ? " •" : ""}
@@ -1543,7 +1542,7 @@ const TieBreakerModal = ({
                   </div>
                   <button
                     onClick={() => onConfirm()}
-                    className="w-full py-5 bg-brand-primary text-brand-text-primary rounded-[24px] font-black uppercase tracking-widest text-xs shadow-lg shadow-brand-primary/20 active:scale-95 transition-all"
+                    className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
                   >
                     Confirmar Resultado
                   </button>
