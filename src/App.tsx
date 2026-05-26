@@ -1822,7 +1822,7 @@ interface ScheduledMatch {
   imageUrl?: string;
 }
 
-type Screen = "players" | "teams" | "ranking" | "finance" | "org-pro";
+type Screen = "players" | "teams" | "ranking" | "finance";
 
 // --- Utils ---
 
@@ -2319,7 +2319,6 @@ function GroupApp({
   const [presenceCode, setPresenceCode] = useState<string>("");
 
   // --- State ---
-  const [isOrgProAuthorized, setIsOrgProAuthorized] = useState<boolean>(true);
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [adminPin, setAdminPin] = useState<string>("");
   const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null);
@@ -2376,12 +2375,6 @@ function GroupApp({
     }, 100);
   }, [selectedMatchId, groupId]);
 
-  useEffect(() => {
-    safeLocalStorage.setItem(
-      `futquina_org_pro_authorized_${groupId}`,
-      isOrgProAuthorized ? "true" : "false",
-    );
-  }, [isOrgProAuthorized, groupId]);
 
   useEffect(() => {
     const fetchGroupData = async () => {
@@ -3319,7 +3312,6 @@ function GroupApp({
     useState(false);
   const [showLogoAnimation, setShowLogoAnimation] = useState(false);
   const [showCloseWarningModal, setShowCloseWarningModal] = useState(false);
-  const [showBackToHomeConfirm, setShowBackToHomeConfirm] = useState(false);
   const [flashingTeamIds, setFlashingTeamIds] = useState<string[]>([]);
 
   const [showQuickAddPlayerModal, setShowQuickAddPlayerModal] = useState<
@@ -3737,7 +3729,7 @@ function GroupApp({
     }),
     isDataLoaded,
     isPresenceMode,
-    isOrgProAuthorized,
+    true,
   );
 
   useSupabaseArraySync(
@@ -3753,7 +3745,7 @@ function GroupApp({
     }),
     isDataLoaded,
     isPresenceMode,
-    isOrgProAuthorized,
+    true,
   );
 
   useSupabaseArraySync(
@@ -3770,7 +3762,7 @@ function GroupApp({
     }),
     isDataLoaded,
     isPresenceMode,
-    isOrgProAuthorized,
+    true,
   );
 
   useSupabaseArraySync(
@@ -3793,7 +3785,7 @@ function GroupApp({
     }),
     isDataLoaded,
     isPresenceMode,
-    isOrgProAuthorized,
+    true,
   );
 
   useSupabaseArraySync(
@@ -3809,11 +3801,11 @@ function GroupApp({
     }),
     isDataLoaded,
     isPresenceMode,
-    isOrgProAuthorized,
+    true,
   );
 
   useEffect(() => {
-    if (!isDataLoaded || isPresenceMode || !isOrgProAuthorized) return;
+    if (!isDataLoaded || isPresenceMode) return;
     supabase
       .from("groups")
       .upsert(
@@ -3837,11 +3829,10 @@ function GroupApp({
     isDataLoaded,
     groupId,
     isPresenceMode,
-    isOrgProAuthorized,
   ]);
 
   useEffect(() => {
-    if (!isDataLoaded || isPresenceMode || !isOrgProAuthorized) return;
+    if (!isDataLoaded || isPresenceMode) return;
     supabase
       .from("match_state")
       .upsert({
@@ -3858,7 +3849,7 @@ function GroupApp({
         config: match.config,
       })
       .then();
-  }, [match, isDataLoaded, groupId, isPresenceMode, isOrgProAuthorized]);
+  }, [match, isDataLoaded, groupId, isPresenceMode]);
 
   // Automatically clear teams and reset match if no players exist or all are unavailable
   useEffect(() => {
@@ -6499,28 +6490,35 @@ function GroupApp({
             className="fixed bottom-24 left-0 right-0 z-[200] flex justify-center px-6 pointer-events-none"
           >
             <motion.div
-              className={`pointer-events-auto flex items-center gap-3 px-5 py-3 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] border backdrop-blur-xl transition-all ${
-                toast.type === "success"
-                  ? "bg-emerald-500/90 border-emerald-400/50 text-white"
-                  : toast.type === "warning"
-                    ? "bg-amber-500/90 border-amber-400/50 text-white"
-                    : "bg-[#1E3D2F]/95 border-white/10 text-white"
-              }`}
+              className="pointer-events-auto flex items-center gap-4 pl-1.5 pr-5 py-1.5 rounded-full shadow-[0_20px_40px_rgba(0,0,0,0.4)] border border-white/10 bg-[#121212]/95 backdrop-blur-xl transition-all group"
             >
-              <div className="shrink-0">
-                {toast.type === "success" && <PiCheckCircleBold size={18} />}
-                {toast.type === "warning" && <PiWarningCircleBold size={18} />}
-                {toast.type === "gray" && <PiGearBold size={18} />}
-                {toast.type === "info" && <PiRocketBold size={18} />}
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-lg ${
+                toast.type === "success"
+                  ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/20"
+                  : toast.type === "warning"
+                    ? "bg-amber-500/20 text-amber-400 border border-amber-500/20"
+                    : "bg-white/5 text-white/80 border border-white/10"
+              }`}>
+                {toast.type === "success" && <PiCheckCircleBold size={20} />}
+                {toast.type === "warning" && <PiWarningCircleBold size={20} />}
+                {toast.type === "gray" && <PiGearBold size={20} />}
+                {toast.type === "info" && <PiRocketBold size={20} />}
               </div>
-              <p className="text-[11px] font-black uppercase tracking-widest leading-none drop-shadow-sm">
-                {toast.message}
-              </p>
+              <div className="flex flex-col pr-2">
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white leading-none mb-0.5">
+                  Notificação
+                </p>
+                <p className="text-[11px] font-medium text-white/60 leading-tight">
+                  {toast.message}
+                </p>
+              </div>
               <button
                 onClick={() => setToast(null)}
-                className="ml-2 hover:opacity-70 transition-opacity"
+                className="ml-auto w-7 h-7 rounded-full flex items-center justify-center bg-white/5 hover:bg-white/10 transition-all active:scale-90"
               >
-                <PiXBold size={16} />
+                <div className="opacity-40 group-hover:opacity-100 transition-opacity text-white">
+                  <PiXBold size={12} />
+                </div>
               </button>
             </motion.div>
           </motion.div>
@@ -6764,17 +6762,20 @@ function GroupApp({
                   {!showAddPlayerSection ? (
                     <div className="flex flex-col gap-0">
                       <div className="flex items-center gap-2">
-                        <h2 className="text-[12px] font-black uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">
-                          Painel de controle
-                        </h2>
-                        {!isOrgProAuthorized && (
-                          <div
-                            onClick={() => setShowAuthModal(true)}
-                            className="flex items-center gap-1 bg-black/5 text-zinc-800/40 px-2 py-0.5 rounded-none text-[8px] font-black uppercase cursor-pointer hover:bg-black/10 transition-colors"
+                        <div className="flex items-center gap-3">
+                          <h2 className="text-[12px] font-black uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">
+                            Painel de controle
+                          </h2>
+                          <button
+                            onClick={() => setShowSetupGuide(true)}
+                            className="flex items-center gap-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-500 py-1 px-3 rounded-full transition-all active:scale-95 group"
                           >
-                            <PiLockFill size={10} /> Local
-                          </div>
-                        )}
+                            <div className="group-hover:rotate-12 transition-transform">
+                              <TiMap size={12} />
+                            </div>
+                            <span className="text-[9px] font-black uppercase tracking-widest">Guia</span>
+                          </button>
+                        </div>
                       </div>
                       <p className="text-[11px] font-black tracking-widest text-zinc-400 font-roboto-flex">
                         Organização
@@ -11772,1488 +11773,6 @@ function GroupApp({
               </motion.div>
             )}
 
-            {currentScreen === "org-pro" && (
-              <motion.div
-                key="org-pro"
-                initial={{ opacity: 0, x: swipeDirection * 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: swipeDirection * -20 }}
-                transition={{ duration: 0.2 }}
-                className="px-2 sm:px-4 pb-24 pt-4 space-y-6 min-h-full bg-transparent flex flex-col text-white"
-              >
-                <div className="w-full space-y-6">
-                  <div className="bg-gradient-to-br from-[#1E3D2F] to-[#14301F] p-6 rounded-xl text-white relative overflow-hidden">
-                    <div className="absolute top-0 right-0 p-4 opacity-10">
-                      {orgProTab === "painel" ? (
-                        <PiUsersBold size={120} />
-                      ) : (
-                        <GiCrown size={120} />
-                      )}
-                    </div>
-
-                    <div className="flex bg-white/10 p-1 rounded-2xl mb-6 w-full sm:w-fit backdrop-blur-md relative z-10 border border-white/10 overflow-x-auto custom-scrollbar no-scrollbar">
-                      <button
-                        onClick={() => setOrgProTab("painel")}
-                        className={`shrink-0 sm:px-6 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${orgProTab === "painel" ? "bg-[#E3D39E] text-emerald-950 shadow-sm" : "text-white/70 hover:text-white"}`}
-                      >
-                        Painel Geral
-                      </button>
-                      <button
-                        onClick={() => setOrgProTab("acesso")}
-                        className={`shrink-0 sm:px-6 px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${orgProTab === "acesso" ? "bg-[#E3D39E] text-emerald-950 shadow-sm" : "text-white/70 hover:text-white"}`}
-                      >
-                        Acesso & Links
-                      </button>
-                      <button
-                        onClick={() => setOrgProTab("confirmados")}
-                        className={`shrink-0 sm:px-6 px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${orgProTab === "confirmados" ? "bg-[#E3D39E] text-emerald-950 shadow-sm" : "text-white/70 hover:text-white"}`}
-                      >
-                        Confirmados
-                      </button>
-                      <button
-                        onClick={() => setOrgProTab("admins")}
-                        className={`shrink-0 sm:px-6 px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${orgProTab === "admins" ? "bg-[#E3D39E] text-emerald-950 shadow-sm" : "text-white/70 hover:text-white"}`}
-                      >
-                        Admins
-                      </button>
-                      <button
-                        onClick={() => setOrgProTab("supabase")}
-                        className={`shrink-0 sm:px-6 px-4 py-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-widest transition-all ${orgProTab === "supabase" ? "bg-[#E3D39E] text-emerald-950 shadow-sm" : "text-white/70 hover:text-white"}`}
-                      >
-                        Supabase
-                      </button>
-                    </div>
-
-                    {orgProTab === "acesso" && (
-                      <>
-                        <h2 className="text-xl font-black uppercase tracking-widest flex items-center gap-2 mb-2 relative z-10">
-                          <span className="text-[#E3D39E]">
-                            <GiCrown size={24} />
-                          </span>
-                          Organização Pro
-                        </h2>
-                        <p className="text-xs text-white/60 mb-6 max-w-[80%] uppercase tracking-widest font-bold leading-relaxed relative z-10">
-                          Gerencie o acesso à pelada e gere o link de presença
-                          para o grupo de WhatsApp.
-                        </p>
-
-                        <button
-                          onClick={() => {
-                            const baseUrl =
-                              window.location.origin + window.location.pathname;
-                            const authObj = Object.fromEntries(
-                              Object.entries(orgProData).map(
-                                ([pid, data]: [string, any]) => [
-                                  pid,
-                                  data.code,
-                                ],
-                              ),
-                            );
-                            const authStr = btoa(JSON.stringify(authObj));
-                            const link = `${baseUrl}?group=${groupId}&presence=true&org=${authStr}`;
-                            navigator.clipboard.writeText(link);
-                            setToast({
-                              message: "Link de presença copiado!",
-                              type: "success",
-                            });
-                            setTimeout(() => setToast(null), 3000);
-                          }}
-                          className="w-full bg-[#E3D39E] text-black font-black uppercase tracking-widest py-4 rounded-xl shadow-lg hover:bg-white active:scale-95 transition-all text-xs flex items-center justify-center gap-2 relative z-10"
-                        >
-                          <ClipboardPaste size={18} />
-                          Copiar Link do Formulário
-                        </button>
-
-                        <div className="mt-8 pt-8 border-t border-white/10 relative z-10">
-                          <div className="flex items-center gap-2 mb-4">
-                            <UserPlus size={16} className="text-[#E3D39E]" />
-                            <h3 className="text-[11px] font-black uppercase tracking-widest text-[#E3D39E]">
-                              Cadastrar Novo Administrador
-                            </h3>
-                          </div>
-                          <div className="flex gap-2">
-                            <input
-                              type="email"
-                              placeholder="E-mail do administrador..."
-                              className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-xs focus:outline-none focus:border-[#E3D39E] transition-colors"
-                              onKeyDown={async (e) => {
-                                if (e.key === "Enter") {
-                                  const email = e.currentTarget.value;
-                                  if (email.includes("@")) {
-                                    const { error } = await supabase
-                                      .from("app_admins")
-                                      .insert({ email, group_id: groupId });
-                                    if (error) {
-                                      setToast({
-                                        message: "Erro ao cadastrar admin",
-                                        type: "warning",
-                                      });
-                                    } else {
-                                      setToast({
-                                        message: "Administrador cadastrado!",
-                                        type: "success",
-                                      });
-                                      e.currentTarget.value = "";
-                                    }
-                                    setTimeout(() => setToast(null), 3000);
-                                  }
-                                }
-                              }}
-                            />
-                          </div>
-                          <p className="text-[9px] font-bold text-white/30 uppercase mt-2 tracking-widest">
-                            Apenas e-mails válidos podem ser administradores.
-                          </p>
-                        </div>
-                      </>
-                    )}
-
-                    {orgProTab === "painel" && (
-                      <>
-                        <h2 className="text-xl font-black uppercase tracking-widest flex items-center gap-2 mb-2 relative z-10">
-                          <span className="text-[#E3D39E]">
-                            <PiUsersBold size={24} />
-                          </span>
-                          Painel de Controle
-                        </h2>
-                        <p className="text-xs text-white/60 mb-6 max-w-[80%] uppercase tracking-widest font-bold leading-relaxed relative z-10">
-                          Visão geral das estatísticas e presença dos jogadores.
-                        </p>
-
-                        <AnimatePresence>
-                          {panelModal && (
-                            <motion.div
-                              initial={{ opacity: 0 }}
-                              animate={{ opacity: 1 }}
-                              exit={{ opacity: 0 }}
-                              className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
-                              onClick={() => setPanelModal(null)}
-                            >
-                              <motion.div
-                                initial={{ scale: 0.9, opacity: 0, y: 20 }}
-                                animate={{ scale: 1, opacity: 1, y: 0 }}
-                                exit={{ scale: 0.9, opacity: 0, y: 20 }}
-                                className="bg-zinc-900 border border-white/10 w-full max-w-lg rounded-[2.5rem] shadow-2xl overflow-hidden text-white"
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                <div className="p-8 border-b border-white/5 flex items-center justify-between bg-white/[0.02]">
-                                  <div>
-                                    <h3 className="text-xl font-black uppercase tracking-widest text-[#E3D39E]">
-                                      {panelModal === "cadastrados" &&
-                                        "Jogadores Cadastrados"}
-                                      {panelModal === "externos" &&
-                                        "Cadastros Externos"}
-                                      {panelModal === "assist" &&
-                                        "Assistências"}
-                                      {panelModal === "confirmados" &&
-                                        "Confirmados"}
-                                      {panelModal === "admins" &&
-                                        "Administradores"}
-                                    </h3>
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-white/40 mt-1">
-                                      Detalhes do Grupo {groupId}
-                                    </p>
-                                  </div>
-                                  <button
-                                    onClick={() => setPanelModal(null)}
-                                    className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 hover:text-white transition-colors"
-                                  >
-                                    <PiXBold size={20} />
-                                  </button>
-                                </div>
-
-                                <div className="p-8 max-h-[60vh] overflow-y-auto custom-scrollbar">
-                                  <div className="space-y-3">
-                                    {panelModal === "cadastrados" &&
-                                      players.map((p) => (
-                                        <div
-                                          key={p.id}
-                                          className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/5 group hover:bg-white/10 transition-all"
-                                        >
-                                          <div className="w-10 h-10 rounded-full bg-black border border-white/10 overflow-hidden flex items-center justify-center shrink-0">
-                                            {p.photo ? (
-                                              <img
-                                                src={p.photo}
-                                                className="w-full h-full object-cover"
-                                              />
-                                            ) : (
-                                              <User
-                                                size={20}
-                                                className="text-white/20"
-                                              />
-                                            )}
-                                          </div>
-                                          <div className="flex-1 min-w-0">
-                                            <div className="text-sm font-black text-white uppercase truncate">
-                                              {p.name}
-                                            </div>
-                                            <div className="text-[9px] font-bold text-white/30 uppercase tracking-widest">
-                                              ID: {p.id.split("-")[0]}
-                                            </div>
-                                          </div>
-                                        </div>
-                                      ))}
-
-                                    {panelModal === "externos" &&
-                                      jogadoresExternos.map((item) => (
-                                        <div
-                                          key={item.id}
-                                          className="p-4 bg-purple-500/10 rounded-2xl border border-purple-500/20 space-y-2"
-                                        >
-                                          <div className="flex items-center justify-between">
-                                            <div className="text-sm font-black text-purple-400 uppercase">
-                                              {item.full_name}
-                                            </div>
-                                            <span className="text-[9px] font-black bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full uppercase tracking-widest">
-                                              Externo
-                                            </span>
-                                          </div>
-                                          <div className="text-[10px] font-bold text-white/50">
-                                            EMAIL: {item.email}
-                                          </div>
-                                          <div className="text-[10px] font-bold text-white/40 uppercase">
-                                            DATA:{" "}
-                                            {new Date(
-                                              item.created_at,
-                                            ).toLocaleDateString()}
-                                          </div>
-                                        </div>
-                                      ))}
-
-                                    {panelModal === "assist" &&
-                                      sortedPlayersByAssists.map((p, idx) => (
-                                        <div
-                                          key={p.id}
-                                          className="flex items-center gap-4 p-4 bg-blue-500/10 rounded-2xl border border-blue-500/20"
-                                        >
-                                          <div className="w-8 h-8 rounded-xl bg-blue-500 text-white flex items-center justify-center text-[11px] font-black shrink-0">
-                                            #{idx + 1}
-                                          </div>
-                                          <div className="flex-1 min-w-0">
-                                            <div className="text-sm font-black text-white uppercase truncate">
-                                              {p.name}
-                                            </div>
-                                          </div>
-                                          <div className="text-base font-black text-blue-400">
-                                            {p.assists || 0}
-                                          </div>
-                                        </div>
-                                      ))}
-
-                                    {panelModal === "confirmados" && (
-                                      <>
-                                        <div className="text-[10px] font-black uppercase tracking-widest text-[#E3D39E]/40 mb-2">
-                                          Fixos (
-                                          {
-                                            players.filter((p) => p.isAvailable)
-                                              .length
-                                          }
-                                          )
-                                        </div>
-                                        {players
-                                          .filter((p) => p.isAvailable)
-                                          .map((p) => (
-                                            <div
-                                              key={p.id}
-                                              className="flex items-center gap-4 p-4 bg-emerald-500/10 rounded-2xl border border-emerald-500/20"
-                                            >
-                                              <div className="w-8 h-8 rounded-full bg-black border border-emerald-500/30 overflow-hidden shrink-0 flex items-center justify-center">
-                                                {p.photo ? (
-                                                  <img
-                                                    src={p.photo}
-                                                    className="w-full h-full object-cover"
-                                                  />
-                                                ) : (
-                                                  <User
-                                                    size={16}
-                                                    className="text-emerald-500/50"
-                                                  />
-                                                )}
-                                              </div>
-                                              <div className="text-sm font-black text-emerald-400 uppercase flex-1 truncate">
-                                                {p.name}
-                                              </div>
-                                              <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                                            </div>
-                                          ))}
-
-                                        {presencasExternas.length > 0 && (
-                                          <>
-                                            <div className="text-[10px] font-black uppercase tracking-widest text-[#E3D39E]/40 mt-4 mb-2">
-                                              Convidados (
-                                              {presencasExternas.length})
-                                            </div>
-                                            {presencasExternas.map((p) => (
-                                              <div
-                                                key={p.id}
-                                                className="flex items-center gap-4 p-4 bg-purple-500/10 rounded-2xl border border-purple-500/20"
-                                              >
-                                                <div className="w-8 h-8 rounded-full bg-black border border-purple-500/30 flex items-center justify-center shrink-0 text-purple-400">
-                                                  <PiUserCirclePlus size={20} />
-                                                </div>
-                                                <div className="text-sm font-black text-purple-400 uppercase flex-1 truncate">
-                                                  {p.player_name}
-                                                </div>
-                                                <div className="text-[9px] font-black bg-purple-500/20 text-purple-400 px-2 py-0.5 rounded-full uppercase tracking-widest font-mono">
-                                                  OK
-                                                </div>
-                                              </div>
-                                            ))}
-                                          </>
-                                        )}
-                                      </>
-                                    )}
-
-                                    {panelModal === "admins" &&
-                                      appAdmins.map((admin) => (
-                                        <div
-                                          key={admin.id}
-                                          className="flex items-center gap-4 p-4 bg-rose-500/10 rounded-2xl border border-rose-500/20"
-                                        >
-                                          <div className="w-10 h-10 rounded-full bg-black border border-rose-500/30 flex items-center justify-center shrink-0">
-                                            <div className="text-rose-400">
-                                              <PiShieldCheckFill size={20} />
-                                            </div>
-                                          </div>
-                                          <div className="flex-1 min-w-0">
-                                            <div className="text-sm font-black text-rose-400 uppercase truncate">
-                                              {admin.email}
-                                            </div>
-                                            <div className="text-[9px] font-bold text-rose-400/40 uppercase tracking-widest">
-                                              ADMINISTRADOR
-                                            </div>
-                                          </div>
-                                        </div>
-                                      ))}
-
-                                    {((panelModal === "cadastrados" &&
-                                      players.length === 0) ||
-                                      (panelModal === "externos" &&
-                                        jogadoresExternos.length === 0) ||
-                                      (panelModal === "admins" &&
-                                        appAdmins.length === 0)) && (
-                                      <div className="text-center py-12">
-                                        <div className="text-white/10 mb-4 flex justify-center">
-                                          <PiUsersBold size={48} />
-                                        </div>
-                                        <p className="text-xs font-bold text-white/20 uppercase tracking-widest">
-                                          Nenhum registro encontrado
-                                        </p>
-                                      </div>
-                                    )}
-                                  </div>
-                                </div>
-
-                                <div className="p-8 bg-white/[0.02] border-t border-white/5">
-                                  <button
-                                    onClick={() => setPanelModal(null)}
-                                    className="w-full py-4 bg-[#E3D39E] text-emerald-950 font-black uppercase tracking-widest text-[11px] rounded-2xl shadow-xl hover:bg-[#D4C38E] transition-all active:scale-95"
-                                  >
-                                    Fechar Detalhes
-                                  </button>
-                                </div>
-                              </motion.div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-
-                        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mt-6 relative z-10">
-                          <button
-                            onClick={() => setPanelModal("cadastrados")}
-                            className="bg-white/10 hover:bg-white/20 transition-all backdrop-blur-md rounded-2xl p-4 border border-white/10 text-left group"
-                          >
-                            <div className="text-white/50 text-[10px] font-black uppercase tracking-widest mb-1 group-hover:text-white transition-colors">
-                              Cadastrados
-                            </div>
-                            <div className="text-3xl font-black">
-                              {players.length}
-                            </div>
-                          </button>
-
-                          <button
-                            onClick={() => setPanelModal("confirmados")}
-                            className="bg-emerald-500/20 hover:bg-emerald-500/30 transition-all backdrop-blur-md rounded-2xl p-4 border border-emerald-500/20 text-left group"
-                          >
-                            <div className="text-emerald-300/70 text-[10px] font-black uppercase tracking-widest mb-1 group-hover:text-emerald-300 transition-colors">
-                              Confirmados
-                            </div>
-                            <div className="text-3xl font-black text-emerald-400">
-                              {players.filter((p) => p.isAvailable).length +
-                                presencasExternas.length}
-                            </div>
-                          </button>
-
-                          <button
-                            onClick={() => setPanelModal("externos")}
-                            className="bg-purple-500/20 hover:bg-purple-500/30 transition-all backdrop-blur-md rounded-2xl p-4 border border-purple-500/20 text-left group"
-                          >
-                            <div className="text-purple-300/70 text-[10px] font-black uppercase tracking-widest mb-1 group-hover:text-purple-300 transition-colors">
-                              Cadastros Externos
-                            </div>
-                            <div className="text-3xl font-black text-purple-400">
-                              {jogadoresExternos.length}
-                            </div>
-                          </button>
-
-                          <button
-                            onClick={() => setPanelModal("assist")}
-                            className="bg-blue-500/20 hover:bg-blue-500/30 transition-all backdrop-blur-md rounded-2xl p-4 border border-blue-500/20 text-left group"
-                          >
-                            <div className="text-blue-300/70 text-[10px] font-black uppercase tracking-widest mb-1 group-hover:text-blue-300 transition-colors">
-                              Total Assist.
-                            </div>
-                            <div className="text-3xl font-black text-blue-400">
-                              {players.reduce(
-                                (acc, p) => acc + (p.assists || 0),
-                                0,
-                              )}
-                            </div>
-                          </button>
-
-                          <button
-                            onClick={() => setPanelModal("admins")}
-                            className="bg-rose-500/20 hover:bg-rose-500/30 transition-all backdrop-blur-md rounded-2xl p-4 border border-rose-500/20 text-left group"
-                          >
-                            <div className="text-rose-300/70 text-[10px] font-black uppercase tracking-widest mb-1 group-hover:text-rose-300 transition-colors">
-                              Administrador
-                            </div>
-                            <div className="text-3xl font-black text-rose-400">
-                              {appAdmins.length}
-                            </div>
-                          </button>
-
-                          <div className="bg-amber-500/20 backdrop-blur-md rounded-2xl p-4 border border-amber-500/20 col-span-2 sm:col-span-1">
-                            <div className="text-amber-300/70 text-[10px] font-black uppercase tracking-widest mb-1">
-                              PIN Master
-                            </div>
-                            <input
-                              type="text"
-                              maxLength={6}
-                              value={adminPin}
-                              onChange={(e) =>
-                                setAdminPin(e.target.value.replace(/\D/g, ""))
-                              }
-                              onBlur={async () => {
-                                if (adminPin && adminPin.length === 6) {
-                                  const { error } = await supabase
-                                    .from("groups")
-                                    .update({ admin_pin: adminPin })
-                                    .eq("id", groupId);
-                                  if (!error) {
-                                    setToast({
-                                      message: "PIN do Administrador salvo!",
-                                      type: "success",
-                                    });
-                                  } else {
-                                    setToast({
-                                      message: "Erro ao salvar PIN",
-                                      type: "warning",
-                                    });
-                                  }
-                                  setTimeout(() => setToast(null), 2000);
-                                }
-                              }}
-                              placeholder="------"
-                              className="w-full bg-transparent text-2xl font-black text-amber-400 font-mono tracking-widest focus:outline-none placeholder:text-amber-400/20"
-                            />
-                          </div>
-                          <div className="bg-blue-500/20 backdrop-blur-md rounded-2xl p-4 border border-blue-500/20">
-                            <div className="text-blue-300/70 text-[10px] font-black uppercase tracking-widest mb-1">
-                              Total Assist.
-                            </div>
-                            <div className="text-3xl font-black text-blue-400">
-                              {players.reduce(
-                                (acc, p) => acc + (p.assists || 0),
-                                0,
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      </>
-                    )}
-                  </div>
-
-                  {orgProTab === "acesso" && (
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-black uppercase tracking-widest text-[#1E3D2F] flex items-center gap-2">
-                          <PiUsersBold size={16} /> Chaves de Acesso
-                        </h3>
-                      </div>
-
-                      <p className="text-[10px] uppercase font-bold text-zinc-500 mb-4 bg-zinc-100 p-3 rounded-xl border border-zinc-200">
-                        Jogadores com a{" "}
-                        <span className="text-emerald-700">
-                          Mensalidade em Dia
-                        </span>{" "}
-                        marcam presença diretamente. Os demais precisarão
-                        confirmar seu acesso digitando a chave abaixo no momento
-                        da inscrição.
-                      </p>
-
-                      <div className="space-y-4 bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm">
-                        <h4 className="text-sm font-bold text-[#1E3D2F] uppercase">
-                          Cadastrar Jogador e Telefone
-                        </h4>
-                        <form
-                          className="flex flex-col sm:flex-row gap-3"
-                          onSubmit={async (e) => {
-                            e.preventDefault();
-                            const form = e.target as HTMLFormElement;
-                            const nameInput = form.elements.namedItem(
-                              "name",
-                            ) as HTMLInputElement;
-                            const phoneInput = form.elements.namedItem(
-                              "phone",
-                            ) as HTMLInputElement;
-                            const isGuestInput = form.elements.namedItem(
-                              "isGuest",
-                            ) as HTMLInputElement;
-
-                            const name = nameInput.value.trim();
-                            let phone = phoneInput.value.trim();
-                            const isGuest = isGuestInput.checked;
-
-                            if (!name) {
-                              setToast({
-                                message: "Preencha o nome do jogador.",
-                                type: "warning",
-                              });
-                              return;
-                            }
-
-                            if (isGuest) {
-                              phone = Math.floor(
-                                1000 + Math.random() * 9000,
-                              ).toString();
-                            } else if (!phone) {
-                              setToast({
-                                message:
-                                  "Preencha o telefone ou marque como convidado.",
-                                type: "warning",
-                              });
-                              return;
-                            }
-
-                            const newPlayerId = crypto.randomUUID();
-                            setPlayers((prev) => [
-                              ...prev,
-                              {
-                                id: newPlayerId,
-                                name,
-                                photo: null,
-                                isAvailable: isGuest, // Set available if guest to add directly to Confirmados
-                                arrivedAt: isGuest ? Date.now() : null,
-                              },
-                            ]);
-
-                            setOrgProData((prev) => ({
-                              ...prev,
-                              [newPlayerId]: { code: phone, isGuest }, // Store guest status
-                            }));
-
-                            setToast({
-                              message: isGuest
-                                ? `Convidado cadastrado! Chave PIN: ${phone}`
-                                : "Jogador cadastrado!",
-                              type: "success",
-                            });
-                            form.reset();
-                          }}
-                        >
-                          <div className="flex flex-col flex-1 gap-2">
-                            <input
-                              type="text"
-                              name="name"
-                              placeholder="Nome do Jogador"
-                              className="bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm font-bold focus:border-[#1E3D2F] outline-none"
-                            />
-                            <label className="flex items-center gap-2 cursor-pointer text-xs font-bold text-zinc-500">
-                              <input
-                                type="checkbox"
-                                name="isGuest"
-                                className="rounded"
-                              />
-                              Marcar como Temporário (Convidado)
-                            </label>
-                          </div>
-                          <input
-                            type="text"
-                            name="phone"
-                            placeholder="Telefone (Chave)"
-                            className="flex-1 bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm font-bold focus:border-[#1E3D2F] outline-none max-h-[38px]"
-                          />
-                          <button
-                            type="submit"
-                            className="bg-[#1E3D2F] text-white px-4 py-2 rounded-lg font-bold uppercase text-xs hover:bg-[#1E3D2F]/90 transition-all shrink-0 max-h-[38px]"
-                          >
-                            Cadastrar
-                          </button>
-                        </form>
-                      </div>
-
-                      <div className="space-y-3">
-                        {players
-                          .filter((player) => orgProData[player.id])
-                          .map((player) => {
-                            const isUpToDate =
-                              payments.find(
-                                (p) =>
-                                  p.playerId === player.id &&
-                                  p.year === new Date().getFullYear(),
-                              )?.months[MONTHS[new Date().getMonth()]] > 0;
-                            return (
-                              <div
-                                key={`org-pro-${player.id}`}
-                                className="bg-white p-4 rounded-2xl border border-zinc-200 shadow-sm flex flex-col sm:flex-row sm:items-center gap-4 group hover:border-[#1E3D2F]/20 transition-all"
-                              >
-                                <div className="flex items-center gap-3 flex-1 min-w-0">
-                                  <div className="w-10 h-10 rounded-full bg-zinc-100 border border-zinc-200 overflow-hidden flex items-center justify-center shrink-0">
-                                    {player.photo ? (
-                                      <img
-                                        src={player.photo}
-                                        className="w-full h-full object-cover"
-                                      />
-                                    ) : (
-                                      <div className="text-black">
-                                        <IoPersonOutline size={16} />
-                                      </div>
-                                    )}
-                                  </div>
-                                  <div className="flex-1 min-w-0">
-                                    <h4 className="text-sm font-bold truncate text-[#1E3D2F] uppercase">
-                                      {player.name}
-                                    </h4>
-                                    <div className="flex items-center gap-2 mt-1">
-                                      {isUpToDate ? (
-                                        <span className="bg-emerald-100 text-emerald-800 text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest">
-                                          Acesso Direto
-                                        </span>
-                                      ) : (
-                                        <span className="bg-amber-100 text-amber-800 text-[9px] font-black uppercase px-2 py-0.5 rounded-full tracking-widest">
-                                          Exige Chave
-                                        </span>
-                                      )}
-                                    </div>
-                                  </div>
-                                </div>
-                                <div className="flex-1 w-full sm:max-w-[200px] shrink-0 mt-2 sm:mt-0">
-                                  <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-1 block">
-                                    Telefone ou PIN
-                                  </label>
-                                  <input
-                                    type="text"
-                                    placeholder="Ex: 8299999999"
-                                    value={orgProData[player.id]?.code || ""}
-                                    onChange={(e) => {
-                                      setOrgProData((prev) => ({
-                                        ...prev,
-                                        [player.id]: { code: e.target.value },
-                                      }));
-                                    }}
-                                    className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm font-bold focus:border-[#1E3D2F] focus:ring-1 focus:ring-[#1E3D2F] outline-none transition-all placeholder:font-normal placeholder:opacity-50"
-                                  />
-                                </div>
-                              </div>
-                            );
-                          })}
-                      </div>
-                    </div>
-                  )}
-
-                  {orgProTab === "painel" && (
-                    <div className="space-y-6">
-                      <div className="bg-white p-6 rounded-2xl border border-zinc-200 shadow-sm">
-                        <h3 className="text-sm font-black uppercase tracking-widest text-[#1E3D2F] flex items-center gap-2 mb-4">
-                          Configurações de Exigência
-                        </h3>
-                        <p className="text-[10px] uppercase font-bold text-zinc-500 mb-6 bg-zinc-100 p-3 rounded-xl border border-zinc-200">
-                          Defina os critérios para que os jogadores adicionados
-                          apareçam na lista de "Cadastrar Jogadores".
-                        </p>
-
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">
-                              Quantidade Máx. Ausências
-                            </label>
-                            <input
-                              type="number"
-                              min="0"
-                              placeholder="Ilimitado"
-                              value={tempOrgProSettings.maxAbsences ?? ""}
-                              onChange={(e) =>
-                                setTempOrgProSettings((prev) => ({
-                                  ...prev,
-                                  maxAbsences: e.target.value
-                                    ? parseInt(e.target.value)
-                                    : null,
-                                }))
-                              }
-                              className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm font-bold focus:border-[#1E3D2F] outline-none transition-all"
-                            />
-                          </div>
-
-                          <div className="space-y-2 flex flex-col justify-end">
-                            <label className="flex items-center gap-3 bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 cursor-pointer hover:bg-zinc-100 transition-colors h-full">
-                              <input
-                                type="checkbox"
-                                checked={
-                                  tempOrgProSettings.requirePaymentUpToDate
-                                }
-                                onChange={(e) =>
-                                  setTempOrgProSettings((prev) => ({
-                                    ...prev,
-                                    requirePaymentUpToDate: e.target.checked,
-                                  }))
-                                }
-                                className="w-4 h-4 text-[#1E3D2F] rounded focus:ring-[#1E3D2F]"
-                              />
-                              <span className="text-xs font-bold text-[#1E3D2F] uppercase tracking-tight">
-                                Exigir Mensalidade em Dia
-                              </span>
-                            </label>
-                          </div>
-
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">
-                              Dia da Pelada
-                            </label>
-                            <select
-                              value={tempOrgProSettings.matchDayOfWeek ?? ""}
-                              onChange={(e) =>
-                                setTempOrgProSettings((prev) => ({
-                                  ...prev,
-                                  matchDayOfWeek: e.target.value
-                                    ? parseInt(e.target.value)
-                                    : null,
-                                }))
-                              }
-                              className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm font-bold focus:border-[#1E3D2F] outline-none transition-all"
-                            >
-                              <option value="">Não definido</option>
-                              <option value="0">Domingo</option>
-                              <option value="1">Segunda-feira</option>
-                              <option value="2">Terça-feira</option>
-                              <option value="3">Quarta-feira</option>
-                              <option value="4">Quinta-feira</option>
-                              <option value="5">Sexta-feira</option>
-                              <option value="6">Sábado</option>
-                            </select>
-                          </div>
-
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest block">
-                              Horário da Pelada
-                            </label>
-                            <input
-                              type="time"
-                              value={tempOrgProSettings.matchTime || ""}
-                              onChange={(e) =>
-                                setTempOrgProSettings((prev) => ({
-                                  ...prev,
-                                  matchTime: e.target.value,
-                                }))
-                              }
-                              className="w-full bg-zinc-50 border border-zinc-200 rounded-lg px-3 py-2 text-sm font-bold focus:border-[#1E3D2F] outline-none transition-all"
-                            />
-                          </div>
-
-                          <div className="col-span-1 sm:col-span-2 pt-2">
-                            <button
-                              onClick={() => {
-                                setOrgProSettings({
-                                  ...tempOrgProSettings,
-                                  appliedDate: Date.now(),
-                                });
-                                setToast({
-                                  message: "Exigências aplicadas com sucesso!",
-                                  type: "success",
-                                });
-                              }}
-                              className="w-full py-4 bg-[#1E3D2F] text-white font-black uppercase tracking-widest text-xs rounded-xl shadow-lg hover:bg-[#14301F] transition-all active:scale-95 flex items-center justify-center gap-2"
-                            >
-                              <IoCheckmarkCircle size={18} />
-                              Aplicar Exigências
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
-                        <div className="overflow-x-auto custom-scrollbar">
-                          <table className="w-full text-left border-collapse min-w-[600px]">
-                            <thead>
-                              <tr className="bg-zinc-50 border-b border-zinc-200">
-                                <th className="p-4 text-xs font-black uppercase tracking-widest text-[#1E3D2F]">
-                                  Jogador
-                                </th>
-                                <th className="p-4 text-xs font-black uppercase tracking-widest text-[#1E3D2F] text-center">
-                                  Status
-                                </th>
-                                <th className="p-4 text-xs font-black uppercase tracking-widest text-[#1E3D2F] text-center">
-                                  Ranking
-                                </th>
-                                <th className="p-4 text-xs font-black uppercase tracking-widest text-[#1E3D2F] text-center">
-                                  Gols
-                                </th>
-                                <th className="p-4 text-xs font-black uppercase tracking-widest text-[#1E3D2F] text-center">
-                                  Assist.
-                                </th>
-                                <th className="p-4 text-xs font-black uppercase tracking-widest text-[#1E3D2F] text-center">
-                                  Mensalidade
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {[...players]
-                                .sort((a, b) => {
-                                  // Sort by ranking (goals + assists) descending, then name
-                                  const aScore =
-                                    (a.goals || 0) + (a.assists || 0);
-                                  const bScore =
-                                    (b.goals || 0) + (b.assists || 0);
-                                  if (bScore !== aScore) return bScore - aScore;
-                                  return a.name.localeCompare(b.name);
-                                })
-                                .map((player, index) => {
-                                  const isUpToDate =
-                                    payments.find(
-                                      (p) =>
-                                        p.playerId === player.id &&
-                                        p.year === new Date().getFullYear(),
-                                    )?.months[MONTHS[new Date().getMonth()]] >
-                                    0;
-
-                                  return (
-                                    <tr
-                                      key={`dash-${player.id}`}
-                                      className="border-b border-zinc-100 last:border-0 hover:bg-zinc-50/50 transition-colors"
-                                    >
-                                      <td className="p-4">
-                                        <div className="flex items-center gap-3">
-                                          <div className="w-8 h-8 rounded-full bg-zinc-100 border border-zinc-200 overflow-hidden flex items-center justify-center shrink-0">
-                                            {player.photo ? (
-                                              <img
-                                                src={player.photo}
-                                                className="w-full h-full object-cover"
-                                              />
-                                            ) : (
-                                              <div className="text-zinc-400">
-                                                <IoPersonOutline size={14} />
-                                              </div>
-                                            )}
-                                          </div>
-                                          <span className="font-bold text-sm text-[#1E3D2F] uppercase">
-                                            {player.name}
-                                          </span>
-                                        </div>
-                                      </td>
-                                      <td className="p-4 text-center">
-                                        {player.isAvailable ? (
-                                          <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase px-2 py-1 rounded-md tracking-widest border border-emerald-200">
-                                            Presente
-                                          </span>
-                                        ) : (
-                                          <span className="inline-flex items-center gap-1 bg-zinc-100 text-zinc-500 text-[10px] font-black uppercase px-2 py-1 rounded-md tracking-widest border border-zinc-200">
-                                            Ausente
-                                          </span>
-                                        )}
-                                      </td>
-                                      <td className="p-4 text-center">
-                                        <span className="font-black text-[#1E3D2F]">
-                                          {index + 1}º
-                                        </span>
-                                      </td>
-                                      <td className="p-4 text-center">
-                                        <span className="font-bold text-amber-600">
-                                          {player.goals || 0}
-                                        </span>
-                                      </td>
-                                      <td className="p-4 text-center">
-                                        <span className="font-bold text-blue-600">
-                                          {player.assists || 0}
-                                        </span>
-                                      </td>
-                                      <td className="p-4 text-center">
-                                        {isUpToDate ? (
-                                          <span className="inline-flex items-center gap-1 text-emerald-600 font-black text-xs uppercase tracking-widest">
-                                            <IoCheckmarkCircle size={14} /> Em
-                                            Dia
-                                          </span>
-                                        ) : (
-                                          <span className="inline-flex items-center gap-1 text-red-500 font-bold text-xs uppercase tracking-widest">
-                                            <PiWarningCircleBold size={14} />{" "}
-                                            Pendente
-                                          </span>
-                                        )}
-                                      </td>
-                                    </tr>
-                                  );
-                                })}
-                              {players.length === 0 && (
-                                <tr>
-                                  <td
-                                    colSpan={6}
-                                    className="p-8 text-center text-zinc-500 text-sm font-bold"
-                                  >
-                                    Nenhum jogador cadastrado.
-                                  </td>
-                                </tr>
-                              )}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {orgProTab === "supabase" && (
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-black uppercase tracking-widest text-[#1E3D2F] flex items-center gap-2">
-                          <Database size={16} /> Status da Conexão Cloud
-                        </h3>
-                      </div>
-
-                      <div className="bg-white rounded-[2rem] border border-zinc-200 p-8 shadow-sm space-y-8">
-                        <div className="flex items-center justify-between p-6 bg-emerald-50 rounded-xl border border-emerald-100">
-                          <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center text-white shadow-lg shadow-emerald-200">
-                              <Wifi size={24} />
-                            </div>
-                            <div>
-                              <h4 className="text-lg font-black text-[#1E3D2F] uppercase tracking-tighter">
-                                Supabase Ativo
-                              </h4>
-                              <p className="text-xs font-bold text-emerald-600 uppercase tracking-widest">
-                                Sincronização em tempo real
-                              </p>
-                            </div>
-                          </div>
-                          <div className="flex items-center gap-2 px-4 py-2 bg-emerald-500/10 rounded-full">
-                            <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                            <span className="text-[10px] font-black text-emerald-700 uppercase tracking-widest">
-                              Online
-                            </span>
-                          </div>
-                        </div>
-
-                        <div className="grid grid-cols-1 gap-4">
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
-                              URL do Projeto
-                            </label>
-                            <div className="bg-zinc-50 p-4 rounded-2xl border border-zinc-100 flex items-center justify-between">
-                              <span className="text-xs font-mono text-zinc-500 truncate mr-4">
-                                {import.meta.env.VITE_SUPABASE_URL?.replace(
-                                  /(.{10}).*(.{5})/,
-                                  "$1***$2",
-                                ) || "Definido no Ambiente"}
-                              </span>
-                              <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
-                              Chave Anon (Token)
-                            </label>
-                            <div className="bg-zinc-50 p-4 rounded-2xl border border-zinc-100 flex items-center justify-between">
-                              <span className="text-xs font-mono text-zinc-500">
-                                ********************************
-                                {import.meta.env.VITE_SUPABASE_ANON_KEY?.slice(
-                                  -5,
-                                ) || "****"}
-                              </span>
-                              <div className="text-zinc-300">
-                                <PiLockFill size={16} />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="pt-6 border-t border-zinc-100">
-                          <div className="bg-zinc-900 text-white p-6 rounded-xl space-y-4 shadow-xl">
-                            <div className="flex items-center gap-3">
-                              <div className="text-emerald-400">
-                                <PiShieldCheckFill size={24} />
-                              </div>
-                              <h4 className="text-sm font-black uppercase tracking-widest">
-                                Segurança de Dados
-                              </h4>
-                            </div>
-                            <p className="text-[11px] text-zinc-400 font-medium leading-relaxed">
-                              Seus dados estão protegidos por criptografia de
-                              ponta a ponta e regras de segurança (RLS) que
-                              garantem que apenas administradores autorizados do
-                              grupo{" "}
-                              <span className="text-white font-bold">
-                                {groupId}
-                              </span>{" "}
-                              possam acessar ou modificar as informações.
-                            </p>
-                            <div className="grid grid-cols-2 gap-3 pt-2">
-                              <div className="bg-white/5 p-3 rounded-2xl border border-white/10">
-                                <div className="text-[10px] font-black text-emerald-400 uppercase mb-1">
-                                  Backup
-                                </div>
-                                <div className="text-[10px] font-bold text-white uppercase">
-                                  Automático
-                                </div>
-                              </div>
-                              <div className="bg-white/5 p-3 rounded-2xl border border-white/10">
-                                <div className="text-[10px] font-black text-amber-400 uppercase mb-1">
-                                  Sync
-                                </div>
-                                <div className="text-[10px] font-bold text-white uppercase">
-                                  Pritioritário
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex flex-col gap-3">
-                          <button
-                            onClick={() => {
-                              setToast({
-                                message: "Sincronização forçada iniciada...",
-                                type: "info",
-                              });
-                              setTimeout(() => {
-                                window.location.reload();
-                              }, 1000);
-                            }}
-                            className="w-full py-4 bg-zinc-100 text-[#1E3D2F] font-black uppercase tracking-widest text-[11px] rounded-[20px] transition-all hover:bg-zinc-200 active:scale-95"
-                          >
-                            Sincronizar Manualmente
-                          </button>
-                          <p className="text-[9px] font-bold text-zinc-400 text-center uppercase tracking-widest">
-                            A sincronização ocorre automaticamente a cada
-                            alteração.
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {orgProTab === "admins" && (
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-black uppercase tracking-widest text-[#1E3D2F] flex items-center gap-2">
-                          <UserPlus size={16} /> Gestão de Administradores
-                        </h3>
-                      </div>
-
-                      <div className="bg-white rounded-[2rem] border border-zinc-200 p-6 shadow-sm space-y-6">
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-zinc-400 ml-1">
-                            E-mail do Novo Admin
-                          </label>
-                          <div className="flex gap-2">
-                            <input
-                              type="email"
-                              id="new-admin-email"
-                              placeholder="exemplo@email.com"
-                              className="flex-1 bg-zinc-50 border border-zinc-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-[#1E3D2F] transition-colors"
-                            />
-                            <button
-                              onClick={async () => {
-                                const input = document.getElementById(
-                                  "new-admin-email",
-                                ) as HTMLInputElement;
-                                const email = input?.value;
-                                if (email && email.includes("@")) {
-                                  const { error } = await supabase
-                                    .from("app_admins")
-                                    .insert({ email, group_id: groupId });
-                                  if (error) {
-                                    setToast({
-                                      message: "Erro ao cadastrar admin",
-                                      type: "warning",
-                                    });
-                                  } else {
-                                    setToast({
-                                      message: "Administrador cadastrado!",
-                                      type: "success",
-                                    });
-                                    input.value = "";
-                                    // Refresh list
-                                    const { data } = await supabase
-                                      .from("app_admins")
-                                      .select("*")
-                                      .eq("group_id", groupId);
-                                    if (data) setAppAdmins(data);
-                                  }
-                                  setTimeout(() => setToast(null), 3000);
-                                }
-                              }}
-                              className="bg-[#1E3D2F] text-white px-6 rounded-xl font-black uppercase text-[10px] tracking-widest hover:bg-[#14301F] transition-colors"
-                            >
-                              Cadastrar
-                            </button>
-                          </div>
-                          <p className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest mt-1 ml-1">
-                            Apenas usuários com este e-mail poderão acessar via
-                            login.
-                          </p>
-                        </div>
-
-                        <div className="pt-4 border-t border-zinc-100">
-                          <h4 className="text-[10px] font-black uppercase tracking-widest text-zinc-500 mb-4">
-                            Admins Cadastrados
-                          </h4>
-                          <div className="space-y-2">
-                            {appAdmins.map((admin) => (
-                              <div
-                                key={admin.id}
-                                className="flex items-center justify-between p-3 bg-zinc-50 rounded-xl border border-zinc-100"
-                              >
-                                <span className="text-sm font-bold text-[#1E3D2F]">
-                                  {admin.email}
-                                </span>
-                                <button
-                                  onClick={async () => {
-                                    const { error } = await supabase
-                                      .from("app_admins")
-                                      .delete()
-                                      .eq("id", admin.id);
-                                    if (!error) {
-                                      setAppAdmins((prev) =>
-                                        prev.filter((a) => a.id !== admin.id),
-                                      );
-                                      setToast({
-                                        message: "Admin removido",
-                                        type: "success",
-                                      });
-                                    }
-                                    setTimeout(() => setToast(null), 3000);
-                                  }}
-                                  className="text-zinc-300 hover:text-red-500 transition-colors"
-                                >
-                                  <PiTrash size={16} />
-                                </button>
-                              </div>
-                            ))}
-                            {appAdmins.length === 0 && (
-                              <div className="text-center py-4 text-zinc-400 text-[10px] font-black uppercase tracking-widest">
-                                Nenhum administrador cadastrado.
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                  {orgProTab === "confirmados" && (
-                    <div className="space-y-4">
-                      <div className="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden mb-8">
-                        <div className="overflow-x-auto custom-scrollbar">
-                          <table className="w-full text-left border-collapse min-w-[600px]">
-                            <thead>
-                              <tr className="bg-zinc-50 border-b border-zinc-200">
-                                <th
-                                  colSpan={4}
-                                  className="p-4 text-xs font-black uppercase tracking-widest text-[#1E3D2F]"
-                                >
-                                  Jogadores Internos (App)
-                                </th>
-                              </tr>
-                              <tr className="border-b border-zinc-200">
-                                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-zinc-500 w-12 text-center">
-                                  #
-                                </th>
-                                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-zinc-500">
-                                  Jogador
-                                </th>
-                                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-zinc-500 text-center">
-                                  Tipo
-                                </th>
-                                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-zinc-500 text-right">
-                                  Horário
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {players
-                                .filter((player) => player.isAvailable)
-                                .sort(
-                                  (a, b) =>
-                                    (a.arrivedAt || 0) - (b.arrivedAt || 0),
-                                )
-                                .map((player, index) => {
-                                  const isGuest =
-                                    orgProData[player.id]?.isGuest;
-                                  const code = orgProData[player.id]?.code;
-
-                                  return (
-                                    <tr
-                                      key={`confirmed-${player.id}`}
-                                      className="border-b border-zinc-100 last:border-0 hover:bg-zinc-50/50 transition-colors"
-                                    >
-                                      <td className="p-4 text-center">
-                                        <span className="text-xs font-black text-zinc-400">
-                                          {index + 1}
-                                        </span>
-                                      </td>
-                                      <td className="p-4">
-                                        <div className="flex items-center gap-3">
-                                          <div className="w-8 h-8 rounded-full bg-zinc-100 border border-zinc-200 overflow-hidden flex items-center justify-center shrink-0">
-                                            {player.photo ? (
-                                              <img
-                                                src={player.photo}
-                                                className="w-full h-full object-cover"
-                                              />
-                                            ) : (
-                                              <div className="text-zinc-400">
-                                                <IoPersonOutline size={14} />
-                                              </div>
-                                            )}
-                                          </div>
-                                          <div className="flex flex-col">
-                                            <span className="font-bold text-sm text-[#1E3D2F] uppercase">
-                                              {player.name}
-                                            </span>
-                                            {isGuest && code && (
-                                              <span className="text-[10px] font-bold text-zinc-500">
-                                                PIN Original: {code}
-                                              </span>
-                                            )}
-                                          </div>
-                                        </div>
-                                      </td>
-                                      <td className="p-4 text-center">
-                                        {isGuest ? (
-                                          <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-800 text-[10px] font-black uppercase px-2 py-1 rounded-md tracking-widest border border-amber-200">
-                                            Convidado
-                                          </span>
-                                        ) : (
-                                          <span className="inline-flex items-center gap-1 bg-emerald-100 text-emerald-800 text-[10px] font-black uppercase px-2 py-1 rounded-md tracking-widest border border-emerald-200">
-                                            Mensalista
-                                          </span>
-                                        )}
-                                      </td>
-                                      <td className="p-4 text-right">
-                                        {player.arrivedAt ? (
-                                          <span className="text-xs font-bold text-zinc-600">
-                                            {new Date(
-                                              player.arrivedAt,
-                                            ).toLocaleTimeString("pt-BR", {
-                                              hour: "2-digit",
-                                              minute: "2-digit",
-                                            })}
-                                          </span>
-                                        ) : (
-                                          <span className="text-xs font-bold text-zinc-400">
-                                            -
-                                          </span>
-                                        )}
-                                      </td>
-                                    </tr>
-                                  );
-                                })}
-                              {players.filter((p) => p.isAvailable).length ===
-                                0 && (
-                                <tr>
-                                  <td
-                                    colSpan={4}
-                                    className="p-8 text-center text-zinc-500 text-sm font-bold"
-                                  >
-                                    Nenhum jogador confirmado no App ainda.
-                                  </td>
-                                </tr>
-                              )}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-
-                      {/* Presenças Externas (Tabela do Formulário) */}
-                      <div className="bg-white rounded-2xl border border-purple-200 shadow-sm overflow-hidden mb-8">
-                        <div className="overflow-x-auto custom-scrollbar">
-                          <table className="w-full text-left border-collapse min-w-[600px]">
-                            <thead>
-                              <tr className="bg-purple-50 border-b border-purple-200">
-                                <th
-                                  colSpan={4}
-                                  className="p-4 text-xs font-black uppercase tracking-widest text-purple-900 flex items-center gap-2"
-                                >
-                                  <Globe size={14} /> Presenças (Formulário
-                                  Externo)
-                                </th>
-                              </tr>
-                              <tr className="border-b border-purple-100">
-                                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-purple-500 w-12 text-center">
-                                  #
-                                </th>
-                                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-purple-500">
-                                  Nome
-                                </th>
-                                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-purple-500 text-center">
-                                  Status
-                                </th>
-                                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-purple-500 text-right">
-                                  Confirmado em
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {presencasExternas.map((p, idx) => (
-                                <tr
-                                  key={`pres-ext-${p.id}`}
-                                  className="border-b border-zinc-50 last:border-0 hover:bg-purple-50/20 transition-colors"
-                                >
-                                  <td className="p-4 text-center">
-                                    <span className="text-xs font-black text-purple-300">
-                                      {idx + 1}
-                                    </span>
-                                  </td>
-                                  <td className="p-4">
-                                    <div className="flex flex-col">
-                                      <span className="font-bold text-sm text-purple-900 uppercase">
-                                        {p.nome}
-                                      </span>
-                                      <span className="text-[10px] text-purple-400 font-mono">
-                                        {p.telefone}
-                                      </span>
-                                    </div>
-                                  </td>
-                                  <td className="p-4 text-center">
-                                    {p.mensalidade_em_dia ? (
-                                      <span className="bg-emerald-100 text-emerald-800 text-[9px] font-black uppercase px-2 py-1 rounded-md tracking-widest border border-emerald-200">
-                                        Pago
-                                      </span>
-                                    ) : (
-                                      <span className="bg-amber-100 text-amber-800 text-[9px] font-black uppercase px-2 py-1 rounded-md tracking-widest border border-amber-200">
-                                        Pendente
-                                      </span>
-                                    )}
-                                  </td>
-                                  <td className="p-4 text-right font-bold text-purple-600 text-xs">
-                                    {new Date(p.created_at).toLocaleTimeString(
-                                      "pt-BR",
-                                      { hour: "2-digit", minute: "2-digit" },
-                                    )}
-                                  </td>
-                                </tr>
-                              ))}
-                              {presencasExternas.length === 0 && (
-                                <tr>
-                                  <td
-                                    colSpan={4}
-                                    className="p-8 text-center text-purple-300 text-sm font-bold"
-                                  >
-                                    Nenhuma presença externa confirmada.
-                                  </td>
-                                </tr>
-                              )}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-
-                      {/* Jogadores Cadastrados Externamente */}
-                      <div className="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden">
-                        <div className="overflow-x-auto custom-scrollbar">
-                          <table className="w-full text-left border-collapse min-w-[600px]">
-                            <thead>
-                              <tr className="bg-zinc-100 border-b border-zinc-200">
-                                <th
-                                  colSpan={4}
-                                  className="p-4 text-xs font-black uppercase tracking-widest text-zinc-900 flex items-center gap-2"
-                                >
-                                  <Users size={14} /> Cadastros Totais (Link
-                                  Externo)
-                                </th>
-                              </tr>
-                              <tr className="border-b border-zinc-100">
-                                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-zinc-500 w-12 text-center">
-                                  #
-                                </th>
-                                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-zinc-500">
-                                  Jogador
-                                </th>
-                                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-zinc-500 text-center">
-                                  Situação
-                                </th>
-                                <th className="p-4 text-[10px] font-black uppercase tracking-widest text-zinc-500 text-right">
-                                  Data Cadastro
-                                </th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              {jogadoresExternos.map((j, idx) => (
-                                <tr
-                                  key={`jog-ext-${j.id}`}
-                                  className="border-b border-zinc-50 last:border-0 hover:bg-zinc-50/50 transition-colors"
-                                >
-                                  <td className="p-4 text-center">
-                                    <span className="text-xs font-black text-zinc-300">
-                                      {idx + 1}
-                                    </span>
-                                  </td>
-                                  <td className="p-4">
-                                    <div className="flex items-center gap-3">
-                                      <div className="w-8 h-8 rounded-full bg-zinc-100 border border-zinc-200 overflow-hidden flex items-center justify-center shrink-0">
-                                        {j.foto_url ? (
-                                          <img
-                                            src={j.foto_url}
-                                            className="w-full h-full object-cover"
-                                          />
-                                        ) : (
-                                          <div className="text-zinc-400">
-                                            <IoPersonOutline size={14} />
-                                          </div>
-                                        )}
-                                      </div>
-                                      <div className="flex flex-col">
-                                        <span className="font-bold text-sm text-zinc-900 uppercase">
-                                          {j.nome}
-                                        </span>
-                                        <span className="text-[10px] text-zinc-400 font-mono">
-                                          {j.telefone}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  </td>
-                                  <td className="p-4 text-center">
-                                    {j.mensalidade_em_dia ? (
-                                      <span className="text-emerald-600 font-black text-[9px] uppercase">
-                                        Liberado
-                                      </span>
-                                    ) : (
-                                      <span className="text-amber-600 font-bold text-[9px] uppercase">
-                                        Bloqueado
-                                      </span>
-                                    )}
-                                  </td>
-                                  <td className="p-4 text-right text-zinc-400 text-xs">
-                                    {new Date(j.created_at).toLocaleDateString(
-                                      "pt-BR",
-                                    )}
-                                  </td>
-                                </tr>
-                              ))}
-                              {jogadoresExternos.length === 0 && (
-                                <tr>
-                                  <td
-                                    colSpan={4}
-                                    className="p-8 text-center text-zinc-400 text-sm font-bold"
-                                  >
-                                    Nenhum jogador cadastrado externamente.
-                                  </td>
-                                </tr>
-                              )}
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </motion.div>
-            )}
           </AnimatePresence>
           {showEqualizerModal && equalizerData && (
             <motion.div
@@ -16135,110 +14654,68 @@ function GroupApp({
         )}
 
         {/* Back To Home Confirm Modal */}
-        {showBackToHomeConfirm && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 backdrop-blur-md z-[300] flex items-center justify-center p-4"
-            onClick={() => setShowBackToHomeConfirm(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-[#14301F] border border-orange-500/30 rounded-xl p-8 max-w-sm w-full relative overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="absolute inset-0 bg-orange-500/5 pointer-events-none" />
-              <h2 className="text-2xl font-black text-center mb-4 uppercase tracking-tighter text-orange-400 relative z-10">
-                Sair da Partida?
-              </h2>
-              <p className="text-center text-white/70 mb-8 text-sm lowercase first-letter:uppercase leading-relaxed px-2 relative z-10">
-                tem certeza que deseja sair desta partida e voltar para o menu
-                principal?
-              </p>
-
-              <div className="flex flex-col gap-3 relative z-10">
-                <button
-                  onClick={() => {
-                    setShowBackToHomeConfirm(false);
-                    onBackToHome();
-                  }}
-                  className="w-full py-5 bg-orange-500 text-white rounded-[20px] font-black uppercase tracking-widest text-xs hover:bg-orange-600 transition-all shadow-xl shadow-orange-500/20 active:scale-95"
-                >
-                  Sim
-                </button>
-                <button
-                  onClick={() => setShowBackToHomeConfirm(false)}
-                  className="w-full py-4 rounded-[20px] font-black uppercase tracking-widest text-[10px] transition-all bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
-                >
-                  Não
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
 
         {showSetupGuide && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 backdrop-blur-md z-[200] flex items-center justify-center p-6"
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center p-6"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
-              className="w-full max-w-sm p-8 rounded-xl border-2 bg-white border-black"
+              className="w-full max-w-sm p-8 rounded-[40px] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-black/5"
             >
               <div className="flex flex-col items-center text-center space-y-6">
-                <div className="w-16 h-16 bg-brand-primary/20 rounded-full flex items-center justify-center text-brand-primary shadow-sm">
-                  <Play size={32} fill="currentColor" />
+                <div className="w-20 h-20 rounded-full bg-[#f0f9eb] flex items-center justify-center">
+                  <div className="w-16 h-16 rounded-full bg-[#e1f3d8] flex items-center justify-center ring-4 ring-white shadow-sm">
+                    <Play size={24} className="text-[#67c23a] fill-[#67c23a] ml-1" />
+                  </div>
                 </div>
 
                 <div className="space-y-2">
-                  <h3 className="text-xl font-black uppercase tracking-tighter text-black">
+                  <h3 className="text-2xl font-black uppercase tracking-tighter text-zinc-900">
                     Tudo Pronto!
                   </h3>
-                  <p className="text-xs font-medium leading-relaxed text-zinc-600">
+                  <p className="text-[11px] font-medium leading-relaxed text-zinc-400 max-w-[240px] mx-auto">
                     Siga estes passos simples para organizar suas partidas:
                   </p>
                 </div>
 
-                <div className="w-full space-y-3 text-left">
-                  <div className="flex gap-3">
-                    <div className="w-6 h-6 rounded-full bg-brand-primary text-black text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm">
+                <div className="w-full space-y-4 text-left py-2">
+                  <div className="flex gap-4 items-start">
+                    <div className="w-8 h-8 rounded-full bg-[#95d475] text-white text-xs font-black flex items-center justify-center shrink-0 shadow-sm">
                       1
                     </div>
-                    <p className="text-[9px] font-medium text-zinc-600">
-                      Confirme a presença dos jogadores tocando em seus nomes
-                      (Verde = Confirmado).
+                    <p className="text-[10px] font-bold text-zinc-600 leading-relaxed pt-1">
+                      <span className="text-zinc-900 block mb-0.5">Crie sua Pelada</span>
+                      Clique no banner verde para definir nome, data e local. Suas peladas ficarão salvas para acesso rápido.
                     </p>
                   </div>
-                  <div className="flex gap-3">
-                    <div className="w-6 h-6 rounded-full bg-brand-primary text-black text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm">
+                  <div className="flex gap-4 items-start">
+                    <div className="w-8 h-8 rounded-full bg-[#95d475] text-white text-xs font-black flex items-center justify-center shrink-0 shadow-sm">
                       2
                     </div>
-                    <p className="text-[9px] font-medium text-zinc-600">
-                      O app organiza os times automaticamente com base na ordem
-                      de entrada.
+                    <p className="text-[10px] font-bold text-zinc-600 leading-relaxed pt-1">
+                      <span className="text-zinc-900 block mb-0.5">Acesse o Gerenciamento</span>
+                      Toque na pelada criada em sua lista para abrir o painel onde você poderá adicionar e confirmar jogadores.
                     </p>
                   </div>
-                  <div className="flex gap-3">
-                    <div className="w-6 h-6 rounded-full bg-brand-primary text-black text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm">
+                  <div className="flex gap-4 items-start">
+                    <div className="w-8 h-8 rounded-full bg-[#95d475] text-white text-xs font-black flex items-center justify-center shrink-0 shadow-sm">
                       3
                     </div>
-                    <p className="text-[9px] font-medium text-zinc-600">
-                      Toque em "Pronto" para ir à tela de confrontos e iniciar o
-                      sorteio ou o jogo.
+                    <p className="text-[10px] font-bold text-zinc-600 leading-relaxed pt-1">
+                      <span className="text-zinc-900 block mb-0.5">Organize as Partidas</span>
+                      Confirme a presença para o sorteio equilibrado. Ao final, registre os gols para atualizar o Ranking e gerencie o fluxo de caixa no menu Financeiro.
                     </p>
                   </div>
                 </div>
 
                 <button
                   onClick={() => setShowSetupGuide(false)}
-                  className="w-full py-4 bg-brand-gradient text-black rounded-xl font-black uppercase tracking-widest text-xs shadow active:scale-95 transition-all text-center border border-black"
+                  className="w-full py-5 bg-[#a3cf54] hover:bg-[#95d475] text-black rounded-[24px] font-black uppercase tracking-widest text-[11px] shadow-lg shadow-[#a3cf54]/20 active:scale-95 transition-all text-center border-b-4 border-black/20"
                 >
                   Entendi, vamos lá!
                 </button>
