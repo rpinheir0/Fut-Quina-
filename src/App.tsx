@@ -966,7 +966,7 @@ const TieBreakerModal = ({
                         const p = players.find((player) => player.id === pid);
                         return (
                           <span
-                            key={pid}
+                            key={`vs-list-a-${pid}`}
                             className="text-[7px] font-black text-black uppercase tracking-tighter"
                           >
                             {p?.name}
@@ -1003,7 +1003,7 @@ const TieBreakerModal = ({
                         const p = players.find((player) => player.id === pid);
                         return (
                           <span
-                            key={pid}
+                            key={`vs-list-b-${pid}`}
                             className="text-[7px] font-black text-black uppercase tracking-tighter"
                           >
                             {p?.name}
@@ -1125,7 +1125,7 @@ const TieBreakerModal = ({
                     <div className="flex flex-wrap gap-x-1.5 mt-1">
                       {(teamA.playerIds || []).map((pid, idx) => (
                         <span
-                          key={pid}
+                          key={`queue-order-a-${pid}`}
                           className="text-[8px] text-black/60 font-black tracking-tight"
                         >
                           {players.find((p) => p.id === pid)?.name}
@@ -1155,7 +1155,7 @@ const TieBreakerModal = ({
                     <div className="flex flex-wrap gap-x-1.5 mt-1">
                       {(teamB.playerIds || []).map((pid, idx) => (
                         <span
-                          key={pid}
+                          key={`queue-order-b-${pid}`}
                           className="text-[8px] text-black/60 font-black tracking-tight"
                         >
                           {players.find((p) => p.id === pid)?.name}
@@ -1395,7 +1395,7 @@ const TieBreakerModal = ({
                             );
                             return (
                               <span
-                                key={pid}
+                                key={`lottery-list-a-${pid}`}
                                 className="text-[6px] font-bold text-zinc-400 uppercase"
                               >
                                 {p?.name}
@@ -1437,7 +1437,7 @@ const TieBreakerModal = ({
                             );
                             return (
                               <span
-                                key={pid}
+                                key={`lottery-list-b-${pid}`}
                                 className="text-[6px] font-bold text-zinc-400 uppercase"
                               >
                                 {p?.name}
@@ -1496,7 +1496,7 @@ const TieBreakerModal = ({
                           const p = players.find((player) => player.id === pid);
                           return (
                             <span
-                              key={pid}
+                              key={`lottery-winner-${pid}`}
                               className="text-[8px] font-black text-black uppercase tracking-widest"
                             >
                               {p?.name}
@@ -1711,7 +1711,7 @@ const PlayerManagementModalComponent = ({
               <div className="flex flex-wrap items-center justify-center gap-1 mt-2">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
-                    key={`modal-star-${star}`}
+                    key={`modal-star-${player.id}-${star}`}
                     onClick={() =>
                       onUpdateStars && onUpdateStars(player.id, star)
                     }
@@ -8801,7 +8801,7 @@ function GroupApp({
                                       <div className="flex flex-row-reverse gap-0.5">
                                         {[1, 2, 3, 4, 5].map((star) => (
                                           <Star
-                                            key={`star-${p.id}-${star}`}
+                                            key={`star-match-a-${p.id}-${star}`}
                                             size={6}
                                             className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10"}`}
                                           />
