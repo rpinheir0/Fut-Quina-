@@ -155,7 +155,7 @@ import {
   PiListBold,
   PiCheckCircleBold,
   PiCheckCircle,
-  PiRanking,
+  PiRankingThin,
   PiWarningCircleBold,
   PiWarningCircle,
   PiCalendarBlankBold,
@@ -7234,7 +7234,7 @@ function GroupApp({
                                   <GiLaurelsTrophy size={40} />
                                 </div>
                               </div>
-                              <span className="font-bold text-zinc-600 text-[10px] sm:text-[11px] max-w-sm uppercase tracking-widest">
+                              <span className="font-bold text-zinc-600 text-[11px] max-w-sm">
                                 Nenhum jogador adicionado ainda.
                               </span>
                             </div>
@@ -10838,10 +10838,10 @@ function GroupApp({
                         <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
                           <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-6">
                             <div className="text-black/30">
-                              <PiRanking size={40} />
+                              <PiRankingThin size={40} />
                             </div>
                           </div>
-                          <span className="font-bold text-zinc-600 text-[10px] sm:text-[11px] max-w-sm uppercase tracking-widest">
+                          <span className="font-bold text-zinc-600 text-[11px] max-w-sm">
                             Nenhum jogador adicionado ainda.
                           </span>
                         </div>
