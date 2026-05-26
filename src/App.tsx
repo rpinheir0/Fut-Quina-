@@ -2072,7 +2072,7 @@ const SpinningBall = ({
 
 const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
   useEffect(() => {
-    const timer = setTimeout(onComplete, 3000);
+    const timer = setTimeout(onComplete, 1000);
     return () => clearTimeout(timer);
   }, [onComplete]);
 
@@ -6020,7 +6020,7 @@ function GroupApp({
 
   return (
     <div
-      className={`h-screen bg-brand-dark text-brand-text-primary font-sans overflow-hidden flex flex-col transition-colors duration-500 ${theme === "dark" ? "dark" : ""}`}
+      className={`min-h-[100dvh] bg-brand-dark text-brand-text-primary font-sans flex flex-col transition-colors duration-500 ${theme === "dark" ? "dark" : ""}`}
     >
       {/* Logo Animation Overlay */}
       <AnimatePresence>
@@ -6525,7 +6525,7 @@ function GroupApp({
         )}
       </AnimatePresence>
 
-      <div className="h-full flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col">
         {/* Sticky Header and Tabs Container */}
         <div
           className={`sticky top-0 z-50 bg-[#000000]/95 backdrop-blur-2xl ${isPrintMode ? "hidden" : ""}`}
@@ -15074,7 +15074,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen font-sans transition-colors duration-500 flex flex-col justify-center p-0 sm:p-2 bg-[#14301F] overflow-x-hidden relative w-full">
+    <div className="min-h-[100dvh] font-sans transition-colors duration-500 flex flex-col justify-center p-0 sm:p-2 bg-zinc-50 dark:bg-[#14301F] overflow-x-hidden relative w-full">
       <div className="w-full sm:w-[98%] sm:max-w-7xl mx-auto px-1 py-4 sm:px-10 sm:py-16 flex flex-col min-h-screen sm:min-h-0 justify-between relative bg-transparent">
         {/* Animated Background Polish */}
         <div className="absolute inset-0 pointer-events-none z-0">

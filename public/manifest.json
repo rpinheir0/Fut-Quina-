@@ -4,7 +4,7 @@
   "description": "A melhor ferramenta para gestão de pelada, times e estatísticas.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#1E3D2F",
+  "background_color": "#ffffff",
   "theme_color": "#1E3D2F",
   "icons": [
     {
