@@ -2077,7 +2077,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
   }, [onComplete]);
 
   return (
-    <div className="fixed inset-0 z-[3000] flex flex-col items-center justify-center bg-[#dce3ee]">
+    <div className="fixed inset-0 z-[3000] flex flex-col items-center justify-center bg-[#14301F]">
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -2303,7 +2303,7 @@ function GroupApp({
 }) {
   const [theme, setTheme] = useState<"light" | "dark">(() => {
     const saved = safeLocalStorage.getItem(`futquina_theme_${groupId}`);
-    return (saved as "light" | "dark") || "light";
+    return (saved as "light" | "dark") || "dark";
   });
 
   useEffect(() => {
@@ -6020,7 +6020,7 @@ function GroupApp({
 
   return (
     <div
-      className={`min-h-[100dvh] bg-brand-dark text-brand-text-primary font-sans flex flex-col transition-colors duration-500 ${theme === "dark" ? "dark" : ""}`}
+      className={`min-h-screen bg-brand-dark text-brand-text-primary font-sans flex flex-col transition-colors duration-500 dark`}
     >
       {/* Logo Animation Overlay */}
       <AnimatePresence>
@@ -15052,8 +15052,8 @@ export default function App() {
     name: string;
   } | null>(null);
   const [renameValue, setRenameValue] = useState("");
-  // Remove theme state and use a constant for logic cleanup or just remove completely
-  const theme = "light";
+  // Use dark theme by default for premium look
+  const theme = "dark";
 
   // Keep offline logic purely local
   useEffect(() => {
@@ -15074,7 +15074,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-[100dvh] font-sans transition-colors duration-500 flex flex-col justify-center p-0 sm:p-2 bg-zinc-50 dark:bg-[#14301F] overflow-x-hidden relative w-full">
+    <div className="min-h-screen font-sans transition-colors duration-500 flex flex-col justify-center p-0 sm:p-2 bg-brand-dark dark:bg-[#050806] overflow-x-hidden relative w-full">
       <div className="w-full sm:w-[98%] sm:max-w-7xl mx-auto px-1 py-4 sm:px-10 sm:py-16 flex flex-col min-h-screen sm:min-h-0 justify-between relative bg-transparent">
         {/* Animated Background Polish */}
         <div className="absolute inset-0 pointer-events-none z-0">
