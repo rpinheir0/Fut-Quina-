@@ -6423,9 +6423,13 @@ function GroupApp({
                 
                 {/* General Tools Card */}
                 <div className="bg-white rounded p-2 shadow-sm border border-zinc-100/50">
-                  {showAddPlayerSection && currentScreen === "players" && (
+                  {((showAddPlayerSection && currentScreen === "players") ||
+                    currentScreen === "teams" ||
+                    currentScreen === "ranking" ||
+                    currentScreen === "finance") && (
                     <button
                       onClick={() => {
+                        setCurrentScreen("players");
                         setShowAddPlayerSection(false);
                         setSelectedMatchId(null);
                         setPlayersTab("configuracao");
@@ -6438,7 +6442,9 @@ function GroupApp({
                         <div className="text-red-400 group-hover:scale-110 transition-transform">
                           <LayoutPanelLeft size={20} />
                         </div>
-                        <span className="text-[14px] font-semibold text-zinc-800">Painel de controle</span>
+                        <span className="text-[14px] font-semibold text-zinc-800">
+                          Painel de controle
+                        </span>
                       </div>
                     </button>
                   )}
@@ -6471,62 +6477,6 @@ function GroupApp({
                     </div>
                     <ChevronRight size={14} className="text-zinc-300" />
                   </button>
-                </div>
-
-                {/* Session Actions (Ref Image "Work" Section) */}
-                <div className="space-y-2">
-                  <div className="px-4 py-1 flex justify-between items-center group cursor-pointer">
-                    <span className="text-[12px] font-bold text-zinc-400 uppercase tracking-widest">Pelada Atual</span>
-                    <ChevronDown size={16} className="text-zinc-300 group-hover:text-zinc-500 transition-colors" />
-                  </div>
-                  
-                  <div className="bg-white rounded p-6 shadow-sm border border-zinc-100/50 text-center">
-                    <span className="text-[12px] font-medium text-zinc-400 italic">
-                      Nenhuma pelada aberta agora
-                    </span>
-                  </div>
-                </div>
-
-                {/* System Section (Ref Image "Personal" Section) */}
-                <div className="space-y-2">
-                  <div className="px-4 py-1 flex justify-between items-center group cursor-pointer">
-                    <span className="text-[12px] font-bold text-zinc-400 uppercase tracking-widest">Sistema</span>
-                    <ChevronDown size={16} className="text-zinc-300 group-hover:text-zinc-500 transition-colors" />
-                  </div>
-
-                  <div className="bg-white rounded p-2 shadow-sm border border-zinc-100/50">
-                    {!showResetAppConfirm ? (
-                      <button
-                        onClick={() => setShowResetAppConfirm(true)}
-                        className="w-full flex items-center gap-4 p-4 hover:bg-red-50 rounded-none transition-all group"
-                      >
-                        <div className="text-zinc-400 group-hover:text-red-500 group-hover:scale-110 transition-transform">
-                          <PiTrashBold size={20} />
-                        </div>
-                        <span className="text-[14px] font-semibold text-zinc-800">Zerar Aplicativo</span>
-                      </button>
-                    ) : (
-                      <div className="p-4 space-y-4 animate-in fade-in slide-in-from-top-1 duration-200">
-                        <p className="text-[11px] font-bold text-red-500 uppercase leading-tight text-center bg-red-50 py-2 rounded-xl">
-                          Confirmar limpeza total?
-                        </p>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={handleResetApp}
-                            className="flex-1 py-3 bg-red-500 text-white rounded text-[11px] font-black uppercase active:scale-95 transition-all shadow-md shadow-red-200"
-                          >
-                            Zerar
-                          </button>
-                          <button
-                            onClick={() => setShowResetAppConfirm(false)}
-                            className="flex-1 py-3 bg-zinc-100 text-zinc-500 rounded text-[11px] font-black uppercase active:scale-95 transition-all"
-                          >
-                            Não
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
                 </div>
               </div>
 
@@ -7243,11 +7193,11 @@ function GroupApp({
                               }}
                             />
                             <div className="absolute inset-0 flex items-center justify-center pb-8 sm:pb-8 pointer-events-none transition-all peer-focus:hidden peer-[:not(:placeholder-shown)]:hidden">
-                              <div className="flex items-center gap-2">
-                                <div className="text-emerald-500/50">
-                                  <IoLogoWhatsapp size={16} />
+                              <div className="flex items-center gap-1">
+                                <div className="text-emerald-500/40">
+                                  <IoLogoWhatsapp size={20} />
                                 </div>
-                                <span className="text-[11px] sm:text-xs font-bold text-[#1E3D2F]/30 leading-tight block text-center">
+                                <span className="text-base sm:text-lg text-[#1E3D2F]/40 leading-tight block text-center">
                                   Cole aqui a lista do whatsapp.
                                 </span>
                               </div>
@@ -7289,11 +7239,13 @@ function GroupApp({
 
                         <section className="w-full relative pt-6 border-t border-black/5">
                           {visiblePlayers.length === 0 ? (
-                            <div className="w-full text-center py-20 opacity-30 text-zinc-400 flex flex-col items-center justify-center gap-4">
-                              <div className="w-20 h-20 rounded-none bg-zinc-100 flex items-center justify-center mb-2">
-                                <GiLaurelsTrophy size={48} />
+                            <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
+                              <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-6">
+                                <div className="text-black/30">
+                                  <GiLaurelsTrophy size={40} />
+                                </div>
                               </div>
-                              <span className="font-black uppercase tracking-[0.2em] text-[10px]">
+                              <span className="font-medium text-zinc-600 text-[12px] max-w-sm">
                                 Nenhum jogador adicionado ainda.
                               </span>
                             </div>
@@ -10894,14 +10846,14 @@ function GroupApp({
                         </motion.div>
                       ))}
                       {players.length === 0 && (
-                        <div className="w-full text-center py-20 opacity-50 text-black/50 text-xs flex flex-col items-center justify-center gap-4">
-                          <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-2">
-                            <span className="opacity-30 text-black">
-                              <GiSportMedal size={48} />
-                            </span>
+                        <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
+                          <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-6">
+                            <div className="text-black/30">
+                              <GiLaurelsTrophy size={40} />
+                            </div>
                           </div>
-                          <span className="font-bold uppercase tracking-widest text-[10px]">
-                            Nenhum jogador registrado ainda.
+                          <span className="font-medium text-zinc-600 text-[12px] max-w-sm">
+                            Nenhum jogador adicionado ainda.
                           </span>
                         </div>
                       )}
@@ -11028,26 +10980,7 @@ function GroupApp({
                         className={`space-y-6 ${isPrintMode ? "bg-white min-h-screen text-black p-4 pb-12 font-mono" : "font-mono"}`}
                       >
                         {!isPrintMode && (
-                          <div className="flex justify-end px-4">
-                            <button
-                              onClick={() => {
-                                if (players.length === 0) {
-                                  setToast({
-                                    message:
-                                      "Adicione jogadores para detalhar despesas",
-                                    type: "info",
-                                  });
-                                  setTimeout(() => setToast(null), 3000);
-                                  return;
-                                }
-                                setIsPrintMode(true);
-                              }}
-                              className="text-zinc-400 p-2 hover:bg-zinc-800 rounded-full transition-colors"
-                              title="Gerar Print"
-                            >
-                              <Eye size={20} />
-                            </button>
-                          </div>
+                          <div className="h-4" />
                         )}
 
                         {isPrintMode && (
@@ -11087,21 +11020,41 @@ function GroupApp({
                             <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                               {/* Saldo Líquido Card */}
                               <div
-                                className={`p-5 transition-all col-span-2 lg:col-span-1 order-1 lg:order-none ${
+                                className={`p-4 transition-all col-span-2 lg:col-span-1 order-1 lg:order-none ${
                                   isPrintMode
                                     ? "bg-white border-zinc-300 border rounded-none"
-                                    : netBalance >= 0
-                                      ? "bg-transparent border-emerald-500/20"
-                                      : "bg-transparent border-red-500/20"
+                                    : "bg-[#dce3ee] border-[#dce3ee]/20"
                                 }`}
                               >
+                                <div className="flex justify-between items-center mb-2">
+                                  <p
+                                    className={`text-[10px] font-black uppercase tracking-widest ${isPrintMode ? "text-zinc-600" : "opacity-60"}`}
+                                  >
+                                    Saldo em Caixa
+                                  </p>
+                                  {!isPrintMode && (
+                                    <button
+                                      onClick={() => {
+                                        if (players.length === 0) {
+                                          setToast({
+                                            message:
+                                              "Adicione jogadores para detalhar despesas",
+                                            type: "info",
+                                          });
+                                          setTimeout(() => setToast(null), 3000);
+                                          return;
+                                        }
+                                        setIsPrintMode(true);
+                                      }}
+                                      className="text-zinc-400 hover:text-zinc-600 transition-colors"
+                                      title="Gerar Print"
+                                    >
+                                      <Eye size={16} />
+                                    </button>
+                                  )}
+                                </div>
                                 <p
-                                  className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? "text-zinc-600" : "opacity-60"}`}
-                                >
-                                  Saldo em Caixa
-                                </p>
-                                <p
-                                  className={`text-xl sm:text-2xl lg:text-3xl font-black mb-4 ${
+                                  className={`text-xl sm:text-2xl lg:text-3xl font-black ${
                                     isPrintMode
                                       ? "text-black"
                                       : netBalance >= 0
@@ -11112,31 +11065,6 @@ function GroupApp({
                                   R$ <AnimatedCounter value={netBalance} />
                                   ,00
                                 </p>
-                                <div className="space-y-1.5">
-                                  <div className="h-2 w-full bg-zinc-200/50 rounded-full overflow-hidden">
-                                    <div
-                                      className={`h-full transition-all duration-1000 ${netBalance >= 0 ? "bg-emerald-500" : "bg-red-500"}`}
-                                      style={{
-                                        width: `${Math.min(100, (Math.abs(netBalance) / Math.max(1, totalRevenue)) * 100)}%`,
-                                      }}
-                                    />
-                                  </div>
-                                  <div className="flex justify-between text-[8px] font-bold uppercase tracking-wider opacity-60">
-                                    <span>
-                                      {netBalance >= 0 ? "Lucro" : "Prejuízo"}
-                                    </span>
-                                    <span>
-                                      {totalRevenue > 0
-                                        ? Math.round(
-                                            (Math.abs(netBalance) /
-                                              totalRevenue) *
-                                              100,
-                                          )
-                                        : 0}
-                                      %
-                                    </span>
-                                  </div>
-                                </div>
                               </div>
 
                               {/* Arrecadação Card */}
@@ -15957,176 +15885,178 @@ function GroupApp({
         />
 
         {/* Bottom Navigation */}
-        <div
-          className={`fixed bottom-0 left-0 right-0 z-[100] w-full ${isPrintMode ? "hidden" : ""}`}
-        >
-          <nav className="w-full bg-[#111111] border-t border-white/5 pt-1 pb-3 sm:pb-4 px-2 sm:px-6 flex items-center justify-around">
-            <button
-              onClick={() => {
-                const screens: Screen[] = [
-                  "players",
-                  "teams",
-                  "ranking",
-                  "finance",
-                ];
-                const targetIndex = screens.indexOf("players");
-                const currentIndex = screens.indexOf(currentScreen);
-                setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
-                setCurrentScreen("players");
-              }}
-              className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
-                currentScreen === "players"
-                  ? "text-brand-primary bg-white/5 shadow-inner"
-                  : "text-white/50 hover:text-white/80 hover:bg-white/5"
-              }`}
-            >
-              {currentScreen === "players" && (
-                <motion.div
-                  layoutId="nav-glow"
-                  className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full"
-                />
-              )}
-              {currentScreen === "players" ? (
-                <div className="mb-1 transition-transform duration-300 -translate-y-0.5">
-                  <PiUserCirclePlusThin size={28} />
-                </div>
-              ) : (
-                <div className="mb-1 transition-transform duration-300">
-                  <PiUserCirclePlusThin size={24} />
-                </div>
-              )}
-              <span
-                className={`text-[11px] font-black uppercase tracking-widest leading-none transition-all duration-300 font-roboto-flex ${currentScreen === "players" ? "opacity-100 translate-y-0" : "opacity-70"}`}
+        {!(currentScreen === "players" && !showAddPlayerSection) && (
+          <div
+            className={`fixed bottom-0 left-0 right-0 z-[100] w-full ${isPrintMode ? "hidden" : ""}`}
+          >
+            <nav className="w-full bg-[#111111] border-t border-white/5 pt-1 pb-3 sm:pb-4 px-2 sm:px-6 flex items-center justify-around">
+              <button
+                onClick={() => {
+                  const screens: Screen[] = [
+                    "players",
+                    "teams",
+                    "ranking",
+                    "finance",
+                  ];
+                  const targetIndex = screens.indexOf("players");
+                  const currentIndex = screens.indexOf(currentScreen);
+                  setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
+                  setCurrentScreen("players");
+                }}
+                className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
+                  currentScreen === "players"
+                    ? "text-brand-primary bg-white/5 shadow-inner"
+                    : "text-white/50 hover:text-white/80 hover:bg-white/5"
+                }`}
               >
-                CADASTRAR
-              </span>
-            </button>
-            <button
-              onClick={() => {
-                const screens: Screen[] = [
-                  "players",
-                  "teams",
-                  "ranking",
-                  "finance",
-                ];
-                const targetIndex = screens.indexOf("teams");
-                const currentIndex = screens.indexOf(currentScreen);
-                setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
-                setCurrentScreen("teams");
-                // Reset PARTIDA tabs
-                setTeamsTab("configuracao");
-                setPlayersTab("configuracao");
-              }}
-              className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
-                currentScreen === "teams"
-                  ? "text-brand-primary bg-white/5 shadow-inner"
-                  : "text-white/50 hover:text-white/80 hover:bg-white/5"
-              }`}
-            >
-              {currentScreen === "teams" && (
-                <motion.div
-                  layoutId="nav-glow"
-                  className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full"
-                />
-              )}
-              {currentScreen === "teams" ? (
-                <div className="mb-1 transition-transform duration-300 -translate-y-0.5 text-brand-primary">
-                  <GiSoccerField size={26} />
-                </div>
-              ) : (
-                <div className="mb-1 transition-transform duration-300">
-                  <GiSoccerField size={22} />
-                </div>
-              )}
-              <span
-                className={`text-[11px] font-black uppercase tracking-widest leading-none transition-all duration-300 font-roboto-flex ${currentScreen === "teams" ? "opacity-100 translate-y-0" : "opacity-70"}`}
+                {currentScreen === "players" && (
+                  <motion.div
+                    layoutId="nav-glow"
+                    className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full"
+                  />
+                )}
+                {currentScreen === "players" ? (
+                  <div className="mb-1 transition-transform duration-300 -translate-y-0.5">
+                    <PiUserCirclePlusThin size={28} />
+                  </div>
+                ) : (
+                  <div className="mb-1 transition-transform duration-300">
+                    <PiUserCirclePlusThin size={24} />
+                  </div>
+                )}
+                <span
+                  className={`text-[11px] leading-none transition-all duration-300 font-roboto-flex ${currentScreen === "players" ? "opacity-100 translate-y-0" : "opacity-70"}`}
+                >
+                  Cadastrar
+                </span>
+              </button>
+              <button
+                onClick={() => {
+                  const screens: Screen[] = [
+                    "players",
+                    "teams",
+                    "ranking",
+                    "finance",
+                  ];
+                  const targetIndex = screens.indexOf("teams");
+                  const currentIndex = screens.indexOf(currentScreen);
+                  setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
+                  setCurrentScreen("teams");
+                  // Reset PARTIDA tabs
+                  setTeamsTab("configuracao");
+                  setPlayersTab("configuracao");
+                }}
+                className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
+                  currentScreen === "teams"
+                    ? "text-brand-primary bg-white/5 shadow-inner"
+                    : "text-white/50 hover:text-white/80 hover:bg-white/5"
+                }`}
               >
-                PARTIDA
-              </span>
-            </button>
-            <button
-              onClick={() => {
-                const screens: Screen[] = [
-                  "players",
-                  "teams",
-                  "ranking",
-                  "finance",
-                ];
-                const targetIndex = screens.indexOf("ranking");
-                const currentIndex = screens.indexOf(currentScreen);
-                setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
-                setCurrentScreen("ranking");
-              }}
-              className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
-                currentScreen === "ranking"
-                  ? "text-brand-primary bg-white/5 shadow-inner"
-                  : "text-white/50 hover:text-white/80 hover:bg-white/5"
-              }`}
-            >
-              {currentScreen === "ranking" && (
-                <motion.div
-                  layoutId="nav-glow"
-                  className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full"
-                />
-              )}
-              {currentScreen === "ranking" ? (
-                <div className="mb-1 transition-transform duration-300 -translate-y-0.5">
-                  <GiTrophy size={26} />
-                </div>
-              ) : (
-                <div className="mb-1 transition-transform duration-300">
-                  <GiTrophy size={22} />
-                </div>
-              )}
-              <span
-                className={`text-[11px] font-black uppercase tracking-widest leading-none transition-all duration-300 font-roboto-flex ${currentScreen === "ranking" ? "opacity-100 translate-y-0" : "opacity-70"}`}
+                {currentScreen === "teams" && (
+                  <motion.div
+                    layoutId="nav-glow"
+                    className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full"
+                  />
+                )}
+                {currentScreen === "teams" ? (
+                  <div className="mb-1 transition-transform duration-300 -translate-y-0.5 text-brand-primary">
+                    <GiSoccerField size={26} />
+                  </div>
+                ) : (
+                  <div className="mb-1 transition-transform duration-300">
+                    <GiSoccerField size={22} />
+                  </div>
+                )}
+                <span
+                  className={`text-[11px] leading-none transition-all duration-300 font-roboto-flex ${currentScreen === "teams" ? "opacity-100 translate-y-0" : "opacity-70"}`}
+                >
+                  Partida
+                </span>
+              </button>
+              <button
+                onClick={() => {
+                  const screens: Screen[] = [
+                    "players",
+                    "teams",
+                    "ranking",
+                    "finance",
+                  ];
+                  const targetIndex = screens.indexOf("ranking");
+                  const currentIndex = screens.indexOf(currentScreen);
+                  setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
+                  setCurrentScreen("ranking");
+                }}
+                className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
+                  currentScreen === "ranking"
+                    ? "text-brand-primary bg-white/5 shadow-inner"
+                    : "text-white/50 hover:text-white/80 hover:bg-white/5"
+                }`}
               >
-                RANKING
-              </span>
-            </button>
-            <button
-              onClick={() => {
-                const screens: Screen[] = [
-                  "players",
-                  "teams",
-                  "ranking",
-                  "finance",
-                ];
-                const targetIndex = screens.indexOf("finance");
-                const currentIndex = screens.indexOf(currentScreen);
-                setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
-                setCurrentScreen("finance");
-                setFinanceSubScreen("balanco");
-              }}
-              className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
-                currentScreen === "finance"
-                  ? "text-brand-primary bg-white/5 shadow-inner"
-                  : "text-white/50 hover:text-white/80 hover:bg-white/5"
-              }`}
-            >
-              {currentScreen === "finance" && (
-                <motion.div
-                  layoutId="nav-glow"
-                  className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full"
-                />
-              )}
-              {currentScreen === "finance" ? (
-                <div className="mb-1 transition-transform duration-300 -translate-y-0.5 text-brand-primary">
-                  <IoIosWallet size={26} />
-                </div>
-              ) : (
-                <div className="mb-1 transition-transform duration-300">
-                  <IoIosWallet size={22} />
-                </div>
-              )}
-              <span
-                className={`text-[11px] font-black uppercase tracking-widest leading-none transition-all duration-300 font-roboto-flex ${currentScreen === "finance" ? "opacity-100 translate-y-0" : "opacity-70"}`}
+                {currentScreen === "ranking" && (
+                  <motion.div
+                    layoutId="nav-glow"
+                    className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full"
+                  />
+                )}
+                {currentScreen === "ranking" ? (
+                  <div className="mb-1 transition-transform duration-300 -translate-y-0.5">
+                    <GiTrophy size={26} />
+                  </div>
+                ) : (
+                  <div className="mb-1 transition-transform duration-300">
+                    <GiTrophy size={22} />
+                  </div>
+                )}
+                <span
+                  className={`text-[11px] leading-none transition-all duration-300 font-roboto-flex ${currentScreen === "ranking" ? "opacity-100 translate-y-0" : "opacity-70"}`}
+                >
+                  Ranking
+                </span>
+              </button>
+              <button
+                onClick={() => {
+                  const screens: Screen[] = [
+                    "players",
+                    "teams",
+                    "ranking",
+                    "finance",
+                  ];
+                  const targetIndex = screens.indexOf("finance");
+                  const currentIndex = screens.indexOf(currentScreen);
+                  setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
+                  setCurrentScreen("finance");
+                  setFinanceSubScreen("balanco");
+                }}
+                className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
+                  currentScreen === "finance"
+                    ? "text-brand-primary bg-white/5 shadow-inner"
+                    : "text-white/50 hover:text-white/80 hover:bg-white/5"
+                }`}
               >
-                FINANCEIRO
-              </span>
-            </button>
-          </nav>
-        </div>
+                {currentScreen === "finance" && (
+                  <motion.div
+                    layoutId="nav-glow"
+                    className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full"
+                  />
+                )}
+                {currentScreen === "finance" ? (
+                  <div className="mb-1 transition-transform duration-300 -translate-y-0.5 text-brand-primary">
+                    <IoIosWallet size={26} />
+                  </div>
+                ) : (
+                  <div className="mb-1 transition-transform duration-300">
+                    <IoIosWallet size={22} />
+                  </div>
+                )}
+                <span
+                  className={`text-[11px] leading-none transition-all duration-300 font-roboto-flex ${currentScreen === "finance" ? "opacity-100 translate-y-0" : "opacity-70"}`}
+                >
+                  Financeiro
+                </span>
+              </button>
+            </nav>
+          </div>
+        )}
 
         {/* Auto Complete Confirmation Modal */}
         {showAutoCompleteModal && (
