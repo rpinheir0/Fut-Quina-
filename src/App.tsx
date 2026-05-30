@@ -14470,13 +14470,13 @@ function GroupApp({
                   mainRef.current.scrollTo({ top: 0, behavior: "smooth" });
                 }
               }}
-              className="fixed bottom-24 right-5 z-[110] w-12 h-12 bg-emerald-500 text-white rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-black/5 flex items-center justify-center cursor-pointer transition-colors hover:bg-emerald-600 hover:shadow-[0_8px_30px_rgb(0,0,0,0.16)]"
+              className="fixed bottom-28 right-5 z-[110] w-14 h-14 bg-emerald-500 text-white rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-black/5 flex items-center justify-center cursor-pointer transition-colors hover:bg-emerald-600 hover:shadow-[0_8px_30px_rgb(0,0,0,0.16)]"
             >
               <motion.div
                 animate={{ y: [0, -4, 0] }}
                 transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
               >
-                <BsChevronDoubleUp size={22} className="text-white" />
+                <BsChevronDoubleUp size={28} className="text-white" />
               </motion.div>
             </motion.button>
           )}
