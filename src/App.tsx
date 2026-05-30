@@ -907,8 +907,8 @@ const TieBreakerModal = ({
         className="w-full max-w-md h-auto max-h-[90vh] flex flex-col bg-[#dce3ee] rounded-2xl overflow-hidden border border-black/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative"
       >
         {/* Background Decorative Elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-[100px] -mr-32 -mt-32" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/20 rounded-full blur-[80px] -ml-32 -mb-32" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl -mr-32 -mt-32" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/20 rounded-full blur-3xl -ml-32 -mb-32" />
 
         {/* Header Section */}
         <div className="pt-10 pb-4 px-6 relative z-10 shrink-0">
@@ -5775,7 +5775,7 @@ function GroupApp({
     }
 
     return (
-      <div className="h-screen bg-brand-dark text-white font-sans overflow-y-auto flex flex-col p-6 items-center justify-center">
+      <div className="h-[100dvh] bg-brand-dark text-white font-sans overflow-y-auto flex flex-col p-6 items-center justify-center">
         <AnimatePresence>
           {toast && (
             <motion.div
@@ -6020,7 +6020,7 @@ function GroupApp({
 
   return (
     <div
-      className={`h-screen bg-brand-dark text-brand-text-primary font-sans overflow-hidden flex flex-col transition-colors duration-500 ${theme === "dark" ? "dark" : ""}`}
+      className={`h-[100dvh] bg-brand-dark text-brand-text-primary font-sans overflow-hidden flex flex-col transition-colors duration-500 ${theme === "dark" ? "dark" : ""}`}
     >
       {/* Logo Animation Overlay */}
       <AnimatePresence>
@@ -15074,8 +15074,8 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen font-sans transition-colors duration-500 flex flex-col justify-center p-0 sm:p-2 bg-[#14301F] overflow-x-hidden relative w-full">
-      <div className="w-full sm:w-[98%] sm:max-w-7xl mx-auto px-1 py-4 sm:px-10 sm:py-16 flex flex-col min-h-screen sm:min-h-0 justify-between relative bg-transparent">
+    <div className="min-h-[100dvh] font-sans transition-colors duration-500 flex flex-col justify-center p-0 sm:p-2 bg-[#14301F] overflow-x-hidden relative w-full">
+      <div className="w-full sm:w-[98%] sm:max-w-7xl mx-auto px-1 py-4 sm:px-10 sm:py-16 flex flex-col min-h-[100dvh] sm:min-h-0 justify-between relative bg-transparent">
         {/* Animated Background Polish */}
         <div className="absolute inset-0 pointer-events-none z-0">
           <div
@@ -15084,8 +15084,8 @@ export default function App() {
               backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 21px), repeating-linear-gradient(-45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 21px)`,
             }}
           ></div>
-          <div className="absolute -top-[20%] -left-[20%] w-[80%] h-[80%] bg-brand-primary opacity-10 blur-[120px] rounded-full animate-pulse" />
-          <div className="absolute -bottom-[20%] -right-[20%] w-[80%] h-[80%] bg-brand-primary opacity-5 blur-[120px] rounded-full" />
+          <div className="absolute -top-[20%] -left-[20%] w-[80%] h-[80%] bg-brand-primary opacity-10 blur-3xl rounded-full animate-pulse transform-gpu" />
+          <div className="absolute -bottom-[20%] -right-[20%] w-[80%] h-[80%] bg-brand-primary opacity-5 blur-3xl rounded-full transform-gpu" />
         </div>
 
         <div className="relative z-10 flex flex-col items-center justify-center gap-6 text-center mb-12">
@@ -15104,8 +15104,10 @@ export default function App() {
             initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: 0.2 }}
-            className="transform sm:scale-100 scale-105 origin-center w-full"
-          ></motion.div>
+            className="transform sm:scale-100 scale-105 origin-center w-full px-4 sm:px-0"
+          >
+            {groups.length === 0 && <TutorialCarousel />}
+          </motion.div>
 
           <div className="space-y-4">
             <AnimatePresence mode="popLayout">
