@@ -3428,15 +3428,43 @@ function GroupApp({
     const isRightSwipe = distanceX < -minSwipeDistance;
 
     if (Math.abs(distanceX) > Math.abs(distanceY) * 1.5) {
-      const screens: Screen[] = ["players", "teams", "ranking", "finance"];
-      const currentIndex = screens.indexOf(currentScreen);
+      let handledTabSwipe = false;
 
-      if (isLeftSwipe && currentIndex < screens.length - 1) {
-        setSwipeDirection(1);
-        setCurrentScreen(screens[currentIndex + 1]);
-      } else if (isRightSwipe && currentIndex > 0) {
-        setSwipeDirection(-1);
-        setCurrentScreen(screens[currentIndex - 1]);
+      if (currentScreen === "teams") {
+        const tabs = ["configuracao", "chegada", "historico", "proximos"];
+        const curTabIdx = tabs.indexOf(teamsTab);
+        if (isLeftSwipe && curTabIdx < tabs.length - 1) {
+          navigateTeamsTab(tabs[curTabIdx + 1] as any);
+          handledTabSwipe = true;
+        } else if (isRightSwipe && curTabIdx > 0) {
+          navigateTeamsTab(tabs[curTabIdx - 1] as any);
+          handledTabSwipe = true;
+        }
+      } else if (currentScreen === "finance") {
+        const tabs = ["balanco", "mensalidade"];
+        const curTabIdx = tabs.indexOf(financeSubScreen);
+        if (curTabIdx !== -1) {
+          if (isLeftSwipe && curTabIdx < tabs.length - 1) {
+            setFinanceSubScreen(tabs[curTabIdx + 1] as any);
+            handledTabSwipe = true;
+          } else if (isRightSwipe && curTabIdx > 0) {
+            setFinanceSubScreen(tabs[curTabIdx - 1] as any);
+            handledTabSwipe = true;
+          }
+        }
+      }
+
+      if (!handledTabSwipe) {
+        const screens: Screen[] = ["players", "teams", "ranking", "finance"];
+        const currentIndex = screens.indexOf(currentScreen);
+
+        if (isLeftSwipe && currentIndex < screens.length - 1) {
+          setSwipeDirection(1);
+          setCurrentScreen(screens[currentIndex + 1]);
+        } else if (isRightSwipe && currentIndex > 0) {
+          setSwipeDirection(-1);
+          setCurrentScreen(screens[currentIndex - 1]);
+        }
       }
     }
   };
