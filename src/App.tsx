@@ -8497,7 +8497,7 @@ function GroupApp({
                                 })()}
                               </button>
                               <div
-                                className={`text-4xl sm:text-7xl font-black origin-center text-zinc-500 ${!match.isActive || match.isPaused ? "opacity-50" : ""} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-xl bg-black/20 border-b-4 border-black/5 shadow-inner`}
+                                className={`text-4xl sm:text-7xl font-black origin-center text-black ${!match.isActive || match.isPaused ? "opacity-50" : ""} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24`}
                               >
                                 {match.scoreA}
                               </div>
@@ -8658,7 +8658,7 @@ function GroupApp({
                                 })()}
                               </button>
                               <div
-                                className={`text-4xl sm:text-7xl font-black origin-center text-zinc-500 ${!match.isActive || match.isPaused ? "opacity-50" : ""} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24 rounded-xl bg-black/20 border-b-4 border-black/5 shadow-inner`}
+                                className={`text-4xl sm:text-7xl font-black origin-center text-black ${!match.isActive || match.isPaused ? "opacity-50" : ""} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24`}
                               >
                                 {match.scoreB}
                               </div>
@@ -13662,15 +13662,13 @@ function GroupApp({
             <motion.div
               initial={{ scale: 0.9, y: 40 }}
               animate={{ scale: 1, y: 0 }}
-              className="w-full max-w-sm rounded-[40px] shadow-2xl border bg-zinc-50 border-zinc-200 overflow-hidden"
+              className="w-full max-w-[300px] rounded-[40px] shadow-2xl border bg-zinc-50 border-zinc-200 overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
               <div className="bg-brand-primary p-10 text-center relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-12 -mt-12 blur-2xl" />
-                <div className="flex w-16 h-16 mx-auto rounded-xl bg-white items-center justify-center mb-4 shadow-xl border-4 border-black/5">
-                  <span className="text-black">
-                    <IoFootballOutline size={32} />
-                  </span>
+                <div className="flex mx-auto items-center justify-center mb-4 text-black">
+                  <IoFootballOutline size={32} />
                 </div>
                 <h3 className="text-xl font-black uppercase tracking-tight text-black">
                   Partida em Andamento
@@ -13686,7 +13684,7 @@ function GroupApp({
                     setShowStartMatchConfirm(false);
                     setTeamsTab("historico");
                   }}
-                  className="w-full py-4 px-4 bg-brand-primary text-black rounded-2xl font-black uppercase text-xs flex items-center justify-center gap-3 hover:scale-[1.02] transition-all active:scale-95 shadow-lg shadow-brand-primary/20"
+                  className="w-full py-4 px-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 hover:opacity-90 transition-all active:scale-95 shadow-lg"
                 >
                   <PiPlay size={20} />
                   Continuar Partida
@@ -13716,7 +13714,7 @@ function GroupApp({
 
                 <button
                   onClick={() => setShowStartMatchConfirm(false)}
-                  className="w-full py-2 text-zinc-400 text-[10px] font-black uppercase tracking-widest hover:text-zinc-600 transition-colors"
+                  className="w-full py-2 text-black text-[10px] font-black uppercase tracking-widest hover:text-black/80 transition-colors"
                 >
                   Cancelar
                 </button>
