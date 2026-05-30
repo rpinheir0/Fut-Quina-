@@ -6945,7 +6945,7 @@ function GroupApp({
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 transition={{ delay: 0.2 + index * 0.05 }}
-                                key={match.id}
+                                key={`${match.id}-${index}`}
                                 onClick={() => {
                                   if (!isExpanded) {
                                     setExpandedMatchCards((prev) => [
@@ -7055,9 +7055,9 @@ function GroupApp({
                                           <div className="flex -space-x-1.5 sm:-space-x-2 mt-1 sm:mt-1.5">
                                             {matchSpecificPlayers
                                               .slice(0, 10)
-                                              .map((player) => (
+                                              .map((player, pIdx) => (
                                                 <div
-                                                  key={`scheduled-match-player-${player.id}-${match.id}`}
+                                                  key={`scheduled-match-player-${player.id}-${match.id}-${pIdx}`}
                                                   className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-white bg-zinc-200 overflow-hidden shadow-sm"
                                                 >
                                                   {player.avatar ? (
@@ -11267,9 +11267,9 @@ function GroupApp({
                                     Nenhuma despesa registrada
                                   </div>
                                 ) : (
-                                  sortedExpenses.map((expense) => (
+                                  sortedExpenses.map((expense, idx) => (
                                     <div
-                                      key={`expense-${expense.id}`}
+                                      key={`expense-${expense.id}-${idx}`}
                                       className={`flex items-center justify-between group ${isPrintMode ? "p-2 bg-white" : "p-4"}`}
                                     >
                                       <div>

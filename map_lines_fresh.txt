@@ -1,0 +1,168 @@
+227:        syncedIds.current = new Set(items.map((i) => i.id));
+239:    const currentIds = new Set(items.map((i) => i.id));
+249:      const payload = items.map((item) => mapToDbRef.current(item, groupId));
+384:        {items.map((_, i) => (
+405:  const usedColors = existingTeams.map((t) => t.color).filter(Boolean);
+419:    .map((t) => t.iconIdx)
+421:  const availableIndices = TEAM_ICONS.map((_, i) => i).filter(
+585:          {TEAM_COLORS.map((color) => (
+713:              .map((pid, idx) => {
+751:                        {[1, 2, 3, 4, 5].map((star) => (
+821:          {teamPlayers.map((pid, idx) => (
+840:                {[1, 2, 3, 4, 5].map((star) => (
+965:                      .map((pid, idx, arr) => {
+1002:                      .map((pid, idx, arr) => {
+1126:                      {(teamA.playerIds || []).map((pid, idx) => (
+1156:                      {(teamB.playerIds || []).map((pid, idx) => (
+1218:                  {state.penalties.teamA.map((shot, idx) => {
+1258:                  {state.penalties.teamB.map((shot, idx) => {
+1392:                          .map((pid, idx, arr) => {
+1434:                          .map((pid, idx, arr) => {
+1495:                        ).map((pid, idx, arr) => {
+1712:                {[1, 2, 3, 4, 5].map((star) => (
+1933:  let allTeamsNow = teams.map((t) => ({
+2003:    allTeamsNow = allTeamsNow.map((team) => {
+2189:            {Array.from({ length: 64 }).map((_, i) => (
+2197:          {Array.from({ length: 12 }).map((_, i) => (
+2921:        events: prev.events.map((e) =>
+3100:      const allPlayerIds = availableSessionPlayersList.map((p) => p.id);
+3110:        .map((p) => p.id);
+3113:        .map((p) => p.id);
+3380:        return prev.map((p) => {
+3570:            paymentsData.map((p) => ({
+3581:            matchHistoryData.map((h) => ({
+3616:            transactionsData.map((t) => ({
+3663:            prev.map((p) =>
+3696:                  data.map((p) => ({
+4238:    const existingNames = new Set(players.map((p) => p.name.toLowerCase()));
+4271:          ...newPlayers.map((p) => p.id),
+4309:        prev.map((t, idx) =>
+4385:        prev.map((t, idx) =>
+4483:        const newTeams = [...prev].map((t) => ({
+4534:      prev.map((p) => (p.id === id ? { ...p, absences } : p)),
+4552:            prev.map((p) =>
+4562:      prev.map((p) => (p.id === id ? { ...p, name: trimmedName } : p)),
+4568:    setPlayers((prev) => prev.map((p) => (p.id === id ? { ...p, stars } : p)));
+4572:    setPlayers((prev) => prev.map((p) => (p.id === id ? { ...p, photo } : p)));
+4589:      let currentTeams = [...prevTeams].map((t) => ({
+4701:      prev.map((p) => {
+4726:        playerIds: teamPlayers.map((p) => p.id),
+4742:        playerIds: leftoverPlayers.map((p) => p.id),
+4776:    setPlayers((prev) => prev.map((p) => ({ ...p, goals: 0, assists: 0 })));
+4816:      prev.map((p) => {
+4941:        newTeams = newTeams.map((t) => {
+4972:          newTeams = newTeams.map((t) => {
+5042:                  allTeamsNow[j].playerIds = allTeamsNow[j].playerIds.map(
+5066:        allTeamsNow = allTeamsNow.map((t) => {
+5081:          newTeams = newTeams.map((t) => {
+5111:        newTeams = newTeams.map((t) => {
+5171:          teamA: (teams[teamAIndex]?.playerIds || []).map((pid) => ({
+5175:          teamB: (teams[teamBIndex]?.playerIds || []).map((pid) => ({
+5246:      prev.map((team) => {
+5404:      newTeams = newTeams.map((t) => {
+5427:      newTeams = newTeams.map((t) => {
+5834:                {sortedPlayersByName.map((p) => (
+5939:                                  prev.map((p) =>
+5984:                                    prev.map((p) =>
+6894:                          {scheduledMatches.map((match, index) => {
+7058:                                              .map((player) => (
+7244:                              {visiblePlayers.map((player) => (
+7305:                                          {[1, 2, 3, 4, 5].map((star) => (
+7631:                                prev.map((p) => ({
+7709:                                const uniquePlayerIds = availablePlayers.map(
+7769:                            setSessionPlayerIds(players.map((p) => p.id));
+7796:                                      prev.map((pl, idx) => ({
+7809:                                        .map((p) => p.id);
+7891:                                      availablePlayers.map((p) => p.id);
+8009:                          sessionPlayersSorted.map((p) => (
+8015:                                  prev.map((pl) =>
+8149:                                  {[1, 2, 3, 4, 5].map((star) => (
+8297:                                    {(lastMatchResult.events || []).map(
+8357:                                                  {[1, 2, 3, 4, 5].map(
+8651:                              {sortedTeamAPlayers.map((pid, idx) => {
+8685:                                          const newTeams = [...prev].map(
+8719:                                                ].playerIds.map((id) => {
+8728:                                                ].playerIds.map((id) =>
+8735:                                              ].playerIds.map((id) =>
+8792:                                        {[1, 2, 3, 4, 5].map((star) => (
+8845:                              }).map((_, i) => (
+8885:                                        const newTeams = [...prev].map(
+8953:                              {sortedTeamBPlayers.map((pid, idx) => {
+8987:                                          const newTeams = [...prev].map(
+9021:                                                ].playerIds.map((id) => {
+9030:                                                ].playerIds.map((id) =>
+9037:                                              ].playerIds.map((id) =>
+9094:                                        {[1, 2, 3, 4, 5].map((star) => (
+9147:                              }).map((_, i) => (
+9187:                                        const newTeams = [...prev].map(
+9427:                                    prev.map((team) =>
+9460:                            {teams.map((t, tIdx) => {
+9516:                                        const newTeams = [...prev].map(
+9648:                                            const newTeams = prevTeams.map(
+9912:                                                const newTeams = prev.map(
+9994:                                          .map((pid, idx) => {
+10075:                                                      ].map((team) => ({
+10125:                                                            ].playerIds.map(
+10140:                                                            ].playerIds.map(
+10151:                                                            ].playerIds.map(
+10175:                                                      ].map((team) => ({
+10241:                                                        ].map((team) => ({
+10364:                                                    {[1, 2, 3, 4, 5].map(
+10418:                      {teams.map((team, tIndex) => (
+10520:                              .map((pid, idx) => {
+10537:                                          const newTeams = [...prev].map(
+10575:                                                ].playerIds.map((id) => {
+10584:                                                ].playerIds.map((id) =>
+10590:                                                ].playerIds.map((id) =>
+10653:                                          {[1, 2, 3, 4, 5].map((star) => (
+10781:                      {sortedRankingPlayers.map((player, index) => (
+10824:                              {[1, 2, 3, 4, 5].map((star) => (
+10917:                              .map((player, index) => (
+11270:                                  sortedExpenses.map((expense, idx) => (
+11377:                                ).map((p) => (
+11460:                                ).map((p) => (
+11591:                              {availableYears.map((y) => (
+11664:                              {MONTHS.map((month) => (
+11680:                            {players.map((player, index) => {
+11713:                                  {MONTHS.map((month) => {
+11844:                    .map((player) => {
+12050:                  {[1, 2, 3, 4, 5].map((star) => (
+12113:                            const newTeams = prev.map((t) => ({
+12131:                                ].playerIds.map((id) => {
+12139:                                ].playerIds.map((id) =>
+12144:                                ].playerIds.map((id) =>
+12190:                            prev.map((p) =>
+12199:                              prev.map((team, idx) => {
+12301:                              .map((t) => ({
+12311:                            prev.map((p) =>
+12454:                                prev.map((p) =>
+12463:                                  prev.map((team, idx) => {
+12540:                              .map((t) => ({
+12549:                            prev.map((p) =>
+12588:                        {teams.map((t, idx) => {
+12596:                                  const newTeams = [...prev].map((team) => ({
+12735:                    .map((pid, idx) => {
+12872:                    {teams.map((t, idx) => (
+12937:                            {t.playerIds.slice(0, 3).map((pid, pidx) => (
+12963:                      {teams.map((team, tIdx) => (
+13055:                              .map((pid, idx) => {
+13139:                                                const newTeams = prev.map(
+13174:                                                    ].playerIds.map((id) => {
+13186:                                                    ].playerIds.map((id) =>
+13195:                                                    ].playerIds.map((id) =>
+13216:                                            const newTeams = prev.map((t) => ({
+13264:                        .map((player) => (
+13284:                                      const newTeams = prev.map((t) => ({
+13295:                                        ].playerIds.map((id) =>
+13483:                {TEAM_ICONS.map((Icon, idx) => (
+13765:                      .map((player) => (
+13829:                        ).map((pid) => {
+13870:                          .map((aid) => {
+14044:                        .map((p) => (
+14169:                {teams.map(
+14188:                          .map((pid, idx) => (
+14197:                                  const newTeams = prev.map((team) => ({
+14210:                                  ].playerIds.map((id) =>
+14248:                    const newTeams = prev.map((team) => ({
+14324:                prev.map((t, i) => (i === idx ? { ...t, color } : t)),
+14843:                    ].map((day) => (
