@@ -9277,9 +9277,9 @@ function GroupApp({
                       )}
                     </div>
                   ) : teamsTab === "proximos" ? (
-                    <div className="space-y-6 relative overflow-hidden w-full">
+                    <div className="space-y-6 relative w-full">
                       {firstSetupDone && teams.length >= 2 && (
-                        <div className="flex justify-between items-center relative z-10 bg-zinc-100/80 backdrop-blur-sm rounded-2xl p-1 mb-2 shadow-sm border border-black/5">
+                        <div className="sticky top-[-1px] flex justify-between items-center z-40 bg-zinc-100/80 backdrop-blur-md rounded-2xl p-1 mb-2 shadow-sm border border-black/5">
                           <div className="flex gap-1 bg-white rounded-[11px]">
                             <div className="flex items-center gap-1.5 ml-1 bg-white rounded-[11px] px-1 py-1">
                               <button
@@ -10327,7 +10327,7 @@ function GroupApp({
                                                                 .playersPerTeam,
                                                         )
                                                       ? "bg-[#53B986]/10 text-[#53B986] animate-pulse shadow-sm shadow-[#53B986]/10"
-                                                      : `border group shadow-sm ${isCurrent ? "bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white border-transparent" : "text-black bg-gradient-to-br from-white to-[#f4f4f5] border-black/5 hover:border-black/10"}`
+                                                      : `border group shadow-sm ${isCurrent ? "bg-white text-black border-transparent" : "text-black bg-gradient-to-br from-white to-[#f4f4f5] border-black/5 hover:border-black/10"}`
                                                 }`}
                                                 style={{
                                                   backgroundColor: !(
@@ -10363,7 +10363,7 @@ function GroupApp({
                                                   orgProSettings.allowFixedGoalkeeper !==
                                                     false ? (
                                                     <div
-                                                      className={`flex items-center justify-center shrink-0 rounded-full w-4 h-4 text-[9px] font-black leading-none ${isCurrent ? "text-white" : "text-black/30"}`}
+                                                      className={`flex items-center justify-center shrink-0 rounded-full w-4 h-4 text-[9px] font-black leading-none ${isCurrent ? "text-black" : "text-black/30"}`}
                                                     >
                                                       G
                                                     </div>
