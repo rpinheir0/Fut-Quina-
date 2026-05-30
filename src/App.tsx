@@ -8307,7 +8307,7 @@ function GroupApp({
                                         if (!p) return null;
                                         return (
                                           <div
-                                            key={`last-game-event-${event.id || idx}`}
+                                            key={`last-game-event-${event.id || 'e'}-${idx}`}
                                             className="flex items-center justify-between gap-2 p-1.5 rounded-lg border border-black/5"
                                             style={{
                                               backgroundColor:
@@ -10017,7 +10017,7 @@ function GroupApp({
                                                   stiffness: 350,
                                                   damping: 25,
                                                 }}
-                                                key={`queue-player-${pid}`}
+                                                key={`queue-player-${pid}-${idx}`}
                                                 onClick={(e) => {
                                                   e.stopPropagation();
                                                   if (
@@ -10417,7 +10417,7 @@ function GroupApp({
                     <div className="grid grid-cols-2 gap-2 sm:gap-4">
                       {teams.map((team, tIndex) => (
                         <motion.div
-                          key={`scoreboard-team-${team.id}-${tIndex}`}
+                          key={`scoreboard-team-${team.id}`}
                           initial={{ opacity: 0, scale: 0.95 }}
                           animate={{ opacity: 1, scale: 1 }}
                           whileHover={{ y: -5 }}
@@ -10791,7 +10791,7 @@ function GroupApp({
                             },
                             opacity: { duration: 0.2 },
                           }}
-                          key={player.id}
+                          key={`${player.id}-${index}`}
                           className="flex items-center py-3 px-2 transition-colors rounded-xl bg-transparent border-b border-black/5"
                         >
                           <div className="w-8 text-sm font-black text-zinc-800/40 text-center shrink-0">
@@ -12962,7 +12962,7 @@ function GroupApp({
                     <AnimatePresence mode="popLayout">
                       {teams.map((team, tIdx) => (
                         <motion.div
-                          key={`settings-team-manage-${team.id}-${tIdx}`}
+                          key={`settings-team-manage-${team.id}`}
                           layout
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
