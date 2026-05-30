@@ -4407,7 +4407,7 @@ function GroupApp({
       if (newA >= teams.length) newA = 0;
       if (newB >= teams.length) newB = teams.length > 1 ? 1 : 0;
 
-      if (newA !== -1 && newA === newB && teams.length > 1) {
+      if (newA === newB && teams.length > 1) {
         newB = (newA + 1) % teams.length;
       }
 
@@ -7852,18 +7852,16 @@ function GroupApp({
                                       if (match.isActive) {
                                         setTeamsTab("historico");
                                       } else {
-                                        if (match.teamAIndex === -1 && match.teamBIndex === -1 && teams.length >= 2) {
+                                        // Ensure first two teams are selected if not already
+                                        if (
+                                          teams.length >= 2 &&
+                                          (match.teamAIndex === -1 ||
+                                            match.teamBIndex === -1)
+                                        ) {
                                           setMatch((prev) => ({
                                             ...prev,
                                             teamAIndex: 0,
                                             teamBIndex: 1,
-                                            scoreA: 0,
-                                            scoreB: 0,
-                                            timeRemaining: prev.config.duration * 60,
-                                            isActive: false,
-                                            isPaused: true,
-                                            hasEnded: false,
-                                            events: [],
                                           }));
                                         }
                                         setTeamsTab("proximos");

@@ -1,0 +1,5 @@
+200:  lastMatchStatus?: 'Vencedor' | 'Empate' | 'Derrota' | 'Subiu';
+3070:        // Identify which team just "subiu" to the match selection
+3078:              return { ...t, lastMatchStatus: 'Subiu' };
+3383:          return { ...t, lastMatchStatus: 'Subiu' };
+5234:                                            Subiu
