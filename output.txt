@@ -1,0 +1,201 @@
+9248:                  ) : teamsTab === "proximos" ? (
+9249-                    <div className="space-y-6 relative overflow-hidden w-full">
+9250-                      {firstSetupDone && teams.length >= 2 && (
+9251-                        <div className="flex justify-between items-center relative z-10 bg-zinc-100/80 backdrop-blur-sm rounded-2xl p-1 mb-2 shadow-sm border border-black/5">
+9252-                          <div className="flex gap-1 bg-white rounded-[11px]">
+9253-                            <div className="flex items-center gap-1.5 ml-1 bg-white rounded-[11px] px-1 py-1">
+9254-                              <button
+9255-                                onClick={() => {
+9256-                                  const newState = !autoCompleteTeams;
+9257-                                  setAutoCompleteTeams(newState);
+9258-                                  if (newState) {
+9259-                                    setShowAutoCompleteModal(true);
+9260-                                  } else {
+9261-                                    setToast({
+9262-                                      message: "Subida automática desativada",
+9263-                                      type: "info",
+9264-                                    });
+9265-                                  }
+9266-                                }}
+9267-                                className={`w-9 h-5 rounded-full p-0.5 transition-all duration-300 relative ${autoCompleteTeams ? "bg-[#00FF00]" : "bg-zinc-300"}`}
+9268-                                title="Subir automaticamente"
+9269-                              >
+9270-                                <div
+9271-                                  className={`w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 transform ${autoCompleteTeams ? "translate-x-4" : "translate-x-0"}`}
+9272-                                />
+9273-                              </button>
+9274-                              <span className="text-[8px] font-black uppercase tracking-tight text-[#1E3D2F]/60 leading-[1.1] text-left max-w-[75px]">
+9275-                                Subir automaticamente
+9276-                              </span>
+9277-                            </div>
+9278-                          </div>
+9279-                          <div className="flex gap-1 bg-white rounded-[11px] border-0">
+9280-                            <button
+9281-                              onClick={() => {
+9282-                                if (match.isActive && !match.hasEnded) return;
+9283-                                if (
+9284-                                  teams.filter(
+9285-                                    (t) =>
+9286-                                      t.playerIds.length ===
+9287-                                      match.config.playersPerTeam,
+9288-                                  ).length < 2
+9289-                                )
+9290-                                  return;
+9291-
+9292-                                setShowLogoAnimation(true);
+9293-                                setTimeout(() => {
+9294-                                  randomizeTeams(match.config.playersPerTeam);
+9295-                                  setShowLogoAnimation(false);
+9296-                                  sounds.playDrawFinished();
+9297-                                  setToast({
+9298-                                    message: "Times sorteados com sucesso!",
+9299-                                    type: "success",
+9300-                                  });
+9301-                                }, 3000);
+9302-                              }}
+9303-                              disabled={
+9304-                                (match.isActive && !match.hasEnded) ||
+9305-                                teams.filter(
+9306-                                  (t) =>
+9307-                                    t.playerIds.length ===
+9308-                                    match.config.playersPerTeam,
+9309-                                ).length < 2
+9310-                              }
+9311-                              className="px-3 py-2 rounded-xl transition-all active:scale-95 hover:bg-black/5 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
+9312-                            >
+9313-                              <span className="text-zinc-800">
+9314-                                <PiShuffleAngularBold size={16} />
+9315-                              </span>
+9316-                              <span className="text-[8px] font-black uppercase tracking-tight text-zinc-800">
+9317-                                Sortear
+9318-                              </span>
+9319-                            </button>
+9320-                            <button
+9321-                              onClick={() => {
+9322-                                if (match.isActive && !match.hasEnded) {
+9323-                                  setShowStartMatchConfirm(true);
+9324-                                  return;
+9325-                                }
+9326-
+9327-                                if (
+9328-                                  match.teamAIndex !== -1 &&
+9329-                                  match.teamBIndex !== -1 &&
+9330-                                  teams[match.teamAIndex]?.playerIds?.length ===
+9331-                                    match.config.playersPerTeam &&
+9332-                                  teams[match.teamBIndex]?.playerIds?.length ===
+9333-                                    match.config.playersPerTeam
+9334-                                ) {
+9335-                                  startNextMatch(
+9336-                                    match.teamAIndex,
+9337-                                    match.teamBIndex,
+9338-                                  );
+9339-                                }
+9340-                              }}
+9341-                              disabled={
+9342-                                !(
+9343-                                  match.teamAIndex !== -1 &&
+9344-                                  match.teamBIndex !== -1 &&
+9345-                                  teams[match.teamAIndex]?.playerIds?.length ===
+9346-                                    match.config.playersPerTeam &&
+9347-                                  teams[match.teamBIndex]?.playerIds?.length ===
+9348-                                    match.config.playersPerTeam
+9349-                                )
+9350-                              }
+9351-                              className="px-3 py-2 rounded-xl transition-all active:scale-95 hover:bg-black/5 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
+9352-                            >
+9353-                              <span className="text-zinc-800">
+9354-                                <IoFootballOutline size={16} />
+9355-                              </span>
+9356-                              <span className="text-[8px] font-black uppercase tracking-tight text-zinc-800">
+9357-                                Iniciar
+9358-                              </span>
+9359-                            </button>
+9360-                          </div>
+9361-                        </div>
+9362-                      )}
+9363-
+9364-                      <div className="space-y-4">
+9365-                        {teams.length < 2 ? (
+9366-                          <div className="py-20 flex flex-col items-center justify-center gap-6 w-full">
+9367-                            <div className="flex flex-col items-center gap-4 opacity-50 text-black/50 text-xs">
+9368-                              <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-2">
+9369-                                <span className="opacity-30 text-black">
+9370-                                  <GiSoccerBall size={48} />
+9371-                                </span>
+9372-                              </div>
+9373-                              <span className="font-bold uppercase tracking-widest text-[10px]">
+9374-                                Crie mais times para ver a fila
+9375-                              </span>
+9376-                            </div>
+9377-                            <button
+9378-                              onClick={() => {
+9379-                                if (
+9380-                                  players.filter((p) =>
+9381-                                    sessionPlayerIds.includes(p.id),
+9382-                                  ).length > 0
+9383-                                ) {
+9384-                                  setTeamsTab("chegada");
+9385-                                } else if (players.length < 2) {
+9386-                                  setCurrentScreen("players");
+9387-                                  setPlayersTab("jogadores");
+9388-                                } else {
+9389-                                  setTeamsTab("configuracao");
+9390-                                  if (!firstSetupDone) {
+9391-                                    setIsInitialSetupFlow(true);
+9392-                                  }
+9393-                                }
+9394-                              }}
+9395-                              className="px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
+9396-                            >
+9397-                              {players.filter((p) =>
+9398-                                sessionPlayerIds.includes(p.id),
+9399-                              ).length > 0
+9400-                                ? "Confirmar Chegada"
+9401-                                : players.length < 2
+9402-                                  ? "CRIAR JOGADORES"
+9403-                                  : "CONFIGURAR PARTIDA"}
+9404-                            </button>
+9405-                          </div>
+9406-                        ) : (
+9407-                          <div className="space-y-4">
+9408-                            {/* Tie resolution info */}
+9409-                            {teams.some(
+9410-                              (t) => t.lastMatchStatus === "Empate",
+9411-                            ) && (
+9412-                              <motion.div
+9413-                                initial={{ opacity: 0, y: -10 }}
+9414-                                animate={{ opacity: 1, y: 0 }}
+9415-                                className="p-5 bg-black border border-black/10 rounded-2xl flex items-start gap-4 shadow-xl mb-4 cursor-pointer hover:bg-black/90 transition-colors group"
+9416-                                onClick={() => {
+9417-                                  setTeams((prev) =>
+9418-                                    prev.map((team) =>
+9419-                                      team.lastMatchStatus === "Empate"
+9420-                                        ? {
+9421-                                            ...team,
+9422-                                            lastMatchStatus: undefined,
+9423-                                          }
+9424-                                        : team,
+9425-                                    ),
+9426-                                  );
+9427-                                }}
+9428-                              >
+9429-                                <div className="w-10 h-10 rounded-xl bg-brand-primary/20 flex items-center justify-center shrink-0">
+9430-                                  <Info
+9431-                                    size={18}
+9432-                                    className="text-brand-primary"
+9433-                                  />
+9434-                                </div>
+9435-                                <div className="flex flex-col">
+9436-                                  <span className="text-[10px] font-black uppercase tracking-widest text-brand-primary mb-1">
+9437-                                    Empate Resolvido Manualmente
+9438-                                  </span>
+9439-                                  <p className="text-[10px] text-white/80 font-bold uppercase leading-relaxed tracking-wider">
+9440-                                    Desmarque o time que deve{" "}
+9441-                                    <span className="text-white">
+9442-                                      descer na fila
+9443-                                    </span>
+9444-                                    . O time que permanecer selecionado jogará a
+9445-                                    próxima partida.
+9446-                                  </p>
+9447-                                </div>
+9448-                              </motion.div>

@@ -3376,14 +3376,21 @@ function GroupApp({
     setPlayers((prev) => {
       const pA = prev.find((p) => p.id === pAId);
       const pB = prev.find((p) => p.id === pBId);
-      if (pA?.isGoalkeeper || pB?.isGoalkeeper) {
-        return prev.map((p) => {
-          if (p.id === pAId) return { ...p, isGoalkeeper: !!pB?.isGoalkeeper };
-          if (p.id === pBId) return { ...p, isGoalkeeper: !!pA?.isGoalkeeper };
-          return p;
-        });
-      }
-      return prev;
+      if (!pA || !pB) return prev;
+      
+      return prev.map((p) => {
+        if (p.id === pAId) {
+          const updates: any = { arrivedAt: pB.arrivedAt };
+          if (pA.isGoalkeeper || pB.isGoalkeeper) updates.isGoalkeeper = !!pB.isGoalkeeper;
+          return { ...p, ...updates };
+        }
+        if (p.id === pBId) {
+          const updates: any = { arrivedAt: pA.arrivedAt };
+          if (pA.isGoalkeeper || pB.isGoalkeeper) updates.isGoalkeeper = !!pA.isGoalkeeper;
+          return { ...p, ...updates };
+        }
+        return p;
+      });
     });
   };
 
@@ -8661,7 +8668,7 @@ function GroupApp({
                                 ).length;
                                 return (
                                   <button
-                                    key={`partida-p-a-${pid}-${idx}`}
+                                    key={`partida-p-a-${pid}`}
                                     disabled={
                                       match.scoreA >= match.config.goalLimit ||
                                       match.scoreB >= match.config.goalLimit
@@ -8751,21 +8758,13 @@ function GroupApp({
                                         playerId: pid,
                                       });
                                     }}
-                                    className={`w-full flex flex-row-reverse items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br from-white to-[#f4f4f5] border border-black/5 hover:opacity-90 hover:border-black/10 ${
+                                    className={`w-full flex flex-row-reverse items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br from-white to-[#f4f4f5] hover:opacity-90 hover:border-black/10 ${
                                       swappingPlayerId === pid
-                                        ? "border-2 border-[#53B986] shadow-lg scale-105"
-                                        : "border group"
+                                        ? "border-2 border-[#53B986] shadow-lg scale-105 relative z-10"
+                                        : swappingPlayerId && swappingPlayerId !== pid
+                                          ? "border-2 border-[#53B986] shadow-sm animate-pulse shadow-[#53B986]/10"
+                                          : "border border-black/5 group"
                                     }`}
-                                    style={{
-                                      borderColor:
-                                        swappingPlayerId !== pid
-                                          ? "#53B986"
-                                          : undefined,
-                                      backgroundColor:
-                                        swappingPlayerId === pid
-                                          ? undefined
-                                          : undefined,
-                                    }}
                                   >
                                     <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-transparent flex items-center justify-center shrink-0 overflow-hidden ml-3">
                                       {p.isGoalkeeper ? (
@@ -8963,7 +8962,7 @@ function GroupApp({
                                 ).length;
                                 return (
                                   <button
-                                    key={`partida-p-b-${pid}-${idx}`}
+                                    key={`partida-p-b-${pid}`}
                                     disabled={
                                       match.scoreA >= match.config.goalLimit ||
                                       match.scoreB >= match.config.goalLimit
@@ -9053,21 +9052,13 @@ function GroupApp({
                                         playerId: pid,
                                       });
                                     }}
-                                    className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br from-white to-[#f4f4f5] border border-black/5 hover:opacity-90 hover:border-black/10 ${
+                                    className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br from-white to-[#f4f4f5] hover:opacity-90 hover:border-black/10 ${
                                       swappingPlayerId === pid
-                                        ? "border-2 border-[#53B986] shadow-lg scale-105"
-                                        : "border group"
+                                        ? "border-2 border-[#53B986] shadow-lg scale-105 relative z-10"
+                                        : swappingPlayerId && swappingPlayerId !== pid
+                                          ? "border-2 border-[#53B986] shadow-sm animate-pulse shadow-[#53B986]/10"
+                                          : "border border-black/5 group"
                                     }`}
-                                    style={{
-                                      borderColor:
-                                        swappingPlayerId !== pid
-                                          ? "#53B986"
-                                          : undefined,
-                                      backgroundColor:
-                                        swappingPlayerId === pid
-                                          ? undefined
-                                          : undefined,
-                                    }}
                                   >
                                     <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-transparent flex items-center justify-center shrink-0 overflow-hidden mr-3">
                                       {p.isGoalkeeper ? (
@@ -9480,11 +9471,12 @@ function GroupApp({
                               return (
                                 <motion.div
                                   layout="position"
-                                  initial={{ opacity: 0, y: 10 }}
+                                  initial={{ opacity: 0, y: 20 }}
                                   animate={{ opacity: 1, y: 0 }}
                                   transition={{
-                                    duration: 0.3,
-                                    ease: "easeOut",
+                                    layout: { type: "tween", ease: "circOut", duration: 0.4 },
+                                    opacity: { duration: 0.3 },
+                                    y: { type: "spring", stiffness: 200, damping: 25 }
                                   }}
                                   key={`team-card-${t.id}`}
                                   id={`team-card-${tIdx}`}
@@ -10001,7 +9993,7 @@ function GroupApp({
                                                 layoutId={`player-card-${pid}`}
                                                 initial={{
                                                   opacity: 0,
-                                                  scale: 0.95,
+                                                  scale: 0.8,
                                                 }}
                                                 animate={{
                                                   opacity: 1,
@@ -10009,13 +10001,14 @@ function GroupApp({
                                                 }}
                                                 exit={{
                                                   opacity: 0,
-                                                  scale: 0.95,
+                                                  scale: 0.8,
                                                 }}
                                                 transition={{
-                                                  duration: 0.2,
-                                                  ease: "easeOut",
+                                                  layout: { type: "tween", ease: "circOut", duration: 0.4 },
+                                                  opacity: { duration: 0.3 },
+                                                  scale: { duration: 0.3 }
                                                 }}
-                                                key={`queue-player-${pid}-${idx}`}
+                                                key={`queue-player-${pid}`}
                                                 onClick={(e) => {
                                                   e.stopPropagation();
                                                   if (
@@ -12235,7 +12228,6 @@ function GroupApp({
                       <button
                         onClick={() => {
                           setSwappingPlayerId(showPlayerActionsModal.playerId);
-                          setTeamsTab("proximos");
                           setShowPlayerActionsModal(null);
                           setToast({
                             message:
@@ -12249,7 +12241,7 @@ function GroupApp({
                           size={14}
                           className="text-zinc-400 group-hover:text-zinc-900 transition-colors"
                         />
-                        Trocar
+                        Substituir
                       </button>
                     )}
 
