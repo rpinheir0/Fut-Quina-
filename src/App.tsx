@@ -3452,6 +3452,18 @@ function GroupApp({
             handledTabSwipe = true;
           }
         }
+      } else if (currentScreen === "ranking") {
+        const tabs = ["geral", "artilharia", "assistencias"];
+        const curTabIdx = tabs.indexOf(rankingTab);
+        if (curTabIdx !== -1) {
+          if (isLeftSwipe && curTabIdx < tabs.length - 1) {
+            setRankingTab(tabs[curTabIdx + 1] as any);
+            handledTabSwipe = true;
+          } else if (isRightSwipe && curTabIdx > 0) {
+            setRankingTab(tabs[curTabIdx - 1] as any);
+            handledTabSwipe = true;
+          }
+        }
       }
 
       if (!handledTabSwipe) {
