@@ -8155,7 +8155,7 @@ function GroupApp({
                               }`}
                             >
                               <div
-                                className={`w-10 h-10 rounded-xl bg-gradient-to-br from-zinc-100 to-zinc-300 flex items-center justify-center overflow-hidden border border-black/10`}
+                                className={`w-10 h-10 rounded-full bg-gradient-to-br from-zinc-100 to-zinc-300 flex items-center justify-center overflow-hidden border border-black/10`}
                               >
                                 {p.photo ? (
                                   <img
