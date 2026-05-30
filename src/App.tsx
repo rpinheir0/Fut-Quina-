@@ -966,7 +966,7 @@ const TieBreakerModal = ({
                         const p = players.find((player) => player.id === pid);
                         return (
                           <span
-                            key={pid}
+                            key={`${pid}-${idx}-firstmatch`}
                             className="text-[7px] font-black text-black uppercase tracking-tighter"
                           >
                             {p?.name}
@@ -1003,7 +1003,7 @@ const TieBreakerModal = ({
                         const p = players.find((player) => player.id === pid);
                         return (
                           <span
-                            key={pid}
+                            key={`${pid}-${idx}-secondmatch`}
                             className="text-[7px] font-black text-black uppercase tracking-tighter"
                           >
                             {p?.name}
@@ -1125,7 +1125,7 @@ const TieBreakerModal = ({
                     <div className="flex flex-wrap gap-x-1.5 mt-1">
                       {(teamA.playerIds || []).map((pid, idx) => (
                         <span
-                          key={pid}
+                          key={`${pid}-${idx}-2`}
                           className="text-[8px] text-black/60 font-black tracking-tight"
                         >
                           {players.find((p) => p.id === pid)?.name}
@@ -1155,7 +1155,7 @@ const TieBreakerModal = ({
                     <div className="flex flex-wrap gap-x-1.5 mt-1">
                       {(teamB.playerIds || []).map((pid, idx) => (
                         <span
-                          key={pid}
+                          key={`${pid}-${idx}-3`}
                           className="text-[8px] text-black/60 font-black tracking-tight"
                         >
                           {players.find((p) => p.id === pid)?.name}
@@ -1395,7 +1395,7 @@ const TieBreakerModal = ({
                             );
                             return (
                               <span
-                                key={pid}
+                                key={`${pid}-${idx}-third`}
                                 className="text-[6px] font-bold text-zinc-400 uppercase"
                               >
                                 {p?.name}
@@ -1437,7 +1437,7 @@ const TieBreakerModal = ({
                             );
                             return (
                               <span
-                                key={pid}
+                                key={`${pid}-${idx}-fourth`}
                                 className="text-[6px] font-bold text-zinc-400 uppercase"
                               >
                                 {p?.name}
@@ -1496,7 +1496,7 @@ const TieBreakerModal = ({
                           const p = players.find((player) => player.id === pid);
                           return (
                             <span
-                              key={pid}
+                              key={`${pid}-${idx}-fifth`}
                               className="text-[8px] font-black text-black uppercase tracking-widest"
                             >
                               {p?.name}
@@ -15001,450 +15001,38 @@ function AuthScreen() {
 
 // --- Main App Component ---
 export default function App() {
-  const [session, setSession] = useState<any>(null);
   const [isInitializing, setIsInitializing] = useState(true);
 
-  const [groups, setGroups] = useState<
-    { id: string; name: string; createdAt: number }[]
-  >(() => {
-    const saved = safeLocalStorage.getItem("futquina_groups_offline");
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  // Clean all previous unused hooks required for syncing
-
-  const [currentGroupId, setCurrentGroupId] = useState<string | null>(() => {
+  // Directly enter the control panel (no "Nova Partida" page)
+  const [currentGroupId] = useState<string>(() => {
     const saved = safeLocalStorage.getItem("futquina_current_group_id_offline");
-    if (saved) {
-      const savedGroups = safeLocalStorage.getItem("futquina_groups_offline");
-      if (
-        savedGroups &&
-        JSON.parse(savedGroups).find((g: any) => g.id === saved)
-      ) {
-        return saved;
-      }
+    if (saved) return saved;
+
+    const savedGroups = safeLocalStorage.getItem("futquina_groups_offline");
+    if (savedGroups) {
+      try {
+        const parsed = JSON.parse(savedGroups);
+        if (parsed && parsed.length > 0) return parsed[0].id;
+      } catch (e) {}
     }
-    return null;
+    return "main"; // default main group ID
   });
 
   useEffect(() => {
-    if (currentGroupId) {
-      safeLocalStorage.setItem(
-        "futquina_current_group_id_offline",
-        currentGroupId,
-      );
-    } else {
-      safeLocalStorage.removeItem("futquina_current_group_id_offline");
-    }
+    safeLocalStorage.setItem(
+      "futquina_current_group_id_offline",
+      currentGroupId,
+    );
   }, [currentGroupId]);
-  const [showNewGroupModal, setShowNewGroupModal] = useState(false);
-  const [newGroupName, setNewGroupName] = useState("");
-  const [selectedGroupOptions, setSelectedGroupOptions] = useState<{
-    id: string;
-    name: string;
-  } | null>(null);
-  const [groupToRename, setGroupToRename] = useState<{
-    id: string;
-    name: string;
-  } | null>(null);
-  const [groupToDelete, setGroupToDelete] = useState<{
-    id: string;
-    name: string;
-  } | null>(null);
-  const [renameValue, setRenameValue] = useState("");
-  // Remove theme state and use a constant for logic cleanup or just remove completely
-  const theme = "light";
-
-  // Keep offline logic purely local
-  useEffect(() => {
-    safeLocalStorage.setItem("futquina_groups_offline", JSON.stringify(groups));
-  }, [groups]);
 
   if (isInitializing) {
     return <SplashScreen onComplete={() => setIsInitializing(false)} />;
   }
 
-  if (currentGroupId) {
-    return (
-      <GroupApp
-        groupId={currentGroupId}
-        onBackToHome={() => setCurrentGroupId(null)}
-      />
-    );
-  }
-
   return (
-    <div className="min-h-[100dvh] font-sans transition-colors duration-500 flex flex-col justify-center p-0 sm:p-2 bg-[#14301F] overflow-x-hidden relative w-full">
-      <div className="w-full sm:w-[98%] sm:max-w-7xl mx-auto px-1 py-4 sm:px-10 sm:py-16 flex flex-col min-h-[100dvh] sm:min-h-0 justify-between relative bg-transparent">
-        {/* Animated Background Polish */}
-        <div className="absolute inset-0 pointer-events-none z-0">
-          <div
-            className="absolute inset-0 opacity-10"
-            style={{
-              backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 21px), repeating-linear-gradient(-45deg, transparent, transparent 20px, #ffffff 20px, #ffffff 21px)`,
-            }}
-          ></div>
-          <div className="absolute -top-[20%] -left-[20%] w-[80%] h-[80%] bg-brand-primary opacity-10 blur-3xl rounded-full animate-pulse transform-gpu" />
-          <div className="absolute -bottom-[20%] -right-[20%] w-[80%] h-[80%] bg-brand-primary opacity-5 blur-3xl rounded-full transform-gpu" />
-        </div>
-
-        <div className="relative z-10 flex flex-col items-center justify-center gap-6 text-center mb-12">
-          <div className="flex flex-col items-center">
-            <FutQuinaLogo
-              size="lg"
-              colorClass=""
-              style={{ color: "#83A8FF" }}
-              titleColorClass="text-[#83A8FF]"
-            />
-          </div>
-        </div>
-
-        <div className="relative z-10 space-y-10 sm:space-y-8 flex-1 flex flex-col justify-center">
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="transform sm:scale-100 scale-105 origin-center w-full px-4 sm:px-0"
-          >
-            {groups.length === 0 && <TutorialCarousel />}
-          </motion.div>
-
-          <div className="space-y-4">
-            <AnimatePresence mode="popLayout">
-              {groups.length > 0 && (
-                <div className="space-y-4 pt-4 sm:pt-0">
-                  <div className="flex items-center gap-3 px-2 mb-2">
-                    <span className="text-[10px] font-normal text-[#E3D39E]/40 uppercase tracking-[0.3em]">
-                      Minhas Partidas
-                    </span>
-                    <div className="h-[1px] flex-1 bg-[#E3D39E]/10" />
-                  </div>
-                  {groups.map((group, index) => (
-                    <motion.div
-                      key={`${group.id}-${index}`}
-                      initial={{ x: -20, opacity: 0 }}
-                      animate={{ x: 0, opacity: 1 }}
-                      transition={{ delay: 0.1 * index }}
-                      className="flex items-center gap-2"
-                    >
-                      <button
-                        onClick={() =>
-                          setSelectedGroupOptions({
-                            id: group.id,
-                            name: group.name,
-                          })
-                        }
-                        className="flex-1 p-4 transition-all duration-400 flex items-center justify-between relative group rounded-xl bg-white/5 backdrop-blur-xl border border-[#E3D39E]/20 hover:-translate-y-1 hover:bg-white/10 hover:border-[#E3D39E]/40 overflow-hidden active:scale-95"
-                      >
-                        <div className="flex flex-col items-start gap-1">
-                          <span
-                            className="text-xl font-black text-[#E3D39E] drop-shadow-md tracking-tight uppercase"
-                            style={{ fontFamily: "system-ui" }}
-                          >
-                            {group.name}
-                          </span>
-                          <span className="text-[9px] font-black text-[#E3D39E]/40 uppercase tracking-widest">
-                            {new Date(group.createdAt).toLocaleDateString()}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-center group-hover:text-brand-primary transition-all">
-                          <span className="text-[#E3D39E] opacity-70 group-hover:opacity-100">
-                            <GiGoalKeeper size={28} />
-                          </span>
-                        </div>
-                      </button>
-                    </motion.div>
-                  ))}
-                </div>
-              )}
-            </AnimatePresence>
-
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="pt-3"
-            >
-              <button
-                onClick={() => setShowNewGroupModal(true)}
-                className="w-full p-4 rounded-xl font-black uppercase tracking-[0.2em] text-[10px] flex items-center justify-center gap-4 transition-all duration-300 bg-brand-primary text-black hover:opacity-90 hover:scale-[1.01] active:scale-95 border-b-4 border-black/20"
-              >
-                <div className="w-7 h-7 rounded-full bg-black/10 flex items-center justify-center">
-                  <Plus size={18} strokeWidth={3} />
-                </div>
-                Nova Partida
-              </button>
-            </motion.div>
-          </div>
-        </div>
-      </div>
-
-      {/* Group Options Modal */}
-      {selectedGroupOptions && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
-          onClick={() => setSelectedGroupOptions(null)}
-        >
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="w-full max-w-md p-8 rounded-xl bg-[#14301F] border border-[#E3D39E]/30 relative overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div
-              className="absolute inset-0 opacity-5 pointer-events-none"
-              style={{
-                backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 15px, #ffffff 15px, #ffffff 16px), repeating-linear-gradient(-45deg, transparent, transparent 15px, #ffffff 15px, #ffffff 16px)`,
-              }}
-            ></div>
-
-            <div className="relative z-10 text-center mb-8">
-              <span className="text-[10px] font-black text-brand-primary uppercase tracking-[0.3em] mb-2 block">
-                Opções da Partida
-              </span>
-              <h3 className="text-2xl font-black font-[system-ui] tracking-tighter text-[#E3D39E] uppercase">
-                {selectedGroupOptions.name}
-              </h3>
-            </div>
-
-            <div className="relative z-10 flex flex-col gap-4">
-              <button
-                onClick={() => {
-                  setCurrentGroupId(selectedGroupOptions.id);
-                  setSelectedGroupOptions(null);
-                }}
-                className="group w-full flex items-center justify-center gap-4 p-5 rounded-xl font-black uppercase tracking-widest text-xs transition-all duration-300 bg-brand-primary text-black hover:scale-[1.02] active:scale-95"
-              >
-                <span className="group-hover:scale-110 transition-transform">
-                  <GiQueenCrown size={20} />
-                </span>
-                <span className="mt-0.5">Entrar na Partida</span>
-              </button>
-
-              <div className="grid grid-cols-2 gap-4">
-                <button
-                  onClick={() => {
-                    setGroupToRename(selectedGroupOptions);
-                    setRenameValue(selectedGroupOptions.name);
-                    setSelectedGroupOptions(null);
-                  }}
-                  className="flex items-center justify-center gap-3 p-4 rounded-[20px] font-black uppercase tracking-widest text-[10px] transition-all bg-white/5 border border-white/10 hover:bg-white/10 text-white"
-                >
-                  <RefreshCw size={14} />
-                  Renomear
-                </button>
-                <button
-                  onClick={() => {
-                    setGroupToDelete(selectedGroupOptions);
-                    setSelectedGroupOptions(null);
-                  }}
-                  className="flex items-center justify-center gap-3 p-4 rounded-[20px] bg-red-500/10 text-red-400 font-black uppercase tracking-widest text-[10px] hover:bg-red-500/20 transition-all border border-red-500/20"
-                >
-                  <Trash2 size={14} />
-                  Exclua
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-      )}
-
-      {/* Delete Confirmation Modal */}
-      {groupToDelete && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="bg-[#14301F] border border-red-500/30 rounded-xl p-8 max-w-md w-full shadow-2xl relative overflow-hidden"
-          >
-            <div className="absolute inset-0 bg-red-500/5 pointer-events-none" />
-            <h3 className="text-2xl font-black uppercase tracking-tighter mb-4 text-red-400 text-center relative z-10">
-              Exclua Partida
-            </h3>
-            <p className="text-center text-white/70 mb-8 text-sm lowercase first-letter:uppercase leading-relaxed px-2 relative z-10">
-              Tem certeza que deseja excluir a partida{" "}
-              <strong className="text-white font-black">
-                {groupToDelete.name}
-              </strong>
-              ? Todos os dados serão perdidos.
-            </p>
-            <div className="flex flex-col gap-3 relative z-10">
-              <button
-                onClick={() => {
-                  setGroups((prev) =>
-                    prev.filter((g) => g.id !== groupToDelete.id),
-                  );
-                  [
-                    `futquina_finance_players_${groupToDelete.id}`,
-                    `futquina_monthly_fee_${groupToDelete.id}`,
-                    `futquina_selected_year_${groupToDelete.id}`,
-                    `futquina_available_years_${groupToDelete.id}`,
-                    `futquina_players_${groupToDelete.id}`,
-                    `futquina_session_player_ids_${groupToDelete.id}`,
-                    `futquina_payments_${groupToDelete.id}`,
-                    `futquina_teams_${groupToDelete.id}`,
-                    `futquina_match_${groupToDelete.id}`,
-                    `futquina_match_history_${groupToDelete.id}`,
-                    `futquina_has_randomized_${groupToDelete.id}`,
-                    `futquina_last_result_${groupToDelete.id}`,
-                  ].forEach((k) => safeLocalStorage.removeItem(k));
-                  setGroupToDelete(null);
-                }}
-                className="w-full py-5 rounded-xl font-black uppercase tracking-widest text-xs bg-red-500 text-white hover:bg-red-600 transition-all shadow-xl shadow-red-500/20 active:scale-95"
-              >
-                Confirmar Exclusão
-              </button>
-              <button
-                onClick={() => setGroupToDelete(null)}
-                className="w-full py-4 rounded-[20px] font-black uppercase tracking-widest text-[10px] transition-all bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
-              >
-                Cancelar
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
-
-      {/* Rename Modal */}
-      {groupToRename && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
-          <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="w-full max-w-md p-8 rounded-xl shadow-2xl bg-[#14301F] border border-[#E3D39E]/30 relative overflow-hidden"
-          >
-            <div
-              className="absolute inset-0 opacity-5 pointer-events-none"
-              style={{
-                backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 15px, #ffffff 15px, #ffffff 16px), repeating-linear-gradient(-45deg, transparent, transparent 15px, #ffffff 15px, #ffffff 16px)`,
-              }}
-            ></div>
-            <h3 className="relative z-10 text-xl font-black uppercase tracking-tighter mb-6 text-[#E3D39E] text-center">
-              Renomear
-            </h3>
-            <input
-              type="text"
-              value={renameValue}
-              onChange={(e) => setRenameValue(e.target.value)}
-              placeholder="Novo nome"
-              className="relative z-10 w-full p-5 rounded-xl mb-8 outline-none font-bold bg-white/5 border border-white/10 text-white placeholder:text-white/20 focus:border-brand-primary transition-all text-center text-lg"
-              autoFocus
-            />
-            <div className="relative z-10 flex flex-col gap-3">
-              <button
-                onClick={() => {
-                  if (renameValue.trim()) {
-                    setGroups((prev) =>
-                      prev.map((g) =>
-                        g.id === groupToRename.id
-                          ? { ...g, name: renameValue.trim() }
-                          : g,
-                      ),
-                    );
-                    setGroupToRename(null);
-                    setRenameValue("");
-                  }
-                }}
-                disabled={!renameValue.trim()}
-                className="w-full py-5 rounded-xl font-black uppercase tracking-widest text-[11px] bg-brand-primary text-black hover:opacity-90 transition-all disabled:opacity-50 active:scale-95 shadow-xl shadow-brand-primary/20"
-              >
-                Salvar Alteração
-              </button>
-              <button
-                onClick={() => {
-                  setGroupToRename(null);
-                  setRenameValue("");
-                }}
-                className="w-full py-4 rounded-[20px] font-black uppercase tracking-widest text-[10px] transition-all bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
-              >
-                Cancelar
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
-
-      {/* New Group Modal */}
-      {showNewGroupModal && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
-          <motion.div
-            initial={{ y: 50, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="w-full max-w-md p-8 rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.8)] bg-[#14301F] border border-[#E3D39E]/30 relative overflow-hidden"
-          >
-            <div
-              className="absolute inset-0 opacity-5 pointer-events-none"
-              style={{
-                backgroundImage: `repeating-linear-gradient(45deg, transparent, transparent 15px, #ffffff 15px, #ffffff 16px), repeating-linear-gradient(-45deg, transparent, transparent 15px, #ffffff 15px, #ffffff 16px)`,
-              }}
-            ></div>
-
-            <div className="relative z-10 text-center mb-8">
-              <div className="w-16 h-16 rounded-full bg-brand-primary/10 text-brand-primary flex items-center justify-center mx-auto mb-4">
-                <GiGoalKeeper size={32} />
-              </div>
-              <h3 className="text-2xl font-black uppercase tracking-tighter text-[#E3D39E]">
-                Nova Partida
-              </h3>
-              <p className="text-[10px] font-black text-[#E3D39E]/40 uppercase tracking-[0.2em] mt-1">
-                Como vai se chamar?
-              </p>
-            </div>
-
-            <input
-              type="text"
-              value={newGroupName}
-              onChange={(e) => setNewGroupName(e.target.value)}
-              placeholder="Ex: Racha dos Amigos"
-              className="relative z-10 w-full p-6 rounded-xl mb-8 outline-none font-black bg-white/5 border border-white/10 text-white placeholder:text-white/20 focus:border-brand-primary transition-all text-center text-lg shadow-inner"
-              autoFocus
-            />
-
-            <div className="relative z-10 flex flex-col gap-4">
-              <button
-                onClick={() => {
-                  if (newGroupName.trim()) {
-                    const newGroup = {
-                      id: Math.random().toString(36).substr(2, 9),
-                      name: newGroupName.trim(),
-                      createdAt: Date.now(),
-                    };
-
-                    if (session?.user?.id) {
-                      supabase
-                        .from("groups")
-                        .insert({
-                          id: newGroup.id,
-                          name: newGroup.name,
-                          created_at: newGroup.createdAt,
-                          user_id: session.user.id,
-                        })
-                        .then();
-                    }
-
-                    setGroups((prev) => [...prev, newGroup]);
-                    setShowNewGroupModal(false);
-                    setNewGroupName("");
-                  }
-                }}
-                disabled={!newGroupName.trim()}
-                className="w-full p-5 rounded-xl font-black uppercase tracking-widest text-xs bg-brand-primary text-black hover:scale-[1.02] transition-all disabled:opacity-50 active:scale-95 border-b-4 border-black/20"
-              >
-                Confirmar Criação
-              </button>
-              <button
-                onClick={() => {
-                  setShowNewGroupModal(false);
-                  setNewGroupName("");
-                }}
-                className="w-full py-4 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all bg-white/5 text-white/50 hover:bg-white/10 hover:text-white"
-              >
-                Voltar
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      )}
-    </div>
+    <GroupApp
+      groupId={currentGroupId}
+      onBackToHome={() => {}}
+    />
   );
 }
