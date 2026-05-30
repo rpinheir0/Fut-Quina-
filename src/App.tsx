@@ -9480,12 +9480,11 @@ function GroupApp({
                               return (
                                 <motion.div
                                   layout="position"
-                                  initial={{ opacity: 0, y: 20 }}
+                                  initial={{ opacity: 0, y: 10 }}
                                   animate={{ opacity: 1, y: 0 }}
                                   transition={{
-                                    type: "spring",
-                                    stiffness: 300,
-                                    damping: 30,
+                                    duration: 0.3,
+                                    ease: "easeOut",
                                   }}
                                   key={`team-card-${t.id}`}
                                   id={`team-card-${tIdx}`}
@@ -10002,7 +10001,7 @@ function GroupApp({
                                                 layoutId={`player-card-${pid}`}
                                                 initial={{
                                                   opacity: 0,
-                                                  scale: 0.8,
+                                                  scale: 0.95,
                                                 }}
                                                 animate={{
                                                   opacity: 1,
@@ -10010,12 +10009,11 @@ function GroupApp({
                                                 }}
                                                 exit={{
                                                   opacity: 0,
-                                                  scale: 0.8,
+                                                  scale: 0.95,
                                                 }}
                                                 transition={{
-                                                  type: "spring",
-                                                  stiffness: 350,
-                                                  damping: 25,
+                                                  duration: 0.2,
+                                                  ease: "easeOut",
                                                 }}
                                                 key={`queue-player-${pid}-${idx}`}
                                                 onClick={(e) => {
