@@ -4117,7 +4117,10 @@ function GroupApp({
   }, [hasRandomized]);
 
   useEffect(() => {
-    if (currentScreen !== "finance") {
+    setIsPrintMode(false);
+    if (currentScreen === "finance") {
+      setFinanceSubScreen("balanco");
+    } else {
       setFinanceSubScreen("menu");
     }
     if (currentScreen === "ranking") {
