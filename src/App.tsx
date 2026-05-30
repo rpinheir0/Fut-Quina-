@@ -10417,7 +10417,7 @@ function GroupApp({
                     <div className="grid grid-cols-2 gap-2 sm:gap-4">
                       {teams.map((team, tIndex) => (
                         <motion.div
-                          key={`scoreboard-team-${team.id}`}
+                          key={`scoreboard-team-${team.id}-${tIndex}`}
                           initial={{ opacity: 0, scale: 0.95 }}
                           animate={{ opacity: 1, scale: 1 }}
                           whileHover={{ y: -5 }}
@@ -10916,7 +10916,7 @@ function GroupApp({
                               .slice(0, 15)
                               .map((player, index) => (
                                 <tr
-                                  key={`ranking-row-print-${player.id}`}
+                                  key={`ranking-row-print-${player.id}-${index}`}
                                   className="border-b border-black/10"
                                 >
                                   <td className="p-2 text-xs font-black">
@@ -11374,9 +11374,9 @@ function GroupApp({
                                       (record.months[currentMonth] || 0) > 0
                                     );
                                   }) || []
-                                ).map((p) => (
+                                ).map((p, pIndex) => (
                                   <div
-                                    key={`em-dia-${p.id}`}
+                                    key={`em-dia-${p.id}-${pIndex}`}
                                     className={`flex items-center justify-between ${isPrintMode ? "p-2 bg-white" : "p-3 rounded-none bg-white border border-emerald-100 shadow-sm"}`}
                                   >
                                     <span
@@ -11457,9 +11457,9 @@ function GroupApp({
                                       (record.months[currentMonth] || 0) <= 0
                                     );
                                   }) || []
-                                ).map((p) => (
+                                ).map((p, pIndex) => (
                                   <div
-                                    key={`em-debito-${p.id}`}
+                                    key={`em-debito-${p.id}-${pIndex}`}
                                     className={`flex items-center justify-between ${isPrintMode ? "p-2 bg-white" : "p-3 rounded-none bg-white border border-red-100 shadow-sm"}`}
                                   >
                                     <span
@@ -11700,7 +11700,7 @@ function GroupApp({
 
                               return (
                                 <tr
-                                  key={`finance-row-${player.id}`}
+                                  key={`finance-row-${player.id}-${index}`}
                                   className={`${index % 2 === 0 ? (isPrintMode ? "bg-zinc-50" : "bg-zinc-50") : "bg-white"} ${!isPrintMode ? "hover:bg-emerald-50 transition-colors" : ""}`}
                                 >
                                   <td
@@ -12960,9 +12960,9 @@ function GroupApp({
                   </h4>
                   <div className="grid grid-cols-2 gap-4">
                     <AnimatePresence mode="popLayout">
-                      {teams.map((team, tIdx) => (
-                        <motion.div
-                          key={`settings-team-manage-${team.id}`}
+                    {teams.map((team, tIdx) => (
+                      <motion.div
+                        key={`settings-team-manage-${team.id}-${tIdx}`}
                           layout
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -13261,9 +13261,9 @@ function GroupApp({
                             p.isAvailable &&
                             !teams.some((t) => t.playerIds.includes(p.id)),
                         )
-                        .map((player) => (
+                        .map((player, pIndex) => (
                           <div
-                            key={`quick-add-player-${player.id}`}
+                            key={`quick-add-player-${player.id}-${pIndex}`}
                             className="flex items-center justify-between p-2 rounded-md bg-brand-dark/30 border border-white/5"
                           >
                             <span className="text-xs font-bold truncate text-[#0D0D0D]">
@@ -13762,9 +13762,9 @@ function GroupApp({
                           p.isAvailable &&
                           !teams.some((t) => t.playerIds.includes(p.id)),
                       )
-                      .map((player) => (
+                      .map((player, pIndex) => (
                         <button
-                          key={`event-scorer-list-${player.id}`}
+                          key={`event-scorer-list-${player.id}-${pIndex}`}
                           onClick={() => {
                             const teamIdx = showEventModal.team as any;
                             const currentTeam = teams[teamIdx];
@@ -14041,9 +14041,9 @@ function GroupApp({
                             p.isAvailable &&
                             !teams.flatMap((t) => t.playerIds).includes(p.id),
                         )
-                        .map((p) => (
+                        .map((p, pIndex) => (
                           <button
-                            key={`randomize-player-list-${p.id}`}
+                            key={`randomize-player-list-${p.id}-${pIndex}`}
                             onClick={() =>
                               addPlayerToTeam(p.id, showQuickAddPlayerModal)
                             }

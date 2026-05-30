@@ -1,0 +1,1898 @@
+222-  }, [mapToDb]);
+223-
+224-  React.useEffect(() => {
+225-    if (!isDataLoaded || !isEnabled) {
+226-      if (!isDataLoaded) {
+227:        syncedIds.current = new Set(items.map((i) => i.id));
+228-      }
+229-      prevEnabled.current = isEnabled;
+230-      return;
+231-    }
+232-
+--
+234-    const forceSync = isEnabled && !prevEnabled.current;
+235-    prevEnabled.current = isEnabled;
+236-
+237-    if (isReadOnly) return;
+238-
+239:    const currentIds = new Set(items.map((i) => i.id));
+240-    const deletedIds = forceSync
+241-      ? []
+242-      : [...syncedIds.current].filter((id) => !currentIds.has(id));
+243-
+244-    if (deletedIds.length > 0) {
+245-      supabase.from(tableName).delete().in("id", deletedIds).then();
+246-    }
+247-
+248-    if (items.length > 0) {
+249:      const payload = items.map((item) => mapToDbRef.current(item, groupId));
+250-      supabase.from(tableName).upsert(payload, { onConflict: "id" }).then();
+251-    }
+252-
+253-    syncedIds.current = currentIds;
+254-  }, [items, isDataLoaded, groupId, tableName, isReadOnly, isEnabled]);
+--
+379-
+380-      {/* Inner tech scanline effect */}
+381-      <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px] pointer-events-none z-10 opacity-30"></div>
+382-
+383-      <div className="absolute bottom-5 left-0 right-0 flex justify-center gap-3 z-20">
+384:        {items.map((_, i) => (
+385-          <div
+386-            key={i}
+387-            className={`transition-all duration-700 ease-out flex items-center justify-center ${
+388-              i === index ? "w-8" : "w-2"
+389-            } h-1 rounded-full overflow-hidden bg-white/20 backdrop-blur-sm`}
+--
+400-    </div>
+401-  );
+402-};
+403-
+404-const getNextTeamColor = (existingTeams: Team[]) => {
+405:  const usedColors = existingTeams.map((t) => t.color).filter(Boolean);
+406-  const availableColors = TEAM_COLORS.filter((c) => !usedColors.includes(c));
+407-
+408-  if (availableColors.length > 0) {
+409-    // Pick random available color
+410-    return availableColors[Math.floor(Math.random() * availableColors.length)];
+--
+414-  return TEAM_COLORS[Math.floor(Math.random() * TEAM_COLORS.length)];
+415-};
+416-
+417-const getNextTeamIconIdx = (existingTeams: Team[]) => {
+418-  const usedIcons = existingTeams
+419:    .map((t) => t.iconIdx)
+420-    .filter((idx) => idx !== undefined);
+421:  const availableIndices = TEAM_ICONS.map((_, i) => i).filter(
+422-    (i) => !usedIcons.includes(i),
+423-  );
+424-
+425-  if (availableIndices.length > 0) {
+426-    return availableIndices[
+--
+580-            <X size={20} className="text-zinc-500" />
+581-          </button>
+582-        </div>
+583-
+584-        <div className="grid grid-cols-5 gap-3 mb-8">
+585:          {TEAM_COLORS.map((color) => (
+586-            <button
+587-              key={color}
+588-              onClick={() => onSelect(color)}
+589-              className={`aspect-square rounded-xl transition-all relative ${color === currentColor ? "ring-4 ring-black/5 scale-110 shadow-lg" : "hover:scale-105"}`}
+590-              style={{
+--
+708-              </span>
+709-            </motion.button>
+710-
+711-            {teamPlayers
+712-              .filter((id) => id !== goalPlayerId)
+713:              .map((pid, idx) => {
+714-                const player = players.find((p) => p.id === pid);
+715-                return (
+716-                  <motion.button
+717-                    initial={{ x: -20, opacity: 0 }}
+718-                    animate={{ x: 0, opacity: 1 }}
+--
+746-                      </div>
+747-                      <div className="text-sm font-black uppercase truncate text-zinc-800 transition-colors group-hover:text-brand-primary leading-none">
+748-                        {player?.name}
+749-                      </div>
+750-                      <div className="flex gap-0.5 mt-0.5">
+751:                        {[1, 2, 3, 4, 5].map((star) => (
+752-                          <Star
+753-                            key={`star-assist-${player?.id}-${star}`}
+754-                            size={8}
+755-                            className={`${(player?.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-zinc-300"}`}
+756-                          />
+--
+816-            Selecione o jogador do {teamName}
+817-          </p>
+818-        </div>
+819-
+820-        <div className="grid grid-cols-2 gap-3 mb-6">
+821:          {teamPlayers.map((pid, idx) => (
+822-            <button
+823-              key={`scorer-choice-${pid}-${idx}`}
+824-              onClick={() => onSelect(pid)}
+825-              className={`p-4 rounded-lg border transition-all text-left group ${
+826-                theme === "light"
+--
+835-                className={`text-sm font-black uppercase transition-colors text-zinc-900 group-hover:text-brand-primary leading-none`}
+836-              >
+837-                {players.find((p) => p.id === pid)?.name}
+838-              </div>
+839-              <div className="flex gap-0.5 mt-0.5">
+840:                {[1, 2, 3, 4, 5].map((star) => (
+841-                  <Star
+842-                    key={`star-scorer-${pid}-${star}`}
+843-                    size={8}
+844-                    className={`${(players.find((p) => p.id === pid)?.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-zinc-300"}`}
+845-                  />
+--
+960-                        const pB = players.find((p) => p.id === b);
+961-                        if (pA?.isGoalkeeper && !pB?.isGoalkeeper) return -1;
+962-                        if (!pA?.isGoalkeeper && pB?.isGoalkeeper) return 1;
+963-                        return 0;
+964-                      })
+965:                      .map((pid, idx, arr) => {
+966-                        const p = players.find((player) => player.id === pid);
+967-                        return (
+968-                          <span
+969-                            key={`${pid}-${idx}-firstmatch`}
+970-                            className="text-[7px] font-black text-black uppercase tracking-tighter"
+--
+997-                        const pB = players.find((p) => p.id === b);
+998-                        if (pA?.isGoalkeeper && !pB?.isGoalkeeper) return -1;
+999-                        if (!pA?.isGoalkeeper && pB?.isGoalkeeper) return 1;
+1000-                        return 0;
+1001-                      })
+1002:                      .map((pid, idx, arr) => {
+1003-                        const p = players.find((player) => player.id === pid);
+1004-                        return (
+1005-                          <span
+1006-                            key={`${pid}-${idx}-secondmatch`}
+1007-                            className="text-[7px] font-black text-black uppercase tracking-tighter"
+--
+1121-                  <div className="flex flex-col overflow-hidden">
+1122-                    <span className="font-black uppercase tracking-widest text-xs text-black truncate">
+1123-                      {teamA.name} primeiro
+1124-                    </span>
+1125-                    <div className="flex flex-wrap gap-x-1.5 mt-1">
+1126:                      {(teamA.playerIds || []).map((pid, idx) => (
+1127-                        <span
+1128-                          key={`${pid}-${idx}-2`}
+1129-                          className="text-[8px] text-black/60 font-black tracking-tight"
+1130-                        >
+1131-                          {players.find((p) => p.id === pid)?.name}
+--
+1151-                  <div className="flex flex-col overflow-hidden">
+1152-                    <span className="font-black uppercase tracking-widest text-xs text-black truncate">
+1153-                      {teamB.name} primeiro
+1154-                    </span>
+1155-                    <div className="flex flex-wrap gap-x-1.5 mt-1">
+1156:                      {(teamB.playerIds || []).map((pid, idx) => (
+1157-                        <span
+1158-                          key={`${pid}-${idx}-3`}
+1159-                          className="text-[8px] text-black/60 font-black tracking-tight"
+1160-                        >
+1161-                          {players.find((p) => p.id === pid)?.name}
+--
+1213-              </div>
+1214-
+1215-              <div className="grid grid-cols-2 gap-4 h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+1216-                {/* Team A Penalties */}
+1217-                <div className="space-y-2">
+1218:                  {state.penalties.teamA.map((shot, idx) => {
+1219-                    const p = players.find(
+1220-                      (player) => player.id === shot.playerId,
+1221-                    );
+1222-                    return (
+1223-                      <div
+--
+1253-                  })}
+1254-                </div>
+1255-
+1256-                {/* Team B Penalties */}
+1257-                <div className="space-y-2">
+1258:                  {state.penalties.teamB.map((shot, idx) => {
+1259-                    const p = players.find(
+1260-                      (player) => player.id === shot.playerId,
+1261-                    );
+1262-                    return (
+1263-                      <div
+--
+1387-                            if (pA?.isGoalkeeper && !pB?.isGoalkeeper)
+1388-                              return -1;
+1389-                            if (!pA?.isGoalkeeper && pB?.isGoalkeeper) return 1;
+1390-                            return 0;
+1391-                          })
+1392:                          .map((pid, idx, arr) => {
+1393-                            const p = players.find(
+1394-                              (player) => player.id === pid,
+1395-                            );
+1396-                            return (
+1397-                              <span
+--
+1429-                            if (pA?.isGoalkeeper && !pB?.isGoalkeeper)
+1430-                              return -1;
+1431-                            if (!pA?.isGoalkeeper && pB?.isGoalkeeper) return 1;
+1432-                            return 0;
+1433-                          })
+1434:                          .map((pid, idx, arr) => {
+1435-                            const p = players.find(
+1436-                              (player) => player.id === pid,
+1437-                            );
+1438-                            return (
+1439-                              <span
+--
+1490-                      {/* Display winning team players */}
+1491-                      <div className="mt-2 flex flex-wrap justify-center gap-1.5 px-4">
+1492-                        {(state.lottery.winnerId === teamA.id
+1493-                          ? teamA.playerIds
+1494-                          : teamB.playerIds
+1495:                        ).map((pid, idx, arr) => {
+1496-                          const p = players.find((player) => player.id === pid);
+1497-                          return (
+1498-                            <span
+1499-                              key={`${pid}-${idx}-fifth`}
+1500-                              className="text-[8px] font-black text-black uppercase tracking-widest"
+--
+1707-                  }
+1708-                }}
+1709-                className={`w-full bg-transparent text-2xl font-black uppercase tracking-tighter text-black leading-none text-center outline-none border-b border-transparent focus:border-black/20 transition-all placeholder:text-zinc-500 py-1`}
+1710-              />
+1711-              <div className="flex flex-wrap items-center justify-center gap-1 mt-2">
+1712:                {[1, 2, 3, 4, 5].map((star) => (
+1713-                  <button
+1714-                    key={`modal-star-${star}`}
+1715-                    onClick={() =>
+1716-                      onUpdateStars && onUpdateStars(player.id, star)
+1717-                    }
+--
+1928-      (id) => !playersList.find((p) => p.id === id)?.isGoalkeeper,
+1929-    ) || [];
+1930-
+1931-  let changed = false;
+1932-  // Deep copy for mutation
+1933:  let allTeamsNow = teams.map((t) => ({
+1934-    ...t,
+1935-    playerIds: [...t.playerIds],
+1936-  }));
+1937-
+1938-  // Step 1: Ensure all teams have GKs at index 0 if they have any
+--
+1998-    }
+1999-  }
+2000-
+2001-  // Final pass: ensure index 0 again for safety after movements
+2002-  if (changed) {
+2003:    allTeamsNow = allTeamsNow.map((team) => {
+2004-      const gks = getGks(team);
+2005-      const line = getLinePlayers(team);
+2006-      return { ...team, playerIds: [...gks, ...line] };
+2007-    });
+2008-  }
+--
+2184-        <div className="absolute inset-0 rounded-full border-8 border-brand-primary/20 animate-[spin_3s_linear_infinite]" />
+2185-
+2186-        {/* Roulette Wheel */}
+2187-        <div className="absolute inset-4 rounded-full border-4 border-brand-primary/40 flex items-center justify-center overflow-hidden animate-[spin_1s_linear_infinite]">
+2188-          <div className="absolute inset-0 grid grid-cols-8 grid-rows-8">
+2189:            {Array.from({ length: 64 }).map((_, i) => (
+2190-              <div
+2191-                key={`roulette-grid-${i}`}
+2192-                className={`border-[0.5px] border-brand-primary/10 ${i % 2 === 0 ? "bg-brand-primary/5" : "bg-transparent"}`}
+2193-              />
+2194-            ))}
+2195-          </div>
+2196-          {/* Spokes */}
+2197:          {Array.from({ length: 12 }).map((_, i) => (
+2198-            <div
+2199-              key={`roulette-spoke-${i}`}
+2200-              className="absolute w-full h-[1px] bg-brand-primary/20"
+2201-              style={{ transform: `rotate(${i * 30}deg)` }}
+2202-            />
+--
+2916-    if (!pendingAssist) return;
+2917-
+2918-    if (assistId) {
+2919-      setMatch((prev) => ({
+2920-        ...prev,
+2921:        events: prev.events.map((e) =>
+2922-          e.id === pendingAssist.eventId ? { ...e, assistId } : e,
+2923-        ),
+2924-      }));
+2925-      setToast({ message: "⚽️ GOL! Assistência registrada", type: "success" });
+2926-    } else {
+--
+3095-    )
+3096-      return;
+3097-
+3098-    setTeams((prev) => {
+3099-      const limit = match.config.playersPerTeam;
+3100:      const allPlayerIds = availableSessionPlayersList.map((p) => p.id);
+3101-      
+3102-      const expectedTeamCount = Math.max(
+3103-        2,
+3104-        Math.ceil(allPlayerIds.length / limit),
+3105-      );
+3106-
+3107-      // Separate GKs and Line, maintaining order within each group
+3108-      const allGks = availableSessionPlayersList
+3109-        .filter((p) => p.isGoalkeeper)
+3110:        .map((p) => p.id);
+3111-      const allLine = availableSessionPlayersList
+3112-        .filter((p) => !p.isGoalkeeper)
+3113:        .map((p) => p.id);
+3114-
+3115-      // Generate the target assignment to check if we need an update
+3116-      const targetAssignment: string[][] = [];
+3117-      let gkPtr = 0;
+3118-      let linePtr = 0;
+--
+3375-  const handleGoalkeeperSwap = (pAId: string, pBId: string) => {
+3376-    setPlayers((prev) => {
+3377-      const pA = prev.find((p) => p.id === pAId);
+3378-      const pB = prev.find((p) => p.id === pBId);
+3379-      if (pA?.isGoalkeeper || pB?.isGoalkeeper) {
+3380:        return prev.map((p) => {
+3381-          if (p.id === pAId) return { ...p, isGoalkeeper: !!pB?.isGoalkeeper };
+3382-          if (p.id === pBId) return { ...p, isGoalkeeper: !!pA?.isGoalkeeper };
+3383-          return p;
+3384-        });
+3385-      }
+--
+3565-          }
+3566-          setTeams(loadedTeams);
+3567-        }
+3568-        if (paymentsData && paymentsData.length > 0) {
+3569-          setPayments(
+3570:            paymentsData.map((p) => ({
+3571-              id: p.id || `${p.player_id}-${p.year}`,
+3572-              playerId: p.player_id,
+3573-              year: p.year,
+3574-              months: p.months || {},
+3575-              monthlyFee: p.monthly_fee || 0,
+3576-            })),
+3577-          );
+3578-        }
+3579-        if (matchHistoryData && matchHistoryData.length > 0) {
+3580-          setMatchHistory(
+3581:            matchHistoryData.map((h) => ({
+3582-              id: h.id,
+3583-              teamAId: h.team_a_id || undefined,
+3584-              teamBId: h.team_b_id || undefined,
+3585-              teamAName: h.team_a_name,
+3586-              teamBName: h.team_b_name,
+--
+3611-            },
+3612-          });
+3613-        }
+3614-        if (transactionsData && transactionsData.length > 0) {
+3615-          setExpenses(
+3616:            transactionsData.map((t) => ({
+3617-              id: t.id,
+3618-              name: t.name,
+3619-              amount: t.amount,
+3620-              date: t.date,
+3621-            })),
+--
+3658-          filter: `group_id=eq.${groupId}`,
+3659-        },
+3660-        (payload) => {
+3661-          const updatedPlayer = payload.new;
+3662-          setPlayers((prev) =>
+3663:            prev.map((p) =>
+3664-              p.id === updatedPlayer.id
+3665-                ? {
+3666-                    ...p,
+3667-                    isAvailable: updatedPlayer.is_available,
+3668-                    arrivedAt: updatedPlayer.arrived_at,
+--
+3691-            .select("*")
+3692-            .eq("group_id", groupId)
+3693-            .then(({ data }) => {
+3694-              if (data) {
+3695-                setPayments(
+3696:                  data.map((p) => ({
+3697-                    id: p.id,
+3698-                    playerId: p.player_id,
+3699-                    month: p.month,
+3700-                    year: p.year,
+3701-                    amount: p.amount,
+--
+4233-      /\d{1,2}:\d{2}/, // Times
+4234-      /^(lista|jogadores|convocados|presença|confirmados|futebol|pelada|horário|data|local|valor)/i, // Titles
+4235-      /^\s*$/, // Empty lines
+4236-    ];
+4237-
+4238:    const existingNames = new Set(players.map((p) => p.name.toLowerCase()));
+4239-
+4240-    const isAnyAvailable = players.some((p) => p.isAvailable);
+4241-
+4242-    lines.forEach((line, i) => {
+4243-      // Remove common prefixes: "1.", "1-", "-", "*", "•" but keep numbers that are part of the name
+--
+4266-    if (newPlayers.length > 0) {
+4267-      setPlayers((prev) => [...prev, ...newPlayers]);
+4268-      if (isAnyAvailable) {
+4269-        setSessionPlayerIds((prev) => [
+4270-          ...prev,
+4271:          ...newPlayers.map((p) => p.id),
+4272-        ]);
+4273-      }
+4274-    }
+4275-  };
+4276-
+--
+4304-        type: "info",
+4305-      });
+4306-      setShowQuickAddPlayerModal(teams.length);
+4307-    } else {
+4308-      setTeams((prev) =>
+4309:        prev.map((t, idx) =>
+4310-          idx === teamIndex
+4311-            ? { ...t, playerIds: [...t.playerIds, newPlayer.id] }
+4312-            : t,
+4313-        ),
+4314-      );
+--
+4380-        type: "info",
+4381-      });
+4382-      setShowQuickAddPlayerModal(teams.length);
+4383-    } else {
+4384-      setTeams((prev) =>
+4385:        prev.map((t, idx) =>
+4386-          idx === teamIndex
+4387-            ? { ...t, playerIds: [...t.playerIds, playerId] }
+4388-            : t,
+4389-        ),
+4390-      );
+--
+4478-      return;
+4479-    }
+4480-
+4481-    if (!cascade) {
+4482-      setTeams((prev) => {
+4483:        const newTeams = [...prev].map((t) => ({
+4484-          ...t,
+4485-          playerIds: [...t.playerIds],
+4486-        }));
+4487-        if (newTeams[tIndex]) {
+4488-          newTeams[tIndex].playerIds = newTeams[tIndex].playerIds.filter(
+--
+4529-    });
+4530-  };
+4531-
+4532-  const updatePlayerAbsences = (id: string, absences: number) => {
+4533-    setPlayers((prev) =>
+4534:      prev.map((p) => (p.id === id ? { ...p, absences } : p)),
+4535-    );
+4536-  };
+4537-
+4538-  const updatePlayerName = (id: string, newName: string) => {
+4539-    if (!newName.trim()) return;
+--
+4547-    ) {
+4548-      setDuplicatePlayerName({
+4549-        name: trimmedName,
+4550-        callback: (finalName) => {
+4551-          setPlayers((prev) =>
+4552:            prev.map((p) =>
+4553-              p.id === id ? { ...p, name: finalName.trim() } : p,
+4554-            ),
+4555-          );
+4556-        },
+4557-      });
+4558-      return;
+4559-    }
+4560-
+4561-    setPlayers((prev) =>
+4562:      prev.map((p) => (p.id === id ? { ...p, name: trimmedName } : p)),
+4563-    );
+4564-    setEditingPlayerId(null);
+4565-  };
+4566-
+4567-  const updatePlayerStars = (id: string, stars: number) => {
+4568:    setPlayers((prev) => prev.map((p) => (p.id === id ? { ...p, stars } : p)));
+4569-  };
+4570-
+4571-  const updatePlayerPhoto = (id: string, photo: string) => {
+4572:    setPlayers((prev) => prev.map((p) => (p.id === id ? { ...p, photo } : p)));
+4573-  };
+4574-
+4575-  const addAvailablePlayersToTeams = () => {
+4576-    const availablePlayers = players.filter(
+4577-      (p) => !teams.some((t) => t.playerIds.includes(p.id)),
+--
+4584-      setTimeout(() => setToast(null), 3000);
+4585-      return;
+4586-    }
+4587-
+4588-    setTeams((prevTeams) => {
+4589:      let currentTeams = [...prevTeams].map((t) => ({
+4590-        ...t,
+4591-        playerIds: [...t.playerIds],
+4592-      }));
+4593-      const limit = match.config.playersPerTeam;
+4594-
+--
+4696-    const shuffled = [...availablePlayers].sort(() => 0.5 - Math.random());
+4697-
+4698-    // Update arrivedAt timestamps to match shuffled order
+4699-    const now = Date.now();
+4700-    setPlayers((prev) =>
+4701:      prev.map((p) => {
+4702-        const shuffleIdx = shuffled.findIndex((s) => s.id === p.id);
+4703-        if (shuffleIdx !== -1) {
+4704-          return { ...p, arrivedAt: now + shuffleIdx };
+4705-        }
+4706-        return p;
+--
+4721-      const teamLetter = String.fromCharCode(65 + teamCount);
+4722-      const iconIdx = getNextTeamIconIdx(newTeams);
+4723-      newTeams.push({
+4724-        id: generateId(),
+4725-        name: `Time ${teamLetter}`,
+4726:        playerIds: teamPlayers.map((p) => p.id),
+4727-        iconIdx,
+4728-        color: getNextTeamColor(newTeams),
+4729-      });
+4730-      currentIndex += playersPerTeam;
+4731-      teamCount++;
+--
+4737-      const teamLetter = String.fromCharCode(65 + teamCount);
+4738-      const iconIdx = getNextTeamIconIdx(newTeams);
+4739-      newTeams.push({
+4740-        id: generateId(),
+4741-        name: `Time ${teamLetter}`,
+4742:        playerIds: leftoverPlayers.map((p) => p.id),
+4743-        iconIdx,
+4744-        color: getNextTeamColor(newTeams),
+4745-      });
+4746-    }
+4747-
+--
+4771-    }));
+4772-    setShowRandomizeModal(false);
+4773-  };
+4774-
+4775-  const resetAllStats = () => {
+4776:    setPlayers((prev) => prev.map((p) => ({ ...p, goals: 0, assists: 0 })));
+4777-    setToast({ message: "🔄 Histórico resetado", type: "info" });
+4778-    setShowResetStatsConfirm(false);
+4779-  };
+4780-
+4781-  const registerGoal = (
+--
+4811-      };
+4812-    });
+4813-
+4814-    // Update player stats
+4815-    setPlayers((prev) =>
+4816:      prev.map((p) => {
+4817-        if (p.id === playerId) return { ...p, goals: p.goals + 1 };
+4818-        if (p.id === assistId) return { ...p, assists: p.assists + 1 };
+4819-        return p;
+4820-      }),
+4821-    );
+--
+4936-      setTeams((prevTeams) => {
+4937-        let newTeams = [...prevTeams];
+4938-        const teamAId = newTeams[teamAIndex]?.id;
+4939-        const teamBId = newTeams[teamBIndex]?.id;
+4940-
+4941:        newTeams = newTeams.map((t) => {
+4942-          if (t.id === teamAId)
+4943-            return {
+4944-              ...t,
+4945-              lastMatchStatus:
+4946-                scoreA === scoreB
+--
+4967-          const winnerId = teams[tieBreakerWinnerIndex]?.id;
+4968-          const loserId =
+4969-            teams[
+4970-              tieBreakerWinnerIndex === teamAIndex ? teamBIndex : teamAIndex
+4971-            ]?.id;
+4972:          newTeams = newTeams.map((t) => {
+4973-            if (t.id === winnerId) return { ...t, lastMatchStatus: "Vencedor" };
+4974-            if (t.id === loserId) return { ...t, lastMatchStatus: "Derrota" };
+4975-            return t;
+4976-          });
+4977-        }
+--
+5037-                    ...allTeamsNow[activeIdx].playerIds.filter(
+5038-                      (id) => id !== lineToSwap,
+5039-                    ),
+5040-                  ];
+5041-                  // Move line player to source team
+5042:                  allTeamsNow[j].playerIds = allTeamsNow[j].playerIds.map(
+5043-                    (id) => (id === gkToMove ? lineToSwap : id),
+5044-                  );
+5045-                  break;
+5046-                } else if (
+5047-                  match?.config?.playersPerTeam !== undefined &&
+--
+5061-            }
+5062-          }
+5063-        });
+5064-
+5065-        // Final sort for all teams to ensure GKs are at index 0
+5066:        allTeamsNow = allTeamsNow.map((t) => {
+5067-          const gks = getGks(t);
+5068-          const line = getLinePlayers(t);
+5069-          return { ...t, playerIds: [...gks, ...line] };
+5070-        });
+5071-
+--
+5076-
+5077-        // Identify which team just "subiu" to the match selection
+5078-        const joinedTeamId = newTeams[nextTeamIndex]?.id;
+5079-
+5080-        if (joinedTeamId) {
+5081:          newTeams = newTeams.map((t) => {
+5082-            if (t.id === joinedTeamId && t.id !== teamAId && t.id !== teamBId) {
+5083-              return { ...t, lastMatchStatus: "Subiu" };
+5084-            }
+5085-            return t;
+5086-          });
+--
+5106-      setTeams((prevTeams) => {
+5107-        let newTeams = [...prevTeams];
+5108-        const teamAId = newTeams[teamAIndex]?.id;
+5109-        const teamBId = newTeams[teamBIndex]?.id;
+5110-
+5111:        newTeams = newTeams.map((t) => {
+5112-          if (t.id === teamAId || t.id === teamBId) {
+5113-            return { ...t, lastMatchStatus: "Empate" };
+5114-          }
+5115-          return t;
+5116-        });
+--
+5166-    if (scoreA === scoreB) {
+5167-      setTieBreaker({
+5168-        showSelection: true,
+5169-        type: "none",
+5170-        penalties: {
+5171:          teamA: (teams[teamAIndex]?.playerIds || []).map((pid) => ({
+5172-            playerId: pid,
+5173-            success: null,
+5174-          })),
+5175:          teamB: (teams[teamBIndex]?.playerIds || []).map((pid) => ({
+5176-            playerId: pid,
+5177-            success: null,
+5178-          })),
+5179-          isFinished: false,
+5180-          winnerId: null,
+--
+5241-      setShowEqualizerModal(true);
+5242-      return;
+5243-    }
+5244-
+5245-    setTeams((prev) =>
+5246:      prev.map((team) => {
+5247-        const { lastMatchStatus, ...rest } = team;
+5248-        return rest;
+5249-      }),
+5250-    );
+5251-
+--
+5399-      const tB = newTeams.find((t) => t.id === teamBId);
+5400-
+5401-      if (!tA || !tB) return prevTeams;
+5402-
+5403-      // Update statuses
+5404:      newTeams = newTeams.map((t) => {
+5405-        if (t.id === teamAId || t.id === teamBId) {
+5406-          return { ...t, lastMatchStatus: "Empate" };
+5407-        }
+5408-        return t;
+5409-      });
+--
+5422-
+5423-      // Mark the ones who moved up
+5424-      const joinedTeamAId = newTeams[0]?.id;
+5425-      const joinedTeamBId = newTeams[1]?.id;
+5426-
+5427:      newTeams = newTeams.map((t) => {
+5428-        if (
+5429-          (t.id === joinedTeamAId || t.id === joinedTeamBId) &&
+5430-          t.id !== teamAId &&
+5431-          t.id !== teamBId
+5432-        ) {
+--
+5829-            <div className="space-y-4 relative z-10">
+5830-              <label className="text-[10px] font-black uppercase tracking-widest text-white/50">
+5831-                Selecione seu nome
+5832-              </label>
+5833-              <div className="grid grid-cols-1 gap-2 max-h-80 overflow-y-auto custom-scrollbar pr-2">
+5834:                {sortedPlayersByName.map((p) => (
+5835-                  <button
+5836-                    key={`pres-${p.id}`}
+5837-                    onClick={() => {
+5838-                      setPresencePlayerId(p.id);
+5839-                      setPresenceCode("");
+--
+5934-                              .from("players")
+5935-                              .update({ is_available: true, arrived_at: now })
+5936-                              .eq("id", presencePlayerId)
+5937-                              .then(() => {
+5938-                                setPlayers((prev) =>
+5939:                                  prev.map((p) =>
+5940-                                    p.id === presencePlayerId
+5941-                                      ? {
+5942-                                          ...p,
+5943-                                          isAvailable: true,
+5944-                                          arrivedAt: now,
+--
+5979-                                .from("players")
+5980-                                .update({ is_available: true, arrived_at: now })
+5981-                                .eq("id", presencePlayerId)
+5982-                                .then(() => {
+5983-                                  setPlayers((prev) =>
+5984:                                    prev.map((p) =>
+5985-                                      p.id === presencePlayerId
+5986-                                        ? {
+5987-                                            ...p,
+5988-                                            isAvailable: true,
+5989-                                            arrivedAt: now,
+--
+6889-                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent"
+6890-                              />
+6891-                            </motion.div>
+6892-                          )}
+6893-
+6894:                          {scheduledMatches.map((match, index) => {
+6895-                            const matchDate = new Date(match.date);
+6896-                            const day = matchDate.getDate();
+6897-                            const month = matchDate
+6898-                              .toLocaleString("pt-BR", { month: "long" })
+6899-                              .replace(/^\w/, (c) => c.toUpperCase());
+--
+7053-                                        {/* Avatar Stack */}
+7054-                                        {matchSpecificPlayers.length > 0 && (
+7055-                                          <div className="flex -space-x-1.5 sm:-space-x-2 mt-1 sm:mt-1.5">
+7056-                                            {matchSpecificPlayers
+7057-                                              .slice(0, 10)
+7058:                                              .map((player, pIdx) => (
+7059-                                                <div
+7060-                                                  key={`scheduled-match-player-${player.id}-${match.id}-${pIdx}`}
+7061-                                                  className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-white bg-zinc-200 overflow-hidden shadow-sm"
+7062-                                                >
+7063-                                                  {player.avatar ? (
+--
+7239-                                Nenhum jogador adicionado ainda.
+7240-                              </span>
+7241-                            </div>
+7242-                          ) : (
+7243-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+7244:                              {visiblePlayers.map((player) => (
+7245-                                <motion.div
+7246-                                  layout
+7247-                                  key={`player-list-dash-switch-${player.id}`}
+7248-                                  className={`flex items-center justify-between p-2 px-3 rounded-none transition-all cursor-pointer hover:bg-zinc-50 active:bg-zinc-100 border border-black/5 bg-white shadow-sm`}
+7249-                                  onClick={() => {
+--
+7300-                                              <GiCrown size={14} />
+7301-                                            </div>
+7302-                                          )}
+7303-                                        </div>
+7304-                                        <div className="flex gap-0.5">
+7305:                                          {[1, 2, 3, 4, 5].map((star) => (
+7306-                                            <Star
+7307-                                              key={`star-dash-m-switch-${player.id}-${star}`}
+7308-                                              size={8}
+7309-                                              className={`${(player.stars || 3) >= star ? "fill-emerald-500 text-emerald-500" : "text-zinc-200"}`}
+7310-                                            />
+--
+7626-                                return;
+7627-                              }
+7628-
+7629-                              // For first time setup, ensure everyone is absent
+7630-                              setPlayers((prev) =>
+7631:                                prev.map((p) => ({
+7632-                                  ...p,
+7633-                                  isAvailable: false,
+7634-                                  arrivedAt: undefined,
+7635-                                })),
+7636-                              );
+--
+7704-                                  .sort(
+7705-                                    (a, b) =>
+7706-                                      (a.arrivedAt || 0) - (b.arrivedAt || 0),
+7707-                                  );
+7708-
+7709:                                const uniquePlayerIds = availablePlayers.map(
+7710-                                  (p) => p.id,
+7711-                                );
+7712-                                const newTeams: Team[] = [];
+7713-
+7714-                                for (
+--
+7764-                              }
+7765-                              setTimeout(() => setToast(null), 3000);
+7766-                            }
+7767-
+7768-                            // Sync session players without resetting isAvailable
+7769:                            setSessionPlayerIds(players.map((p) => p.id));
+7770-                          }}
+7771-                          className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
+7772-                        >
+7773-                          Aplicar Configurações
+7774-                        </button>
+--
+7791-                              ) && (
+7792-                                <button
+7793-                                  onClick={() => {
+7794-                                    const now = Date.now();
+7795-                                    setPlayers((prev) =>
+7796:                                      prev.map((pl, idx) => ({
+7797-                                        ...pl,
+7798-                                        isAvailable: true,
+7799-                                        arrivedAt: now + idx,
+7800-                                      })),
+7801-                                    );
+--
+7804-                                      // Gather all current session players in random or current string order, maybe just use all session players
+7805-                                      const allPlayerIds = players
+7806-                                        .filter((p) =>
+7807-                                          sessionPlayerIds.includes(p.id),
+7808-                                        )
+7809:                                        .map((p) => p.id);
+7810-                                      const newTeams: Team[] = [];
+7811-                                      const playersPerTeam =
+7812-                                        match.config.playersPerTeam;
+7813-                                      for (
+7814-                                        let i = 0;
+--
+7886-                                      setShowInsufficientPlayersModal(true);
+7887-                                      return;
+7888-                                    }
+7889-
+7890-                                    const updatedPlayerIds =
+7891:                                      availablePlayers.map((p) => p.id);
+7892-                                    const uniquePlayerIds: string[] = [];
+7893-                                    const seenIds = new Set<string>();
+7894-                                    updatedPlayerIds.forEach((id) => {
+7895-                                      if (!seenIds.has(id)) {
+7896-                                        uniquePlayerIds.push(id);
+--
+8004-                                ? "CRIAR JOGADORES"
+8005-                                : "CONFIGURAR PARTIDA"}
+8006-                            </button>
+8007-                          </div>
+8008-                        ) : (
+8009:                          sessionPlayersSorted.map((p) => (
+8010-                            <button
+8011-                              key={`arrival-player-below-${p.id}`}
+8012-                              onClick={() => {
+8013-                                const isNowAvailable = !p.isAvailable;
+8014-                                setPlayers((prev) =>
+8015:                                  prev.map((pl) =>
+8016-                                    pl.id === p.id
+8017-                                      ? {
+8018-                                          ...pl,
+8019-                                          isAvailable: isNowAvailable,
+8020-                                          arrivedAt: isNowAvailable
+--
+8144-                                  className={`text-xs font-normal tracking-tight capitalize leading-none ${p.isAvailable ? "text-black/90" : "text-black/50"}`}
+8145-                                >
+8146-                                  {p.name.toLowerCase()}
+8147-                                </div>
+8148-                                <div className="flex gap-1">
+8149:                                  {[1, 2, 3, 4, 5].map((star) => (
+8150-                                    <Star
+8151-                                      key={`star-a-${p.id}-${star}`}
+8152-                                      size={8}
+8153-                                      className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/20"}`}
+8154-                                    />
+--
+8292-                                    </div>
+8293-                                  </div>
+8294-
+8295-                                  {/* Scorers display */}
+8296-                                  <div className="w-full space-y-2 mt-2 pt-4 border-t border-black/10">
+8297:                                    {(lastMatchResult.events || []).map(
+8298-                                      (event, idx) => {
+8299-                                        const p = players.find(
+8300-                                          (pl) => pl.id === event.playerId,
+8301-                                        );
+8302-                                        const a = event.assistId
+--
+8352-                                              <div className="flex flex-col gap-0.5 min-w-0">
+8353-                                                <span className="text-xs font-normal tracking-tight capitalize truncate text-black/90 leading-none">
+8354-                                                  {p.name.toLowerCase()}
+8355-                                                </span>
+8356-                                                <div className="flex gap-0.5">
+8357:                                                  {[1, 2, 3, 4, 5].map(
+8358-                                                    (star) => (
+8359-                                                      <Star
+8360-                                                        key={`star-h-${p.id}-${star}`}
+8361-                                                        size={6}
+8362-                                                        className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10"}`}
+--
+8646-                                  teams[match.teamBIndex]?.color ||
+8647-                                  TEAM_COLORS[1],
+8648-                              }}
+8649-                            />
+8650-                            <div className="space-y-2 relative z-20">
+8651:                              {sortedTeamAPlayers.map((pid, idx) => {
+8652-                                const p = players.find((pl) => pl.id === pid);
+8653-                                if (!p) return null;
+8654-                                const matchGoals = match.events.filter(
+8655-                                  (e) =>
+8656-                                    e.type === "goal" && e.playerId === pid,
+--
+8680-                                        handleGoalkeeperSwap(
+8681-                                          swappingPlayerId,
+8682-                                          pid,
+8683-                                        );
+8684-                                        setTeams((prev) => {
+8685:                                          const newTeams = [...prev].map(
+8686-                                            (team) => ({
+8687-                                              ...team,
+8688-                                              playerIds: [...team.playerIds],
+8689-                                            }),
+8690-                                          );
+--
+8714-                                              swapTeamIdx === currentTeamIdx
+8715-                                            ) {
+8716-                                              newTeams[swapTeamIdx].playerIds =
+8717-                                                newTeams[
+8718-                                                  swapTeamIdx
+8719:                                                ].playerIds.map((id) => {
+8720-                                                  if (id === pAId) return pBId;
+8721-                                                  if (id === pBId) return pAId;
+8722-                                                  return id;
+8723-                                                });
+8724-                                            } else {
+8725-                                              newTeams[swapTeamIdx].playerIds =
+8726-                                                newTeams[
+8727-                                                  swapTeamIdx
+8728:                                                ].playerIds.map((id) =>
+8729-                                                  id === pAId ? pBId : id,
+8730-                                                );
+8731-                                              newTeams[
+8732-                                                currentTeamIdx
+8733-                                              ].playerIds = newTeams[
+8734-                                                currentTeamIdx
+8735:                                              ].playerIds.map((id) =>
+8736-                                                id === pBId ? pAId : id,
+8737-                                              );
+8738-                                            }
+8739-                                            setToast({
+8740-                                              message: "Jogadores trocados!",
+--
+8787-                                    <div className="flex flex-col items-end gap-0.5 overflow-hidden">
+8788-                                      <span className="text-xs font-normal tracking-tight capitalize truncate text-black/90 leading-none text-right">
+8789-                                        {p.name.toLowerCase()}
+8790-                                      </span>
+8791-                                      <div className="flex flex-row-reverse gap-0.5">
+8792:                                        {[1, 2, 3, 4, 5].map((star) => (
+8793-                                          <Star
+8794-                                            key={`star-${p.id}-${star}`}
+8795-                                            size={6}
+8796-                                            className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10"}`}
+8797-                                          />
+--
+8840-                                  0,
+8841-                                  match.config.playersPerTeam -
+8842-                                    (teams[match.teamAIndex]?.playerIds
+8843-                                      ?.length || 0),
+8844-                                ),
+8845:                              }).map((_, i) => (
+8846-                                <button
+8847-                                  key={`empty-a-${i}`}
+8848-                                  onClick={() => {
+8849-                                    if (
+8850-                                      movingPlayers &&
+--
+8880-                                        movingPlayers.playerIds.slice(
+8881-                                          0,
+8882-                                          availableSlots,
+8883-                                        );
+8884-                                      setTeams((prev) => {
+8885:                                        const newTeams = [...prev].map(
+8886-                                          (team) => ({
+8887-                                            ...team,
+8888-                                            playerIds: [...team.playerIds],
+8889-                                          }),
+8890-                                        );
+--
+8948-                                  <Plus size={12} />
+8949-                                </button>
+8950-                              ))}
+8951-                            </div>
+8952-                            <div className="space-y-2">
+8953:                              {sortedTeamBPlayers.map((pid, idx) => {
+8954-                                const p = players.find((pl) => pl.id === pid);
+8955-                                if (!p) return null;
+8956-                                const matchGoals = match.events.filter(
+8957-                                  (e) =>
+8958-                                    e.type === "goal" && e.playerId === pid,
+--
+8982-                                        handleGoalkeeperSwap(
+8983-                                          swappingPlayerId,
+8984-                                          pid,
+8985-                                        );
+8986-                                        setTeams((prev) => {
+8987:                                          const newTeams = [...prev].map(
+8988-                                            (team) => ({
+8989-                                              ...team,
+8990-                                              playerIds: [...team.playerIds],
+8991-                                            }),
+8992-                                          );
+--
+9016-                                              swapTeamIdx === currentTeamIdx
+9017-                                            ) {
+9018-                                              newTeams[swapTeamIdx].playerIds =
+9019-                                                newTeams[
+9020-                                                  swapTeamIdx
+9021:                                                ].playerIds.map((id) => {
+9022-                                                  if (id === pAId) return pBId;
+9023-                                                  if (id === pBId) return pAId;
+9024-                                                  return id;
+9025-                                                });
+9026-                                            } else {
+9027-                                              newTeams[swapTeamIdx].playerIds =
+9028-                                                newTeams[
+9029-                                                  swapTeamIdx
+9030:                                                ].playerIds.map((id) =>
+9031-                                                  id === pAId ? pBId : id,
+9032-                                                );
+9033-                                              newTeams[
+9034-                                                currentTeamIdx
+9035-                                              ].playerIds = newTeams[
+9036-                                                currentTeamIdx
+9037:                                              ].playerIds.map((id) =>
+9038-                                                id === pBId ? pAId : id,
+9039-                                              );
+9040-                                            }
+9041-                                            setToast({
+9042-                                              message: "Jogadores trocados!",
+--
+9089-                                    <div className="flex flex-col gap-0.5 overflow-hidden">
+9090-                                      <span className="text-xs font-normal tracking-tight capitalize truncate text-black/90 leading-none">
+9091-                                        {p.name.toLowerCase()}
+9092-                                      </span>
+9093-                                      <div className="flex gap-0.5">
+9094:                                        {[1, 2, 3, 4, 5].map((star) => (
+9095-                                          <Star
+9096-                                            key={`star-b-${p.id}-${star}`}
+9097-                                            size={6}
+9098-                                            className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10"}`}
+9099-                                          />
+--
+9142-                                  0,
+9143-                                  match.config.playersPerTeam -
+9144-                                    (teams[match.teamBIndex]?.playerIds
+9145-                                      ?.length || 0),
+9146-                                ),
+9147:                              }).map((_, i) => (
+9148-                                <button
+9149-                                  key={`empty-b-${i}`}
+9150-                                  onClick={() => {
+9151-                                    if (
+9152-                                      movingPlayers &&
+--
+9182-                                        movingPlayers.playerIds.slice(
+9183-                                          0,
+9184-                                          availableSlots,
+9185-                                        );
+9186-                                      setTeams((prev) => {
+9187:                                        const newTeams = [...prev].map(
+9188-                                          (team) => ({
+9189-                                            ...team,
+9190-                                            playerIds: [...team.playerIds],
+9191-                                          }),
+9192-                                        );
+--
+9422-                                initial={{ opacity: 0, y: -10 }}
+9423-                                animate={{ opacity: 1, y: 0 }}
+9424-                                className="p-5 bg-black border border-black/10 rounded-2xl flex items-start gap-4 shadow-xl mb-4 cursor-pointer hover:bg-black/90 transition-colors group"
+9425-                                onClick={() => {
+9426-                                  setTeams((prev) =>
+9427:                                    prev.map((team) =>
+9428-                                      team.lastMatchStatus === "Empate"
+9429-                                        ? {
+9430-                                            ...team,
+9431-                                            lastMatchStatus: undefined,
+9432-                                          }
+--
+9455-                                  </p>
+9456-                                </div>
+9457-                              </motion.div>
+9458-                            )}
+9459-
+9460:                            {teams.map((t, tIdx) => {
+9461-                              const isCurrent =
+9462-                                tIdx === match.teamAIndex ||
+9463-                                tIdx === match.teamBIndex;
+9464-                              const isFlashing = flashingTeamIds.includes(t.id);
+9465-
+--
+9511-                                        movingPlayers.playerIds.slice(
+9512-                                          0,
+9513-                                          availableSlots,
+9514-                                        );
+9515-                                      setTeams((prev) => {
+9516:                                        const newTeams = [...prev].map(
+9517-                                          (team) => ({
+9518-                                            ...team,
+9519-                                            playerIds: [...team.playerIds],
+9520-                                          }),
+9521-                                        );
+--
+9643-                                      }
+9644-
+9645-                                      if (isCurrent) {
+9646-                                        if (t.lastMatchStatus === "Empate") {
+9647-                                          setTeams((prevTeams) => {
+9648:                                            const newTeams = prevTeams.map(
+9649-                                              (team) => ({
+9650-                                                ...team,
+9651-                                                lastMatchStatus:
+9652-                                                  team.lastMatchStatus ===
+9653-                                                  "Empate"
+--
+9907-                                              const required =
+9908-                                                match.config.playersPerTeam -
+9909-                                                t.playerIds.length;
+9910-                                              let count = 0;
+9911-                                              setTeams((prev) => {
+9912:                                                const newTeams = prev.map(
+9913-                                                  (team) => ({
+9914-                                                    ...team,
+9915-                                                    playerIds: [
+9916-                                                      ...team.playerIds,
+9917-                                                    ],
+--
+9989-                                            return (
+9990-                                              (playerA?.arrivedAt || 0) -
+9991-                                              (playerB?.arrivedAt || 0)
+9992-                                            );
+9993-                                          })
+9994:                                          .map((pid, idx) => {
+9995-                                            const p = players.find(
+9996-                                              (pl) => pl.id === pid,
+9997-                                            );
+9998-                                            if (!p) return null;
+9999-                                            return (
+--
+10070-                                                      pid,
+10071-                                                    );
+10072-                                                    setTeams((prev) => {
+10073-                                                      const newTeams = [
+10074-                                                        ...prev,
+10075:                                                      ].map((team) => ({
+10076-                                                        ...team,
+10077-                                                        playerIds: [
+10078-                                                          ...team.playerIds,
+10079-                                                        ],
+10080-                                                      }));
+--
+10120-                                                          newTeams[
+10121-                                                            swapTeamIdx
+10122-                                                          ].playerIds =
+10123-                                                            newTeams[
+10124-                                                              swapTeamIdx
+10125:                                                            ].playerIds.map(
+10126-                                                              (id) => {
+10127-                                                                if (id === pAId)
+10128-                                                                  return pBId;
+10129-                                                                if (id === pBId)
+10130-                                                                  return pAId;
+--
+10135-                                                          newTeams[
+10136-                                                            swapTeamIdx
+10137-                                                          ].playerIds =
+10138-                                                            newTeams[
+10139-                                                              swapTeamIdx
+10140:                                                            ].playerIds.map(
+10141-                                                              (id) =>
+10142-                                                                id === pAId
+10143-                                                                  ? pBId
+10144-                                                                  : id,
+10145-                                                            );
+10146-                                                          newTeams[
+10147-                                                            currentTeamIdx
+10148-                                                          ].playerIds =
+10149-                                                            newTeams[
+10150-                                                              currentTeamIdx
+10151:                                                            ].playerIds.map(
+10152-                                                              (id) =>
+10153-                                                                id === pBId
+10154-                                                                  ? pAId
+10155-                                                                  : id,
+10156-                                                            );
+--
+10170-                                                  ) {
+10171-                                                    // Move logic
+10172-                                                    setTeams((prev) => {
+10173-                                                      const newTeams = [
+10174-                                                        ...prev,
+10175:                                                      ].map((team) => ({
+10176-                                                        ...team,
+10177-                                                        playerIds: [
+10178-                                                          ...team.playerIds,
+10179-                                                        ],
+10180-                                                      }));
+--
+10236-                                                    ) {
+10237-                                                      // Move player to the incomplete selected team
+10238-                                                      setTeams((prev) => {
+10239-                                                        const newTeams = [
+10240-                                                          ...prev,
+10241:                                                        ].map((team) => ({
+10242-                                                          ...team,
+10243-                                                          playerIds: [
+10244-                                                            ...team.playerIds,
+10245-                                                          ],
+10246-                                                        }));
+--
+10359-                                                    className={`text-xs font-bold tracking-tight capitalize truncate leading-none ${isCurrent ? "text-black" : "text-black/90"}`}
+10360-                                                  >
+10361-                                                    {p.name.toLowerCase()}
+10362-                                                  </span>
+10363-                                                  <div className="flex gap-0.5">
+10364:                                                    {[1, 2, 3, 4, 5].map(
+10365-                                                      (star) => (
+10366-                                                        <Star
+10367-                                                          key={`star-q-${p.id}-${star}`}
+10368-                                                          size={8}
+10369-                                                          className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/20"}`}
+--
+10413-                        )}
+10414-                      </div>
+10415-                    </div>
+10416-                  ) : (
+10417-                    <div className="grid grid-cols-2 gap-2 sm:gap-4">
+10418:                      {teams.map((team, tIndex) => (
+10419-                        <motion.div
+10420-                          key={`scoreboard-team-${team.id}`}
+10421-                          initial={{ opacity: 0, scale: 0.95 }}
+10422-                          animate={{ opacity: 1, scale: 1 }}
+10423-                          whileHover={{ y: -5 }}
+--
+10515-                                  return 1;
+10516-                                return (
+10517-                                  (pA?.arrivedAt || 0) - (pB?.arrivedAt || 0)
+10518-                                );
+10519-                              })
+10520:                              .map((pid, idx) => {
+10521-                                const p = players.find((pl) => pl.id === pid);
+10522-                                return p ? (
+10523-                                  <div
+10524-                                    key={`scoreboard-player-${team.id}-${pid}-${idx}`}
+10525-                                    onClick={(e) => {
+--
+10532-                                        handleGoalkeeperSwap(
+10533-                                          swappingPlayerId,
+10534-                                          pid,
+10535-                                        );
+10536-                                        setTeams((prev) => {
+10537:                                          const newTeams = [...prev].map(
+10538-                                            (team) => ({
+10539-                                              ...team,
+10540-                                              playerIds: [...team.playerIds],
+10541-                                            }),
+10542-                                          );
+--
+10570-                                            const pBId = pid;
+10571-                                            if (teamAIdx === teamBIdx) {
+10572-                                              newTeams[teamAIdx].playerIds =
+10573-                                                newTeams[
+10574-                                                  teamAIdx
+10575:                                                ].playerIds.map((id) => {
+10576-                                                  if (id === pAId) return pBId;
+10577-                                                  if (id === pBId) return pAId;
+10578-                                                  return id;
+10579-                                                });
+10580-                                            } else {
+10581-                                              newTeams[teamAIdx].playerIds =
+10582-                                                newTeams[
+10583-                                                  teamAIdx
+10584:                                                ].playerIds.map((id) =>
+10585-                                                  id === pAId ? pBId : id,
+10586-                                                );
+10587-                                              newTeams[teamBIdx].playerIds =
+10588-                                                newTeams[
+10589-                                                  teamBIdx
+10590:                                                ].playerIds.map((id) =>
+10591-                                                  id === pBId ? pAId : id,
+10592-                                                );
+10593-                                            }
+10594-                                          }
+10595-                                          return newTeams;
+--
+10648-                                          }`}
+10649-                                        >
+10650-                                          {p.name}
+10651-                                        </span>
+10652-                                        <div className="flex gap-0.5 mt-0.5">
+10653:                                          {[1, 2, 3, 4, 5].map((star) => (
+10654-                                            <Star
+10655-                                              key={`star-pcard-${p.id}-${star}`}
+10656-                                              size={8}
+10657-                                              className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-zinc-300"}`}
+10658-                                            />
+--
+10776-                        </div>
+10777-                      </div>
+10778-                    </div>
+10779-
+10780-                    <div className="flex flex-col gap-1">
+10781:                      {sortedRankingPlayers.map((player, index) => (
+10782-                        <motion.div
+10783-                          layout
+10784-                          initial={{ opacity: 0, y: 10 }}
+10785-                          animate={{ opacity: 1, y: 0 }}
+10786-                          transition={{
+--
+10819-                          <div className="flex-1 text-xs text-zinc-800/90 tracking-tight truncate mr-4 font-normal capitalize flex flex-col gap-0.5">
+10820-                            <span className="leading-none">
+10821-                              {player.name.toLowerCase()}
+10822-                            </span>
+10823-                            <div className="flex gap-0.5">
+10824:                              {[1, 2, 3, 4, 5].map((star) => (
+10825-                                <Star
+10826-                                  key={`star-rank-${player.id}-${star}`}
+10827-                                  size={8}
+10828-                                  className={`${(player.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-zinc-800/10"}`}
+10829-                                />
+--
+10912-                            </tr>
+10913-                          </thead>
+10914-                          <tbody>
+10915-                            {sortedPlayersByTotal
+10916-                              .slice(0, 15)
+10917:                              .map((player, index) => (
+10918-                                <tr
+10919-                                  key={`ranking-row-print-${player.id}`}
+10920-                                  className="border-b border-black/10"
+10921-                                >
+10922-                                  <td className="p-2 text-xs font-black">
+--
+11265-                                    className={`text-center text-zinc-400 text-xs uppercase tracking-widest ${isPrintMode ? "p-2" : "p-8"}`}
+11266-                                  >
+11267-                                    Nenhuma despesa registrada
+11268-                                  </div>
+11269-                                ) : (
+11270:                                  sortedExpenses.map((expense, idx) => (
+11271-                                    <div
+11272-                                      key={`expense-${expense.id}-${idx}`}
+11273-                                      className={`flex items-center justify-between group ${isPrintMode ? "p-2 bg-white" : "p-4"}`}
+11274-                                    >
+11275-                                      <div>
+--
+11372-                                    return (
+11373-                                      record &&
+11374-                                      (record.months[currentMonth] || 0) > 0
+11375-                                    );
+11376-                                  }) || []
+11377:                                ).map((p) => (
+11378-                                  <div
+11379-                                    key={`em-dia-${p.id}`}
+11380-                                    className={`flex items-center justify-between ${isPrintMode ? "p-2 bg-white" : "p-3 rounded-none bg-white border border-emerald-100 shadow-sm"}`}
+11381-                                  >
+11382-                                    <span
+--
+11455-                                    return (
+11456-                                      !record ||
+11457-                                      (record.months[currentMonth] || 0) <= 0
+11458-                                    );
+11459-                                  }) || []
+11460:                                ).map((p) => (
+11461-                                  <div
+11462-                                    key={`em-debito-${p.id}`}
+11463-                                    className={`flex items-center justify-between ${isPrintMode ? "p-2 bg-white" : "p-3 rounded-none bg-white border border-red-100 shadow-sm"}`}
+11464-                                  >
+11465-                                    <span
+--
+11586-                              onChange={(e) =>
+11587-                                setSelectedYear(parseInt(e.target.value))
+11588-                              }
+11589-                              className="bg-transparent text-base font-black text-zinc-900 outline-none cursor-pointer"
+11590-                            >
+11591:                              {availableYears.map((y) => (
+11592-                                <option
+11593-                                  key={y}
+11594-                                  value={y}
+11595-                                  className="bg-white text-zinc-900"
+11596-                                >
+--
+11659-                              className={`${isPrintMode ? "bg-zinc-50 text-zinc-700" : "bg-zinc-100 text-zinc-800"} font-bold uppercase tracking-tighter`}
+11660-                            >
+11661-                              <th
+11662-                                className={`border ${isPrintMode ? "border-zinc-300" : "border-zinc-300 sticky left-0 z-10 bg-zinc-100"}`}
+11663-                              ></th>
+11664:                              {MONTHS.map((month) => (
+11665-                                <th
+11666-                                  key={month}
+11667-                                  className={`p-0.5 border ${isPrintMode ? "border-zinc-300" : "border-zinc-300"}`}
+11668-                                >
+11669-                                  {month}
+--
+11675-                            </tr>
+11676-                          </thead>
+11677-                          <tbody
+11678-                            className={`${isPrintMode ? "bg-white text-black" : "bg-white text-[#1E3D2F]"}`}
+11679-                          >
+11680:                            {players.map((player, index) => {
+11681-                              const record = payments.find(
+11682-                                (p) =>
+11683-                                  p.playerId === player.id &&
+11684-                                  p.year === selectedYear,
+11685-                              ) || {
+--
+11708-                                  >
+11709-                                    <span className="p-0.5 font-bold">
+11710-                                      {player.name}
+11711-                                    </span>
+11712-                                  </td>
+11713:                                  {MONTHS.map((month) => {
+11714-                                    const isPaid =
+11715-                                      (record?.months?.[month] || 0) > 0;
+11716-                                    return (
+11717-                                      <td
+11718-                                        key={`month-cell-${player.id}-${month}`}
+--
+11839-                          teams[match.teamAIndex]?.playerIds?.includes(p.id)) ||
+11840-                        (match.teamBIndex !== -1 &&
+11841-                          teams[match.teamBIndex]?.playerIds?.includes(p.id));
+11842-                      return !isSelected && p.isAvailable;
+11843-                    })
+11844:                    .map((player) => {
+11845-                      const currentTeam = teams.find((t) =>
+11846-                        t.playerIds.includes(player.id),
+11847-                      );
+11848-                      const isInOtherTeam =
+11849-                        equalizerData.otherTeamIndex !== -1 &&
+--
+12045-                      (p) => p.id === showPlayerActionsModal.playerId,
+12046-                    )?.name
+12047-                  }
+12048-                </h3>
+12049-                <div className="flex justify-center gap-1 mt-1">
+12050:                  {[1, 2, 3, 4, 5].map((star) => (
+12051-                    <Star
+12052-                      key={`star-action-${showPlayerActionsModal.playerId}-${star}`}
+12053-                      size={10}
+12054-                      className={`${(players.find((p) => p.id === showPlayerActionsModal.playerId)?.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10"}`}
+12055-                    />
+--
+12108-                          const playerAId = swappingPlayerId;
+12109-                          const playerBId = showPlayerActionsModal.playerId;
+12110-
+12111-                          handleGoalkeeperSwap(playerAId, playerBId);
+12112-                          setTeams((prev) => {
+12113:                            const newTeams = prev.map((t) => ({
+12114-                              ...t,
+12115-                              playerIds: [...t.playerIds],
+12116-                            }));
+12117-                            let teamAIdx = -1;
+12118-                            let teamBIdx = -1;
+--
+12126-
+12127-                            if (teamAIdx !== -1 && teamBIdx !== -1) {
+12128-                              if (teamAIdx === teamBIdx) {
+12129-                                newTeams[teamAIdx].playerIds = newTeams[
+12130-                                  teamAIdx
+12131:                                ].playerIds.map((id) => {
+12132-                                  if (id === playerAId) return playerBId;
+12133-                                  if (id === playerBId) return playerAId;
+12134-                                  return id;
+12135-                                });
+12136-                              } else {
+12137-                                newTeams[teamAIdx].playerIds = newTeams[
+12138-                                  teamAIdx
+12139:                                ].playerIds.map((id) =>
+12140-                                  id === playerAId ? playerBId : id,
+12141-                                );
+12142-                                newTeams[teamBIdx].playerIds = newTeams[
+12143-                                  teamBIdx
+12144:                                ].playerIds.map((id) =>
+12145-                                  id === playerBId ? playerAId : id,
+12146-                                );
+12147-                              }
+12148-                            }
+12149-
+--
+12185-                          const isBecomingGk = player
+12186-                            ? !player.isGoalkeeper
+12187-                            : false;
+12188-
+12189-                          setPlayers((prev) =>
+12190:                            prev.map((p) =>
+12191-                              p.id === pid
+12192-                                ? { ...p, isGoalkeeper: !p.isGoalkeeper }
+12193-                                : p,
+12194-                            ),
+12195-                          );
+12196-
+12197-                          if (isBecomingGk && targetTeamIndex !== -1) {
+12198-                            setTeams((prev) =>
+12199:                              prev.map((team, idx) => {
+12200-                                if (idx === targetTeamIndex) {
+12201-                                  const otherIds = team.playerIds.filter(
+12202-                                    (id) => id !== pid,
+12203-                                  );
+12204-                                  return {
+--
+12296-                            setMatch((prev) => ({ ...prev, isPaused: true }));
+12297-                          }
+12298-
+12299-                          setTeams((prev) => {
+12300-                            return prev
+12301:                              .map((t) => ({
+12302-                                ...t,
+12303-                                playerIds: t.playerIds.filter(
+12304-                                  (id) =>
+12305-                                    id !== showPlayerActionsModal.playerId,
+12306-                                ),
+12307-                              }))
+12308-                              .filter((t) => t.playerIds.length > 0);
+12309-                          });
+12310-                          setPlayers((prev) =>
+12311:                            prev.map((p) =>
+12312-                              p.id === showPlayerActionsModal.playerId
+12313-                                ? {
+12314-                                    ...p,
+12315-                                    isAvailable: false,
+12316-                                    arrivedAt: undefined,
+--
+12449-                              const isBecomingGk = player
+12450-                                ? !player.isGoalkeeper
+12451-                                : false;
+12452-
+12453-                              setPlayers((prev) =>
+12454:                                prev.map((p) =>
+12455-                                  p.id === pid
+12456-                                    ? { ...p, isGoalkeeper: !p.isGoalkeeper }
+12457-                                    : p,
+12458-                                ),
+12459-                              );
+12460-
+12461-                              if (isBecomingGk && targetTeamIndex !== -1) {
+12462-                                setTeams((prev) =>
+12463:                                  prev.map((team, idx) => {
+12464-                                    if (idx === targetTeamIndex) {
+12465-                                      const otherIds = team.playerIds.filter(
+12466-                                        (id) => id !== pid,
+12467-                                      );
+12468-                                      return {
+--
+12535-
+12536-                      <button
+12537-                        onClick={() => {
+12538-                          setTeams((prev) => {
+12539-                            return prev
+12540:                              .map((t) => ({
+12541-                                ...t,
+12542-                                playerIds: t.playerIds.filter(
+12543-                                  (id) => id !== showQueuePlayerModal.playerId,
+12544-                                ),
+12545-                              }))
+12546-                              .filter((t) => t.playerIds.length > 0);
+12547-                          });
+12548-                          setPlayers((prev) =>
+12549:                            prev.map((p) =>
+12550-                              p.id === showQueuePlayerModal.playerId
+12551-                                ? {
+12552-                                    ...p,
+12553-                                    isAvailable: false,
+12554-                                    arrivedAt: undefined,
+--
+12583-                    <div className="space-y-4">
+12584-                      <div className="text-[10px] font-black text-zinc-400 uppercase tracking-widest text-center px-4">
+12585-                        Destino:
+12586-                      </div>
+12587-                      <div className="max-h-60 overflow-y-auto px-1 space-y-2 custom-scrollbar">
+12588:                        {teams.map((t, idx) => {
+12589-                          if (idx === showQueuePlayerModal.teamIndex)
+12590-                            return null;
+12591-                          return (
+12592-                            <button
+12593-                              key={`move-to-${t.id}`}
+12594-                              onClick={() => {
+12595-                                setTeams((prev) => {
+12596:                                  const newTeams = [...prev].map((team) => ({
+12597-                                    ...team,
+12598-                                    playerIds: [...team.playerIds],
+12599-                                  }));
+12600-                                  if (
+12601-                                    newTeams[showQueuePlayerModal.teamIndex]
+--
+12730-                    <div className="h-px flex-1 bg-zinc-200"></div>
+12731-                  </div>
+12732-
+12733-                  {teams[showAssistSelection.teamIndex].playerIds
+12734-                    .filter((pid) => pid !== showAssistSelection.scorerId)
+12735:                    .map((pid, idx) => {
+12736-                      const player = players.find((p) => p.id === pid);
+12737-                      return (
+12738-                        <motion.button
+12739-                          initial={{ x: -20, opacity: 0 }}
+12740-                          animate={{ x: 0, opacity: 1 }}
+--
+12867-                <section className="space-y-4">
+12868-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-brand-text-secondary">
+12869-                    Confronto Atual
+12870-                  </h4>
+12871-                  <div className="grid grid-cols-2 gap-2 max-h-48 overflow-y-auto pr-2">
+12872:                    {teams.map((t, idx) => (
+12873-                      <div
+12874-                        key={`settings-team-select-${t.id}-${idx}`}
+12875-                        className={`p-[1px] rounded-md ${match.teamAIndex === idx || match.teamBIndex === idx ? "bg-team-gradient" : "bg-transparent"}`}
+12876-                      >
+12877-                        <motion.button
+--
+12932-                          </div>
+12933-                          <span className="truncate w-full text-center">
+12934-                            {t.name}
+12935-                          </span>
+12936-                          <div className="flex flex-wrap justify-center gap-0.5 mt-1">
+12937:                            {t.playerIds.slice(0, 3).map((pid, pidx) => (
+12938-                              <span
+12939-                                key={`settings-team-player-badge-${t.id}-${pid}-${pidx}`}
+12940-                                className="text-[6px] opacity-60 bg-black/5 px-1 rounded-sm"
+12941-                              >
+12942-                                {
+--
+12958-                  <h4 className="text-[10px] font-black uppercase tracking-widest text-brand-text-secondary">
+12959-                    Gerenciar Times e Jogadores
+12960-                  </h4>
+12961-                  <div className="grid grid-cols-2 gap-4">
+12962-                    <AnimatePresence mode="popLayout">
+12963:                      {teams.map((team, tIdx) => (
+12964-                        <motion.div
+12965-                          key={`settings-team-manage-${team.id}`}
+12966-                          layout
+12967-                          initial={{ opacity: 0, y: 20 }}
+12968-                          animate={{ opacity: 1, y: 0 }}
+--
+13050-                                  return 1;
+13051-                                return (
+13052-                                  (pA?.arrivedAt || 0) - (pB?.arrivedAt || 0)
+13053-                                );
+13054-                              })
+13055:                              .map((pid, idx) => {
+13056-                                const player = players.find(
+13057-                                  (p) => p.id === pid,
+13058-                                );
+13059-                                if (!player) return null;
+13060-                                return (
+--
+13134-                                              handleGoalkeeperSwap(
+13135-                                                playerAId,
+13136-                                                playerBId,
+13137-                                              );
+13138-                                              setTeams((prev) => {
+13139:                                                const newTeams = prev.map(
+13140-                                                  (t) => ({
+13141-                                                    ...t,
+13142-                                                    playerIds: [...t.playerIds],
+13143-                                                  }),
+13144-                                                );
+--
+13169-                                                  if (teamAIdx === teamBIdx) {
+13170-                                                    newTeams[
+13171-                                                      teamAIdx
+13172-                                                    ].playerIds = newTeams[
+13173-                                                      teamAIdx
+13174:                                                    ].playerIds.map((id) => {
+13175-                                                      if (id === playerAId)
+13176-                                                        return playerBId;
+13177-                                                      if (id === playerBId)
+13178-                                                        return playerAId;
+13179-                                                      return id;
+--
+13181-                                                  } else {
+13182-                                                    newTeams[
+13183-                                                      teamAIdx
+13184-                                                    ].playerIds = newTeams[
+13185-                                                      teamAIdx
+13186:                                                    ].playerIds.map((id) =>
+13187-                                                      id === playerAId
+13188-                                                        ? playerBId
+13189-                                                        : id,
+13190-                                                    );
+13191-                                                    newTeams[
+13192-                                                      teamBIdx
+13193-                                                    ].playerIds = newTeams[
+13194-                                                      teamBIdx
+13195:                                                    ].playerIds.map((id) =>
+13196-                                                      id === playerBId
+13197-                                                        ? playerAId
+13198-                                                        : id,
+13199-                                                    );
+13200-                                                  }
+--
+13211-                                        )}
+13212-
+13213-                                      <button
+13214-                                        onClick={() => {
+13215-                                          setTeams((prev) => {
+13216:                                            const newTeams = prev.map((t) => ({
+13217-                                              ...t,
+13218-                                              playerIds: [...t.playerIds],
+13219-                                            }));
+13220-                                            newTeams[tIdx].playerIds = newTeams[
+13221-                                              tIdx
+--
+13259-                        .filter(
+13260-                          (p) =>
+13261-                            p.isAvailable &&
+13262-                            !teams.some((t) => t.playerIds.includes(p.id)),
+13263-                        )
+13264:                        .map((player) => (
+13265-                          <div
+13266-                            key={`quick-add-player-${player.id}`}
+13267-                            className="flex items-center justify-between p-2 rounded-md bg-brand-dark/30 border border-white/5"
+13268-                          >
+13269-                            <span className="text-xs font-bold truncate text-[#0D0D0D]">
+--
+13279-                                    handleGoalkeeperSwap(
+13280-                                      playerInTeamId,
+13281-                                      playerFromBenchId,
+13282-                                    );
+13283-                                    setTeams((prev) => {
+13284:                                      const newTeams = prev.map((t) => ({
+13285-                                        ...t,
+13286-                                        playerIds: [...t.playerIds],
+13287-                                      }));
+13288-                                      const teamIdx = newTeams.findIndex((t) =>
+13289-                                        t.playerIds.includes(playerInTeamId),
+13290-                                      );
+13291-
+13292-                                      if (teamIdx !== -1) {
+13293-                                        newTeams[teamIdx].playerIds = newTeams[
+13294-                                          teamIdx
+13295:                                        ].playerIds.map((id) =>
+13296-                                          id === playerInTeamId
+13297-                                            ? playerFromBenchId
+13298-                                            : id,
+13299-                                        );
+13300-                                      }
+--
+13478-            >
+13479-              <h3 className="text-xl font-black uppercase tracking-tighter text-center">
+13480-                Escolher Escudo
+13481-              </h3>
+13482-              <div className="grid grid-cols-4 gap-3">
+13483:                {TEAM_ICONS.map((Icon, idx) => (
+13484-                  <button
+13485-                    key={`team-icon-${idx}`}
+13486-                    onClick={() => {
+13487-                      const newTeams = [...teams];
+13488-                      newTeams[showIconPicker].iconIdx = idx;
+--
+13760-                      .filter(
+13761-                        (p) =>
+13762-                          p.isAvailable &&
+13763-                          !teams.some((t) => t.playerIds.includes(p.id)),
+13764-                      )
+13765:                      .map((player) => (
+13766-                        <button
+13767-                          key={`event-scorer-list-${player.id}`}
+13768-                          onClick={() => {
+13769-                            const teamIdx = showEventModal.team as any;
+13770-                            const currentTeam = teams[teamIdx];
+--
+13824-                      </h3>
+13825-                      <div className="grid grid-cols-1 gap-2">
+13826-                        {(showEventModal.team === "A"
+13827-                          ? teams[match.teamAIndex]?.playerIds || []
+13828-                          : teams[match.teamBIndex]?.playerIds || []
+13829:                        ).map((pid) => {
+13830-                          const player = players.find((p) => p.id === pid);
+13831-                          return player ? (
+13832-                            <button
+13833-                              key={`event-scorer-select-${showEventModal.team}-${pid}`}
+13834-                              onClick={() => setSelectedScorerId(pid)}
+--
+13865-                        {(showEventModal.team === "A"
+13866-                          ? teams[match.teamAIndex]?.playerIds || []
+13867-                          : teams[match.teamBIndex]?.playerIds || []
+13868-                        )
+13869-                          .filter((id) => id !== selectedScorerId)
+13870:                          .map((aid) => {
+13871-                            const assistPlayer = players.find(
+13872-                              (p) => p.id === aid,
+13873-                            );
+13874-                            return (
+13875-                              <button
+--
+14039-                        .filter(
+14040-                          (p) =>
+14041-                            p.isAvailable &&
+14042-                            !teams.flatMap((t) => t.playerIds).includes(p.id),
+14043-                        )
+14044:                        .map((p) => (
+14045-                          <button
+14046-                            key={`randomize-player-list-${p.id}`}
+14047-                            onClick={() =>
+14048-                              addPlayerToTeam(p.id, showQuickAddPlayerModal)
+14049-                            }
+--
+14164-                O time vencedor teve um jogador removido. Escolha um jogador de
+14165-                outro time para substituí-lo:
+14166-              </p>
+14167-
+14168-              <div className="w-full max-h-60 overflow-y-auto space-y-2 pr-2 custom-scrollbar mb-6">
+14169:                {teams.map(
+14170-                  (t, tIdx) =>
+14171-                    tIdx !== (replacingPlayer?.teamIndex ?? -1) && (
+14172-                      <div
+14173-                        key={`summary-team-select-${t.id}-${tIdx}`}
+14174-                        className="space-y-1"
+--
+14183-                            if (pA?.isGoalkeeper && !pB?.isGoalkeeper)
+14184-                              return -1;
+14185-                            if (!pA?.isGoalkeeper && pB?.isGoalkeeper) return 1;
+14186-                            return (pA?.arrivedAt || 0) - (pB?.arrivedAt || 0);
+14187-                          })
+14188:                          .map((pid, idx) => (
+14189-                            <button
+14190-                              key={`summary-player-replace-${t.id}-${pid}-${idx}`}
+14191-                              onClick={() => {
+14192-                                handleGoalkeeperSwap(
+14193-                                  replacingPlayer.removedPlayerId,
+14194-                                  pid,
+14195-                                );
+14196-                                setTeams((prev) => {
+14197:                                  const newTeams = prev.map((team) => ({
+14198-                                    ...team,
+14199-                                    playerIds: [...team.playerIds],
+14200-                                  }));
+14201-                                  // Remove from source team
+14202-                                  newTeams[tIdx].playerIds = newTeams[
+--
+14205-                                  // Replace in target team
+14206-                                  newTeams[
+14207-                                    replacingPlayer.teamIndex
+14208-                                  ].playerIds = newTeams[
+14209-                                    replacingPlayer.teamIndex
+14210:                                  ].playerIds.map((id) =>
+14211-                                    id === replacingPlayer.removedPlayerId
+14212-                                      ? pid
+14213-                                      : id,
+14214-                                  );
+14215-                                  return newTeams.filter(
+--
+14243-
+14244-              <button
+14245-                onClick={() => {
+14246-                  // If cancelled, just remove the player without replacement
+14247-                  setTeams((prev) => {
+14248:                    const newTeams = prev.map((team) => ({
+14249-                      ...team,
+14250-                      playerIds: [...team.playerIds],
+14251-                    }));
+14252-                    newTeams[replacingPlayer.teamIndex].playerIds = newTeams[
+14253-                      replacingPlayer.teamIndex
+--
+14319-                teamA: isTeamA ? color : prev.teamA,
+14320-                teamB: isTeamB ? color : prev.teamB,
+14321-              }));
+14322-              // Also update specific team if needed, but fixed takes precedence usually
+14323-              setTeams((prev) =>
+14324:                prev.map((t, i) => (i === idx ? { ...t, color } : t)),
+14325-              );
+14326-            } else {
+14327-              setTeams((prev) => {
+14328-                const newTeams = [...prev];
+14329-                if (newTeams[idx]) {
+--
+14838-                      "Quarta",
+14839-                      "Quinta",
+14840-                      "Sexta",
+14841-                      "Sábado",
+14842-                      "Domingo",
+14843:                    ].map((day) => (
+14844-                      <option key={day} value={day}>
+14845-                        {day}
+14846-                      </option>
+14847-                    ))}
+14848-                  </select>
