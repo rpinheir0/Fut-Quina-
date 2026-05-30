@@ -3379,6 +3379,68 @@ function GroupApp({
     lastScrollY.current = currentScrollY;
   };
 
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+  const touchEndY = useRef<number | null>(null);
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+    touchStartY.current = e.targetTouches[0].clientY;
+    touchEndX.current = null;
+    touchEndY.current = null;
+  };
+
+  const onTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+    touchEndY.current = e.targetTouches[0].clientY;
+  };
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    if (
+      touchStartX.current === null ||
+      touchEndX.current === null ||
+      touchStartY.current === null ||
+      touchEndY.current === null
+    ) {
+      return;
+    }
+
+    // Check if target is inside horizontal scrollable container
+    let isHorizontalScroll = false;
+    let target = e.target as HTMLElement | null;
+    while (target && target !== e.currentTarget) {
+      const className = target.className || "";
+      if (typeof className === "string" && (className.includes("overflow-x-auto") || className.includes("custom-scrollbar"))) {
+        isHorizontalScroll = true;
+        break;
+      }
+      target = target.parentElement as HTMLElement | null;
+    }
+
+    if (isHorizontalScroll) return;
+
+    const distanceX = touchStartX.current - touchEndX.current;
+    const distanceY = touchStartY.current - touchEndY.current;
+
+    const isLeftSwipe = distanceX > minSwipeDistance;
+    const isRightSwipe = distanceX < -minSwipeDistance;
+
+    if (Math.abs(distanceX) > Math.abs(distanceY) * 1.5) {
+      const screens: Screen[] = ["players", "teams", "ranking", "finance"];
+      const currentIndex = screens.indexOf(currentScreen);
+
+      if (isLeftSwipe && currentIndex < screens.length - 1) {
+        setSwipeDirection(1);
+        setCurrentScreen(screens[currentIndex + 1]);
+      } else if (isRightSwipe && currentIndex > 0) {
+        setSwipeDirection(-1);
+        setCurrentScreen(screens[currentIndex - 1]);
+      }
+    }
+  };
+
   const playWhistle = () => {
     const audio = new Audio(
       "https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3",
@@ -6787,6 +6849,9 @@ function GroupApp({
         <main
           ref={mainRef}
           onScroll={handleMainScroll}
+          onTouchStart={onTouchStart}
+          onTouchMove={onTouchMove}
+          onTouchEnd={onTouchEnd}
           className={`flex-1 overflow-y-auto pb-20 ${isPrintMode ? "p-0 pb-0 bg-white text-black" : ["players", "teams", "ranking", "finance"].includes(currentScreen) ? "bg-white" : ""}`}
         >
           <AnimatePresence mode="wait">
