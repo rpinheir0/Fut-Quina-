@@ -10761,10 +10761,10 @@ function GroupApp({
                                     }}
                                     className={`flex justify-between items-center py-2 px-1 transition-all group/player cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
                                       swappingPlayerId === pid
-                                        ? "bg-[#53B986]/20 rounded-lg animate-pulse"
+                                        ? "bg-[#53B986]/20 rounded-lg"
                                         : swappingPlayerId &&
                                             swappingPlayerId !== pid
-                                          ? "bg-[#53B986]/10 rounded-lg"
+                                          ? "bg-[#53B986]/10 rounded-lg animate-pulse"
                                           : "bg-transparent border-transparent"
                                     }`}
                                   >
@@ -10814,7 +10814,7 @@ function GroupApp({
                                       )}
                                       {swappingPlayerId &&
                                         swappingPlayerId !== pid && (
-                                          <div className="px-2 py-1 bg-[#53B986] text-black rounded-sm text-[8px] font-black uppercase">
+                                          <div className="px-2 py-1 bg-[#53B986] text-black rounded-sm text-[8px] font-black uppercase animate-pulse">
                                             Trocar
                                           </div>
                                         )}
@@ -13356,7 +13356,7 @@ function GroupApp({
                                               });
                                               setSwappingPlayerId(null);
                                             }}
-                                            className="p-1.5 bg-brand-primary text-[#0D0D0D] rounded-sm text-[8px] font-black uppercase"
+                                            className="p-1.5 bg-brand-primary text-[#0D0D0D] rounded-sm text-[8px] font-black uppercase animate-pulse"
                                           >
                                             Trocar
                                           </button>
@@ -13461,7 +13461,7 @@ function GroupApp({
                                     });
                                     setSwappingPlayerId(null);
                                   }}
-                                  className="px-3 py-1 bg-brand-primary text-[#0D0D0D] rounded-sm text-[8px] font-black uppercase"
+                                  className="px-3 py-1 bg-brand-primary text-[#0D0D0D] rounded-sm text-[8px] font-black uppercase animate-pulse"
                                 >
                                   Entrar
                                 </button>
