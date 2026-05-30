@@ -6913,26 +6913,19 @@ function GroupApp({
                 {/* Dashboard Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   {!showAddPlayerSection ? (
-                    <div className="flex flex-col gap-0">
-                      <div className="flex items-center gap-2">
-                        <div className="flex items-center gap-3">
-                          <h2 className="text-[12px] font-black uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">
-                            Painel de controle
-                          </h2>
-                          <button
-                            onClick={() => setShowSetupGuide(true)}
-                            className="flex items-center gap-1.5 bg-zinc-100 hover:bg-zinc-200 text-zinc-500 py-1 px-3 rounded-full transition-all active:scale-95 group"
-                          >
-                            <div className="group-hover:rotate-12 transition-transform">
-                              <TiMap size={12} />
-                            </div>
-                            <span className="text-[9px] font-black uppercase tracking-widest">Guia</span>
-                          </button>
+                    <div className="flex flex-col gap-0.5">
+                      <h2 className="text-[12px] font-black uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">
+                        Painel de controle
+                      </h2>
+                      <button
+                        onClick={() => setShowSetupGuide(true)}
+                        className="flex items-center gap-1.5 text-zinc-400 transition-all active:scale-95 group w-fit"
+                      >
+                        <div className="group-hover:rotate-12 transition-transform">
+                          <TiMap size={12} />
                         </div>
-                      </div>
-                      <p className="text-[11px] font-black tracking-widest text-zinc-400 font-roboto-flex">
-                        Organização
-                      </p>
+                        <span className="text-[10px] font-black uppercase tracking-widest">Guia</span>
+                      </button>
                     </div>
                   ) : (
                     <div className="flex flex-col gap-0.5">
