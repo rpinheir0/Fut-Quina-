@@ -7938,48 +7938,69 @@ function GroupApp({
                                 <button
                                   onClick={() => {
                                     const now = Date.now();
+                                    
                                     setPlayers((prev) =>
-                                      prev.map((pl, idx) => ({
-                                        ...pl,
-                                        isAvailable: true,
-                                        arrivedAt: now + idx,
-                                      })),
+                                      prev.map((pl, idx) => {
+                                        if (sessionPlayerIds.includes(pl.id)) {
+                                          return {
+                                            ...pl,
+                                            isAvailable: true,
+                                            arrivedAt: pl.arrivedAt || now + idx,
+                                          };
+                                        }
+                                        return pl;
+                                      }),
                                     );
 
                                     setTeams((prevTeams) => {
-                                      // Gather all current session players in random or current string order, maybe just use all session players
-                                      const allPlayerIds = players
-                                        .filter((p) =>
-                                          sessionPlayerIds.includes(p.id),
-                                        )
-                                        .map((p) => p.id);
-                                      const newTeams: Team[] = [];
+                                      const playersInExistingTeams = new Set(
+                                        prevTeams.flatMap((t) => t.playerIds),
+                                      );
+                                      const missingSessionPlayerIds =
+                                        sessionPlayerIds.filter(
+                                          (id) =>
+                                            !playersInExistingTeams.has(id),
+                                        );
+
+                                      if (missingSessionPlayerIds.length === 0)
+                                        return prevTeams;
+
                                       const playersPerTeam =
                                         match.config.playersPerTeam;
+                                      const newAddedTeams: Team[] = [];
+
                                       for (
                                         let i = 0;
-                                        i < allPlayerIds.length;
+                                        i < missingSessionPlayerIds.length;
                                         i += playersPerTeam
                                       ) {
-                                        const teamPlayers = allPlayerIds.slice(
-                                          i,
-                                          i + playersPerTeam,
-                                        );
-                                        const teamIndex = Math.floor(
-                                          i / playersPerTeam,
-                                        );
-                                        const teamLetter = String.fromCharCode(
-                                          65 + teamIndex,
-                                        );
-                                        newTeams.push({
+                                        const teamPlayers =
+                                          missingSessionPlayerIds.slice(
+                                            i,
+                                            i + playersPerTeam,
+                                          );
+                                        const teamIndex =
+                                          prevTeams.length +
+                                          newAddedTeams.length;
+                                        const teamLetter =
+                                          String.fromCharCode(
+                                            65 + (teamIndex % 26),
+                                          );
+                                        newAddedTeams.push({
                                           id: generateId(),
                                           name: `Time ${teamLetter}`,
                                           playerIds: teamPlayers,
-                                          iconIdx: getNextTeamIconIdx(newTeams),
-                                          color: getNextTeamColor(newTeams),
+                                          iconIdx: getNextTeamIconIdx([
+                                            ...prevTeams,
+                                            ...newAddedTeams,
+                                          ]),
+                                          color: getNextTeamColor([
+                                            ...prevTeams,
+                                            ...newAddedTeams,
+                                          ]),
                                         });
                                       }
-                                      return newTeams;
+                                      return [...prevTeams, ...newAddedTeams];
                                     });
                                   }}
                                   className="px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center gap-2"
