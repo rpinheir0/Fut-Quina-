@@ -8313,15 +8313,6 @@ function GroupApp({
                                 >
                                   {p.name.toLowerCase()}
                                 </div>
-                                <div className="flex gap-1">
-                                  {[1, 2, 3, 4, 5].map((star) => (
-                                    <Star
-                                      key={`star-a-${p.id}-${star}`}
-                                      size={8}
-                                      className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/20"}`}
-                                    />
-                                  ))}
-                                </div>
                                 <div
                                   className={`text-[8px] font-bold uppercase ${p.isAvailable ? "text-green-600" : "text-black/30"}`}
                                 >
