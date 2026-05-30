@@ -4119,6 +4119,12 @@ function GroupApp({
     if (currentScreen !== "finance") {
       setFinanceSubScreen("menu");
     }
+    if (currentScreen === "ranking") {
+      setRankingTab("geral");
+      if (mainRef.current) {
+        mainRef.current.scrollTop = 0;
+      }
+    }
   }, [currentScreen]);
 
   useEffect(() => {
@@ -6205,8 +6211,8 @@ function GroupApp({
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
 
-                <div className="w-20 h-20 mx-auto rounded-full bg-white flex items-center justify-center overflow-hidden border-4 border-zinc-300 shadow-xl relative z-10 mb-6">
-                  <span className="text-zinc-200 flex items-center shrink-0">
+                <div className="mx-auto flex items-center justify-center relative z-10 mb-6">
+                  <span className="text-zinc-500 flex items-center shrink-0">
                     <ClipboardPaste size={40} />
                   </span>
                 </div>
@@ -6233,8 +6239,8 @@ function GroupApp({
                         name: e.target.value,
                       }))
                     }
-                    placeholder="Ex: Aluguel da quadra"
-                    className="w-full p-4 bg-zinc-100 rounded-xl outline-none focus:ring-2 ring-black/5 font-bold text-sm border border-zinc-200"
+                    placeholder="Aluguel da quadra"
+                    className="w-full p-4 bg-zinc-100 rounded-xl outline-none focus:ring-2 ring-black/5 text-sm border border-zinc-200"
                   />
                 </div>
                 <div>
@@ -6251,7 +6257,7 @@ function GroupApp({
                       }))
                     }
                     placeholder="0.00"
-                    className="w-full p-4 bg-zinc-100 rounded-xl outline-none focus:ring-2 ring-black/5 font-black text-xl border border-zinc-200"
+                    className="w-full p-4 bg-zinc-100 rounded-xl outline-none focus:ring-2 ring-black/5 text-base border border-zinc-200"
                   />
                 </div>
 
@@ -10761,10 +10767,10 @@ function GroupApp({
                                     }}
                                     className={`flex justify-between items-center py-2 px-1 transition-all group/player cursor-pointer hover:scale-[1.02] active:scale-[0.98] ${
                                       swappingPlayerId === pid
-                                        ? "bg-[#53B986]/20 rounded-lg"
+                                        ? "bg-[#53B986]/20 rounded-lg animate-pulse"
                                         : swappingPlayerId &&
                                             swappingPlayerId !== pid
-                                          ? "bg-[#53B986]/10 rounded-lg animate-pulse"
+                                          ? "bg-[#53B986]/10 rounded-lg"
                                           : "bg-transparent border-transparent"
                                     }`}
                                   >
@@ -10814,7 +10820,7 @@ function GroupApp({
                                       )}
                                       {swappingPlayerId &&
                                         swappingPlayerId !== pid && (
-                                          <div className="px-2 py-1 bg-[#53B986] text-black rounded-sm text-[8px] font-black uppercase animate-pulse">
+                                          <div className="px-2 py-1 bg-[#53B986] text-black rounded-sm text-[8px] font-black uppercase">
                                             Trocar
                                           </div>
                                         )}
@@ -11292,25 +11298,6 @@ function GroupApp({
                                     </div>
                                   )}
                                 </div>
-                                <div className="space-y-1.5 relative z-10">
-                                  <div className="h-2 w-full bg-black/10 rounded-full overflow-hidden">
-                                    <div
-                                      className="h-full bg-white transition-all duration-1000"
-                                      style={{
-                                        width: `${Math.min(100, (totalRevenue / Math.max(1, players.length * (monthlyFee || 30))) * 100)}%`,
-                                      }}
-                                    />
-                                  </div>
-                                  <div
-                                    className={`flex justify-between text-[8px] font-bold uppercase tracking-wider ${isPrintMode ? "opacity-60" : "text-[#1E3D2F]/60"}`}
-                                  >
-                                    <span>Meta {players.length} jogs</span>
-                                    <span>
-                                      R$ {players.length * (monthlyFee || 30)}
-                                      ,00
-                                    </span>
-                                  </div>
-                                </div>
                               </div>
 
                               {/* Despesas Card */}
@@ -11385,22 +11372,24 @@ function GroupApp({
                                   )}
                                 </h3>
                                 {!isPrintMode && (
-                                  <button
-                                    onClick={() => {
-                                      if (players.length === 0) {
-                                        setToast({
-                                          message: "Adicione jogadores para detalhar despesas",
-                                          type: "info"
-                                        });
-                                        setTimeout(() => setToast(null), 3000);
-                                        return;
-                                      }
-                                      setShowExpenseModal(true);
-                                    }}
-                                    className="p-1.5 bg-[#ffffff] text-[#1E3D2F] rounded-lg hover:opacity-90 transition-all active:scale-90"
-                                  >
-                                    <Plus size={16} />
-                                  </button>
+                                  <div className="p-[1.5px] bg-gradient-to-r from-red-500 to-rose-600 rounded-lg">
+                                    <button
+                                      onClick={() => {
+                                        if (players.length === 0) {
+                                          setToast({
+                                            message: "Adicione jogadores para detalhar despesas",
+                                            type: "info"
+                                          });
+                                          setTimeout(() => setToast(null), 3000);
+                                          return;
+                                        }
+                                        setShowExpenseModal(true);
+                                      }}
+                                      className="p-1.5 bg-[#ffffff] text-[#1E3D2F] rounded-[7px] hover:opacity-90 transition-all active:scale-90 block"
+                                    >
+                                      <Plus size={16} />
+                                    </button>
+                                  </div>
                                 )}
                               </div>
                               <div
@@ -11547,7 +11536,7 @@ function GroupApp({
 
                             {/* Em Débito */}
                             <div
-                              className={`transition-all overflow-hidden ${isPrintMode ? "bg-white border border-zinc-300 rounded-none" : "rounded-none border border-zinc-200/20 bg-red-500/5"}`}
+                              className={`transition-all overflow-hidden ${isPrintMode ? "bg-white border border-zinc-300 rounded-none" : "rounded-none bg-red-500/5"}`}
                             >
                               <div
                                 className={`flex justify-between items-center ${isPrintMode ? "border-b border-zinc-300 bg-zinc-100 p-2 text-zinc-900" : "mb-4"}`}
@@ -11606,7 +11595,7 @@ function GroupApp({
                                 ).map((p, pIndex) => (
                                   <div
                                     key={`em-debito-${p.id}-${pIndex}`}
-                                    className={`flex items-center justify-between ${isPrintMode ? "p-2 bg-white" : "p-3 rounded-none bg-white border border-red-100 shadow-sm"}`}
+                                    className={`flex items-center justify-between ${isPrintMode ? "p-2 bg-white" : "p-3 rounded-none bg-white shadow-none"}`}
                                   >
                                     <span
                                       className={`text-xs uppercase tracking-tight ${isPrintMode ? "font-mono text-zinc-800" : "font-bold text-zinc-800 font-mono"}`}
@@ -11618,7 +11607,7 @@ function GroupApp({
                                         Pendente
                                       </span>
                                     ) : (
-                                      <span className="text-[8px] font-black bg-red-500 text-zinc-800 px-2 py-0.5 rounded-full uppercase tracking-tighter">
+                                      <span className="text-[8px] font-black text-red-500 uppercase tracking-tighter">
                                         Pendente
                                       </span>
                                     )}
@@ -13356,7 +13345,7 @@ function GroupApp({
                                               });
                                               setSwappingPlayerId(null);
                                             }}
-                                            className="p-1.5 bg-brand-primary text-[#0D0D0D] rounded-sm text-[8px] font-black uppercase animate-pulse"
+                                            className="p-1.5 bg-brand-primary text-[#0D0D0D] rounded-sm text-[8px] font-black uppercase"
                                           >
                                             Trocar
                                           </button>
@@ -13461,7 +13450,7 @@ function GroupApp({
                                     });
                                     setSwappingPlayerId(null);
                                   }}
-                                  className="px-3 py-1 bg-brand-primary text-[#0D0D0D] rounded-sm text-[8px] font-black uppercase animate-pulse"
+                                  className="px-3 py-1 bg-brand-primary text-[#0D0D0D] rounded-sm text-[8px] font-black uppercase"
                                 >
                                   Entrar
                                 </button>
@@ -14583,7 +14572,7 @@ function GroupApp({
                 animate={{ y: [0, -4, 0] }}
                 transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
               >
-                <BsChevronDoubleUp size={28} className="text-white" />
+                <BsChevronDoubleUp size={28} color="white" />
               </motion.div>
             </motion.button>
           )}
