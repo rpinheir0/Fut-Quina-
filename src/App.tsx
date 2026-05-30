@@ -6908,7 +6908,7 @@ function GroupApp({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="p-4 sm:p-6 space-y-6 bg-zinc-50/30 min-h-full"
+                className="p-4 sm:p-6 space-y-6 bg-zinc-50/30 min-h-full flex flex-col"
               >
                 {/* Dashboard Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -6967,7 +6967,7 @@ function GroupApp({
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
-                      className="space-y-8"
+                      className="flex-1 flex flex-col space-y-8"
                     >
                       {/* CTA Banner */}
                       <motion.div
@@ -7238,33 +7238,33 @@ function GroupApp({
                               </motion.div>
                             );
                           })}
-
-                          {/* Alert Banner */}
-                          <motion.div 
-                            initial={{ opacity: 0, scale: 0.95 }}
-                            animate={scheduledMatches.length === 0 ? {
-                              opacity: 1,
-                              scale: [1, 1.02, 1],
-                            } : { opacity: 1, scale: 1 }}
-                            transition={scheduledMatches.length === 0 ? {
-                              opacity: { duration: 0.4 },
-                              scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
-                            } : { delay: 0.4 }}
-                            className="bg-gradient-to-br from-[#eff5e8] to-[#e1ebd5] rounded-lg p-4 flex items-center gap-4 shadow-sm mt-2 border border-[#d4e2c0]/50"
-                          >
-                            <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
-                              <AlertCircle size={24} />
-                            </div>
-                            <div className="flex-1 flex flex-col">
-                              <p className="text-[12px] font-medium text-zinc-600 leading-tight">
-                                {scheduledMatches.length === 0
-                                  ? "Você precisa criar uma pelada no botão acima para continuar."
-                                  : "Para iniciar, selecione a pelada que você criou no painel acima."}
-                              </p>
-                            </div>
-                          </motion.div>
                         </div>
                       </div>
+
+                      {/* Alert Banner / Tip */}
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={scheduledMatches.length === 0 ? {
+                          opacity: 1,
+                          scale: [1, 1.02, 1],
+                        } : { opacity: 1, scale: 1 }}
+                        transition={scheduledMatches.length === 0 ? {
+                          opacity: { duration: 0.4 },
+                          scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                        } : { delay: 0.4 }}
+                        className={`bg-gradient-to-br from-[#eff5e8] to-[#e1ebd5] rounded-xl p-4 flex items-center gap-4 shadow-sm border border-[#d4e2c0]/50 ${scheduledMatches.length > 0 ? "mt-auto" : "mt-2"}`}
+                      >
+                        <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
+                          <AlertCircle size={24} />
+                        </div>
+                        <div className="flex-1 flex flex-col">
+                          <p className="text-[12px] font-medium text-zinc-600 leading-tight">
+                            {scheduledMatches.length === 0
+                              ? "Você precisa criar uma pelada no botão acima para continuar."
+                              : "Para iniciar, selecione a pelada que você criou no painel acima."}
+                          </p>
+                        </div>
+                      </motion.div>
                     </motion.div>
                   ) : (
                     <motion.div
