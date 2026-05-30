@@ -3394,6 +3394,15 @@ function GroupApp({
     });
   };
 
+  const scrollToTeam = (teamIndex: number) => {
+    setTimeout(() => {
+      const el = document.getElementById(`team-card-${teamIndex}`);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    }, 150);
+  };
+
   const handleResetApp = async () => {
     try {
       setPlayers([]);
@@ -10055,6 +10064,13 @@ function GroupApp({
                                                       });
                                                       return;
                                                     }
+                                                    const targetTeamIdx = teams.findIndex(
+                                                      (tm) => tm.playerIds.includes(swappingPlayerId)
+                                                    );
+                                                    if (targetTeamIdx !== -1) {
+                                                      scrollToTeam(targetTeamIdx);
+                                                    }
+
                                                     // Swap logic
                                                     handleGoalkeeperSwap(
                                                       swappingPlayerId,
@@ -10519,6 +10535,14 @@ function GroupApp({
                                         swappingPlayerId &&
                                         swappingPlayerId !== pid
                                       ) {
+                                        const targetTeamIdx = teams.findIndex(
+                                          (t) =>
+                                            t.playerIds.includes(swappingPlayerId)
+                                        );
+                                        if (targetTeamIdx !== -1) {
+                                          scrollToTeam(targetTeamIdx);
+                                        }
+
                                         // Complete swap logic
                                         handleGoalkeeperSwap(
                                           swappingPlayerId,
@@ -12099,6 +12123,13 @@ function GroupApp({
                           const playerAId = swappingPlayerId;
                           const playerBId = showPlayerActionsModal.playerId;
 
+                          const targetTeamIdx = teams.findIndex((t) =>
+                            t.playerIds.includes(playerAId),
+                          );
+                          if (targetTeamIdx !== -1) {
+                            scrollToTeam(targetTeamIdx);
+                          }
+
                           handleGoalkeeperSwap(playerAId, playerBId);
                           setTeams((prev) => {
                             const newTeams = prev.map((t) => ({
@@ -13266,6 +13297,13 @@ function GroupApp({
                                     const playerInTeamId = swappingPlayerId;
                                     const playerFromBenchId = player.id;
 
+                                    const targetTeamIdx = teams.findIndex((t) =>
+                                      t.playerIds.includes(playerInTeamId),
+                                    );
+                                    if (targetTeamIdx !== -1) {
+                                      scrollToTeam(targetTeamIdx);
+                                    }
+
                                     handleGoalkeeperSwap(
                                       playerInTeamId,
                                       playerFromBenchId,
@@ -14179,6 +14217,7 @@ function GroupApp({
                             <button
                               key={`summary-player-replace-${t.id}-${pid}-${idx}`}
                               onClick={() => {
+                                scrollToTeam(replacingPlayer.teamIndex);
                                 handleGoalkeeperSwap(
                                   replacingPlayer.removedPlayerId,
                                   pid,
