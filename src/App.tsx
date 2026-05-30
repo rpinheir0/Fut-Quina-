@@ -7168,7 +7168,7 @@ function GroupApp({
                       className="space-y-6"
                     >
                       <div className="space-y-6">
-                        <div className="bg-[#dce3ee]/30 p-4 sm:p-6 rounded-none border border-black/5 space-y-4 sm:space-y-6">
+                        <div className="bg-gradient-to-br from-zinc-200 to-zinc-300 p-4 sm:p-6 rounded-[24px] border border-black/5 space-y-4 sm:space-y-6">
                           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                             <div className="flex-1 flex gap-2 sm:gap-3">
                               <input
