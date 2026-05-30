@@ -70,6 +70,7 @@ import {
   Power,
   Shirt,
   LayoutPanelLeft,
+  ArrowUp,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { FcHighPriority } from "react-icons/fc";
@@ -6797,7 +6798,7 @@ function GroupApp({
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
                   >
-                    Presença
+                    PRESENÇA
                   </span>
                 </button>
                 <button
@@ -6807,7 +6808,7 @@ function GroupApp({
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
                   >
-                    Confrontos
+                    CONFRONTOS
                   </span>
                 </button>
                 <button
@@ -6817,7 +6818,7 @@ function GroupApp({
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
                   >
-                    Próximos
+                    PRÓXIMOS
                   </span>
                 </button>
               </div>
@@ -7927,7 +7928,7 @@ function GroupApp({
                           .length > 0 && (
                           <div className="flex justify-between items-center">
                             <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">
-                              Ordem de Chegada
+                              ORDEM DE CHEGADA
                             </h3>
                             <div className="flex flex-row items-center gap-2">
                               {players.some(
@@ -8008,7 +8009,7 @@ function GroupApp({
                                   <span className="text-white">
                                     <CheckCircle2 size={16} />
                                   </span>
-                                  <span>Todos</span>
+                                  <span>TODOS</span>
                                 </button>
                               )}
                               {players.filter((p) => p.isAvailable).length >=
@@ -8117,7 +8118,7 @@ function GroupApp({
                                   <span className="text-white">
                                     <CheckCircle2 size={16} />
                                   </span>
-                                  <span>Pronto</span>
+                                  <span>PRONTO</span>
                                 </button>
                               )}
                             </div>
@@ -8322,9 +8323,9 @@ function GroupApp({
                                   ))}
                                 </div>
                                 <div
-                                  className={`text-[8px] font-bold uppercase ${p.isAvailable ? "text-black/60" : "text-black/30"}`}
+                                  className={`text-[8px] font-bold uppercase ${p.isAvailable ? "text-green-600" : "text-black/30"}`}
                                 >
-                                  {p.isAvailable ? "Confirmado" : "Aguardando"}
+                                  {p.isAvailable ? "CONFIRMADO" : "Aguardando"}
                                 </div>
                               </div>
                               {p.isAvailable && (
@@ -14586,7 +14587,7 @@ function GroupApp({
                 animate={{ y: [0, -4, 0] }}
                 transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
               >
-                <BsChevronDoubleUp size={28} color="white" />
+                <ArrowUp size={28} color="white" />
               </motion.div>
             </motion.button>
           )}
