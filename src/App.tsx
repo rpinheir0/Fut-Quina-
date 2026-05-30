@@ -86,6 +86,7 @@ import {
   BsArrowUpRightCircle,
   BsClockHistory,
   BsPersonFillAdd,
+  BsChevronDoubleUp,
 } from "react-icons/bs";
 import {
   IoIosTrophy,
@@ -3355,8 +3356,28 @@ function GroupApp({
   } | null>(null);
   const [showSetupGuide, setShowSetupGuide] = useState(false);
   const [highlightFirstPlayer, setHighlightFirstPlayer] = useState(false);
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const mainRef = useRef<HTMLElement>(null);
+  const lastScrollY = useRef(0);
   const teamRects = useRef<DOMRect[]>([]);
+
+  const handleMainScroll = (e: React.UIEvent<HTMLElement>) => {
+    const currentScrollY = e.currentTarget.scrollTop;
+    
+    setShowScrollTop((prev) => {
+      if (currentScrollY > 150 && !prev) return true;
+      if (currentScrollY <= 150 && prev) return false;
+      return prev;
+    });
+
+    if (currentScrollY > lastScrollY.current + 10) {
+      if (toast) {
+        setToast(null);
+      }
+    }
+    
+    lastScrollY.current = currentScrollY;
+  };
 
   const playWhistle = () => {
     const audio = new Audio(
@@ -6761,6 +6782,7 @@ function GroupApp({
         {/* Main Content */}
         <main
           ref={mainRef}
+          onScroll={handleMainScroll}
           className={`flex-1 overflow-y-auto pb-20 ${isPrintMode ? "p-0 pb-0 bg-white text-black" : ["players", "teams", "ranking", "finance"].includes(currentScreen) ? "bg-white" : ""}`}
         >
           <AnimatePresence mode="wait">
@@ -14432,6 +14454,33 @@ function GroupApp({
           onUpdateStars={updatePlayerStars}
           onRemove={removePlayer}
         />
+
+        {/* Scroll to Top Button */}
+        <AnimatePresence>
+          {showScrollTop && (
+            <motion.button
+              initial={{ opacity: 0, y: 50, scale: 0 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 50, scale: 0 }}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95, y: 2 }}
+              transition={{ type: "spring", stiffness: 350, damping: 20 }}
+              onClick={() => {
+                if (mainRef.current) {
+                  mainRef.current.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              }}
+              className="fixed bottom-24 right-5 z-[110] w-12 h-12 bg-white text-zinc-900 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-black/5 flex items-center justify-center cursor-pointer transition-shadow hover:shadow-[0_8px_30px_rgb(0,0,0,0.16)]"
+            >
+              <motion.div
+                animate={{ y: [0, -4, 0] }}
+                transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+              >
+                <BsChevronDoubleUp size={22} className="text-emerald-500" />
+              </motion.div>
+            </motion.button>
+          )}
+        </AnimatePresence>
 
         {/* Bottom Navigation */}
         {!(currentScreen === "players" && !showAddPlayerSection) && (
