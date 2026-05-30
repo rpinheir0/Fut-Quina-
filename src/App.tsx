@@ -106,7 +106,7 @@ import {
 import {
   MdOutlinePlayForWork,
 } from "react-icons/md";
-import { CiSaveUp1, CiMemoPad } from "react-icons/ci";
+import { CiSaveUp1, CiMemoPad, CiImport } from "react-icons/ci";
 import { TiMap } from "react-icons/ti";
 import {
   GiGloves,
@@ -6208,16 +6208,17 @@ function GroupApp({
               className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-2xl bg-zinc-50 border border-zinc-200"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="bg-brand-gradient p-8 text-center relative overflow-hidden">
+              <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
+                <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
 
-                <div className="w-16 h-16 mx-auto rounded-full bg-white flex items-center justify-center border-4 border-black/5 shadow-xl relative z-10 mb-4">
-                  <span className="text-emerald-500">
-                    <PiRocketBold size={32} />
+                <div className="mx-auto flex items-center justify-center relative z-10 mb-6">
+                  <span className="text-zinc-600 flex items-center shrink-0">
+                    <CiImport size={60} />
                   </span>
                 </div>
 
-                <h3 className="text-xl font-black uppercase tracking-tighter text-black leading-none mb-1">
+                <h3 className="text-2xl font-black uppercase tracking-tighter text-black leading-none mb-1">
                   Próximo Passo
                 </h3>
                 <p className="text-[10px] text-black/60 font-black uppercase tracking-[0.2em]">
@@ -6249,9 +6250,12 @@ function GroupApp({
 
                 <button
                   onClick={() => setShowArrivalStepGuide(false)}
-                  className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg hover:bg-black transition-all active:scale-95"
+                  className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                 >
-                  OK, Entendi!
+                  <span className="text-white">
+                    <CheckCircle2 size={16} />
+                  </span>
+                  <span>OK, Entendi!</span>
                 </button>
               </div>
             </motion.div>
@@ -9277,9 +9281,9 @@ function GroupApp({
                       )}
                     </div>
                   ) : teamsTab === "proximos" ? (
-                    <div className="space-y-6 relative w-full">
+                    <div className="space-y-6 relative overflow-visible w-full">
                       {firstSetupDone && teams.length >= 2 && (
-                        <div className="sticky top-[-1px] flex justify-between items-center z-40 bg-zinc-100/80 backdrop-blur-md rounded-2xl p-1 mb-2 shadow-sm border border-black/5">
+                        <div className="sticky top-0 z-40 bg-zinc-100/90 backdrop-blur-md rounded-2xl p-1 mb-2 shadow-sm border border-black/5 flex justify-between items-center">
                           <div className="flex gap-1 bg-white rounded-[11px]">
                             <div className="flex items-center gap-1.5 ml-1 bg-white rounded-[11px] px-1 py-1">
                               <button
@@ -10327,7 +10331,7 @@ function GroupApp({
                                                                 .playersPerTeam,
                                                         )
                                                       ? "bg-[#53B986]/10 text-[#53B986] animate-pulse shadow-sm shadow-[#53B986]/10"
-                                                      : `border group shadow-sm ${isCurrent ? "bg-white text-black border-transparent" : "text-black bg-gradient-to-br from-white to-[#f4f4f5] border-black/5 hover:border-black/10"}`
+                                                      : `border group shadow-sm ${isCurrent ? "bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white border-transparent" : "text-black bg-gradient-to-br from-white to-[#f4f4f5] border-black/5 hover:border-black/10"}`
                                                 }`}
                                                 style={{
                                                   backgroundColor: !(
@@ -10363,7 +10367,7 @@ function GroupApp({
                                                   orgProSettings.allowFixedGoalkeeper !==
                                                     false ? (
                                                     <div
-                                                      className={`flex items-center justify-center shrink-0 rounded-full w-4 h-4 text-[9px] font-black leading-none ${isCurrent ? "text-black" : "text-black/30"}`}
+                                                      className={`flex items-center justify-center shrink-0 rounded-full w-4 h-4 text-[9px] font-black leading-none ${isCurrent ? "text-white" : "text-black/30"}`}
                                                     >
                                                       G
                                                     </div>
