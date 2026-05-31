@@ -7266,13 +7266,18 @@ function GroupApp({
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
                         onClick={() => setShowScheduleModal(true)}
-                        className="cursor-pointer relative overflow-hidden bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] rounded-full p-4 shadow-xl hover:shadow-2xl transition-all hover:scale-[1.01] active:scale-[0.99]"
+                        className="cursor-pointer relative overflow-hidden bg-gradient-to-r from-[#0f2e04] via-[#1a4d07] to-[#0a1f02] rounded-full p-4 shadow-xl hover:shadow-2xl transition-all hover:scale-[1.01] active:scale-[0.99]"
                       >
                         {/* Background pattern */}
                         <div className="absolute top-0 right-0 h-full w-2/3 opacity-20 mix-blend-overlay flex justify-end items-center px-10">
-                          <div className="absolute -right-10 -top-10 text-white">
+                          <motion.div 
+                            initial={{ rotate: 0 }}
+                            animate={{ rotate: 1800 }}
+                            transition={{ duration: 10, ease: "easeOut" }}
+                            className="absolute -right-10 -top-10 text-white"
+                          >
                             <GiSoccerBall size={200} />
-                          </div>
+                          </motion.div>
                         </div>
 
                         <div className="relative z-10 flex items-center justify-between">
@@ -7281,7 +7286,7 @@ function GroupApp({
                               <Plus size={24} className="text-[#a1fd2b]" />
                             </div>
                             <div className="flex flex-col text-black">
-                              <h3 className="text-lg sm:text-xl font-black tracking-tighter uppercase text-zinc-800">
+                              <h3 className="text-lg sm:text-xl font-black tracking-tighter uppercase text-white">
                                 CRIE SUA PELADA
                               </h3>
                             </div>
