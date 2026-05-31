@@ -7683,15 +7683,6 @@ function GroupApp({
                                   Nenhum jogador adicionado ainda.
                                 </span>
                               </div>
-                              <button
-                                onClick={() => {
-                                  setCurrentScreen("players");
-                                  setPlayersTab("jogadores");
-                                }}
-                                className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-xl shadow-emerald-500/20 hover:opacity-90 transition-all active:scale-95 border border-white/10"
-                              >
-                                CADASTRAR JOGADORES
-                              </button>
                             </div>
                           ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -8468,7 +8459,7 @@ function GroupApp({
                                   setTeamsTab("configuracao");
                                 }
                               }}
-                              className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-xl shadow-emerald-500/20 hover:opacity-90 transition-all active:scale-95 border border-white/10"
+                              className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl hover:opacity-90 transition-all active:scale-95 border border-white/10"
                             >
                               {players.length < 2
                                 ? "CRIAR JOGADORES"
@@ -8659,7 +8650,7 @@ function GroupApp({
                                     }
                                   }
                                 }}
-                                className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-xl shadow-emerald-500/20 hover:opacity-90 transition-all active:scale-95 border border-white/10"
+                                className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl hover:opacity-90 transition-all active:scale-95 border border-white/10"
                               >
                                 {players.length < 2
                                   ? "CRIAR JOGADORES"
@@ -9839,7 +9830,7 @@ function GroupApp({
                                   }
                                 }
                               }}
-                              className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-xl shadow-emerald-500/20 hover:opacity-90 transition-all active:scale-95 border border-white/10"
+                              className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl hover:opacity-90 transition-all active:scale-95 border border-white/10"
                             >
                               {players.filter((p) =>
                                 sessionPlayerIds.includes(p.id),
@@ -11308,15 +11299,6 @@ function GroupApp({
                               Nenhum jogador adicionado ainda.
                             </span>
                           </div>
-                          <button
-                            onClick={() => {
-                              setCurrentScreen("players");
-                              setPlayersTab("jogadores");
-                            }}
-                            className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-xl shadow-emerald-500/20 hover:opacity-90 transition-all active:scale-95 border border-white/10"
-                          >
-                            CADASTRAR JOGADORES
-                          </button>
                         </div>
                       )}
                     </div>
