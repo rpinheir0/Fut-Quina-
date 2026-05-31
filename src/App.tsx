@@ -7245,7 +7245,7 @@ function GroupApp({
                               setIsInitialSetupFlow(true);
                             }
                           }}
-                          className="flex-1 sm:flex-none px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                          className="flex-1 sm:flex-none px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                         >
                           CONFIGURAR PARTIDA
                         </button>
@@ -7671,15 +7671,22 @@ function GroupApp({
 
                         <section className="w-full relative pt-6 border-t border-black/5">
                           {visiblePlayers.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
-                              <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-6">
-                                <div className="text-black/30">
-                                  <GiLaurelsTrophy size={40} />
-                                </div>
+                            <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
+                              <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
+                                <GiLaurelsTrophy size={100} />
+                                <span className="font-bold uppercase tracking-widest text-[11px]">
+                                  Nenhum jogador adicionado ainda.
+                                </span>
                               </div>
-                              <span className="font-bold text-zinc-600 text-[11px] max-w-sm">
-                                Nenhum jogador adicionado ainda.
-                              </span>
+                              <button
+                                onClick={() => {
+                                  setCurrentScreen("players");
+                                  setPlayersTab("jogadores");
+                                }}
+                                className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-xl shadow-emerald-500/20 hover:opacity-90 transition-all active:scale-95 border border-white/10"
+                              >
+                                CADASTRAR JOGADORES
+                              </button>
                             </div>
                           ) : (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
@@ -8437,16 +8444,15 @@ function GroupApp({
                           </div>
                         )}
 
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {players.filter((p) => sessionPlayerIds.includes(p.id))
-                          .length === 0 ? (
-                          <div className="col-span-full py-20 flex flex-col items-center justify-center gap-6 w-full">
-                            <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
-                              <GiSocks size={120} />
-                              <span className="font-bold uppercase tracking-widest text-[10px]">
-                                Nenhum jogador na sessão
-                              </span>
-                            </div>
+                      {players.filter((p) => sessionPlayerIds.includes(p.id))
+                        .length === 0 ? (
+                        <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
+                          <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
+                            <GiSocks size={100} />
+                            <span className="font-bold uppercase tracking-widest text-[11px]">
+                              Nenhum jogador na sessão
+                            </span>
+                          </div>
                             <button
                               onClick={() => {
                                 if (players.length < 2) {
@@ -8457,15 +8463,16 @@ function GroupApp({
                                   setTeamsTab("configuracao");
                                 }
                               }}
-                              className="px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
+                              className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-xl shadow-emerald-500/20 hover:opacity-90 transition-all active:scale-95 border border-white/10"
                             >
                               {players.length < 2
                                 ? "CRIAR JOGADORES"
                                 : "CONFIGURAR PARTIDA"}
                             </button>
-                          </div>
-                        ) : (
-                          sessionPlayersSorted.map((p) => (
+                        </div>
+                      ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {sessionPlayersSorted.map((p) => (
                             <button
                               key={`arrival-player-below-${p.id}`}
                               onClick={() => {
@@ -8617,21 +8624,21 @@ function GroupApp({
                                 />
                               )}
                             </button>
-                          ))
-                        )}
-                      </div>
+                          ))}
+                        </div>
+                      )}
                     </div>
                   ) : teamsTab === "historico" ? (
                     <div
                       className={`space-y-6 w-full ${match.isActive ? "pt-6 px-2 sm:px-6 pb-0 overflow-hidden" : ""}`}
                     >
                       {!match.isActive ? (
-                        <div className="py-20 flex flex-col items-center justify-center gap-6 w-full">
+                        <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
                           {players.filter((p) => p.isAvailable).length === 0 ? (
                             <>
                               <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
-                                <GiSoccerField size={120} />
-                                <span className="font-bold uppercase tracking-widest text-[10px]">
+                                <GiSoccerField size={100} />
+                                <span className="font-bold uppercase tracking-widest text-[11px]">
                                   Nenhum jogador presente
                                 </span>
                               </div>
@@ -8647,7 +8654,7 @@ function GroupApp({
                                     }
                                   }
                                 }}
-                                className="px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
+                                className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-xl shadow-emerald-500/20 hover:opacity-90 transition-all active:scale-95 border border-white/10"
                               >
                                 {players.length < 2
                                   ? "CRIAR JOGADORES"
@@ -9802,10 +9809,10 @@ function GroupApp({
 
                       <div className="space-y-4">
                         {teams.length < 2 ? (
-                          <div className="py-20 flex flex-col items-center justify-center gap-6 w-full">
+                          <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
                             <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
-                              <GiSoccerBall size={120} />
-                              <span className="font-bold uppercase tracking-widest text-[10px]">
+                              <GiSoccerBall size={100} />
+                              <span className="font-bold uppercase tracking-widest text-[11px]">
                                 Crie mais times para ver a fila
                               </span>
                             </div>
@@ -9827,12 +9834,12 @@ function GroupApp({
                                   }
                                 }
                               }}
-                              className="px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
+                              className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-xl shadow-emerald-500/20 hover:opacity-90 transition-all active:scale-95 border border-white/10"
                             >
                               {players.filter((p) =>
                                 sessionPlayerIds.includes(p.id),
                               ).length > 0
-                                ? "Confirmar Chegada"
+                                ? "CONFIRMAR CHEGADA"
                                 : players.length < 2
                                   ? "CRIAR JOGADORES"
                                   : "CONFIGURAR PARTIDA"}
@@ -11289,15 +11296,22 @@ function GroupApp({
                         </motion.div>
                       ))}
                       {players.length === 0 && (
-                        <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
-                          <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-6">
-                            <div className="text-black/30">
-                              <PiRankingThin size={40} />
-                            </div>
+                        <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
+                          <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
+                            <GiLaurelsTrophy size={100} />
+                            <span className="font-bold uppercase tracking-widest text-[11px]">
+                              Nenhum jogador adicionado ainda.
+                            </span>
                           </div>
-                          <span className="font-bold text-zinc-600 text-[11px] max-w-sm">
-                            Nenhum jogador adicionado ainda.
-                          </span>
+                          <button
+                            onClick={() => {
+                              setCurrentScreen("players");
+                              setPlayersTab("jogadores");
+                            }}
+                            className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-xl shadow-emerald-500/20 hover:opacity-90 transition-all active:scale-95 border border-white/10"
+                          >
+                            CADASTRAR JOGADORES
+                          </button>
                         </div>
                       )}
                     </div>
