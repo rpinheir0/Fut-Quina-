@@ -6953,12 +6953,14 @@ function GroupApp({
 
             {/* Header Actions */}
             <div className="flex items-center gap-2 relative z-10">
-              <button 
-                onClick={() => setShowGlobalSettings(true)}
-                className="text-white hover:opacity-80 transition-opacity p-2 flex items-center justify-center cursor-pointer"
-              >
-                <IoIosMenu size={28} />
-              </button>
+              {!(currentScreen === "players" && !showAddPlayerSection) && (
+                <button 
+                  onClick={() => setShowGlobalSettings(true)}
+                  className="text-white hover:opacity-80 transition-opacity p-2 flex items-center justify-center cursor-pointer"
+                >
+                  <IoIosMenu size={28} />
+                </button>
+              )}
             </div>
           </header>
 
@@ -7215,15 +7217,6 @@ function GroupApp({
                       <h2 className="text-[12px] font-black uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">
                         Painel de controle
                       </h2>
-                      <button
-                        onClick={() => setShowSetupGuide(true)}
-                        className="flex items-center gap-1.5 text-zinc-400 transition-all active:scale-95 group w-fit"
-                      >
-                        <div className="group-hover:rotate-12 transition-transform">
-                          <TiMap size={12} />
-                        </div>
-                        <span className="text-[10px] font-black uppercase tracking-widest">Guia</span>
-                      </button>
                     </div>
                   ) : (
                     <div className="flex flex-col gap-0.5">
@@ -7291,9 +7284,6 @@ function GroupApp({
                               <h3 className="text-lg sm:text-xl font-black tracking-tighter uppercase bg-clip-text text-transparent bg-gradient-to-r from-zinc-100 via-zinc-300 to-zinc-100">
                                 CRIE SUA PELADA
                               </h3>
-                              <p className="text-xs font-bold tracking-wide uppercase mt-0 max-w-[250px] leading-snug text-white">
-                                Crie e gerencie as próximas peladas.
-                              </p>
                             </div>
                           </div>
                         </div>
@@ -7318,7 +7308,7 @@ function GroupApp({
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.3 }}
-                              className="bg-white/40 border border-dashed border-zinc-200 rounded-sm h-[64px] flex items-center px-4 gap-4 relative overflow-hidden mb-2"
+                              className="bg-white/40 border border-dashed border-zinc-200 rounded-none h-[64px] flex items-center px-4 gap-4 relative overflow-hidden mb-2"
                             >
                               <div className="w-10 h-10 rounded-full bg-zinc-100/50 flex items-center justify-center text-zinc-300">
                                 <GiSoccerField size={20} />
@@ -7409,7 +7399,7 @@ function GroupApp({
                                     setPlayersTab("configuracao");
                                   }
                                 }}
-                                className={`group relative bg-white rounded-sm flex flex-col sm:flex-row items-stretch border border-black/10 cursor-pointer shadow-sm hover:shadow-md transition-all duration-500 ease-in-out overflow-hidden ${isExpanded ? "opacity-100 max-h-[500px]" : "opacity-60 max-h-[56px] sm:max-h-[64px]"}`}
+                                className={`group relative bg-white rounded-none flex flex-col sm:flex-row items-stretch border border-black/10 cursor-pointer shadow-sm hover:shadow-md transition-all duration-500 ease-in-out overflow-hidden ${isExpanded ? "opacity-100 max-h-[500px]" : "opacity-60 max-h-[56px] sm:max-h-[64px]"}`}
                               >
                                 {/* Settings and Delete Actions - Absolute Top Right */}
                                 <div className="absolute top-[14px] sm:top-[16px] right-3 sm:right-4 flex items-center gap-0 z-20">
@@ -7455,8 +7445,11 @@ function GroupApp({
                                 </div>
 
                                 {/* Right Content */}
-                                <div
-                                  className={`flex-1 p-4 sm:p-5 relative overflow-hidden transition-opacity duration-300 ${isExpanded ? "opacity-100" : "opacity-0"}`}
+                                <motion.div
+                                  initial={false}
+                                  animate={isExpanded ? { opacity: 1, height: "auto" } : { opacity: 0, height: 0 }}
+                                  transition={{ duration: 0.4, ease: "easeInOut" }}
+                                  className="flex-1 p-4 sm:p-5 relative overflow-hidden"
                                 >
                                   {/* Subtle background texture pattern */}
                                   <div className="absolute inset-0 opacity-5 pointer-events-none overflow-hidden flex items-center justify-end">
@@ -7473,7 +7466,7 @@ function GroupApp({
                                   <div className="relative z-10 flex flex-col h-full justify-between gap-4">
                                     <div className="flex justify-between items-start">
                                       <div className="flex flex-col gap-2 mt-0 sm:mt-1">
-                                        <h5 className="font-bold text-zinc-800 text-sm sm:text-[12px] tracking-tight font-roboto-flex">
+                                        <h5 className="font-normal uppercase text-zinc-800 text-sm sm:text-[12px] tracking-tight font-roboto-flex">
                                           {day} {month} - {weekday}
                                         </h5>
                                       </div>
@@ -7496,7 +7489,12 @@ function GroupApp({
                                         </div>
                                         {/* Avatar Stack */}
                                         {matchSpecificPlayers.length > 0 && (
-                                          <div className="flex -space-x-1.5 sm:-space-x-2 mt-1 sm:mt-1.5">
+                                          <motion.div 
+                                            initial={{ opacity: 0, x: -10 }}
+                                            animate={isExpanded ? { opacity: 1, x: 0 } : { opacity: 0 }}
+                                            transition={{ delay: 0.3 }}
+                                            className="flex -space-x-1.5 sm:-space-x-2 mt-1 sm:mt-1.5"
+                                          >
                                             {matchSpecificPlayers
                                               .slice(0, 10)
                                               .map((player, pIdx) => (
@@ -7525,14 +7523,14 @@ function GroupApp({
                                                   10}
                                               </div>
                                             )}
-                                          </div>
+                                          </motion.div>
                                         )}
                                       </div>
 
 
                                     </div>
                                   </div>
-                                </div>
+                                </motion.div>
                               </motion.div>
                             );
                           })}
@@ -7550,7 +7548,7 @@ function GroupApp({
                           opacity: { duration: 0.4 },
                           scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                         } : { delay: 0.4 }}
-                        className={`bg-gradient-to-br from-[#eff5e8] to-[#e1ebd5] rounded-sm p-4 flex items-center gap-4 shadow-sm border border-[#d4e2c0]/50 ${scheduledMatches.length > 0 ? "mt-auto" : "mt-2"}`}
+                        className={`bg-gradient-to-br from-[#eff5e8] to-[#e1ebd5] rounded-none p-4 flex items-center gap-4 shadow-sm border border-[#d4e2c0]/50 ${scheduledMatches.length > 0 ? "mt-auto" : "mt-2"}`}
                       >
                         <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
                           <AlertCircle size={24} />
