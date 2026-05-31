@@ -7281,7 +7281,7 @@ function GroupApp({
                               <Plus size={24} className="text-[#a1fd2b]" />
                             </div>
                             <div className="flex flex-col text-black">
-                              <h3 className="text-lg sm:text-xl font-black tracking-tighter uppercase bg-clip-text text-transparent bg-gradient-to-r from-zinc-100 via-zinc-300 to-zinc-100">
+                              <h3 className="text-lg sm:text-xl font-black tracking-tighter uppercase text-zinc-800">
                                 CRIE SUA PELADA
                               </h3>
                             </div>
@@ -7548,7 +7548,7 @@ function GroupApp({
                           opacity: { duration: 0.4 },
                           scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                         } : { delay: 0.4 }}
-                        className={`bg-gradient-to-br from-[#eff5e8] to-[#e1ebd5] rounded-none p-4 flex items-center gap-4 shadow-sm border border-[#d4e2c0]/50 ${scheduledMatches.length > 0 ? "mt-auto" : "mt-2"}`}
+                        className={`bg-[#dce3ee] rounded-none p-4 flex items-center gap-4 shadow-sm border border-black/5 ${scheduledMatches.length > 0 ? "mt-auto" : "mt-2"}`}
                       >
                         <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
                           <AlertCircle size={24} />
@@ -7572,13 +7572,13 @@ function GroupApp({
                       className="space-y-6"
                     >
                       <div className="space-y-6">
-                        <div className="bg-gradient-to-br from-zinc-200 to-zinc-300 p-4 sm:p-6 rounded-[24px] border border-black/5 space-y-4 sm:space-y-6">
+                        <div className="bg-gradient-to-br from-zinc-200 to-zinc-300 p-4 sm:p-6 rounded-none border border-black/5 space-y-4 sm:space-y-6">
                           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                             <div className="flex-1 flex gap-2 sm:gap-3">
                               <input
                                 type="text"
                                 placeholder="Nome do jogador..."
-                                className={`flex-1 px-4 sm:px-5 py-3 rounded-[14px] border border-black/5 outline-none transition-all bg-white text-[#1E3D2F] placeholder-[#1E3D2F]/30 focus:ring-4 focus:ring-emerald-500/10 text-[13px] sm:text-sm font-bold shadow-sm h-[40px]`}
+                                className={`flex-1 px-4 sm:px-5 py-3 rounded-none border border-black/5 outline-none transition-all bg-white text-[#1E3D2F] placeholder-[#1E3D2F]/30 focus:ring-4 focus:ring-emerald-500/10 text-[13px] sm:text-sm font-bold shadow-sm h-[40px]`}
                                 onKeyDown={(e) => {
                                   if (e.key === "Enter") {
                                     addPlayer(e.currentTarget.value);
@@ -7588,7 +7588,7 @@ function GroupApp({
                               />
                               <button
                                 onClick={handleImportContacts}
-                                className="w-[40px] h-[40px] bg-white text-[#83A8EF] rounded-[14px] shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center border border-black/5 shrink-0"
+                                className="w-[40px] h-[40px] bg-white text-[#83A8EF] rounded-none shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center border border-black/5 shrink-0"
                                 title="Importar dos Contatos"
                               >
                                 <Contact size={20} />
@@ -7603,7 +7603,7 @@ function GroupApp({
                                     input.value = "";
                                   }
                                 }}
-                                className="w-[40px] h-[40px] bg-emerald-500 text-white rounded-[14px] shadow hover:bg-emerald-600 transition-all active:scale-95 flex items-center justify-center shrink-0"
+                                className="w-[40px] h-[40px] bg-emerald-500 text-white rounded-none shadow hover:bg-emerald-600 transition-all active:scale-95 flex items-center justify-center shrink-0"
                               >
                                 <Plus size={22} />
                               </button>
@@ -7613,7 +7613,7 @@ function GroupApp({
                           <div className="relative">
                             <textarea
                               placeholder=" "
-                              className={`w-full h-28 sm:h-32 px-5 sm:px-6 py-5 sm:py-6 rounded-[20px] border border-black/5 outline-none transition-all text-sm font-bold resize-none bg-white text-[#1E3D2F] focus:ring-4 focus:ring-emerald-500/10 peer shadow-sm`}
+                              className={`w-full h-28 sm:h-32 px-5 sm:px-6 py-5 sm:py-6 rounded-none border border-black/5 outline-none transition-all text-sm font-bold resize-none bg-white text-[#1E3D2F] focus:ring-4 focus:ring-emerald-500/10 peer shadow-sm`}
                               onChange={(e) => {
                                 if (
                                   e.target.value.includes("\n") ||
@@ -7635,7 +7635,7 @@ function GroupApp({
                               </div>
                             </div>
                             <div
-                              className={`absolute right-5 sm:right-6 bottom-4 sm:bottom-6 text-[#1E3D2F]/40 cursor-pointer hover:text-emerald-600 transition-colors flex items-center gap-1.5 sm:gap-2 bg-white/80 backdrop-blur-sm p-1.5 sm:p-2 pl-3 sm:pl-3 rounded-xl`}
+                              className={`absolute right-5 sm:right-6 bottom-4 sm:bottom-6 text-[#1E3D2F]/40 cursor-pointer hover:text-emerald-600 transition-colors flex items-center gap-1.5 sm:gap-2 bg-white/80 backdrop-blur-sm p-1.5 sm:p-2 pl-3 sm:pl-3 rounded-none`}
                               onClick={async () => {
                                 try {
                                   const text =
