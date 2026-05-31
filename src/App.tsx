@@ -3711,6 +3711,7 @@ function GroupApp({
         }
       }
 
+      /* Disabling screen swipe to navigate as per user request
       if (!handledTabSwipe) {
         const screens: Screen[] = ["players", "teams", "ranking", "finance"];
         const currentIndex = screens.indexOf(currentScreen);
@@ -3723,6 +3724,7 @@ function GroupApp({
           setCurrentScreen(screens[currentIndex - 1]);
         }
       }
+      */
     }
   };
 
@@ -7286,10 +7288,10 @@ function GroupApp({
                               <Plus size={24} className="text-[#a1fd2b]" />
                             </div>
                             <div className="flex flex-col text-black">
-                              <h3 className="text-lg sm:text-xl font-bold tracking-tight">
-                                Crie sua Pelada
+                              <h3 className="text-lg sm:text-xl font-black tracking-tighter uppercase bg-clip-text text-transparent bg-gradient-to-r from-zinc-100 via-zinc-300 to-zinc-100">
+                                CRIE SUA PELADA
                               </h3>
-                              <p className="text-xs font-medium tracking-wide uppercase opacity-90 mt-0 max-w-[250px] leading-snug">
+                              <p className="text-xs font-bold tracking-wide uppercase mt-0 max-w-[250px] leading-snug text-white">
                                 Crie e gerencie as próximas peladas.
                               </p>
                             </div>
@@ -7316,7 +7318,7 @@ function GroupApp({
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.3 }}
-                              className="bg-white/40 border border-dashed border-zinc-200 rounded-xl h-[64px] flex items-center px-4 gap-4 relative overflow-hidden mb-2"
+                              className="bg-white/40 border border-dashed border-zinc-200 rounded-sm h-[64px] flex items-center px-4 gap-4 relative overflow-hidden mb-2"
                             >
                               <div className="w-10 h-10 rounded-full bg-zinc-100/50 flex items-center justify-center text-zinc-300">
                                 <GiSoccerField size={20} />
@@ -7407,7 +7409,7 @@ function GroupApp({
                                     setPlayersTab("configuracao");
                                   }
                                 }}
-                                className={`group relative bg-white rounded-xl flex flex-col sm:flex-row items-stretch border border-black/10 cursor-pointer shadow-sm hover:shadow-md transition-all duration-500 ease-in-out overflow-hidden ${isExpanded ? "opacity-100 max-h-[500px]" : "opacity-60 max-h-[56px] sm:max-h-[64px]"}`}
+                                className={`group relative bg-white rounded-sm flex flex-col sm:flex-row items-stretch border border-black/10 cursor-pointer shadow-sm hover:shadow-md transition-all duration-500 ease-in-out overflow-hidden ${isExpanded ? "opacity-100 max-h-[500px]" : "opacity-60 max-h-[56px] sm:max-h-[64px]"}`}
                               >
                                 {/* Settings and Delete Actions - Absolute Top Right */}
                                 <div className="absolute top-[14px] sm:top-[16px] right-3 sm:right-4 flex items-center gap-0 z-20">
@@ -7548,7 +7550,7 @@ function GroupApp({
                           opacity: { duration: 0.4 },
                           scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                         } : { delay: 0.4 }}
-                        className={`bg-gradient-to-br from-[#eff5e8] to-[#e1ebd5] rounded-xl p-4 flex items-center gap-4 shadow-sm border border-[#d4e2c0]/50 ${scheduledMatches.length > 0 ? "mt-auto" : "mt-2"}`}
+                        className={`bg-gradient-to-br from-[#eff5e8] to-[#e1ebd5] rounded-sm p-4 flex items-center gap-4 shadow-sm border border-[#d4e2c0]/50 ${scheduledMatches.length > 0 ? "mt-auto" : "mt-2"}`}
                       >
                         <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
                           <AlertCircle size={24} />
