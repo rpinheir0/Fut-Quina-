@@ -71,6 +71,10 @@ import {
   Shirt,
   LayoutPanelLeft,
   ArrowUp,
+  LayoutList,
+  History,
+  Crown,
+  MousePointerClick,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { FcHighPriority } from "react-icons/fc";
@@ -98,6 +102,7 @@ import {
   IoMdArrowDown,
   IoMdDoneAll,
   IoIosMenu,
+  IoIosSave,
 } from "react-icons/io";
 import {
   PiUserCirclePlusThin,
@@ -106,6 +111,8 @@ import {
 } from "react-icons/pi";
 import {
   MdOutlinePlayForWork,
+  MdDonutLarge,
+  MdDataSaverOff,
 } from "react-icons/md";
 import { CiSaveUp1, CiMemoPad, CiImport } from "react-icons/ci";
 import { TiMap } from "react-icons/ti";
@@ -113,6 +120,7 @@ import {
   GiGloves,
   GiGoalKeeper,
   GiSoccerKick,
+  GiKing,
   GiSoccerField,
   GiTrophy,
   GiPodiumWinner,
@@ -295,6 +303,44 @@ interface Team {
 interface PenaltyShot {
   playerId: string;
   success: boolean | null;
+}
+
+interface MatchResult {
+  id: string;
+  teamAName: string;
+  teamBName: string;
+  teamAColor: string;
+  teamBColor: string;
+  teamAId: string;
+  teamBId: string;
+  teamAPlayerIds: string[];
+  teamBPlayerIds: string[];
+  teamAIndex: number;
+  teamBIndex: number;
+  scoreA: number;
+  scoreB: number;
+  winnerIndex: number;
+  loserIndex: number;
+  winnerId: string | null;
+  loserId: string | null;
+  events: MatchEvent[];
+  timestamp: number;
+  tieBreakerWinnerId: string | null;
+  duration: number;
+}
+
+interface PeladaReport {
+  id: string;
+  timestamp: number;
+  playersStats: Record<string, { 
+    goals: number; 
+    assists: number; 
+    matches: number; 
+    time: number; 
+    playerName: string;
+    photo?: string;
+  }>;
+  absentPlayers: { id: string, name: string, photo?: string }[];
 }
 
 interface TieBreakerState {
@@ -2263,6 +2309,54 @@ const RouletteOverlay = () => {
   );
 };
 
+const SavingPeladaOverlay = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[500] flex flex-col items-center justify-center bg-zinc-900/95 backdrop-blur-2xl p-6"
+    >
+      <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-primary/20 rounded-full blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-500/10 rounded-full blur-[120px]" />
+      </div>
+
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ type: "spring", damping: 12 }}
+        className="w-24 h-24 rounded-[32px] bg-brand-primary flex items-center justify-center mb-8 shadow-lg shadow-brand-primary/20 text-black"
+      >
+        <IoIosSave size={48} />
+      </motion.div>
+
+      <motion.div
+        initial={{ y: 20, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="text-center"
+      >
+        <h2 className="text-3xl font-black text-white uppercase tracking-tighter mb-2">
+          Salvando Pelada
+        </h2>
+        <p className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-6 px-4">
+          Armazenando presença, confrontos e próximos
+        </p>
+        <div className="flex items-center justify-center gap-2">
+          {[0, 150, 300].map((delay) => (
+            <div
+              key={delay}
+              className="w-2 h-2 rounded-full bg-brand-primary animate-bounce"
+              style={{ animationDelay: `${delay}ms` }}
+            />
+          ))}
+        </div>
+      </motion.div>
+    </motion.div>
+  );
+};
+
 // --- Animated Counter ---
 function AnimatedCounter({ value }: { value: number }) {
   const [displayValue, setDisplayValue] = useState(0);
@@ -2584,6 +2678,9 @@ function GroupApp({
     );
   }, [scheduledMatches, groupId]);
 
+  const [showEndPeladaConfirm, setShowEndPeladaConfirm] = useState(false);
+  const [isSavingPeladaFlow, setIsSavingPeladaFlow] = useState(false);
+
   const handleScheduleMatch = () => {
     if (newMatchName.trim()) {
       const days = [
@@ -2849,7 +2946,7 @@ function GroupApp({
     };
   });
 
-  const [matchHistory, setMatchHistory] = useState<any[]>(() => {
+  const [matchHistory, setMatchHistory] = useState<MatchResult[]>(() => {
     const saved = safeLocalStorage.getItem(`futquina_match_history_${groupId}`);
     if (saved) {
       try {
@@ -3264,6 +3361,153 @@ function GroupApp({
     message: string;
     type: "info" | "warning" | "gray" | "success";
   } | null>(null);
+  const [showPeladaReport, setShowPeladaReport] = useState(false);
+  const [lastPeladaReport, setLastPeladaReport] = useState<PeladaReport | null>(() => {
+    const saved = localStorage.getItem("futquina_last_report");
+    return saved ? JSON.parse(saved) : null;
+  });
+
+  const generatePeladaReportData = (): PeladaReport => {
+    const playersStats: Record<string, {
+      goals: number;
+      assists: number;
+      matches: number;
+      time: number;
+      playerName: string;
+      photo?: string;
+    }> = {};
+    
+    // Initialize stats for players who are in session
+    sessionPlayerIds.forEach(id => {
+      const p = players.find(player => player.id === id);
+      if (p) {
+        playersStats[id] = {
+          goals: 0,
+          assists: 0,
+          matches: 0,
+          time: 0,
+          playerName: p.name,
+          photo: p.photo
+        };
+      }
+    });
+
+    // Process match history
+    matchHistory.forEach(historyItem => {
+      // Goals/Assists from events
+      historyItem.events.forEach(event => {
+        if (event.type === "goal") {
+          if (playersStats[event.playerId]) {
+            playersStats[event.playerId].goals++;
+          }
+          if (event.assistId && playersStats[event.assistId]) {
+            playersStats[event.assistId].assists++;
+          }
+        }
+      });
+
+      // Matches played
+      const rosterA = historyItem.teamAPlayerIds || [];
+      const rosterB = historyItem.teamBPlayerIds || [];
+      const matchDuration = historyItem.duration || historyItem.config?.duration || 0;
+
+      [...rosterA, ...rosterB].forEach(pid => {
+        if (playersStats[pid]) {
+          playersStats[pid].matches++;
+          playersStats[pid].time += matchDuration;
+        } else {
+          const p = players.find(player => player.id === pid);
+          if (p) {
+            playersStats[pid] = {
+              goals: 0, // already counted from events if they had any
+              assists: 0,
+              matches: 1,
+              time: matchDuration,
+              playerName: p.name,
+              photo: p.photo
+            };
+          }
+        }
+      });
+    });
+
+    // Final goals/assists pass for players NOT in session but who played (edge case)
+    matchHistory.forEach(historyItem => {
+       historyItem.events.forEach(event => {
+        if (event.type === "goal") {
+          if (playersStats[event.playerId]) {
+             // Already incremented
+          } else {
+             const p = players.find(player => player.id === event.playerId);
+             if (p) {
+               playersStats[event.playerId] = { goals: 1, assists: 0, matches: 0, time: 0, playerName: p.name, photo: p.photo };
+             }
+          }
+           if (event.assistId && !playersStats[event.assistId]) {
+             const p = players.find(player => player.id === event.assistId);
+             if (p) {
+                playersStats[event.assistId] = { goals: 0, assists: 1, matches: 0, time: 0, playerName: p.name, photo: p.photo };
+             }
+          }
+        }
+      });
+    });
+
+    const absentPlayers = players
+      .filter(p => !sessionPlayerIds.includes(p.id))
+      .map(p => ({ id: p.id, name: p.name, photo: p.photo }));
+
+    return {
+      id: generateId(),
+      timestamp: Date.now(),
+      playersStats,
+      absentPlayers
+    };
+  };
+
+  const confirmEndPelada = () => {
+    setShowEndPeladaConfirm(false);
+    setIsSavingPeladaFlow(true);
+    
+    // Simulate saving delay
+    setTimeout(() => {
+      handleEndPelada();
+      setIsSavingPeladaFlow(false);
+    }, 2000);
+  };
+
+  const handleEndPelada = () => {
+    const report = generatePeladaReportData();
+    setLastPeladaReport(report);
+    localStorage.setItem("futquina_last_report", JSON.stringify(report));
+    
+    // Resets
+    setSessionPlayerIds([]);
+    setMatchHistory([]);
+    setTeams([]);
+    setMatch({
+      isActive: false,
+      isPaused: true,
+      timeRemaining: 10 * 60,
+      config: { duration: 10, playersPerTeam: 5, goalLimit: 2 },
+      scoreA: 0,
+      scoreB: 0,
+      events: [],
+      startTime: null,
+      hasEnded: false,
+    });
+    setLastMatchResult(null);
+    setCurrentScreen("teams");
+    setTeamsTab("chegada");
+    setShowPeladaReport(true);
+    setShowGlobalSettings(false);
+
+    // Also update all players to not available
+    setPlayers(prev => prev.map(p => ({ ...p, isAvailable: false, arrivedAt: undefined })));
+    
+    setToast({ message: "Pelada encerrada e dados resetados!", type: "success" });
+    setTimeout(() => setToast(null), 3000);
+  };
   const [showIconPicker, setShowIconPicker] = useState<number | null>(null);
   const [selectedScorerId, setSelectedScorerId] = useState<string | null>(null);
   const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
@@ -4139,6 +4383,15 @@ function GroupApp({
       return () => clearTimeout(timer);
     }
   }, [toast]);
+
+  useEffect(() => {
+    if (matchConfigOpenId) {
+      const timer = setTimeout(() => {
+        setMatchConfigOpenId(null);
+      }, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [matchConfigOpenId]);
 
   // Sync com tabelas externas (jogadores e presencas)
   useEffect(() => {
@@ -5040,7 +5293,7 @@ function GroupApp({
       teamToLeaveIndex = -1; // Draw: no one leaves automatically
     }
 
-    const result = {
+    const result: MatchResult = {
       id: generateId(),
       teamAName: teams[teamAIndex]?.name || "Time A",
       teamBName: teams[teamBIndex]?.name || "Time B",
@@ -5054,6 +5307,8 @@ function GroupApp({
         TEAM_COLORS[1],
       teamAId: teams[teamAIndex]?.id,
       teamBId: teams[teamBIndex]?.id,
+      teamAPlayerIds: [...(teams[teamAIndex]?.playerIds || [])],
+      teamBPlayerIds: [...(teams[teamBIndex]?.playerIds || [])],
       scoreA,
       scoreB,
       teamAIndex,
@@ -5068,6 +5323,7 @@ function GroupApp({
         tieBreakerWinnerIndex !== undefined
           ? teams[tieBreakerWinnerIndex]?.id
           : null,
+      duration: match.config.duration,
     };
 
     setLastMatchResult(result);
@@ -6543,7 +6799,7 @@ function GroupApp({
                       className="w-full flex items-center gap-4 p-4 hover:bg-zinc-50 rounded-none transition-all group border-b border-zinc-50"
                     >
                       <div className="flex items-center gap-4 text-left">
-                        <div className="text-red-400 group-hover:scale-110 transition-transform">
+                        <div className="text-indigo-900 group-hover:scale-110 transition-transform">
                           <LayoutPanelLeft size={20} />
                         </div>
                         <span className="text-[14px] font-semibold text-zinc-800">
@@ -6555,8 +6811,44 @@ function GroupApp({
 
 
                   <button
+                    onClick={() => {
+                      setShowEndPeladaConfirm(true);
+                      setShowGlobalSettings(false);
+                    }}
+                    className="w-full flex items-center justify-between p-4 hover:bg-emerald-50 rounded-none transition-all group border-t border-zinc-50"
+                  >
+                    <div className="flex items-center gap-4 text-left">
+                      <div className="text-emerald-600 group-hover:scale-110 transition-transform">
+                        <IoIosSave size={20} />
+                      </div>
+                      <span className="text-[14px] font-semibold text-zinc-800">Fim da pelada</span>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      if (matchHistory.length === 0 && !lastPeladaReport) {
+                        setToast({ message: "Nenhum histórico disponível para relatório.", type: "warning" });
+                        setTimeout(() => setToast(null), 3000);
+                        return;
+                      }
+                      setShowPeladaReport(true);
+                      setShowGlobalSettings(false);
+                    }}
+                    className="w-full flex items-center justify-between p-4 hover:bg-zinc-50 rounded-none transition-all group border-t border-zinc-50"
+                  >
+                    <div className="flex items-center gap-4 text-left">
+                      <div className="text-zinc-600 group-hover:scale-110 transition-transform">
+                        <MdDataSaverOff size={20} />
+                      </div>
+                      <span className="text-[14px] font-semibold text-zinc-800">Relatório das partidas</span>
+                    </div>
+                    <ChevronRight size={14} className="text-zinc-300" />
+                  </button>
+
+                  <button
                     onClick={() => setShowSetupGuide(true)}
-                    className="w-full flex items-center justify-between p-4 hover:bg-zinc-50 rounded-none transition-all group"
+                    className="w-full flex items-center justify-between p-4 hover:bg-zinc-50 rounded-none transition-all group border-t border-zinc-50"
                   >
                     <div className="flex items-center gap-4 text-left">
                       <div className="text-blue-500 group-hover:scale-110 transition-transform">
@@ -8149,12 +8441,8 @@ function GroupApp({
                         {players.filter((p) => sessionPlayerIds.includes(p.id))
                           .length === 0 ? (
                           <div className="col-span-full py-20 flex flex-col items-center justify-center gap-6 w-full">
-                            <div className="flex flex-col items-center gap-4 opacity-50 text-black/50 text-xs">
-                              <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-2">
-                                <span className="opacity-30 text-black">
-                                  <GiSocks size={48} />
-                                </span>
-                              </div>
+                            <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
+                              <GiSocks size={120} />
                               <span className="font-bold uppercase tracking-widest text-[10px]">
                                 Nenhum jogador na sessão
                               </span>
@@ -8341,12 +8629,8 @@ function GroupApp({
                         <div className="py-20 flex flex-col items-center justify-center gap-6 w-full">
                           {players.filter((p) => p.isAvailable).length === 0 ? (
                             <>
-                              <div className="flex flex-col items-center gap-4 opacity-50 text-black/50 text-xs">
-                                <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-2">
-                                  <span className="opacity-30 text-black">
-                                    <GiSoccerField size={48} />
-                                  </span>
-                                </div>
+                              <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
+                                <GiSoccerField size={120} />
                                 <span className="font-bold uppercase tracking-widest text-[10px]">
                                   Nenhum jogador presente
                                 </span>
@@ -9519,12 +9803,8 @@ function GroupApp({
                       <div className="space-y-4">
                         {teams.length < 2 ? (
                           <div className="py-20 flex flex-col items-center justify-center gap-6 w-full">
-                            <div className="flex flex-col items-center gap-4 opacity-50 text-black/50 text-xs">
-                              <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-2">
-                                <span className="opacity-30 text-black">
-                                  <GiSoccerBall size={48} />
-                                </span>
-                              </div>
+                            <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
+                              <GiSoccerBall size={120} />
                               <span className="font-bold uppercase tracking-widest text-[10px]">
                                 Crie mais times para ver a fila
                               </span>
@@ -13883,6 +14163,233 @@ function GroupApp({
           </motion.div>
         )}
 
+        {showPeladaReport && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[300] flex items-center justify-center p-2 sm:p-6"
+            onClick={() => setShowPeladaReport(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              className="w-full max-w-lg bg-[#F8FAFC] rounded-[40px] shadow-2xl overflow-hidden flex flex-col max-h-[92vh] border border-white/20"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Modern Header */}
+              <div className="bg-gradient-to-br from-[#dce3ee] to-[#F1F5F9] p-10 text-center relative overflow-hidden shrink-0">
+                <div className="absolute -top-12 -right-12 w-48 h-48 bg-white/40 rounded-full blur-3xl" />
+                <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-black/5 rounded-full blur-2xl" />
+                
+                <div className="relative z-10 flex flex-col items-center gap-4">
+                  <div className="inline-flex items-center justify-center w-16 h-16 text-zinc-800">
+                    <MdDonutLarge size={48} />
+                  </div>
+                  <div className="space-y-1">
+                    <h3 className="text-3xl font-black uppercase tracking-tighter text-zinc-900 leading-none">
+                      Relatório
+                    </h3>
+                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">
+                      {new Date((matchHistory.length > 0 ? Date.now() : lastPeladaReport?.timestamp || Date.now())).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 overflow-y-auto p-5 sm:p-8 space-y-8 custom-scrollbar">
+                {/* Bento Highlights */}
+                {(() => {
+                  const report = matchHistory.length > 0 ? generatePeladaReportData() : lastPeladaReport;
+                  if (!report) return null;
+                  
+                  const statsArray = Object.values(report.playersStats) as any[];
+                  if (statsArray.length === 0) return null;
+
+                  const topScorer = [...statsArray].sort((a, b) => b.goals - a.goals || b.matches - a.matches)[0];
+                  const topAssister = [...statsArray].sort((a, b) => b.assists - a.assists || b.matches - a.matches)[0];
+                  const topPlayer = [...statsArray].sort((a, b) => (b.goals + b.assists) - (a.goals + a.assists) || b.matches - a.matches)[0];
+
+                  return (
+                    <div className="space-y-4">
+                      <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400 px-1">
+                        Destaques da Pelada
+                      </h4>
+                      <div className="grid grid-cols-2 gap-3">
+                        {/* MVP Card */}
+                        <div className="col-span-2 bg-gradient-to-br from-zinc-900 to-zinc-800 p-5 rounded-[28px] relative overflow-hidden group shadow-lg">
+                          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
+                            <Star size={80} fill="currentColor" />
+                          </div>
+                          <div className="flex items-center gap-4 relative z-10">
+                            <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 overflow-hidden shrink-0">
+                               {topPlayer.photo ? (
+                                  <img src={topPlayer.photo} alt="" className="w-full h-full object-cover" />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center text-white/40"><User size={24} /></div>
+                                )}
+                            </div>
+                            <div className="flex-1">
+                              <span className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em]">Melhor em Campo</span>
+                              <h5 className="text-xl font-bold text-white uppercase truncate">{(topPlayer.playerName || "").toLowerCase()}</h5>
+                              <div className="flex gap-4 mt-1">
+                                <span className="text-[11px] text-zinc-400 font-bold"><b className="text-white">{topPlayer.goals}</b> Gols</span>
+                                <span className="text-[11px] text-zinc-400 font-bold"><b className="text-white">{topPlayer.assists}</b> Ass</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Top Scorer */}
+                        <div className="bg-white p-5 rounded-none shadow-sm border border-zinc-200/50 flex flex-col justify-between min-h-[140px] group transition-all hover:border-brand-primary">
+                          <div className="flex justify-between items-start">
+                             <div className="w-10 h-10 flex items-center justify-center text-zinc-900">
+                               <GiKing size={24} />
+                             </div>
+                             <span className="text-[24px] font-black text-zinc-200 group-hover:text-emerald-100 transition-colors">01</span>
+                          </div>
+                          <div>
+                            <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest block mb-1">Artilheiro</span>
+                            <h5 className="text-sm font-bold text-zinc-800 truncate leading-none capitalize">{(topScorer.playerName || "").toLowerCase()}</h5>
+                            <p className="text-xs font-black text-zinc-400 mt-1">{topScorer.goals} Gols</p>
+                          </div>
+                        </div>
+
+                        {/* Top Assister */}
+                        <div className="bg-white p-5 rounded-none shadow-sm border border-zinc-200/50 flex flex-col justify-between min-h-[140px] group transition-all hover:border-blue-400">
+                          <div className="flex justify-between items-start">
+                             <div className="w-10 h-10 flex items-center justify-center text-zinc-900">
+                               <GiSoccerKick size={24} />
+                             </div>
+                             <span className="text-[24px] font-black text-zinc-200 group-hover:text-blue-100 transition-colors">01</span>
+                          </div>
+                          <div>
+                            <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest block mb-1">Garçom</span>
+                            <h5 className="text-sm font-bold text-zinc-800 truncate leading-none capitalize">{(topAssister.playerName || "").toLowerCase()}</h5>
+                            <p className="text-xs font-black text-zinc-400 mt-1">{topAssister.assists} Ass</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                {/* Detailed Table */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between px-1">
+                    <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400 flex items-center gap-2">
+                       Estatísticas Gerais
+                    </h4>
+                    <span className="text-[10px] font-bold text-zinc-400">Ordenado por Pontos</span>
+                  </div>
+                  
+                  <div className="bg-white rounded-[32px] shadow-sm border border-zinc-200/50 overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-left">
+                        <thead>
+                          <tr className="bg-zinc-50/50 border-b border-zinc-100">
+                            <th className="p-5 text-[10px] font-black uppercase text-zinc-400">Jogador</th>
+                            <th className="p-5 text-center text-[10px] font-black uppercase text-zinc-400">G</th>
+                            <th className="p-5 text-center text-[10px] font-black uppercase text-zinc-400">A</th>
+                            <th className="p-5 text-center text-[10px] font-black uppercase text-zinc-400">Pts</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-zinc-50">
+                          {(() => {
+                            const report = matchHistory.length > 0 ? generatePeladaReportData() : lastPeladaReport;
+                            if (!report) return null;
+                            
+                            return (Object.values(report.playersStats) as any[])
+                              .sort((a, b) => {
+                                const totalA = (a.goals || 0) + (a.assists || 0);
+                                const totalB = (b.goals || 0) + (b.assists || 0);
+                                return totalB - totalA || (b.matches || 0) - (a.matches || 0);
+                              })
+                              .map((stat, idx) => (
+                                <tr key={`report-stats-${idx}`} className="hover:bg-zinc-50/30 transition-colors group">
+                                  <td className="p-4 pl-5">
+                                    <div className="flex items-center gap-3">
+                                      <div className="w-9 h-9 rounded-full bg-zinc-100 border border-zinc-100 overflow-hidden flex items-center justify-center shrink-0 shadow-inner group-hover:border-zinc-200 transition-colors">
+                                        {stat.photo ? (
+                                          <img src={stat.photo} alt="" className="w-full h-full object-cover" />
+                                        ) : (
+                                          <User size={14} className="text-zinc-400" />
+                                        )}
+                                      </div>
+                                      <div className="flex flex-col">
+                                        <span className="text-xs font-bold text-zinc-800 capitalize">
+                                          {(stat.playerName || "").toLowerCase()}
+                                        </span>
+                                        <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">
+                                          {stat.matches} PART / {stat.time}m
+                                        </span>
+                                      </div>
+                                    </div>
+                                  </td>
+                                  <td className="p-4 text-center text-xs font-black text-emerald-600">{stat.goals || 0}</td>
+                                  <td className="p-4 text-center text-xs font-black text-blue-500">{stat.assists || 0}</td>
+                                  <td className="p-4 text-center">
+                                    <div className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-900 text-white text-[10px] font-black shadow-lg">
+                                      {(stat.goals || 0) + (stat.assists || 0)}
+                                    </div>
+                                  </td>
+                                </tr>
+                              ));
+                          })()}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Absences Section */}
+                {(() => {
+                  const report = matchHistory.length > 0 ? generatePeladaReportData() : lastPeladaReport;
+                  if (!report || report.absentPlayers.length === 0) return null;
+                  
+                  return (
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between px-1">
+                        <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400 flex items-center gap-2">
+                           Não Compareceram
+                        </h4>
+                        <div className="flex -space-x-2">
+                           {report.absentPlayers.slice(0, 3).map((p, i) => (
+                             <div key={`absent-mini-${i}`} className="w-5 h-5 rounded-full border-2 border-[#F8FAFC] bg-zinc-200 overflow-hidden">
+                                {p.photo ? <img src={p.photo} alt="" className="w-full h-full object-cover grayscale" /> : null}
+                             </div>
+                           ))}
+                        </div>
+                      </div>
+                      <div className="bg-white/50 rounded-[28px] border border-dashed border-zinc-300 p-6 flex flex-wrap gap-2 items-center justify-center">
+                        {report.absentPlayers.map((p, idx) => (
+                          <div key={`absent-${idx}`} className="px-3 py-1.5 bg-white rounded-full border border-zinc-200 shadow-sm flex items-center gap-2 animate-in fade-in slide-in-from-bottom-1" style={{ animationDelay: `${idx * 50}ms` }}>
+                            <div className="w-4 h-4 rounded-full bg-zinc-100 overflow-hidden grayscale shrink-0">
+                              {p.photo ? <img src={p.photo} alt="" className="w-full h-full object-cover" /> : <User size={8} className="text-zinc-400" />}
+                            </div>
+                            <span className="text-[10px] font-bold text-zinc-500 capitalize">{p.name.toLowerCase()}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
+              </div>
+
+              {/* Action Footer */}
+              <div className="p-8 bg-white border-t border-zinc-100 shrink-0">
+                <button
+                  onClick={() => setShowPeladaReport(false)}
+                  className="w-full h-16 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black rounded-full font-black uppercase tracking-[0.2em] text-xs shadow-xl active:scale-[0.98] transition-all hover:shadow-2xl hover:-translate-y-0.5"
+                >
+                  Continuar
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+
         {showEventModal && (
           <motion.div
             initial={{ opacity: 0 }}
@@ -15072,6 +15579,54 @@ function GroupApp({
           </motion.div>
         </div>
       )}
+
+      {/* End Pelada Confirm Modal */}
+      {showEndPeladaConfirm && (
+        <div className="fixed inset-0 z-[310] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+          <motion.div
+            initial={{ scale: 0.9, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            className="w-full max-w-sm bg-white p-8 rounded-[32px] shadow-2xl border border-black/5 relative overflow-hidden"
+          >
+            <div className="relative z-10 text-center space-y-6">
+              <div className="w-16 h-16 rounded-[24px] bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
+                 <IoIosSave size={32} />
+              </div>
+              
+              <div className="space-y-1">
+                <h3 className="text-xl font-bold uppercase tracking-tight text-zinc-900">
+                  ENCERRAR PELADA
+                </h3>
+                <p className="text-sm font-medium text-zinc-500 max-w-[260px] mx-auto leading-normal">
+                  Isso irá salvar as informações de <span className="text-zinc-800 font-bold">presença</span>, <span className="text-zinc-800 font-bold">confrontos</span> e <span className="text-zinc-800 font-bold">próximos</span>.
+                  <br />
+                  Deseja continuar?
+                </p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3 pt-2">
+                <button
+                  onClick={() => setShowEndPeladaConfirm(false)}
+                  className="w-full h-12 rounded-2xl font-bold uppercase tracking-widest text-[10px] transition-all bg-zinc-50 text-zinc-400 hover:bg-zinc-100 active:scale-95"
+                >
+                  CANCELAR
+                </button>
+                <button
+                  onClick={confirmEndPelada}
+                  className="w-full h-12 rounded-2xl font-bold uppercase tracking-widest text-[10px] bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white shadow-lg shadow-emerald-500/20 active:scale-95 transition-all"
+                >
+                  CONFIRMAR
+                </button>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Saving Overlay */}
+      <AnimatePresence>
+        {isSavingPeladaFlow && <SavingPeladaOverlay />}
+      </AnimatePresence>
     </div>
   );
 }
