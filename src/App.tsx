@@ -6757,123 +6757,7 @@ function GroupApp({
         queueCount={teams.length - 2}
       />
 
-      {/* Global Application Settings Modal */}
-      <AnimatePresence>
-        {showGlobalSettings && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex justify-end"
-            onClick={() => setShowGlobalSettings(false)}
-          >
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="w-full max-w-[320px] bg-[#F8F9FB] h-full shadow-2xl flex flex-col overflow-hidden"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Top Spacing instead of Header */}
-              <div className="h-4" />
-
-              {/* Scrollable Content (Card Groups) */}
-              <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
-                
-                {/* General Tools Card */}
-                <div className="bg-white rounded p-2 shadow-sm border border-zinc-100/50">
-                  {((showAddPlayerSection && currentScreen === "players") ||
-                    currentScreen === "teams" ||
-                    currentScreen === "ranking" ||
-                    currentScreen === "finance") && (
-                    <button
-                      onClick={() => {
-                        setCurrentScreen("players");
-                        setShowAddPlayerSection(false);
-                        setSelectedMatchId(null);
-                        setPlayersTab("configuracao");
-                        setTeamsTab("configuracao");
-                        setShowGlobalSettings(false);
-                      }}
-                      className="w-full flex items-center gap-4 p-4 hover:bg-zinc-50 rounded-none transition-all group border-b border-zinc-50"
-                    >
-                      <div className="flex items-center gap-4 text-left">
-                        <div className="text-indigo-900 group-hover:scale-110 transition-transform">
-                          <LayoutPanelLeft size={20} />
-                        </div>
-                        <span className="text-[14px] font-semibold text-zinc-800">
-                          Painel de controle
-                        </span>
-                      </div>
-                    </button>
-                  )}
-
-
-                  <button
-                    onClick={() => {
-                      setShowEndPeladaConfirm(true);
-                      setShowGlobalSettings(false);
-                    }}
-                    className="w-full flex items-center justify-between p-4 hover:bg-emerald-50 rounded-none transition-all group border-t border-zinc-50"
-                  >
-                    <div className="flex items-center gap-4 text-left">
-                      <div className="text-emerald-600 group-hover:scale-110 transition-transform">
-                        <IoIosSave size={20} />
-                      </div>
-                      <span className="text-[14px] font-semibold text-zinc-800">Fim da pelada</span>
-                    </div>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      if (matchHistory.length === 0 && !lastPeladaReport) {
-                        setToast({ message: "Nenhum histórico disponível para relatório.", type: "warning" });
-                        setTimeout(() => setToast(null), 3000);
-                        return;
-                      }
-                      setShowPeladaReport(true);
-                      setShowGlobalSettings(false);
-                    }}
-                    className="w-full flex items-center justify-between p-4 hover:bg-zinc-50 rounded-none transition-all group border-t border-zinc-50"
-                  >
-                    <div className="flex items-center gap-4 text-left">
-                      <div className="text-zinc-600 group-hover:scale-110 transition-transform">
-                        <MdDataSaverOff size={20} />
-                      </div>
-                      <span className="text-[14px] font-semibold text-zinc-800">Relatório das partidas</span>
-                    </div>
-                    <ChevronRight size={14} className="text-zinc-300" />
-                  </button>
-
-                  <button
-                    onClick={() => setShowSetupGuide(true)}
-                    className="w-full flex items-center justify-between p-4 hover:bg-zinc-50 rounded-none transition-all group border-t border-zinc-50"
-                  >
-                    <div className="flex items-center gap-4 text-left">
-                      <div className="text-blue-500 group-hover:scale-110 transition-transform">
-                        <TiMap size={20} />
-                      </div>
-                      <span className="text-[14px] font-semibold text-zinc-800">Guia Inicial</span>
-                    </div>
-                    <ChevronRight size={14} className="text-zinc-300" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Close Button Footer */}
-              <div className="p-6 bg-white border-t border-zinc-100">
-                <button
-                  onClick={() => setShowGlobalSettings(false)}
-                  className="w-full py-4 bg-zinc-900 text-white rounded font-bold text-[13px] uppercase tracking-widest active:scale-[0.98] transition-all shadow-lg shadow-zinc-200 hover:bg-black"
-                >
-                  Fechar Menu
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Global Application Settings Modal handled below in sticky header */}
 
       {/* Not Enough Players Modal */}
       <AnimatePresence>
@@ -7185,6 +7069,122 @@ function GroupApp({
               </div>
             </div>
           )}
+          <AnimatePresence>
+            {showGlobalSettings && (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="absolute top-full right-0 w-screen h-[calc(100vh-100%)] bg-black/60 backdrop-blur-sm z-[200] flex justify-end"
+                onClick={() => setShowGlobalSettings(false)}
+              >
+                <motion.div
+                  initial={{ x: "100%" }}
+                  animate={{ x: 0 }}
+                  exit={{ x: "100%" }}
+                  transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                  className="w-full max-w-[320px] bg-[#F8F9FB] h-full shadow-2xl flex flex-col overflow-hidden"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* Top Spacing instead of Header */}
+                  <div className="h-4" />
+
+                  {/* Scrollable Content (Card Groups) */}
+                  <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
+                    
+                    {/* General Tools Card */}
+                    <div className="bg-white rounded p-2 shadow-sm border border-zinc-100/50">
+                      {((showAddPlayerSection && currentScreen === "players") ||
+                        currentScreen === "teams" ||
+                        currentScreen === "ranking" ||
+                        currentScreen === "finance") && (
+                        <button
+                          onClick={() => {
+                            setCurrentScreen("players");
+                            setShowAddPlayerSection(false);
+                            setSelectedMatchId(null);
+                            setPlayersTab("configuracao");
+                            setTeamsTab("configuracao");
+                            setShowGlobalSettings(false);
+                          }}
+                          className="w-full flex items-center gap-4 p-4 hover:bg-zinc-50 rounded-none transition-all group border-b border-zinc-50"
+                        >
+                          <div className="flex items-center gap-4 text-left">
+                            <div className="text-zinc-800 group-hover:scale-110 transition-transform">
+                              <LayoutPanelLeft size={20} />
+                            </div>
+                            <span className="text-[14px] text-zinc-800">
+                              Painel de controle
+                            </span>
+                          </div>
+                        </button>
+                      )}
+
+
+                      <button
+                        onClick={() => {
+                          setShowEndPeladaConfirm(true);
+                          setShowGlobalSettings(false);
+                        }}
+                        className="w-full flex items-center justify-between p-4 hover:bg-emerald-50 rounded-none transition-all group border-t border-zinc-50"
+                      >
+                        <div className="flex items-center gap-4 text-left">
+                          <div className="text-zinc-800 group-hover:scale-110 transition-transform">
+                            <IoIosSave size={20} />
+                          </div>
+                          <span className="text-[14px] text-zinc-800">Fim da pelada</span>
+                        </div>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          if (matchHistory.length === 0 && !lastPeladaReport) {
+                            setToast({ message: "Nenhum histórico disponível para relatório.", type: "warning" });
+                            setTimeout(() => setToast(null), 3000);
+                            return;
+                          }
+                          setShowPeladaReport(true);
+                          setShowGlobalSettings(false);
+                        }}
+                        className="w-full flex items-center justify-between p-4 hover:bg-zinc-50 rounded-none transition-all group border-t border-zinc-50"
+                      >
+                        <div className="flex items-center gap-4 text-left">
+                          <div className="text-zinc-800 group-hover:scale-110 transition-transform">
+                            <MdDataSaverOff size={20} />
+                          </div>
+                          <span className="text-[14px] text-zinc-800">Relatório das partidas</span>
+                        </div>
+                        <ChevronRight size={14} className="text-zinc-300" />
+                      </button>
+
+                      <button
+                        onClick={() => setShowSetupGuide(true)}
+                        className="w-full flex items-center justify-between p-4 hover:bg-zinc-50 rounded-none transition-all group border-t border-zinc-50"
+                      >
+                        <div className="flex items-center gap-4 text-left">
+                          <div className="text-zinc-800 group-hover:scale-110 transition-transform">
+                            <TiMap size={20} />
+                          </div>
+                          <span className="text-[14px] text-zinc-800">Guia Inicial</span>
+                        </div>
+                        <ChevronRight size={14} className="text-zinc-300" />
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Close Button Footer */}
+                  <div className="p-6 bg-white border-t border-zinc-100">
+                    <button
+                      onClick={() => setShowGlobalSettings(false)}
+                      className="w-full py-4 bg-zinc-900 text-white rounded font-bold text-[13px] uppercase tracking-widest active:scale-[0.98] transition-all shadow-lg shadow-zinc-200 hover:bg-black"
+                    >
+                      Fechar Menu
+                    </button>
+                  </div>
+                </motion.div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* Main Content */}
@@ -8639,7 +8639,7 @@ function GroupApp({
                               <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
                                 <GiSoccerField size={100} />
                                 <span className="font-bold uppercase tracking-widest text-[11px]">
-                                  Nenhum jogador presente
+                                  Nenhum jogador para iniciar o confronto
                                 </span>
                               </div>
                               <button
