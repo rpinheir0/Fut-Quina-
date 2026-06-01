@@ -7208,7 +7208,7 @@ function GroupApp({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="p-4 sm:p-6 space-y-6 bg-zinc-50/30 min-h-full flex flex-col"
+                className="p-4 sm:p-6 space-y-4 bg-zinc-50/30 min-h-full flex flex-col"
               >
                 {/* Dashboard Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -7258,7 +7258,7 @@ function GroupApp({
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
-                      className="flex-1 flex flex-col space-y-8"
+                      className="flex-1 flex flex-col space-y-4"
                     >
                       {/* CTA Banner */}
                       <motion.div
@@ -7283,7 +7283,7 @@ function GroupApp({
                         <div className="relative z-10 flex items-center justify-between">
                           <div className="flex items-center gap-4">
                             <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#0a180f] flex items-center justify-center shrink-0 shadow-lg">
-                              <Plus size={24} className="text-[#a1fd2b]" />
+                              <Plus size={24} className="text-white" />
                             </div>
                             <div className="flex flex-col text-black">
                               <h3 className="text-lg sm:text-xl font-black tracking-tighter uppercase text-white">
@@ -7313,14 +7313,14 @@ function GroupApp({
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.3 }}
-                              className="bg-white/40 border border-dashed border-zinc-200 rounded-none h-[64px] flex items-center px-4 gap-4 relative overflow-hidden mb-2"
+                              className="bg-gradient-to-br from-[#dce3ee] to-[#ced7e6] border border-black/5 rounded-xl h-[92px] flex items-center px-6 gap-5 relative overflow-hidden mb-2 shadow-sm"
                             >
-                              <div className="w-10 h-10 rounded-full bg-zinc-100/50 flex items-center justify-center text-zinc-300">
-                                <GiSoccerField size={20} />
+                              <div className="w-12 h-12 rounded-full bg-white/50 border border-black/5 flex items-center justify-center text-zinc-400 shrink-0 shadow-sm">
+                                <GiSoccerField size={24} />
                               </div>
-                              <div className="flex-1 space-y-2">
-                                <div className="h-2.5 w-24 bg-zinc-100 rounded-full" />
-                                <div className="h-2 w-16 bg-zinc-50 rounded-full" />
+                              <div className="flex-1 space-y-3">
+                                <div className="h-3 w-32 bg-white/60 rounded-full" />
+                                <div className="h-2.5 w-20 bg-white/40 rounded-full" />
                               </div>
                               <motion.div
                                 animate={{ x: ["-100%", "200%"] }}
@@ -7404,7 +7404,7 @@ function GroupApp({
                                     setPlayersTab("configuracao");
                                   }
                                 }}
-                                className={`group relative bg-white rounded-none flex flex-col border border-black/10 cursor-pointer shadow-md hover:shadow-lg transition-all duration-500 ease-in-out overflow-hidden`}
+                                className={`group relative bg-white rounded-xl flex flex-col border border-black/10 cursor-pointer shadow-md hover:shadow-lg transition-all duration-500 ease-in-out overflow-hidden`}
                               >
                                 {/* Top Header Section */}
                                 <div className="w-full bg-gradient-to-br from-[#dce3ee] to-[#ced7e6] relative overflow-hidden px-5 py-5 flex items-center justify-between border-b border-black/5">
@@ -7551,7 +7551,7 @@ function GroupApp({
                           opacity: { duration: 0.4 },
                           scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                         } : { delay: 0.4 }}
-                        className={`bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-100 rounded-none p-4 flex items-center gap-4 shadow-sm border border-black/5 ${scheduledMatches.length > 0 ? "mt-auto" : "mt-2"}`}
+                        className={`bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-100 rounded-none p-4 flex items-center gap-4 shadow-sm border border-black/5 mt-auto`}
                       >
                         <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
                           <AlertCircle size={24} />
@@ -14377,12 +14377,12 @@ function GroupApp({
               </div>
 
               {/* Action Footer */}
-              <div className="p-8 bg-white border-t border-zinc-100 shrink-0">
+              <div className="p-8 bg-white border-t border-zinc-100 rounded-t-[40px] shrink-0 shadow-[0_-10px_30px_rgba(0,0,0,0.03)]">
                 <button
                   onClick={() => setShowPeladaReport(false)}
                   className="w-full h-16 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black rounded-full font-black uppercase tracking-[0.2em] text-xs shadow-xl active:scale-[0.98] transition-all hover:shadow-2xl hover:-translate-y-0.5"
                 >
-                  Continuar
+                  CONTINUAR
                 </button>
               </div>
             </motion.div>
@@ -15094,7 +15094,7 @@ function GroupApp({
         </AnimatePresence>
 
         {/* Bottom Navigation */}
-        {!(currentScreen === "players" && !showAddPlayerSection) && (
+        {!(currentScreen === "players" && !showAddPlayerSection) && !showPeladaReport && (
           <div
             className={`fixed bottom-0 left-0 right-0 z-[100] w-full ${isPrintMode ? "hidden" : ""}`}
           >
@@ -15433,7 +15433,7 @@ function GroupApp({
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-full max-w-sm bg-white p-8 rounded-[32px] shadow-[0_20px_60px_rgba(0,0,0,0.3)] border border-black/5 relative overflow-hidden"
+            className="w-full max-w-sm bg-white p-8 rounded-[20px] shadow-[0_20px_60px_rgba(0,0,0,0.3)] border border-black/5 relative overflow-hidden"
           >
             <div className="relative z-10 text-center space-y-6">
               <div className="flex items-center justify-center mx-auto scale-90">
@@ -15445,16 +15445,14 @@ function GroupApp({
                   EXCLUIR PELADA
                 </h3>
                 <p className="text-sm font-medium text-zinc-500 max-w-[260px] mx-auto leading-normal">
-                  Tem certeza que deseja excluir a pelada
-                  <br />
-                  <span className="text-zinc-800 font-bold">"{matchToDelete.name}"?</span>
+                  Tem certeza que deseja excluir a pelada?
                 </p>
               </div>
 
               <div className="grid grid-cols-2 gap-3 pt-2">
                 <button
                   onClick={() => setMatchToDelete(null)}
-                  className="w-full h-12 rounded-2xl font-bold uppercase tracking-widest text-[10px] transition-all bg-zinc-50 text-zinc-400 hover:bg-zinc-100 active:scale-95 border border-black/5"
+                  className="w-full h-12 rounded-xl font-bold uppercase tracking-widest text-[10px] transition-all bg-zinc-50 text-zinc-400 hover:bg-zinc-100 active:scale-95 border border-black/5"
                 >
                   CANCELAR
                 </button>
@@ -15469,7 +15467,7 @@ function GroupApp({
                     });
                     setMatchToDelete(null);
                   }}
-                  className="w-full h-12 rounded-2xl font-bold uppercase tracking-widest text-[10px] bg-gradient-to-br from-red-50 to-red-100 text-red-600 hover:shadow-lg hover:shadow-red-500/10 transition-all active:scale-95 border border-red-200/50"
+                  className="w-full h-12 rounded-xl font-bold uppercase tracking-widest text-[10px] bg-gradient-to-br from-red-50 to-red-100 text-red-600 hover:shadow-lg hover:shadow-red-500/10 transition-all active:scale-95 border border-red-200/50"
                 >
                   EXCLUIR
                 </button>
@@ -15585,11 +15583,11 @@ function GroupApp({
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-full max-w-sm bg-white p-8 rounded-[32px] shadow-2xl border border-black/5 relative overflow-hidden"
+            className="w-full max-w-sm bg-white p-8 rounded-[20px] shadow-2xl border border-black/5 relative overflow-hidden"
           >
             <div className="relative z-10 text-center space-y-6">
-              <div className="w-16 h-16 rounded-[24px] bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
-                 <IoIosSave size={32} />
+              <div className="text-emerald-600 flex items-center justify-center mx-auto">
+                 <IoIosSave size={40} />
               </div>
               
               <div className="space-y-1">
@@ -15606,13 +15604,13 @@ function GroupApp({
               <div className="grid grid-cols-2 gap-3 pt-2">
                 <button
                   onClick={() => setShowEndPeladaConfirm(false)}
-                  className="w-full h-12 rounded-2xl font-bold uppercase tracking-widest text-[10px] transition-all bg-zinc-50 text-zinc-400 hover:bg-zinc-100 active:scale-95"
+                  className="w-full h-12 rounded-xl font-bold uppercase tracking-widest text-[10px] transition-all bg-zinc-50 text-zinc-400 hover:bg-zinc-100 active:scale-95 border border-black/5"
                 >
                   CANCELAR
                 </button>
                 <button
                   onClick={confirmEndPelada}
-                  className="w-full h-12 rounded-2xl font-bold uppercase tracking-widest text-[10px] bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white shadow-lg shadow-emerald-500/20 active:scale-95 transition-all"
+                  className="w-full h-12 rounded-xl font-bold uppercase tracking-widest text-[10px] bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white shadow-lg shadow-emerald-500/20 active:scale-95 transition-all"
                 >
                   CONFIRMAR
                 </button>
