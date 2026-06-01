@@ -7266,7 +7266,7 @@ function GroupApp({
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
                         onClick={() => setShowScheduleModal(true)}
-                        className="cursor-pointer relative overflow-hidden bg-gradient-to-r from-[#0f2e04] via-[#1a4d07] to-[#0a1f02] rounded-full p-4 shadow-xl hover:shadow-2xl transition-all hover:scale-[1.01] active:scale-[0.99]"
+                        className="cursor-pointer relative overflow-hidden bg-gradient-to-r from-[#1b4d07] via-[#2d6e12] to-[#143b05] rounded-full p-4 shadow-xl hover:shadow-2xl transition-all hover:scale-[1.01] active:scale-[0.99]"
                       >
                         {/* Background pattern */}
                         <div className="absolute top-0 right-0 h-full w-2/3 opacity-20 mix-blend-overlay flex justify-end items-center px-10">
@@ -7335,11 +7335,11 @@ function GroupApp({
                             const day = matchDate.getDate();
                             const month = matchDate
                               .toLocaleString("pt-BR", { month: "long" })
-                              .replace(/^\w/, (c) => c.toUpperCase());
+                              .toLowerCase();
                             const weekday = matchDate
                               .toLocaleString("pt-BR", { weekday: "long" })
                               .substring(0, 7)
-                              .replace(/^\w/, (c) => c.toUpperCase());
+                              .toLowerCase();
 
                             // Get specific match players and session
                             const specificSessionSaved =
@@ -7404,93 +7404,96 @@ function GroupApp({
                                     setPlayersTab("configuracao");
                                   }
                                 }}
-                                className={`group relative bg-white rounded-none flex flex-col sm:flex-row items-stretch border border-black/10 cursor-pointer shadow-sm hover:shadow-md transition-all duration-500 ease-in-out overflow-hidden ${isExpanded ? "opacity-100 max-h-[500px]" : "opacity-60 max-h-[56px] sm:max-h-[64px]"}`}
+                                className={`group relative bg-white rounded-none flex flex-col border border-black/10 cursor-pointer shadow-md hover:shadow-lg transition-all duration-500 ease-in-out overflow-hidden`}
                               >
-                                {/* Settings and Delete Actions - Absolute Top Right */}
-                                <div className="absolute top-[14px] sm:top-[16px] right-3 sm:right-4 flex items-center gap-0 z-20">
-                                  <AnimatePresence>
-                                    {matchConfigOpenId === match.id && (
-                                      <motion.button
-                                        initial={{ opacity: 0, scale: 0.5 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.5 }}
-                                        transition={{ duration: 0.2 }}
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setMatchToDelete(match);
-                                          setMatchConfigOpenId(null);
-                                        }}
-                                        className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center text-zinc-600 hover:text-red-500 hover:bg-black/5 transition-colors rounded-full"
-                                      >
-                                        <Trash2
-                                          size={13}
-                                          className="sm:w-3.5 sm:h-3.5"
-                                        />
-                                      </motion.button>
-                                    )}
-                                  </AnimatePresence>
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      setMatchConfigOpenId((prev) =>
-                                        prev === match.id ? null : match.id,
-                                      );
-                                    }}
-                                    className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center transition-all text-zinc-600 hover:text-black hover:bg-black/5"
-                                  >
-                                    <Settings size={14} />
-                                  </button>
+                                {/* Top Header Section */}
+                                <div className="w-full bg-gradient-to-br from-[#dce3ee] to-[#ced7e6] relative overflow-hidden px-5 py-5 flex items-center justify-between border-b border-black/5">
+                                  
+
+                                  <div className="flex items-center gap-4 relative z-10 w-full">
+                                    {/* Glow ball icon */}
+                                    <div className="w-[52px] h-[52px] rounded-full flex items-center justify-center bg-white border border-black/5 shadow-sm shrink-0 text-zinc-600">
+                                      <GiSoccerBall size={32} />
+                                    </div>
+                                    
+                                    {/* Title & Subtitle */}
+                                    <div className="flex flex-col text-left flex-1 min-w-0">
+                                      <span className="text-[20px] font-bold text-zinc-800 tracking-tighter leading-none truncate">
+                                        {(match.name || "Futebol").charAt(0).toUpperCase() + (match.name || "Futebol").slice(1).toLowerCase()}
+                                      </span>
+                                    </div>
+                                  </div>
+                                  
+                                  {/* Settings Actions */}
+                                  <div className="relative z-20 flex items-center gap-1 ml-2">
+                                    <AnimatePresence>
+                                      {matchConfigOpenId === match.id && (
+                                        <motion.button
+                                          initial={{ opacity: 0, scale: 0.5 }}
+                                          animate={{ opacity: 1, scale: 1 }}
+                                          exit={{ opacity: 0, scale: 0.5 }}
+                                          transition={{ duration: 0.2 }}
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setMatchToDelete(match);
+                                            setMatchConfigOpenId(null);
+                                          }}
+                                          className="w-8 h-8 flex items-center justify-center text-zinc-500 hover:text-red-500 hover:bg-black/5 transition-colors rounded-full shrink-0"
+                                        >
+                                          <Trash2 size={16} />
+                                        </motion.button>
+                                      )}
+                                    </AnimatePresence>
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        setMatchConfigOpenId((prev) =>
+                                          prev === match.id ? null : match.id,
+                                        );
+                                      }}
+                                      className="w-8 h-8 rounded-full flex items-center justify-center transition-all text-zinc-500 hover:text-zinc-800 hover:bg-black/5 shrink-0"
+                                    >
+                                      <Settings size={20} />
+                                    </button>
+                                  </div>
                                 </div>
 
-                                {/* Left Match Name Section */}
-                                <div className="w-full sm:w-28 bg-black/5 flex items-center justify-center min-h-[54px] sm:min-h-[62px] px-10 sm:px-4 border-b sm:border-b-0 sm:border-r border-black/5 relative overflow-hidden text-center text-wrap break-words">
-                                  <span className="text-[12px] sm:text-[14px] font-black text-zinc-800 uppercase tracking-tighter leading-tight break-words line-clamp-2">
-                                    {match.name}
-                                  </span>
-                                </div>
-
-                                {/* Right Content */}
+                                {/* Bottom Content */}
                                 <motion.div
                                   initial={false}
                                   animate={isExpanded ? { opacity: 1, height: "auto" } : { opacity: 0, height: 0 }}
                                   transition={{ duration: 0.4, ease: "easeInOut" }}
-                                  className="flex-1 p-4 sm:p-5 relative overflow-hidden"
+                                  className="w-full relative overflow-hidden bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0]"
                                 >
                                   {/* Subtle background texture pattern */}
-                                  <div className="absolute inset-0 opacity-5 pointer-events-none overflow-hidden flex items-center justify-end">
-                                    <div className="text-black mix-blend-overlay pr-2 sm:pr-4">
-                                      <GiSoccerField size={140} />
-                                    </div>
-                                    <div className="absolute inset-0 flex items-center justify-end">
-                                      <div className="text-[#59b823]/10 pr-6 sm:pr-12">
-                                        <MdOutlinePlayForWork size={80} />
-                                      </div>
+                                  <div className="absolute inset-0 opacity-[0.4] pointer-events-none overflow-hidden flex items-center justify-end">
+                                    <div className="text-white pr-2 sm:pr-4">
+                                      <GiSoccerField size={160} />
                                     </div>
                                   </div>
 
-                                  <div className="relative z-10 flex flex-col h-full justify-between gap-4">
+                                  <div className="relative z-10 flex flex-col h-full justify-between gap-4 p-4 sm:p-6">
                                     <div className="flex justify-between items-start">
                                       <div className="flex flex-col gap-2 mt-0 sm:mt-1">
-                                        <h5 className="font-normal uppercase text-zinc-800 text-sm sm:text-[12px] tracking-tight font-roboto-flex">
-                                          {day} {month} - {weekday}
+                                        <h5 className="font-semibold text-zinc-800 text-[15px] sm:text-[16px] font-roboto-flex tracking-tight">
+                                          {day} {month} - {weekday.split('-')[0]}
                                         </h5>
                                       </div>
                                     </div>
 
                                     <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 w-full">
-                                      <div className="space-y-1.5">
-                                        <div className="flex items-center gap-2 text-[10px] sm:text-[11px] text-zinc-600 font-medium">
+                                      <div className="space-y-3">
+                                        <div className="flex items-center gap-2 text-[14px] sm:text-[15px] text-zinc-800 font-medium tracking-tight">
                                           <div className="text-emerald-600">
-                                            <BsClockHistory size={12} />
+                                            <BsClockHistory size={16} />
                                           </div>{" "}
                                           {match.time}
                                         </div>
-                                        <div className="flex items-center gap-2 text-xs sm:text-[11px] text-zinc-600 font-medium font-roboto-flex">
+                                        <div className="flex items-center gap-2 text-[14px] sm:text-[15px] text-zinc-800 font-medium tracking-tight">
                                           <div className="text-emerald-600">
-                                            <BsPersonFillAdd size={12} />
+                                            <BsPersonFillAdd size={16} />
                                           </div>{" "}
-                                          {matchSpecificPlayers.length}{" "}
-                                          jogadores
+                                          {totalAvailablePlayers} jogadores
                                         </div>
                                         {/* Avatar Stack */}
                                         {matchSpecificPlayers.length > 0 && (
@@ -7498,14 +7501,14 @@ function GroupApp({
                                             initial={{ opacity: 0, x: -10 }}
                                             animate={isExpanded ? { opacity: 1, x: 0 } : { opacity: 0 }}
                                             transition={{ delay: 0.3 }}
-                                            className="flex -space-x-1.5 sm:-space-x-2 mt-1 sm:mt-1.5"
+                                            className="flex -space-x-1.5 sm:-space-x-2 pt-2"
                                           >
                                             {matchSpecificPlayers
                                               .slice(0, 10)
                                               .map((player, pIdx) => (
                                                 <div
                                                   key={`scheduled-match-player-${player.id}-${match.id}-${pIdx}`}
-                                                  className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-white bg-zinc-200 overflow-hidden shadow-sm"
+                                                  className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 border-white bg-white overflow-hidden shadow-sm flex items-center justify-center shrink-0"
                                                 >
                                                   {player.avatar ? (
                                                     <img
@@ -7514,25 +7517,20 @@ function GroupApp({
                                                       className="w-full h-full object-cover"
                                                     />
                                                   ) : (
-                                                    <div className="w-full h-full flex items-center justify-center text-[10px] sm:text-[8px] font-bold text-zinc-500 uppercase">
+                                                    <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-zinc-600 uppercase bg-white">
                                                       {player.name[0]}
                                                     </div>
                                                   )}
                                                 </div>
                                               ))}
-                                            {matchSpecificPlayers.length >
-                                              10 && (
-                                              <div className="w-5 h-5 sm:w-6 sm:h-6 rounded-full border border-white bg-zinc-50 flex items-center justify-center text-[10px] font-black text-zinc-400">
-                                                +
-                                                {matchSpecificPlayers.length -
-                                                  10}
+                                            {matchSpecificPlayers.length > 10 && (
+                                              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 border-white bg-white flex items-center justify-center text-[10px] font-black text-zinc-400 shadow-sm shrink-0">
+                                                +{matchSpecificPlayers.length - 10}
                                               </div>
                                             )}
                                           </motion.div>
                                         )}
                                       </div>
-
-
                                     </div>
                                   </div>
                                 </motion.div>
@@ -7553,7 +7551,7 @@ function GroupApp({
                           opacity: { duration: 0.4 },
                           scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                         } : { delay: 0.4 }}
-                        className={`bg-[#dce3ee] rounded-none p-4 flex items-center gap-4 shadow-sm border border-black/5 ${scheduledMatches.length > 0 ? "mt-auto" : "mt-2"}`}
+                        className={`bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-100 rounded-none p-4 flex items-center gap-4 shadow-sm border border-black/5 ${scheduledMatches.length > 0 ? "mt-auto" : "mt-2"}`}
                       >
                         <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
                           <AlertCircle size={24} />
