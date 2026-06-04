@@ -3345,6 +3345,7 @@ function GroupApp({
     useState(false);
   const [showArrivalStepGuide, setShowArrivalStepGuide] = useState(false);
   const [arrivalCardIndex, setArrivalCardIndex] = useState(0);
+  const [isAiProcessing, setIsAiProcessing] = useState(false);
   const [showAddPlayerSection, setShowAddPlayerSection] = useState(false);
   const [showPlayerSummary, setShowPlayerSummary] = useState(false);
   const [isFlashingConfig, setIsFlashingConfig] = useState(false);
@@ -4629,54 +4630,59 @@ function GroupApp({
   };
 
   const addBulkPlayers = (text: string) => {
-    const lines = text.split("\n");
-    const newPlayers: Player[] = [];
+    setIsAiProcessing(true);
 
-    // Patterns to ignore: dates (DD/MM, DD-MM), times (HH:MM), common titles/descriptions
-    const ignorePatterns = [
-      /\d{1,2}[\/\-]\d{1,2}/, // Dates
-      /\d{1,2}:\d{2}/, // Times
-      /^(lista|jogadores|convocados|presença|confirmados|futebol|pelada|horário|data|local|valor)/i, // Titles
-      /^\s*$/, // Empty lines
-    ];
+    setTimeout(() => {
+      const lines = text.split("\n");
+      const newPlayers: Player[] = [];
 
-    const existingNames = new Set(players.map((p) => p.name.toLowerCase()));
+      // Patterns to ignore: dates (DD/MM, DD-MM), times (HH:MM), common titles/descriptions
+      const ignorePatterns = [
+        /\d{1,2}[\/\-]\d{1,2}/, // Dates
+        /\d{1,2}:\d{2}/, // Times
+        /^(lista|jogadores|convocados|presença|confirmados|futebol|pelada|horário|data|local|valor)/i, // Titles
+        /^\s*$/, // Empty lines
+      ];
 
-    const isAnyAvailable = players.some((p) => p.isAvailable);
+      const existingNames = new Set(players.map((p) => p.name.toLowerCase()));
 
-    lines.forEach((line, i) => {
-      // Remove common prefixes: "1.", "1-", "-", "*", "•" but keep numbers that are part of the name
-      let name = line.replace(/^[\d\.\-\*\•\s]+(?=\s|[A-Z])/, "").trim();
-      if (!name) name = line.replace(/^[\d\.\-\*\•\s]+/, "").trim();
+      const isAnyAvailable = players.some((p) => p.isAvailable);
 
-      // Check if the line should be ignored
-      const shouldIgnore = ignorePatterns.some((pattern) => pattern.test(name));
+      lines.forEach((line, i) => {
+        // Remove common prefixes: "1.", "1-", "-", "*", "•" but keep numbers that are part of the name
+        let name = line.replace(/^[\d\.\-\*\•\s]+(?=\s|[A-Z])/, "").trim();
+        if (!name) name = line.replace(/^[\d\.\-\*\•\s]+/, "").trim();
 
-      if (name && name.length > 1 && !shouldIgnore) {
-        if (existingNames.has(name.toLowerCase())) return;
-        existingNames.add(name.toLowerCase());
+        // Check if the line should be ignored
+        const shouldIgnore = ignorePatterns.some((pattern) => pattern.test(name));
 
-        newPlayers.push({
-          id: generateId(),
-          name,
-          goals: 0,
-          assists: 0,
-          isAvailable: isAnyAvailable,
-          arrivedAt: isAnyAvailable ? Date.now() + i : undefined,
-          stars: 3,
-        });
+        if (name && name.length > 1 && !shouldIgnore) {
+          if (existingNames.has(name.toLowerCase())) return;
+          existingNames.add(name.toLowerCase());
+
+          newPlayers.push({
+            id: generateId(),
+            name,
+            goals: 0,
+            assists: 0,
+            isAvailable: isAnyAvailable,
+            arrivedAt: isAnyAvailable ? Date.now() + i : undefined,
+            stars: 3,
+          });
+        }
+      });
+
+      if (newPlayers.length > 0) {
+        setPlayers((prev) => [...prev, ...newPlayers]);
+        if (isAnyAvailable) {
+          setSessionPlayerIds((prev) => [
+            ...prev,
+            ...newPlayers.map((p) => p.id),
+          ]);
+        }
       }
-    });
-
-    if (newPlayers.length > 0) {
-      setPlayers((prev) => [...prev, ...newPlayers]);
-      if (isAnyAvailable) {
-        setSessionPlayerIds((prev) => [
-          ...prev,
-          ...newPlayers.map((p) => p.id),
-        ]);
-      }
-    }
+      setIsAiProcessing(false);
+    }, 1500);
   };
 
   const finishQuickAddPlayer = (name: string, teamIndex: number) => {
@@ -7674,6 +7680,54 @@ function GroupApp({
                           </div>
 
                           <div className="relative">
+                            <AnimatePresence>
+                              {isAiProcessing && (
+                                <motion.div
+                                  initial={{ opacity: 0 }}
+                                  animate={{ opacity: 1 }}
+                                  exit={{ opacity: 0 }}
+                                  className="absolute inset-0 bg-white/90 backdrop-blur-sm z-20 flex flex-col items-center justify-center gap-3 overflow-hidden"
+                                >
+                                  <div className="flex gap-1.5">
+                                    {[0, 1, 2].map((i) => (
+                                      <motion.div
+                                        key={i}
+                                        animate={{
+                                          scale: [1, 1.5, 1],
+                                          opacity: [0.3, 1, 0.3],
+                                        }}
+                                        transition={{
+                                          duration: 0.8,
+                                          repeat: Infinity,
+                                          delay: i * 0.2,
+                                        }}
+                                        className="w-2 h-2 bg-zinc-400 rounded-full"
+                                      />
+                                    ))}
+                                  </div>
+                                  <motion.div
+                                    animate={{ opacity: [0.4, 1, 0.4] }}
+                                    transition={{ duration: 1.5, repeat: Infinity }}
+                                    className="text-[10px] uppercase tracking-[0.2em] text-[#888888]"
+                                  >
+                                    Adicionando a lista
+                                  </motion.div>
+
+                                  {/* Background shimmer effect */}
+                                  <motion.div
+                                    animate={{
+                                      x: ["-100%", "100%"],
+                                    }}
+                                    transition={{
+                                      duration: 1.5,
+                                      repeat: Infinity,
+                                      ease: "linear",
+                                    }}
+                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-zinc-100/30 to-transparent skew-x-12"
+                                  />
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
                             <textarea
                               placeholder=" "
                               className={`w-full h-28 sm:h-32 px-5 sm:px-6 py-5 sm:py-6 rounded-none border border-black/5 outline-none transition-all text-sm font-bold resize-none bg-white text-[#1E3D2F] focus:ring-4 focus:ring-emerald-500/10 peer shadow-sm`}
@@ -8633,7 +8687,7 @@ function GroupApp({
                               }}
                               className={`flex items-center gap-3 p-3 rounded-xl border transition-all active:scale-[0.98] ${
                                 p.isAvailable
-                                  ? "bg-[#dce3ee] border-[#dce3ee] text-black shadow-lg shadow-[#dce3ee]/10"
+                                  ? "bg-[#ededed] border-[#ededed] text-black shadow-lg shadow-[#ededed]/10"
                                   : "bg-black/5 border-black/5 text-black/50 opacity-100 hover:bg-black/10"
                               }`}
                             >
