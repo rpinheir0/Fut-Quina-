@@ -3364,6 +3364,7 @@ function GroupApp({
     type: "info" | "warning" | "gray" | "success";
   } | null>(null);
   const [showPeladaReport, setShowPeladaReport] = useState(false);
+  const [reportCardIndex, setReportCardIndex] = useState(0);
   const [lastPeladaReport, setLastPeladaReport] = useState<PeladaReport | null>(() => {
     const saved = localStorage.getItem("futquina_last_report");
     return saved ? JSON.parse(saved) : null;
@@ -14263,7 +14264,7 @@ function GroupApp({
                     );
                     randomizeTeams(val);
                   }}
-                  className="flex-1 py-4 bg-brand-gradient text-black rounded-lg font-bold shadow-xl  glass-3d"
+                  className="flex-1 py-4 bg-brand-gradient text-black rounded-lg font-bold shadow-xl glass-3d"
                 >
                   Sortear
                 </button>
@@ -14277,38 +14278,25 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[300] flex items-center justify-center p-2 sm:p-6"
+            className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[6000] flex items-center justify-center p-4"
             onClick={() => setShowPeladaReport(false)}
           >
-            <motion.div
-              initial={{ scale: 0.95, y: 20, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              className="w-full max-w-lg bg-[#F8FAFC] rounded-[40px] shadow-2xl overflow-hidden flex flex-col max-h-[92vh] border border-white/20"
-              onClick={(e) => e.stopPropagation()}
+            <div 
+              className="relative w-full max-w-sm flex items-center justify-center pointer-events-none"
+              style={{ height: '560px' }}
             >
-              {/* Modern Header */}
-              <div className="bg-gradient-to-br from-[#dce3ee] to-[#F1F5F9] p-10 text-center relative overflow-hidden shrink-0">
-                <div className="absolute -top-12 -right-12 w-48 h-48 bg-white/40 rounded-full blur-3xl" />
-                <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-black/5 rounded-full blur-2xl" />
-                
-                <div className="relative z-10 flex flex-col items-center gap-4">
-                  <div className="inline-flex items-center justify-center w-16 h-16 text-zinc-800">
-                    <MdDonutLarge size={48} />
-                  </div>
-                  <div className="space-y-1">
-                    <h3 className="text-3xl font-black uppercase tracking-tighter text-zinc-900 leading-none">
-                      Relatório
-                    </h3>
-                    <p className="text-[10px] font-bold text-zinc-500 uppercase tracking-[0.2em]">
-                      {new Date((matchHistory.length > 0 ? Date.now() : lastPeladaReport?.timestamp || Date.now())).toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' })}
-                    </p>
-                  </div>
-                </div>
-              </div>
+              {/* Close Button - Outside the drag area */}
+              <button 
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowPeladaReport(false);
+                }}
+                className="absolute -top-16 right-0 z-[6100] w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition-colors text-white pointer-events-auto border border-white/10 shadow-2xl"
+              >
+                <X size={24} />
+              </button>
 
-              {/* Content */}
-              <div className="flex-1 overflow-y-auto p-5 sm:p-8 space-y-8 custom-scrollbar">
-                {/* Bento Highlights */}
+              <AnimatePresence mode="popLayout">
                 {(() => {
                   const report = matchHistory.length > 0 ? generatePeladaReportData() : lastPeladaReport;
                   if (!report) return null;
@@ -14320,182 +14308,208 @@ function GroupApp({
                   const topAssister = [...statsArray].sort((a, b) => b.assists - a.assists || b.matches - a.matches)[0];
                   const topPlayer = [...statsArray].sort((a, b) => (b.goals + b.assists) - (a.goals + a.assists) || b.matches - a.matches)[0];
 
-                  return (
-                    <div className="space-y-4">
-                      <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400 px-1">
-                        Destaques da Pelada
-                      </h4>
-                      <div className="grid grid-cols-2 gap-3">
-                        {/* MVP Card */}
-                        <div className="col-span-2 bg-gradient-to-br from-zinc-900 to-zinc-800 p-5 rounded-[28px] relative overflow-hidden group shadow-lg">
-                          <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:scale-110 transition-transform duration-500">
-                            <Star size={80} fill="currentColor" />
-                          </div>
-                          <div className="flex items-center gap-4 relative z-10">
-                            <div className="w-16 h-16 rounded-2xl bg-white/10 backdrop-blur-md border border-white/10 overflow-hidden shrink-0">
-                               {topPlayer.photo ? (
-                                  <img src={topPlayer.photo} alt="" className="w-full h-full object-cover" />
-                                ) : (
-                                  <div className="w-full h-full flex items-center justify-center text-white/40"><User size={24} /></div>
-                                )}
+                  const reportCards = [
+                    {
+                      id: 'mvp',
+                      title: 'Craque da Pelada',
+                      content: (
+                        <div className="flex flex-col items-center justify-center h-full space-y-6">
+                          <div className="relative">
+                            <div className="absolute -inset-4 bg-emerald-500/20 blur-2xl rounded-full animate-pulse" />
+                            <div className="w-28 h-28 rounded-[36px] bg-zinc-900 border-2 border-emerald-500/30 overflow-hidden relative z-10 shadow-2xl rotate-3">
+                              {topPlayer.photo ? (
+                                <img src={topPlayer.photo} alt="" className="w-full h-full object-cover" />
+                              ) : (
+                                <div className="w-full h-full flex items-center justify-center text-emerald-500/50">
+                                  <User size={40} />
+                                </div>
+                              )}
                             </div>
-                            <div className="flex-1">
-                              <span className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em]">Melhor em Campo</span>
-                              <h5 className="text-xl font-bold text-white uppercase truncate">{(topPlayer.playerName || "").toLowerCase()}</h5>
-                              <div className="flex gap-4 mt-1">
-                                <span className="text-[11px] text-zinc-400 font-bold"><b className="text-white">{topPlayer.goals}</b> Gols</span>
-                                <span className="text-[11px] text-zinc-400 font-bold"><b className="text-white">{topPlayer.assists}</b> Ass</span>
+                            <div className="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-2 rounded-xl shadow-lg z-20 -rotate-6">
+                              <Star size={20} fill="currentColor" />
+                            </div>
+                          </div>
+                          <div className="text-center space-y-2">
+                            <h4 className="text-2xl font-black text-zinc-900 uppercase italic tracking-tighter leading-none">
+                              {topPlayer.playerName}
+                            </h4>
+                            <div className="flex gap-4 justify-center">
+                              <div className="flex flex-col">
+                                <span className="text-[20px] font-black text-zinc-900 leading-none">{topPlayer.goals}</span>
+                                <span className="text-[10px] font-bold text-zinc-400 uppercase">Gols</span>
+                              </div>
+                              <div className="w-px h-8 bg-zinc-200 self-center" />
+                              <div className="flex flex-col">
+                                <span className="text-[20px] font-black text-zinc-900 leading-none">{topPlayer.assists}</span>
+                                <span className="text-[10px] font-bold text-zinc-400 uppercase">Ass</span>
                               </div>
                             </div>
                           </div>
                         </div>
-
-                        {/* Top Scorer */}
-                        <div className="bg-white p-5 rounded-none shadow-sm border border-zinc-200/50 flex flex-col justify-between min-h-[140px] group transition-all hover:border-brand-primary">
-                          <div className="flex justify-between items-start">
-                             <div className="w-10 h-10 flex items-center justify-center text-zinc-900">
-                               <GiKing size={24} />
-                             </div>
-                             <span className="text-[24px] font-black text-zinc-200 group-hover:text-emerald-100 transition-colors">01</span>
+                      )
+                    },
+                    {
+                      id: 'leaders',
+                      title: 'Líderes',
+                      content: (
+                        <div className="space-y-4 h-full flex flex-col justify-center">
+                          <div className="bg-zinc-50 p-6 rounded-[32px] border border-zinc-100 flex items-center gap-4">
+                            <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600">
+                              <GiKing size={28} />
+                            </div>
+                            <div className="flex-1">
+                              <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Artilheiro</span>
+                              <h5 className="font-bold text-zinc-800 capitalize leading-none">{topScorer.playerName.toLowerCase()}</h5>
+                              <p className="text-xs font-black text-zinc-400 mt-1">{topScorer.goals} GOLS</p>
+                            </div>
                           </div>
-                          <div>
-                            <span className="text-[9px] font-black text-emerald-600 uppercase tracking-widest block mb-1">Artilheiro</span>
-                            <h5 className="text-sm font-bold text-zinc-800 truncate leading-none capitalize">{(topScorer.playerName || "").toLowerCase()}</h5>
-                            <p className="text-xs font-black text-zinc-400 mt-1">{topScorer.goals} Gols</p>
-                          </div>
-                        </div>
-
-                        {/* Top Assister */}
-                        <div className="bg-white p-5 rounded-none shadow-sm border border-zinc-200/50 flex flex-col justify-between min-h-[140px] group transition-all hover:border-blue-400">
-                          <div className="flex justify-between items-start">
-                             <div className="w-10 h-10 flex items-center justify-center text-zinc-900">
-                               <GiSoccerKick size={24} />
-                             </div>
-                             <span className="text-[24px] font-black text-zinc-200 group-hover:text-blue-100 transition-colors">01</span>
-                          </div>
-                          <div>
-                            <span className="text-[9px] font-black text-blue-500 uppercase tracking-widest block mb-1">Garçom</span>
-                            <h5 className="text-sm font-bold text-zinc-800 truncate leading-none capitalize">{(topAssister.playerName || "").toLowerCase()}</h5>
-                            <p className="text-xs font-black text-zinc-400 mt-1">{topAssister.assists} Ass</p>
+                          <div className="bg-zinc-50 p-6 rounded-[32px] border border-zinc-100 flex items-center gap-4">
+                            <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600">
+                              <GiSoccerKick size={28} />
+                            </div>
+                            <div className="flex-1">
+                              <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Garçom</span>
+                              <h5 className="font-bold text-zinc-800 capitalize leading-none">{topAssister.playerName.toLowerCase()}</h5>
+                              <p className="text-xs font-black text-zinc-400 mt-1">{topAssister.assists} ASSIST</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  );
-                })()}
-
-                {/* Detailed Table */}
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between px-1">
-                    <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400 flex items-center gap-2">
-                       Estatísticas Gerais
-                    </h4>
-                    <span className="text-[10px] font-bold text-zinc-400">Ordenado por Pontos</span>
-                  </div>
-                  
-                  <div className="bg-white rounded-[32px] shadow-sm border border-zinc-200/50 overflow-hidden">
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-left">
-                        <thead>
-                          <tr className="bg-zinc-50/50 border-b border-zinc-100">
-                            <th className="p-5 text-[10px] font-black uppercase text-zinc-400">Jogador</th>
-                            <th className="p-5 text-center text-[10px] font-black uppercase text-zinc-400">G</th>
-                            <th className="p-5 text-center text-[10px] font-black uppercase text-zinc-400">A</th>
-                            <th className="p-5 text-center text-[10px] font-black uppercase text-zinc-400">Pts</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-zinc-50">
-                          {(() => {
-                            const report = matchHistory.length > 0 ? generatePeladaReportData() : lastPeladaReport;
-                            if (!report) return null;
-                            
-                            return (Object.values(report.playersStats) as any[])
-                              .sort((a, b) => {
-                                const totalA = (a.goals || 0) + (a.assists || 0);
-                                const totalB = (b.goals || 0) + (b.assists || 0);
-                                return totalB - totalA || (b.matches || 0) - (a.matches || 0);
-                              })
+                      )
+                    },
+                    {
+                      id: 'stats',
+                      title: 'Estatísticas',
+                      content: (
+                        <div className="h-full flex flex-col pt-2">
+                          <div className="overflow-y-auto pr-1 flex-1 space-y-2 custom-scrollbar">
+                            {statsArray
+                              .sort((a, b) => ((b.goals || 0) + (b.assists || 0)) - ((a.goals || 0) + (a.assists || 0)))
+                              .slice(0, 10)
                               .map((stat, idx) => (
-                                <tr key={`report-stats-${idx}`} className="hover:bg-zinc-50/30 transition-colors group">
-                                  <td className="p-4 pl-5">
-                                    <div className="flex items-center gap-3">
-                                      <div className="w-9 h-9 rounded-full bg-zinc-100 border border-zinc-100 overflow-hidden flex items-center justify-center shrink-0 shadow-inner group-hover:border-zinc-200 transition-colors">
-                                        {stat.photo ? (
-                                          <img src={stat.photo} alt="" className="w-full h-full object-cover" />
-                                        ) : (
-                                          <User size={14} className="text-zinc-400" />
-                                        )}
-                                      </div>
-                                      <div className="flex flex-col">
-                                        <span className="text-xs font-bold text-zinc-800 capitalize">
-                                          {(stat.playerName || "").toLowerCase()}
-                                        </span>
-                                        <span className="text-[9px] font-bold text-zinc-400 uppercase tracking-widest">
-                                          {stat.matches} PART / {stat.time}m
-                                        </span>
-                                      </div>
+                                <div key={idx} className="flex items-center gap-3 p-3 bg-zinc-50 rounded-2xl border border-zinc-100">
+                                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[10px] font-black text-zinc-400 border border-zinc-100 shrink-0">
+                                    {idx + 1}
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <h6 className="text-[11px] font-bold text-zinc-800 truncate uppercase">{stat.playerName}</h6>
+                                  </div>
+                                  <div className="flex gap-4 pr-2">
+                                    <div className="text-center">
+                                      <span className="block text-xs font-black text-emerald-600">{stat.goals}</span>
+                                      <span className="block text-[8px] font-bold text-zinc-300 uppercase">G</span>
                                     </div>
-                                  </td>
-                                  <td className="p-4 text-center text-xs font-black text-emerald-600">{stat.goals || 0}</td>
-                                  <td className="p-4 text-center text-xs font-black text-blue-500">{stat.assists || 0}</td>
-                                  <td className="p-4 text-center">
-                                    <div className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-zinc-900 text-white text-[10px] font-black shadow-lg">
-                                      {(stat.goals || 0) + (stat.assists || 0)}
+                                    <div className="text-center">
+                                      <span className="block text-xs font-black text-blue-500">{stat.assists}</span>
+                                      <span className="block text-[8px] font-bold text-zinc-300 uppercase">A</span>
                                     </div>
-                                  </td>
-                                </tr>
-                              ));
-                          })()}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Absences Section */}
-                {(() => {
-                  const report = matchHistory.length > 0 ? generatePeladaReportData() : lastPeladaReport;
-                  if (!report || report.absentPlayers.length === 0) return null;
-                  
-                  return (
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between px-1">
-                        <h4 className="text-[11px] font-black uppercase tracking-[0.2em] text-zinc-400 flex items-center gap-2">
-                           Não Compareceram
-                        </h4>
-                        <div className="flex -space-x-2">
-                           {report.absentPlayers.slice(0, 3).map((p, i) => (
-                             <div key={`absent-mini-${i}`} className="w-5 h-5 rounded-full border-2 border-[#F8FAFC] bg-zinc-200 overflow-hidden">
-                                {p.photo ? <img src={p.photo} alt="" className="w-full h-full object-cover grayscale" /> : null}
+                                  </div>
+                                </div>
+                              ))}
+                          </div>
+                        </div>
+                      )
+                    },
+                    {
+                      id: 'absences',
+                      title: 'Faltas',
+                      content: (
+                        <div className="h-full flex flex-col justify-center items-center text-center space-y-6">
+                           {report.absentPlayers.length > 0 ? (
+                             <>
+                               <div className="flex -space-x-3 mb-2 scale-125">
+                                 {report.absentPlayers.slice(0, 4).map((p, i) => (
+                                   <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-zinc-100 overflow-hidden shadow-sm">
+                                     {p.photo ? <img src={p.photo} alt="" className="w-full h-full object-cover grayscale" /> : <div className="w-full h-full flex items-center justify-center text-zinc-300"><User size={16} /></div>}
+                                   </div>
+                                 ))}
+                               </div>
+                               <div className="space-y-1">
+                                 <h5 className="text-lg font-black text-zinc-900 uppercase italic leading-none">{report.absentPlayers.length} Ausentes</h5>
+                                 <p className="text-xs font-medium text-zinc-400 max-w-[200px]">Estes jogadores confirmaram mas não compareceram hoje.</p>
+                               </div>
+                               <div className="flex flex-wrap justify-center gap-2 max-h-32 overflow-y-auto">
+                                 {report.absentPlayers.map((p, i) => (
+                                   <span key={i} className="px-3 py-1 bg-zinc-100 rounded-full text-[9px] font-black text-zinc-500 uppercase tracking-widest">{p.name}</span>
+                                 ))}
+                               </div>
+                             </>
+                           ) : (
+                             <div className="space-y-4">
+                               <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto">
+                                 <Check size={32} className="text-emerald-500" />
+                               </div>
+                               <div>
+                                 <h5 className="text-lg font-black text-zinc-900 uppercase leading-none">100% de Presença</h5>
+                                 <p className="text-xs font-medium text-zinc-400 mt-2">Todos os convocados marcaram presença!</p>
+                               </div>
                              </div>
+                           )}
+                        </div>
+                      )
+                    }
+                  ];
+
+                  const activeIndex = Math.abs(reportCardIndex) % reportCards.length;
+                  const currentCard = reportCards[activeIndex];
+
+                  return (
+                    <motion.div
+                      key={currentCard.id}
+                      drag="x"
+                      dragConstraints={{ left: 0, right: 0 }}
+                      onDragEnd={(e, info) => {
+                        if (info.offset.x > 100) {
+                          setReportCardIndex(prev => prev - 1);
+                        } else if (info.offset.x < -100) {
+                          setReportCardIndex(prev => prev + 1);
+                        }
+                      }}
+                      initial={{ scale: 0.9, opacity: 0, rotate: -3, x: -50 }}
+                      animate={{ scale: 1, opacity: 1, rotate: 0, x: 0 }}
+                      exit={{ scale: 1.1, opacity: 0, rotate: 3, x: 100 }}
+                      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+                      className="absolute w-full h-[460px] bg-white rounded-[48px] shadow-[0_30px_100px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col border border-zinc-100 pointer-events-auto cursor-grab active:cursor-grabbing"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {/* Background Accents */}
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-zinc-50 rounded-full -mr-16 -mt-16 blur-2xl" />
+                      <div className="absolute bottom-0 left-0 w-32 h-32 bg-zinc-50 rounded-full -ml-16 -mb-16 blur-2xl" />
+
+                      <div className="relative z-10 flex-1 flex flex-col h-full uppercase">
+                        {/* Header */}
+                        <div className="pt-10 pb-6 px-10 text-center flex flex-col items-center gap-1 border-b border-zinc-50">
+                          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-300">Resumo da Pelada</span>
+                          <h3 className="text-2xl font-black text-zinc-900 italic tracking-tighter">{currentCard.title}</h3>
+                        </div>
+
+                        {/* Card Content body */}
+                        <div className="flex-1 px-10 pb-8 pt-4">
+                          {currentCard.content}
+                        </div>
+
+                        {/* Pagination indicators */}
+                        <div className="pb-8 px-10 flex justify-center gap-2">
+                           {reportCards.map((_, i) => (
+                             <div 
+                               key={i} 
+                               className={`h-1.5 rounded-full transition-all duration-300 ${i === activeIndex ? 'w-8 bg-zinc-900' : 'w-1.5 bg-zinc-200'}`} 
+                             />
                            ))}
                         </div>
                       </div>
-                      <div className="bg-white/50 rounded-[28px] border border-dashed border-zinc-300 p-6 flex flex-wrap gap-2 items-center justify-center">
-                        {report.absentPlayers.map((p, idx) => (
-                          <div key={`absent-${idx}`} className="px-3 py-1.5 bg-white rounded-full border border-zinc-200 shadow-sm flex items-center gap-2 animate-in fade-in slide-in-from-bottom-1" style={{ animationDelay: `${idx * 50}ms` }}>
-                            <div className="w-4 h-4 rounded-full bg-zinc-100 overflow-hidden grayscale shrink-0">
-                              {p.photo ? <img src={p.photo} alt="" className="w-full h-full object-cover" /> : <User size={8} className="text-zinc-400" />}
-                            </div>
-                            <span className="text-[10px] font-bold text-zinc-500 capitalize">{p.name.toLowerCase()}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
+
+                      {/* Stack effect layers (behind) */}
+                      <div className="absolute -bottom-2 inset-x-8 h-4 bg-white/40 rounded-b-[48px] border border-white/20 -z-10 shadow-sm" />
+                      <div className="absolute -bottom-4 inset-x-12 h-4 bg-white/20 rounded-b-[48px] border border-white/20 -z-20 shadow-sm" />
+                    </motion.div>
                   );
                 })()}
+              </AnimatePresence>
+              
+              <div className="absolute -bottom-16 inset-x-0 text-center pointer-events-none">
+                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 animate-pulse">Deslize para ler o relatório</p>
               </div>
-
-              {/* Action Footer */}
-              <div className="p-8 bg-white border-t border-zinc-100 rounded-t-[40px] shrink-0 shadow-[0_-10px_30px_rgba(0,0,0,0.03)]">
-                <button
-                  onClick={() => setShowPeladaReport(false)}
-                  className="w-full h-16 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black rounded-full font-black uppercase tracking-[0.2em] text-xs shadow-xl active:scale-[0.98] transition-all hover:shadow-2xl hover:-translate-y-0.5"
-                >
-                  CONTINUAR
-                </button>
-              </div>
-            </motion.div>
+            </div>
           </motion.div>
         )}
 
@@ -15704,10 +15718,18 @@ function GroupApp({
                 <h3 className="text-xl font-bold uppercase tracking-tight text-zinc-900">
                   ENCERRAR PELADA
                 </h3>
-                <p className="text-sm font-medium text-zinc-500 max-w-[260px] mx-auto leading-normal">
-                  Isso irá salvar as informações de <span className="text-zinc-800 font-bold">presença</span>, <span className="text-zinc-800 font-bold">confrontos</span> e <span className="text-zinc-800 font-bold">próximos</span>.
-                  <br />
-                  Deseja continuar?
+                <p className="text-sm font-medium text-zinc-500 max-w-[300px] mx-auto leading-normal">
+                  {matchHistory.length > 0 ? (
+                    <>
+                      Isso irá salvar as informações de <span className="text-zinc-800 font-bold">presença</span>, <span className="text-zinc-800 font-bold">confrontos</span> e <span className="text-zinc-800 font-bold">próximos</span>.
+                      <br />
+                      Deseja continuar?
+                    </>
+                  ) : (
+                    <span className="text-red-500 font-bold block py-2">
+                      É necessário que pelo menos uma partida tenha ocorrido para encerrar e salvar as informações.
+                    </span>
+                  )}
                 </p>
               </div>
 
@@ -15720,7 +15742,10 @@ function GroupApp({
                 </button>
                 <button
                   onClick={confirmEndPelada}
-                  className="w-full h-12 rounded-xl font-bold uppercase tracking-widest text-[10px] bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white shadow-lg shadow-emerald-500/20 active:scale-95 transition-all"
+                  disabled={matchHistory.length === 0}
+                  className={`w-full h-12 rounded-xl font-bold uppercase tracking-widest text-[10px] bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white shadow-lg shadow-emerald-500/20 active:scale-95 transition-all ${
+                    matchHistory.length === 0 ? "opacity-50 grayscale cursor-not-allowed" : ""
+                  }`}
                 >
                   CONFIRMAR
                 </button>
