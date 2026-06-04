@@ -7198,7 +7198,7 @@ function GroupApp({
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
-          className={`flex-1 overflow-y-auto pb-20 ${isPrintMode ? "p-0 pb-0 bg-white text-black" : ["players", "teams", "ranking", "finance"].includes(currentScreen) ? "bg-white" : ""}`}
+          className={`flex-1 overflow-y-auto pb-20 ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-[#dcdcdc]"}`}
         >
           <AnimatePresence mode="wait">
             {currentScreen === "players" && !isPrintMode && (
@@ -7843,7 +7843,7 @@ function GroupApp({
                     </div>
                   ) : teamsTab === "configuracao" ? (
                     <div className="space-y-6">
-                      <div className="sticky top-[-1px] z-40 bg-white/90 backdrop-blur-md py-4 -mx-2 px-2 sm:-mx-4 sm:px-4 flex justify-between items-center border-b border-black/5">
+                      <div className="sticky top-[-1px] z-40 bg-[#dcdcdc] backdrop-blur-md py-4 -mx-2 px-2 sm:-mx-4 sm:px-4 flex justify-between items-center border-b border-black/5">
                         <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">
                           Configuração
                         </h3>
@@ -9688,7 +9688,7 @@ function GroupApp({
                   ) : teamsTab === "proximos" ? (
                     <div className="space-y-6 relative overflow-visible w-full">
                       {firstSetupDone && teams.length >= 2 && (
-                        <div className="sticky top-0 z-40 bg-zinc-100/90 backdrop-blur-md rounded-2xl p-1 mb-2 shadow-sm border border-black/5 flex justify-between items-center">
+                        <div className="sticky top-0 z-40 bg-[#dcdcdc] backdrop-blur-md rounded-2xl p-1 mb-2 shadow-sm border border-black/5 flex justify-between items-center">
                           <div className="flex gap-1 bg-white rounded-[11px]">
                             <div className="flex items-center gap-1.5 ml-1 bg-white rounded-[11px] px-1 py-1">
                               <button
