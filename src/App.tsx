@@ -3344,6 +3344,7 @@ function GroupApp({
   const [showInsufficientPlayersModal, setShowInsufficientPlayersModal] =
     useState(false);
   const [showArrivalStepGuide, setShowArrivalStepGuide] = useState(false);
+  const [arrivalCardIndex, setArrivalCardIndex] = useState(0);
   const [showAddPlayerSection, setShowAddPlayerSection] = useState(false);
   const [showPlayerSummary, setShowPlayerSummary] = useState(false);
   const [isFlashingConfig, setIsFlashingConfig] = useState(false);
@@ -6578,55 +6579,109 @@ function GroupApp({
               className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-2xl bg-zinc-50 border border-zinc-200"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
-
-                <div className="mx-auto flex items-center justify-center relative z-10 mb-6">
-                  <span className="text-zinc-600 flex items-center shrink-0">
-                    <CiImport size={60} />
-                  </span>
-                </div>
-
-                <h3 className="text-2xl font-black uppercase tracking-tighter text-black leading-none mb-1">
-                  Próximo Passo
-                </h3>
-                <p className="text-[10px] text-black/60 font-black uppercase tracking-[0.2em]">
-                  ORDEM DE CHEGADA
-                </p>
-              </div>
-
-              <div className="p-6 space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-[#dce3ee] text-zinc-800 flex items-center justify-center text-[10px] font-black shrink-0">
-                      1
-                    </div>
-                    <p className="text-[11px] font-bold text-zinc-600 leading-tight">
-                      Toque nos jogadores para confirmar a presença deles na
-                      pelada de hoje.
-                    </p>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-5 h-5 rounded-full bg-[#dce3ee] text-zinc-800 flex items-center justify-center text-[10px] font-black shrink-0">
-                      2
-                    </div>
-                    <p className="text-[11px] font-bold text-zinc-600 leading-tight">
-                      Você precisa de pelo menos o dobro de jogadores (ex: 2
-                      times de {match.config.playersPerTeam}) para prosseguir.
-                    </p>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => setShowArrivalStepGuide(false)}
-                  className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+              <div className="relative overflow-hidden w-full bg-zinc-50">
+                <motion.div
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.2}
+                  onDragEnd={(e, { offset, velocity }) => {
+                    const swipeThreshold = 50;
+                    if (offset.x < -swipeThreshold && arrivalCardIndex === 0) {
+                      setArrivalCardIndex(1);
+                    } else if (offset.x > swipeThreshold && arrivalCardIndex === 1) {
+                      setArrivalCardIndex(0);
+                    }
+                  }}
+                  animate={{ x: arrivalCardIndex === 0 ? "0%" : "-50%" }}
+                  transition={{ type: "spring", damping: 20, stiffness: 100 }}
+                  className="flex w-[200%]"
                 >
-                  <span className="text-white">
-                    <CheckCircle2 size={16} />
-                  </span>
-                  <span>OK, Entendi!</span>
-                </button>
+                  {/* Card 1 */}
+                  <div className="w-1/2 flex flex-col">
+                    <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
+                      <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
+
+                      <h3 className="text-2xl font-black uppercase tracking-tighter text-black leading-none mb-1">
+                        Próximo Passo
+                      </h3>
+                      <p className="text-[10px] text-black/60 font-black tracking-[0.2em]">
+                        Ordem de chegada (1/2)
+                      </p>
+                    </div>
+
+                    <div className="p-6 space-y-6">
+                      <div className="space-y-3 min-h-[80px] flex items-center">
+                        <div className="flex items-start gap-3">
+                          <div className="w-8 h-8 rounded-full bg-[#dce3ee] text-zinc-800 flex items-center justify-center text-xs font-black shrink-0">
+                            1
+                          </div>
+                          <p className="text-[12px] font-bold text-zinc-600 leading-tight pt-1">
+                            Toque nos jogadores para confirmar a presença deles na
+                            pelada de hoje.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-center gap-2 pb-4">
+                        <div className={`w-2 h-2 rounded-full transition-all ${arrivalCardIndex === 0 ? "bg-[#75c628] w-4" : "bg-zinc-300"}`} />
+                        <div className={`w-2 h-2 rounded-full transition-all ${arrivalCardIndex === 1 ? "bg-[#75c628] w-4" : "bg-zinc-300"}`} />
+                      </div>
+
+                      <button
+                        onClick={() => setArrivalCardIndex(1)}
+                        className="w-full py-4 bg-zinc-200 text-zinc-600 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-zinc-300 transition-all active:scale-95 flex items-center justify-center gap-2"
+                      >
+                        Próximo
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Card 2 */}
+                  <div className="w-1/2 flex flex-col">
+                    <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
+                      <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
+                      <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
+
+                      <h3 className="text-2xl font-black uppercase tracking-tighter text-black leading-none mb-1">
+                        Próximo Passo
+                      </h3>
+                      <p className="text-[10px] text-black/60 font-black tracking-[0.2em]">
+                        Ordem de chegada (2/2)
+                      </p>
+                    </div>
+
+                    <div className="p-6 space-y-6">
+                      <div className="space-y-3 min-h-[80px] flex items-center">
+                        <div className="flex items-start gap-4">
+                          <div className="w-8 h-8 rounded-full bg-[#dce3ee] text-zinc-800 flex items-center justify-center text-xs font-black shrink-0">
+                            2
+                          </div>
+                          <p className="text-[12px] font-bold text-zinc-600 leading-tight pt-1">
+                            Você precisa de pelo menos o dobro de jogadores (ex: 2
+                            times de {match.config.playersPerTeam}) para prosseguir.
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-center gap-2 pb-4">
+                        <div className={`w-2 h-2 rounded-full transition-all ${arrivalCardIndex === 0 ? "bg-[#75c628] w-4" : "bg-zinc-300"}`} />
+                        <div className={`w-2 h-2 rounded-full transition-all ${arrivalCardIndex === 1 ? "bg-[#75c628] w-4" : "bg-zinc-300"}`} />
+                      </div>
+
+                      <button
+                        onClick={() => {
+                          setShowArrivalStepGuide(false);
+                          setArrivalCardIndex(0);
+                        }}
+                        className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                      >
+                        <CheckCircle2 size={16} />
+                        OK, Entendi!
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
               </div>
             </motion.div>
           </motion.div>
@@ -7270,14 +7325,9 @@ function GroupApp({
                       >
                         {/* Background pattern */}
                         <div className="absolute top-0 right-0 h-full w-2/3 opacity-20 mix-blend-overlay flex justify-end items-center px-10">
-                          <motion.div 
-                            initial={{ rotate: 0 }}
-                            animate={{ rotate: 1800 }}
-                            transition={{ duration: 10, ease: "easeOut" }}
-                            className="absolute -right-10 -top-10 text-white"
-                          >
+                          <div className="absolute -right-10 -top-10 text-white">
                             <GiSoccerBall size={200} />
-                          </motion.div>
+                          </div>
                         </div>
 
                         <div className="relative z-10 flex items-center justify-between">
@@ -7313,7 +7363,7 @@ function GroupApp({
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.3 }}
-                              className="bg-gradient-to-br from-[#dce3ee] to-[#ced7e6] border border-black/5 rounded-xl h-[92px] flex items-center px-6 gap-5 relative overflow-hidden mb-2 shadow-sm"
+                              className="bg-gradient-to-br from-[#dce3ee] to-[#ced7e6] border border-black/5 rounded-lg h-[92px] flex items-center px-6 gap-5 relative overflow-hidden mb-2 shadow-sm"
                             >
                               <div className="w-12 h-12 rounded-full bg-white/50 border border-black/5 flex items-center justify-center text-zinc-400 shrink-0 shadow-sm">
                                 <GiSoccerField size={24} />
@@ -7404,21 +7454,31 @@ function GroupApp({
                                     setPlayersTab("configuracao");
                                   }
                                 }}
-                                className={`group relative bg-white rounded-xl flex flex-col border border-black/10 cursor-pointer shadow-md hover:shadow-lg transition-all duration-500 ease-in-out overflow-hidden`}
+                                className={`group relative bg-white rounded-lg flex flex-col border border-black/10 cursor-pointer shadow-md hover:shadow-lg transition-all duration-500 ease-in-out overflow-hidden`}
                               >
+                                <motion.div
+                                  animate={{ x: ["-100%", "200%"] }}
+                                  transition={{ duration: 4, repeat: Infinity, repeatDelay: 6, ease: "linear" }}
+                                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none z-30"
+                                />
                                 {/* Top Header Section */}
-                                <div className="w-full bg-gradient-to-br from-[#dce3ee] to-[#ced7e6] relative overflow-hidden px-5 py-5 flex items-center justify-between border-b border-black/5">
+                                <div className="w-full bg-gradient-to-br from-[#dce3ee] to-[#ced7e6] relative overflow-hidden px-5 py-3 flex items-center justify-between border-b border-black/5">
+                                  <motion.div
+                                    animate={{ x: ["-100%", "200%"] }}
+                                    transition={{ duration: 3, repeat: Infinity, repeatDelay: 5, ease: "linear" }}
+                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none z-0"
+                                  />
                                   
 
                                   <div className="flex items-center gap-4 relative z-10 w-full">
                                     {/* Glow ball icon */}
-                                    <div className="w-[52px] h-[52px] rounded-full flex items-center justify-center bg-white border border-black/5 shadow-sm shrink-0 text-zinc-600">
-                                      <GiSoccerBall size={32} />
+                                    <div className="w-9 h-9 rounded-full flex items-center justify-center bg-white border border-black/5 shadow-sm shrink-0 text-zinc-600">
+                                      <GiSoccerBall size={20} />
                                     </div>
                                     
                                     {/* Title & Subtitle */}
                                     <div className="flex flex-col text-left flex-1 min-w-0">
-                                      <span className="text-[20px] font-bold text-zinc-800 tracking-tighter leading-none truncate">
+                                      <span className="text-[18px] font-bold text-zinc-800 tracking-tighter leading-none truncate">
                                         {(match.name || "Futebol").charAt(0).toUpperCase() + (match.name || "Futebol").slice(1).toLowerCase()}
                                       </span>
                                     </div>
@@ -7451,9 +7511,9 @@ function GroupApp({
                                           prev === match.id ? null : match.id,
                                         );
                                       }}
-                                      className="w-8 h-8 rounded-full flex items-center justify-center transition-all text-zinc-500 hover:text-zinc-800 hover:bg-black/5 shrink-0"
+                                      className="w-7 h-7 rounded-full flex items-center justify-center transition-all text-zinc-500 hover:text-zinc-800 hover:bg-black/5 shrink-0"
                                     >
-                                      <Settings size={20} />
+                                      <Settings size={16} />
                                     </button>
                                   </div>
                                 </div>
@@ -8200,6 +8260,7 @@ function GroupApp({
                               } else {
                                 setTeamsTab("chegada");
                                 setShowArrivalStepGuide(true);
+                              setArrivalCardIndex(0);
                                 setToast({
                                   message: "Configurações aplicadas!",
                                   type: "success",
