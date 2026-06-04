@@ -7790,7 +7790,6 @@ function GroupApp({
                           {visiblePlayers.length === 0 ? (
                             <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
                               <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
-                                <GiLaurelsTrophy size={100} />
                                 <span className="font-bold uppercase tracking-widest text-[11px]">
                                   Nenhum jogador adicionado ainda.
                                 </span>
@@ -8557,7 +8556,6 @@ function GroupApp({
                         .length === 0 ? (
                         <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
                           <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
-                            <GiSocks size={100} />
                             <span className="font-bold uppercase tracking-widest text-[11px]">
                               Nenhum jogador na sessão
                             </span>
@@ -8746,7 +8744,6 @@ function GroupApp({
                           {players.filter((p) => p.isAvailable).length === 0 ? (
                             <>
                               <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
-                                <GiSoccerField size={100} />
                                 <span className="font-bold uppercase tracking-widest text-[11px]">
                                   Nenhum jogador para iniciar o confronto
                                 </span>
@@ -9920,7 +9917,6 @@ function GroupApp({
                         {teams.length < 2 ? (
                           <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
                             <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
-                              <GiSoccerBall size={100} />
                               <span className="font-bold uppercase tracking-widest text-[11px]">
                                 Crie mais times para ver a fila
                               </span>
@@ -11407,7 +11403,6 @@ function GroupApp({
                       {players.length === 0 && (
                         <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
                           <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
-                            <GiLaurelsTrophy size={100} />
                             <span className="font-bold uppercase tracking-widest text-[11px]">
                               Nenhum jogador adicionado ainda.
                             </span>
