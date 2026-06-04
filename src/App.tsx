@@ -56,6 +56,7 @@ import {
   Wallet,
   ArrowLeftRight,
   ArrowLeft,
+  ArrowRight,
   MoveRight,
   Home,
   MoreVertical,
@@ -952,7 +953,7 @@ const TieBreakerModal = ({
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="w-full max-w-md h-auto max-h-[90vh] flex flex-col bg-[#dce3ee] rounded-2xl overflow-hidden border border-black/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative"
+        className="w-full max-w-md h-auto max-h-[90vh] flex flex-col bg-[#b8b8b8] rounded-2xl overflow-hidden border border-black/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative"
       >
         {/* Background Decorative Elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl -mr-32 -mt-32" />
@@ -1400,7 +1401,7 @@ const TieBreakerModal = ({
                   </div>
 
                   {/* Marker */}
-                  <div className="w-24 h-24 bg-[#dce3ee] rounded-full border-4 border-black/5 shadow-inner flex items-center justify-center z-10">
+                  <div className="w-24 h-24 bg-[#b8b8b8] rounded-full border-4 border-black/5 shadow-inner flex items-center justify-center z-10">
                     <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center">
                       <SpinningBall size="sm" spin={state.lottery.isSpinning} />
                     </div>
@@ -1704,7 +1705,7 @@ const PlayerManagementModalComponent = ({
         className="w-full max-w-[300px] bg-white rounded-xl relative overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="bg-[#dce3ee] border-b border-zinc-200 p-6 flex flex-col items-center gap-4 relative">
+        <div className="bg-[#b8b8b8] border-b border-zinc-200 p-6 flex flex-col items-center gap-4 relative">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-2 bg-white/50 hover:bg-white rounded-full shadow-sm text-zinc-500 hover:text-black transition-all"
@@ -2125,7 +2126,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
   }, [onComplete]);
 
   return (
-    <div className="fixed inset-0 z-[3000] flex flex-col items-center justify-center bg-[#dce3ee]">
+    <div className="fixed inset-0 z-[3000] flex flex-col items-center justify-center bg-[#b8b8b8]">
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -3346,6 +3347,7 @@ function GroupApp({
   const [showArrivalStepGuide, setShowArrivalStepGuide] = useState(false);
   const [arrivalCardIndex, setArrivalCardIndex] = useState(0);
   const [isAiProcessing, setIsAiProcessing] = useState(false);
+  const [reportCardIndex, setReportCardIndex] = useState(0);
   const [showAddPlayerSection, setShowAddPlayerSection] = useState(false);
   const [showPlayerSummary, setShowPlayerSummary] = useState(false);
   const [isFlashingConfig, setIsFlashingConfig] = useState(false);
@@ -3364,7 +3366,6 @@ function GroupApp({
     type: "info" | "warning" | "gray" | "success";
   } | null>(null);
   const [showPeladaReport, setShowPeladaReport] = useState(false);
-  const [reportCardIndex, setReportCardIndex] = useState(0);
   const [lastPeladaReport, setLastPeladaReport] = useState<PeladaReport | null>(() => {
     const saved = localStorage.getItem("futquina_last_report");
     return saved ? JSON.parse(saved) : null;
@@ -6476,7 +6477,7 @@ function GroupApp({
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
+              <div className="bg-[#b8b8b8] p-10 text-center relative overflow-hidden">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
@@ -6605,7 +6606,7 @@ function GroupApp({
                 >
                   {/* Card 1 */}
                   <div className="w-1/2 flex flex-col">
-                    <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
+                    <div className="bg-[#b8b8b8] p-10 text-center relative overflow-hidden">
                       <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                       <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
 
@@ -6620,7 +6621,7 @@ function GroupApp({
                     <div className="p-6 space-y-6">
                       <div className="space-y-3 min-h-[80px] flex items-center">
                         <div className="flex items-start gap-3">
-                          <div className="w-8 h-8 rounded-full bg-[#dce3ee] text-zinc-800 flex items-center justify-center text-xs font-black shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-[#b8b8b8] text-zinc-800 flex items-center justify-center text-xs font-black shrink-0">
                             1
                           </div>
                           <p className="text-[12px] font-bold text-zinc-600 leading-tight pt-1">
@@ -6646,7 +6647,7 @@ function GroupApp({
 
                   {/* Card 2 */}
                   <div className="w-1/2 flex flex-col">
-                    <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
+                    <div className="bg-[#b8b8b8] p-10 text-center relative overflow-hidden">
                       <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                       <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
 
@@ -6661,7 +6662,7 @@ function GroupApp({
                     <div className="p-6 space-y-6">
                       <div className="space-y-3 min-h-[80px] flex items-center">
                         <div className="flex items-start gap-4">
-                          <div className="w-8 h-8 rounded-full bg-[#dce3ee] text-zinc-800 flex items-center justify-center text-xs font-black shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-[#b8b8b8] text-zinc-800 flex items-center justify-center text-xs font-black shrink-0">
                             2
                           </div>
                           <p className="text-[12px] font-bold text-zinc-600 leading-tight pt-1">
@@ -6712,7 +6713,7 @@ function GroupApp({
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-[#dce3ee] p-8 text-center relative overflow-hidden">
+              <div className="bg-[#b8b8b8] p-8 text-center relative overflow-hidden">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
@@ -7202,26 +7203,6 @@ function GroupApp({
                         </div>
                       </button>
 
-                      <button
-                        onClick={() => {
-                          if (matchHistory.length === 0 && !lastPeladaReport) {
-                            setToast({ message: "Nenhum histórico disponível para relatório.", type: "warning" });
-                            setTimeout(() => setToast(null), 3000);
-                            return;
-                          }
-                          setShowPeladaReport(true);
-                          setShowGlobalSettings(false);
-                        }}
-                        className="w-full flex items-center justify-between p-4 hover:bg-zinc-50 rounded-none transition-all group border-t border-zinc-50"
-                      >
-                        <div className="flex items-center gap-4 text-left">
-                          <div className="text-zinc-800 group-hover:scale-110 transition-transform">
-                            <MdDataSaverOff size={20} />
-                          </div>
-                          <span className="text-[14px] text-zinc-800">Relatório das partidas</span>
-                        </div>
-                        <ChevronRight size={14} className="text-zinc-300" />
-                      </button>
 
                       <button
                         onClick={() => setShowSetupGuide(true)}
@@ -7370,7 +7351,7 @@ function GroupApp({
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.3 }}
-                              className="bg-gradient-to-br from-[#dce3ee] to-[#ced7e6] border border-black/5 rounded-lg h-[92px] flex items-center px-6 gap-5 relative overflow-hidden mb-2 shadow-sm"
+                              className="bg-gradient-to-br from-[#b8b8b8] to-[#ced7e6] border border-black/5 rounded-lg h-[92px] flex items-center px-6 gap-5 relative overflow-hidden mb-2 shadow-sm"
                             >
                               <div className="w-12 h-12 rounded-full bg-white/50 border border-black/5 flex items-center justify-center text-zinc-400 shrink-0 shadow-sm">
                                 <GiSoccerField size={24} />
@@ -7469,7 +7450,7 @@ function GroupApp({
                                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none z-30"
                                 />
                                 {/* Top Header Section */}
-                                <div className="w-full bg-gradient-to-br from-[#dce3ee] to-[#ced7e6] relative overflow-hidden px-5 py-3 flex items-center justify-between border-b border-black/5">
+                                <div className="w-full bg-gradient-to-br from-[#b8b8b8] to-[#ced7e6] relative overflow-hidden px-5 py-3 flex items-center justify-between border-b border-black/5">
                                   <motion.div
                                     animate={{ x: ["-100%", "200%"] }}
                                     transition={{ duration: 3, repeat: Infinity, repeatDelay: 5, ease: "linear" }}
@@ -8982,7 +8963,7 @@ function GroupApp({
                           {match.hasEnded && (
                             <div className="absolute inset-0 z-40 bg-black/10 backdrop-blur-[1px] rounded-2xl pointer-events-auto cursor-default" />
                           )}
-                          <div className="sticky top-[-1px] z-40 bg-[#dce3ee] backdrop-blur-md border-b border-black/10 ring-1 ring-white/5 py-6 -mx-2 px-2 sm:-mx-4 sm:px-4 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-2xl w-full max-w-3xl mx-auto relative overflow-hidden">
+                          <div className="sticky top-[-1px] z-40 bg-[#b8b8b8] backdrop-blur-md border-b border-black/10 ring-1 ring-white/5 py-6 -mx-2 px-2 sm:-mx-4 sm:px-4 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-2xl w-full max-w-3xl mx-auto relative overflow-hidden">
                             <div className="flex-1 flex flex-col items-center text-center space-y-2 sm:space-y-4">
                               <button
                                 className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm"
@@ -10119,7 +10100,7 @@ function GroupApp({
                                   } ${
                                     isCurrent
                                       ? "shadow-2xl z-10 border-[#53B986] bg-white backdrop-blur-md ring-4 ring-[#53B986]/10"
-                                      : "shadow-sm opacity-60 border-black/5 bg-[#dce3ee]"
+                                      : "shadow-sm opacity-60 border-black/5 bg-[#b8b8b8]"
                                   } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? "animate-pulse bg-brand-primary/10 !border-[#53B986]" : ""}`}
                                   style={{
                                     borderColor:
@@ -11415,7 +11396,7 @@ function GroupApp({
                 ) : (
                   <div
                     key="ranking-print"
-                    className="p-8 bg-[#dce3ee] min-h-screen text-black space-y-8"
+                    className="p-8 bg-[#b8b8b8] min-h-screen text-black space-y-8"
                   >
                     <div className="flex items-center justify-between border-b border-black/10 pb-3">
                       <div className="flex items-center gap-2">
@@ -11537,7 +11518,7 @@ function GroupApp({
                         )}
 
                         {isPrintMode && (
-                          <div className="pt-10 pb-6 text-center border-b border-zinc-300 mb-6 bg-[#dce3ee] flex flex-col items-center relative">
+                          <div className="pt-10 pb-6 text-center border-b border-zinc-300 mb-6 bg-[#b8b8b8] flex flex-col items-center relative">
                             <div className="mb-4">
                               <FutQuinaLogo
                                 size="md"
@@ -11576,7 +11557,7 @@ function GroupApp({
                                 className={`p-4 transition-all col-span-2 lg:col-span-1 order-1 lg:order-none ${
                                   isPrintMode
                                     ? "bg-white border-zinc-300 border rounded-none"
-                                    : "bg-[#dce3ee] border-[#dce3ee]/20"
+                                    : "bg-[#b8b8b8] border-[#b8b8b8]/20"
                                 }`}
                               >
                                 <div className="flex justify-between items-center mb-2">
@@ -12145,7 +12126,7 @@ function GroupApp({
                     )}
 
                     {isPrintMode && (
-                      <div className="p-3 bg-[#dce3ee] text-zinc-800 flex justify-between items-center">
+                      <div className="p-3 bg-[#b8b8b8] text-zinc-800 flex justify-between items-center">
                         <FutQuinaLogo
                           size="sm"
                           titleColorClass="text-[#484848]"
@@ -12548,7 +12529,7 @@ function GroupApp({
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
+              <div className="bg-[#b8b8b8] p-10 text-center relative overflow-hidden">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
@@ -12932,7 +12913,7 @@ function GroupApp({
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
+              <div className="bg-[#b8b8b8] p-10 text-center relative overflow-hidden">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
@@ -13208,7 +13189,7 @@ function GroupApp({
               animate={{ scale: 1, y: 0 }}
               className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-2xl bg-zinc-50 border border-zinc-200"
             >
-              <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
+              <div className="bg-[#b8b8b8] p-10 text-center relative overflow-hidden">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
@@ -14264,7 +14245,7 @@ function GroupApp({
                     );
                     randomizeTeams(val);
                   }}
-                  className="flex-1 py-4 bg-brand-gradient text-black rounded-lg font-bold shadow-xl glass-3d"
+                  className="flex-1 py-4 bg-brand-gradient text-black rounded-lg font-bold shadow-xl  glass-3d"
                 >
                   Sortear
                 </button>
@@ -14278,238 +14259,250 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[6000] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[300] flex items-center justify-center p-2 sm:p-6"
             onClick={() => setShowPeladaReport(false)}
           >
-            <div 
-              className="relative w-full max-w-sm flex items-center justify-center pointer-events-none"
-              style={{ height: '560px' }}
+            <motion.div
+              initial={{ scale: 0.95, y: 20, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              className="w-full max-w-lg bg-[#F8FAFC] rounded-[40px] shadow-2xl overflow-hidden flex flex-col max-h-[80vh] border border-white/20 relative"
+              onClick={(e) => e.stopPropagation()}
             >
-              {/* Close Button - Outside the drag area */}
+              {/* Close Button UI */}
               <button 
-                onClick={(e) => {
-                  e.stopPropagation();
+                onClick={() => {
                   setShowPeladaReport(false);
+                  setReportCardIndex(0);
                 }}
-                className="absolute -top-16 right-0 z-[6100] w-12 h-12 flex items-center justify-center rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md transition-colors text-white pointer-events-auto border border-white/10 shadow-2xl"
+                className="absolute top-6 right-6 z-[100] w-10 h-10 flex items-center justify-center rounded-full bg-black/5 hover:bg-black/10 transition-colors text-zinc-500 hover:text-zinc-900"
               >
-                <X size={24} />
+                <X size={20} />
               </button>
 
-              <AnimatePresence mode="popLayout">
+              {/* Modern Header */}
+              <div className="bg-gradient-to-br from-[#b8b8b8] to-[#F1F5F9] p-8 text-center relative overflow-hidden shrink-0">
+                <div className="absolute -top-12 -right-12 w-48 h-48 bg-white/40 rounded-full blur-3xl" />
+                <div className="relative z-10 flex flex-col items-center gap-1">
+                  <div className="w-12 h-1 bg-zinc-800/10 rounded-full mb-4" />
+                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400">Dashboard de Performance</span>
+                  <h2 className="text-2xl font-black uppercase tracking-tight text-zinc-900">Relatório da Pelada</h2>
+                </div>
+              </div>
+
+              {/* Content area for stacked cards */}
+              <div className="flex-1 relative flex items-center justify-center p-6 overflow-hidden bg-zinc-50/50">
                 {(() => {
                   const report = matchHistory.length > 0 ? generatePeladaReportData() : lastPeladaReport;
-                  if (!report) return null;
+                  if (!report) return (
+                    <div className="text-zinc-400 text-xs font-bold uppercase tracking-widest">Aguardando dados...</div>
+                  );
                   
                   const statsArray = Object.values(report.playersStats) as any[];
-                  if (statsArray.length === 0) return null;
+                  if (statsArray.length === 0) return (
+                    <div className="text-zinc-400 text-xs font-bold uppercase tracking-widest">Sem estatísticas</div>
+                  );
 
                   const topScorer = [...statsArray].sort((a, b) => b.goals - a.goals || b.matches - a.matches)[0];
                   const topAssister = [...statsArray].sort((a, b) => b.assists - a.assists || b.matches - a.matches)[0];
                   const topPlayer = [...statsArray].sort((a, b) => (b.goals + b.assists) - (a.goals + a.assists) || b.matches - a.matches)[0];
 
-                  const reportCards = [
+                  const cards = [
                     {
                       id: 'mvp',
                       title: 'Craque da Pelada',
+                      icon: <Star className="text-amber-500" />,
                       content: (
-                        <div className="flex flex-col items-center justify-center h-full space-y-6">
-                          <div className="relative">
-                            <div className="absolute -inset-4 bg-emerald-500/20 blur-2xl rounded-full animate-pulse" />
-                            <div className="w-28 h-28 rounded-[36px] bg-zinc-900 border-2 border-emerald-500/30 overflow-hidden relative z-10 shadow-2xl rotate-3">
-                              {topPlayer.photo ? (
-                                <img src={topPlayer.photo} alt="" className="w-full h-full object-cover" />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center text-emerald-500/50">
-                                  <User size={40} />
-                                </div>
-                              )}
-                            </div>
-                            <div className="absolute -bottom-2 -right-2 bg-emerald-500 text-white p-2 rounded-xl shadow-lg z-20 -rotate-6">
-                              <Star size={20} fill="currentColor" />
-                            </div>
-                          </div>
-                          <div className="text-center space-y-2">
-                            <h4 className="text-2xl font-black text-zinc-900 uppercase italic tracking-tighter leading-none">
-                              {topPlayer.playerName}
-                            </h4>
-                            <div className="flex gap-4 justify-center">
-                              <div className="flex flex-col">
-                                <span className="text-[20px] font-black text-zinc-900 leading-none">{topPlayer.goals}</span>
-                                <span className="text-[10px] font-bold text-zinc-400 uppercase">Gols</span>
+                        <div className="h-full flex flex-col justify-center gap-6">
+                           <div className="relative mx-auto group">
+                              <div className="absolute inset-0 bg-brand-primary/20 blur-2xl rounded-full scale-125 animate-pulse" />
+                              <div className="w-32 h-32 rounded-[40px] bg-zinc-900 border-4 border-white shadow-2xl relative overflow-hidden flex items-center justify-center">
+                                 {topPlayer.photo ? (
+                                    <img src={topPlayer.photo} alt="" className="w-full h-full object-cover" />
+                                  ) : (
+                                    <div className="text-white/20"><User size={48} /></div>
+                                  )}
                               </div>
-                              <div className="w-px h-8 bg-zinc-200 self-center" />
-                              <div className="flex flex-col">
-                                <span className="text-[20px] font-black text-zinc-900 leading-none">{topPlayer.assists}</span>
-                                <span className="text-[10px] font-bold text-zinc-400 uppercase">Ass</span>
+                              <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-xl rotate-12">
+                                <Award size={24} />
                               </div>
-                            </div>
-                          </div>
+                           </div>
+                           <div className="text-center">
+                              <h4 className="text-2xl font-black text-zinc-900 uppercase tracking-tight">{(topPlayer.playerName || "").toLowerCase()}</h4>
+                              <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.3em] mt-1">Status: Imbatível</p>
+                           </div>
+                           <div className="grid grid-cols-2 gap-3 mt-4">
+                              <div className="bg-emerald-50 p-4 rounded-3xl text-center">
+                                <span className="text-[10px] font-bold text-emerald-700 uppercase">Gols</span>
+                                <div className="text-xl font-black text-emerald-900">{topPlayer.goals}</div>
+                              </div>
+                              <div className="bg-blue-50 p-4 rounded-3xl text-center">
+                                <span className="text-[10px] font-bold text-blue-700 uppercase">Assists</span>
+                                <div className="text-xl font-black text-blue-900">{topPlayer.assists}</div>
+                              </div>
+                           </div>
                         </div>
                       )
                     },
                     {
-                      id: 'leaders',
-                      title: 'Líderes',
+                      id: 'artilharia',
+                      title: 'Top Artilheiros',
+                      icon: <GiSoccerField color="#a1a1aa" />,
                       content: (
-                        <div className="space-y-4 h-full flex flex-col justify-center">
-                          <div className="bg-zinc-50 p-6 rounded-[32px] border border-zinc-100 flex items-center gap-4">
-                            <div className="w-12 h-12 bg-emerald-100 rounded-2xl flex items-center justify-center text-emerald-600">
-                              <GiKing size={28} />
+                        <div className="space-y-3 pt-2">
+                          {statsArray.sort((a,b) => b.goals-a.goals).slice(0, 5).map((p, i) => (
+                            <div key={`rep-art-${i}`} className="flex items-center justify-between p-4 bg-zinc-50 border border-zinc-100 rounded-2xl hover:bg-white transition-colors">
+                              <div className="flex items-center gap-3">
+                                <span className={`w-6 h-6 flex items-center justify-center rounded-lg text-[10px] font-black ${i === 0 ? 'bg-amber-100 text-amber-600' : 'bg-zinc-100 text-zinc-400'}`}>
+                                  {i + 1}
+                                </span>
+                                <span className="text-sm font-bold text-zinc-800 capitalize truncate max-w-[120px]">{(p.playerName || "").toLowerCase()}</span>
+                              </div>
+                              <span className="text-sm font-black text-zinc-900">{p.goals} <span className="text-[10px] text-zinc-400">GOLS</span></span>
                             </div>
-                            <div className="flex-1">
-                              <span className="text-[10px] font-black text-emerald-600 uppercase tracking-widest">Artilheiro</span>
-                              <h5 className="font-bold text-zinc-800 capitalize leading-none">{topScorer.playerName.toLowerCase()}</h5>
-                              <p className="text-xs font-black text-zinc-400 mt-1">{topScorer.goals} GOLS</p>
-                            </div>
-                          </div>
-                          <div className="bg-zinc-50 p-6 rounded-[32px] border border-zinc-100 flex items-center gap-4">
-                            <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center text-blue-600">
-                              <GiSoccerKick size={28} />
-                            </div>
-                            <div className="flex-1">
-                              <span className="text-[10px] font-black text-blue-600 uppercase tracking-widest">Garçom</span>
-                              <h5 className="font-bold text-zinc-800 capitalize leading-none">{topAssister.playerName.toLowerCase()}</h5>
-                              <p className="text-xs font-black text-zinc-400 mt-1">{topAssister.assists} ASSIST</p>
-                            </div>
-                          </div>
+                          ))}
                         </div>
                       )
                     },
                     {
-                      id: 'stats',
-                      title: 'Estatísticas',
+                      id: 'garcons',
+                      title: 'Top Garçons',
+                      icon: <GiSoccerKick color="#a1a1aa" />,
                       content: (
-                        <div className="h-full flex flex-col pt-2">
-                          <div className="overflow-y-auto pr-1 flex-1 space-y-2 custom-scrollbar">
-                            {statsArray
-                              .sort((a, b) => ((b.goals || 0) + (b.assists || 0)) - ((a.goals || 0) + (a.assists || 0)))
-                              .slice(0, 10)
-                              .map((stat, idx) => (
-                                <div key={idx} className="flex items-center gap-3 p-3 bg-zinc-50 rounded-2xl border border-zinc-100">
-                                  <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center text-[10px] font-black text-zinc-400 border border-zinc-100 shrink-0">
-                                    {idx + 1}
-                                  </div>
-                                  <div className="flex-1 min-w-0">
-                                    <h6 className="text-[11px] font-bold text-zinc-800 truncate uppercase">{stat.playerName}</h6>
-                                  </div>
-                                  <div className="flex gap-4 pr-2">
-                                    <div className="text-center">
-                                      <span className="block text-xs font-black text-emerald-600">{stat.goals}</span>
-                                      <span className="block text-[8px] font-bold text-zinc-300 uppercase">G</span>
-                                    </div>
-                                    <div className="text-center">
-                                      <span className="block text-xs font-black text-blue-500">{stat.assists}</span>
-                                      <span className="block text-[8px] font-bold text-zinc-300 uppercase">A</span>
-                                    </div>
-                                  </div>
-                                </div>
-                              ))}
-                          </div>
+                        <div className="space-y-3 pt-2">
+                          {statsArray.sort((a,b) => b.assists-a.assists).slice(0, 5).map((p, i) => (
+                            <div key={`rep-ass-${i}`} className="flex items-center justify-between p-4 bg-zinc-50 border border-zinc-100 rounded-2xl hover:bg-white transition-colors">
+                              <div className="flex items-center gap-3">
+                                <span className={`w-6 h-6 flex items-center justify-center rounded-lg text-[10px] font-black ${i === 0 ? 'bg-blue-100 text-blue-600' : 'bg-zinc-100 text-zinc-400'}`}>
+                                  {i + 1}
+                                </span>
+                                <span className="text-sm font-bold text-zinc-800 capitalize truncate max-w-[120px]">{(p.playerName || "").toLowerCase()}</span>
+                              </div>
+                              <span className="text-sm font-black text-zinc-900">{p.assists} <span className="text-[10px] text-zinc-400">ASS</span></span>
+                            </div>
+                          ))}
                         </div>
                       )
                     },
                     {
-                      id: 'absences',
-                      title: 'Faltas',
+                      id: 'ausentes',
+                      title: 'Não Compareceram',
+                      icon: <Trophy className="text-zinc-300 opacity-30" />,
                       content: (
-                        <div className="h-full flex flex-col justify-center items-center text-center space-y-6">
-                           {report.absentPlayers.length > 0 ? (
-                             <>
-                               <div className="flex -space-x-3 mb-2 scale-125">
-                                 {report.absentPlayers.slice(0, 4).map((p, i) => (
-                                   <div key={i} className="w-10 h-10 rounded-full border-2 border-white bg-zinc-100 overflow-hidden shadow-sm">
-                                     {p.photo ? <img src={p.photo} alt="" className="w-full h-full object-cover grayscale" /> : <div className="w-full h-full flex items-center justify-center text-zinc-300"><User size={16} /></div>}
+                        <div className="h-full flex flex-col pt-4">
+                           <div className="bg-zinc-100/50 rounded-[32px] p-6 border border-dashed border-zinc-200 flex flex-wrap justify-center gap-2 overflow-y-auto max-h-[280px] custom-scrollbar">
+                              {report.absentPlayers.length > 0 ? report.absentPlayers.map((p, i) => (
+                                <div key={`rep-abs-${i}`} className="px-4 py-2 bg-white rounded-full border border-zinc-200 shadow-sm flex items-center gap-2">
+                                   <div className="w-5 h-5 rounded-full bg-zinc-100 overflow-hidden grayscale">
+                                      {p.photo ? <img src={p.photo} alt="" className="w-full h-full object-cover" /> : <User size={10} className="text-zinc-400" />}
                                    </div>
-                                 ))}
-                               </div>
-                               <div className="space-y-1">
-                                 <h5 className="text-lg font-black text-zinc-900 uppercase italic leading-none">{report.absentPlayers.length} Ausentes</h5>
-                                 <p className="text-xs font-medium text-zinc-400 max-w-[200px]">Estes jogadores confirmaram mas não compareceram hoje.</p>
-                               </div>
-                               <div className="flex flex-wrap justify-center gap-2 max-h-32 overflow-y-auto">
-                                 {report.absentPlayers.map((p, i) => (
-                                   <span key={i} className="px-3 py-1 bg-zinc-100 rounded-full text-[9px] font-black text-zinc-500 uppercase tracking-widest">{p.name}</span>
-                                 ))}
-                               </div>
-                             </>
-                           ) : (
-                             <div className="space-y-4">
-                               <div className="w-20 h-20 bg-emerald-50 rounded-full flex items-center justify-center mx-auto">
-                                 <Check size={32} className="text-emerald-500" />
-                               </div>
-                               <div>
-                                 <h5 className="text-lg font-black text-zinc-900 uppercase leading-none">100% de Presença</h5>
-                                 <p className="text-xs font-medium text-zinc-400 mt-2">Todos os convocados marcaram presença!</p>
-                               </div>
-                             </div>
-                           )}
+                                   <span className="text-[10px] font-bold text-zinc-500 capitalize">{p.name.toLowerCase()}</span>
+                                </div>
+                              )) : (
+                                <div className="text-center py-10 opacity-30 italic text-xs">Todos presentes!</div>
+                              )}
+                           </div>
+                           <p className="mt-auto text-center text-[9px] font-bold text-zinc-400 uppercase tracking-widest px-4">
+                             Estes jogadores não participaram desta sessão.
+                           </p>
                         </div>
                       )
                     }
                   ];
 
-                  const activeIndex = Math.abs(reportCardIndex) % reportCards.length;
-                  const currentCard = reportCards[activeIndex];
-
                   return (
-                    <motion.div
-                      key={currentCard.id}
-                      drag="x"
-                      dragConstraints={{ left: 0, right: 0 }}
-                      onDragEnd={(e, info) => {
-                        if (info.offset.x > 100) {
-                          setReportCardIndex(prev => prev - 1);
-                        } else if (info.offset.x < -100) {
-                          setReportCardIndex(prev => prev + 1);
-                        }
-                      }}
-                      initial={{ scale: 0.9, opacity: 0, rotate: -3, x: -50 }}
-                      animate={{ scale: 1, opacity: 1, rotate: 0, x: 0 }}
-                      exit={{ scale: 1.1, opacity: 0, rotate: 3, x: 100 }}
-                      transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-                      className="absolute w-full h-[460px] bg-white rounded-[48px] shadow-[0_30px_100px_rgba(0,0,0,0.5)] overflow-hidden flex flex-col border border-zinc-100 pointer-events-auto cursor-grab active:cursor-grabbing"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      {/* Background Accents */}
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-zinc-50 rounded-full -mr-16 -mt-16 blur-2xl" />
-                      <div className="absolute bottom-0 left-0 w-32 h-32 bg-zinc-50 rounded-full -ml-16 -mb-16 blur-2xl" />
+                    <div className="relative w-full h-full flex flex-col items-center">
+                      <div className="relative w-full aspect-[4/5] max-w-[320px]">
+                        <AnimatePresence>
+                          {cards.map((card, i) => {
+                            if (i < reportCardIndex) return null;
+                            if (i > reportCardIndex + 2) return null;
 
-                      <div className="relative z-10 flex-1 flex flex-col h-full uppercase">
-                        {/* Header */}
-                        <div className="pt-10 pb-6 px-10 text-center flex flex-col items-center gap-1 border-b border-zinc-50">
-                          <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-300">Resumo da Pelada</span>
-                          <h3 className="text-2xl font-black text-zinc-900 italic tracking-tighter">{currentCard.title}</h3>
-                        </div>
+                            const isFront = i === reportCardIndex;
+                            const offset = i - reportCardIndex;
 
-                        {/* Card Content body */}
-                        <div className="flex-1 px-10 pb-8 pt-4">
-                          {currentCard.content}
-                        </div>
+                            return (
+                              <motion.div
+                                key={card.id}
+                                style={{ zIndex: cards.length - i }}
+                                drag={isFront ? "x" : false}
+                                dragConstraints={{ left: 0, right: 0 }}
+                                onDragEnd={(_, info) => {
+                                  if (info.offset.x < -100 && reportCardIndex < cards.length - 1) {
+                                    setReportCardIndex(prev => prev + 1);
+                                  } else if (info.offset.x > 100 && reportCardIndex > 0) {
+                                    setReportCardIndex(prev => prev - 1);
+                                  }
+                                }}
+                                animate={{
+                                  scale: 1 - offset * 0.05,
+                                  y: offset * -15,
+                                  opacity: 1 - offset * 0.3,
+                                  rotate: isFront ? 0 : (i % 2 === 0 ? 1.5 : -1.5) * offset,
+                                }}
+                                whileDrag={{ scale: 1.02 }}
+                                exit={{ x: -500, opacity: 0, rotate: -20 }}
+                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                className={`absolute inset-0 bg-white shadow-[0_30px_60px_rgba(0,0,0,0.12)] rounded-[48px] p-8 flex flex-col border border-zinc-100 ${isFront ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'}`}
+                              >
+                                <div className="flex items-center justify-between mb-8">
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-2xl bg-zinc-50 border border-zinc-100 flex items-center justify-center text-xl">
+                                      {card.icon}
+                                    </div>
+                                    <h3 className="text-lg font-black text-zinc-900 tracking-tight uppercase">{card.title}</h3>
+                                  </div>
+                                  <div className="px-3 py-1 bg-zinc-900 text-white rounded-full text-[9px] font-black tracking-widest">
+                                    {i + 1}/{cards.length}
+                                  </div>
+                                </div>
+                                
+                                <div className="flex-1 overflow-hidden">
+                                  {card.content}
+                                </div>
 
-                        {/* Pagination indicators */}
-                        <div className="pb-8 px-10 flex justify-center gap-2">
-                           {reportCards.map((_, i) => (
-                             <div 
-                               key={i} 
-                               className={`h-1.5 rounded-full transition-all duration-300 ${i === activeIndex ? 'w-8 bg-zinc-900' : 'w-1.5 bg-zinc-200'}`} 
-                             />
-                           ))}
-                        </div>
+                                {isFront && (
+                                   <div className="mt-8 flex justify-center gap-1.5">
+                                      {cards.map((_, dotIdx) => (
+                                          <div 
+                                              key={`dot-${dotIdx}`} 
+                                              className={`h-1 rounded-full transition-all duration-300 ${dotIdx === reportCardIndex ? 'w-6 bg-zinc-900' : 'w-1.5 bg-zinc-200'}`}
+                                          />
+                                      ))}
+                                   </div>
+                                )}
+                              </motion.div>
+                            );
+                          })}
+                        </AnimatePresence>
                       </div>
 
-                      {/* Stack effect layers (behind) */}
-                      <div className="absolute -bottom-2 inset-x-8 h-4 bg-white/40 rounded-b-[48px] border border-white/20 -z-10 shadow-sm" />
-                      <div className="absolute -bottom-4 inset-x-12 h-4 bg-white/20 rounded-b-[48px] border border-white/20 -z-20 shadow-sm" />
-                    </motion.div>
+                      {/* Control Instructions */}
+                      <div className="mt-10 flex items-center gap-6">
+                         <button 
+                            disabled={reportCardIndex === 0}
+                            onClick={() => setReportCardIndex(prev => prev - 1)}
+                            className={`w-10 h-10 rounded-full border border-zinc-200 flex items-center justify-center text-zinc-400 transition-all ${reportCardIndex === 0 ? 'opacity-20' : 'hover:bg-zinc-100 active:scale-90 hover:text-zinc-600'}`}
+                         >
+                            <ArrowLeft size={16} />
+                         </button>
+                         <div className="flex flex-col items-center gap-0.5">
+                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-400">Navegação</span>
+                            <div className="text-[8px] font-bold text-zinc-300 uppercase tracking-widest">Deslize para o lado</div>
+                         </div>
+                         <button 
+                            disabled={reportCardIndex === cards.length - 1}
+                            onClick={() => setReportCardIndex(prev => prev + 1)}
+                            className={`w-10 h-10 rounded-full border border-zinc-200 flex items-center justify-center text-zinc-400 transition-all ${reportCardIndex === cards.length - 1 ? 'opacity-20' : 'hover:bg-zinc-100 active:scale-90 hover:text-zinc-600'}`}
+                         >
+                            <ArrowRight size={16} />
+                         </button>
+                      </div>
+                    </div>
                   );
                 })()}
-              </AnimatePresence>
-              
-              <div className="absolute -bottom-16 inset-x-0 text-center pointer-events-none">
-                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/40 animate-pulse">Deslize para ler o relatório</p>
               </div>
-            </div>
+
+            </motion.div>
           </motion.div>
         )}
 
@@ -15610,7 +15603,7 @@ function GroupApp({
             className="w-full max-w-md p-8 rounded-[24px] shadow-[0_20px_60px_rgba(0,0,0,0.8)] bg-white border border-black/10 relative overflow-hidden"
           >
             <div className="relative z-10 text-center mb-8">
-              <div className="w-16 h-16 rounded-none text-[#dce3ee] flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-none text-[#b8b8b8] flex items-center justify-center mx-auto mb-4">
                 <GiSoccerBall size={32} />
               </div>
               <h3 className="text-2xl font-black uppercase tracking-tighter text-zinc-900">
