@@ -72,6 +72,7 @@ import {
   Shirt,
   LayoutPanelLeft,
   ArrowUp,
+  ArrowDown,
   LayoutList,
   History,
   Crown,
@@ -131,6 +132,7 @@ import {
   GiAbstract042,
   GiSoccerBall,
   GiCrown,
+  GiWhistle,
   GiSportMedal,
   GiQueenCrown,
   GiCrossShield,
@@ -7424,164 +7426,185 @@ function GroupApp({
                                 transition={{ delay: 0.2 + index * 0.05 }}
                                 key={`${match.id}-${index}`}
                                 onClick={() => {
-                                  if (!isExpanded) {
-                                    setExpandedMatchCards((prev) => [
-                                      ...prev,
-                                      match.id,
-                                    ]);
-                                    setTimeout(() => {
-                                      setExpandedMatchCards((prev) =>
-                                        prev.filter((id) => id !== match.id),
-                                      );
-                                    }, 15000);
-                                  } else {
-                                    setSelectedMatchId(match.id);
-                                    setCurrentScreen("players");
-                                    setShowAddPlayerSection(true);
-                                    setTeamsTab("configuracao");
-                                    setPlayersTab("configuracao");
-                                  }
+                                  setSelectedMatchId(match.id);
+                                  setCurrentScreen("players");
+                                  setShowAddPlayerSection(true);
+                                  setTeamsTab("configuracao");
+                                  setPlayersTab("configuracao");
                                 }}
-                                className={`group relative bg-white rounded-lg flex flex-col border border-black/10 cursor-pointer shadow-md hover:shadow-lg transition-all duration-500 ease-in-out overflow-hidden`}
+                                className={`group relative rounded-[40px] flex flex-col cursor-pointer shadow-[0_20px_40px_rgba(0,0,0,0.3)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.4)] transition-all duration-500 ease-in-out p-6 bg-gradient-to-br from-[#1c55d4] via-[#103fa1] to-[#011442] overflow-hidden`}
                               >
-                                <motion.div
-                                  animate={{ x: ["-100%", "200%"] }}
-                                  transition={{ duration: 4, repeat: Infinity, repeatDelay: 6, ease: "linear" }}
-                                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none z-30"
-                                />
-                                {/* Top Header Section */}
-                                <div className="w-full bg-gradient-to-br from-[#dce3ee] to-[#ced7e6] relative overflow-hidden px-5 py-3 flex items-center justify-between border-b border-black/5">
-                                  <motion.div
-                                    animate={{ x: ["-100%", "200%"] }}
-                                    transition={{ duration: 3, repeat: Infinity, repeatDelay: 5, ease: "linear" }}
-                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent pointer-events-none z-0"
-                                  />
-                                  
+                                {/* Inner glow and gradient mesh */}
+                                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/20 rounded-full blur-[80px] pointer-events-none" />
+                                <div className="absolute bottom-0 left-0 w-48 h-48 bg-indigo-500/20 rounded-full blur-[60px] pointer-events-none" />
 
-                                  <div className="flex items-center gap-4 relative z-10 w-full">
-                                    {/* Glow ball icon */}
-                                    <div className="w-9 h-9 rounded-full flex items-center justify-center bg-white border border-black/5 shadow-sm shrink-0 text-zinc-600">
-                                      <GiSoccerBall size={20} />
+                                {/* Top Area */}
+                                <div className="flex justify-between items-center mb-6 relative z-10 w-full">
+                                  <div className="flex items-center gap-3">
+                                    <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md p-1 flex items-center justify-center border border-white/10 shadow-inner overflow-hidden">
+                                       {matchSpecificPlayers.length > 0 && matchSpecificPlayers[0].photo ? (
+                                         <img src={matchSpecificPlayers[0].photo} className="w-full h-full object-cover rounded-full" />
+                                       ) : (
+                                         <GiSoccerBall size={20} color="#fff" />
+                                       )}
                                     </div>
-                                    
-                                    {/* Title & Subtitle */}
-                                    <div className="flex flex-col text-left flex-1 min-w-0">
-                                      <span className="text-[18px] font-bold text-zinc-800 tracking-tighter leading-none truncate">
-                                        {(match.name || "Futebol").charAt(0).toUpperCase() + (match.name || "Futebol").slice(1).toLowerCase()}
-                                      </span>
-                                    </div>
+                                    <span className="text-white font-medium text-sm capitalize tracking-wide">
+                                        {(match.name || "S").substring(0, 15)}
+                                    </span>
                                   </div>
                                   
-                                  {/* Settings Actions */}
-                                  <div className="relative z-20 flex items-center gap-1 ml-2">
+                                  <div className="relative">
                                     <AnimatePresence>
-                                      {matchConfigOpenId === match.id && (
-                                        <motion.button
-                                          initial={{ opacity: 0, scale: 0.5 }}
-                                          animate={{ opacity: 1, scale: 1 }}
-                                          exit={{ opacity: 0, scale: 0.5 }}
-                                          transition={{ duration: 0.2 }}
-                                          onClick={(e) => {
-                                            e.stopPropagation();
-                                            setMatchToDelete(match);
-                                            setMatchConfigOpenId(null);
-                                          }}
-                                          className="w-8 h-8 flex items-center justify-center text-zinc-500 hover:text-red-500 hover:bg-black/5 transition-colors rounded-full shrink-0"
-                                        >
-                                          <Trash2 size={16} />
-                                        </motion.button>
-                                      )}
+                                        {matchConfigOpenId === match.id && (
+                                          <motion.button
+                                            initial={{ opacity: 0, scale: 0.5, x: 10 }}
+                                            animate={{ opacity: 1, scale: 1, x: -40 }}
+                                            exit={{ opacity: 0, scale: 0.5, x: 10 }}
+                                            transition={{ duration: 0.2 }}
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              setMatchToDelete(match);
+                                              setMatchConfigOpenId(null);
+                                            }}
+                                            className="absolute top-0 right-0 w-10 h-10 flex items-center justify-center bg-red-500 text-white rounded-full shrink-0 shadow-lg"
+                                          >
+                                            <Trash2 size={16} />
+                                          </motion.button>
+                                        )}
                                     </AnimatePresence>
-                                    <button
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        setMatchConfigOpenId((prev) =>
-                                          prev === match.id ? null : match.id,
-                                        );
-                                      }}
-                                      className="w-7 h-7 rounded-full flex items-center justify-center transition-all text-zinc-500 hover:text-zinc-800 hover:bg-black/5 shrink-0"
+                                    <button 
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setMatchConfigOpenId((prev) =>
+                                              prev === match.id ? null : match.id,
+                                            );
+                                          }}
+                                        className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-all border border-white/5"
                                     >
-                                      <Settings size={16} />
+                                        <Info size={16} />
                                     </button>
                                   </div>
                                 </div>
 
-                                {/* Bottom Content */}
-                                <motion.div
-                                  initial={false}
-                                  animate={isExpanded ? { opacity: 1, height: "auto" } : { opacity: 0, height: 0 }}
-                                  transition={{ duration: 0.4, ease: "easeInOut" }}
-                                  className="w-full relative overflow-hidden bg-gradient-to-br from-[#f8fafc] via-[#f1f5f9] to-[#e2e8f0]"
-                                >
-                                  {/* Subtle background texture pattern */}
-                                  <div className="absolute inset-0 opacity-[0.4] pointer-events-none overflow-hidden flex items-center justify-end">
-                                    <div className="text-white pr-2 sm:pr-4">
-                                      <GiSoccerField size={160} />
-                                    </div>
-                                  </div>
+                                {/* Center Value */}
+                                <div className="text-center mb-6 relative z-10">
+                                    <p className="text-white/60 text-[10px] font-bold tracking-[0.2em] uppercase mb-2">
+                                        PRÓXIMA PELADA
+                                    </p>
+                                    <h3 className="text-white text-5xl font-semibold tracking-tight">
+                                        {day} {month.substring(0, 3)}
+                                    </h3>
+                                    <p className="text-white/80 text-lg mt-2 font-medium tracking-wide">
+                                        {weekday.split('-')[0]} as {match.time}
+                                    </p>
+                                </div>
 
-                                  <div className="relative z-10 flex flex-col h-full justify-between gap-4 p-4 sm:p-6">
-                                    <div className="flex justify-between items-start">
-                                      <div className="flex flex-col gap-2 mt-0 sm:mt-1">
-                                        <h5 className="font-semibold text-zinc-800 text-[15px] sm:text-[16px] font-roboto-flex tracking-tight">
-                                          {day} {month} - {weekday.split('-')[0]}
-                                        </h5>
-                                      </div>
-                                    </div>
-
-                                    <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 w-full">
-                                      <div className="space-y-3">
-                                        <div className="flex items-center gap-2 text-[14px] sm:text-[15px] text-zinc-800 font-medium tracking-tight">
-                                          <div className="text-emerald-600">
-                                            <BsClockHistory size={16} />
-                                          </div>{" "}
-                                          {match.time}
-                                        </div>
-                                        <div className="flex items-center gap-2 text-[14px] sm:text-[15px] text-zinc-800 font-medium tracking-tight">
-                                          <div className="text-emerald-600">
-                                            <BsPersonFillAdd size={16} />
-                                          </div>{" "}
-                                          {totalAvailablePlayers} jogadores
-                                        </div>
-                                        {/* Avatar Stack */}
-                                        {matchSpecificPlayers.length > 0 && (
-                                          <motion.div 
-                                            initial={{ opacity: 0, x: -10 }}
-                                            animate={isExpanded ? { opacity: 1, x: 0 } : { opacity: 0 }}
-                                            transition={{ delay: 0.3 }}
-                                            className="flex -space-x-1.5 sm:-space-x-2 pt-2"
-                                          >
-                                            {matchSpecificPlayers
-                                              .slice(0, 10)
-                                              .map((player, pIdx) => (
-                                                <div
-                                                  key={`scheduled-match-player-${player.id}-${match.id}-${pIdx}`}
-                                                  className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 border-white bg-white overflow-hidden shadow-sm flex items-center justify-center shrink-0"
-                                                >
-                                                  {player.avatar ? (
-                                                    <img
-                                                      src={player.avatar}
-                                                      alt={player.name}
-                                                      className="w-full h-full object-cover"
-                                                    />
-                                                  ) : (
-                                                    <div className="w-full h-full flex items-center justify-center text-[10px] font-bold text-zinc-600 uppercase bg-white">
-                                                      {player.name[0]}
-                                                    </div>
-                                                  )}
+                                {/* Avatars Row */}
+                                <div className="flex justify-center -space-x-3 mb-8 relative z-10 w-full px-4 overflow-hidden py-2" onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedMatchId(match.id);
+                                    setCurrentScreen("players");
+                                    setShowAddPlayerSection(true);
+                                }}>
+                                    {matchSpecificPlayers.slice(0, 5).map((player: any, pIdx: number) => (
+                                        <div key={`avatar-${pIdx}`} className="w-12 h-12 rounded-full border-2 border-[#1c55d4] bg-zinc-800 overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.3)] shrink-0">
+                                            {player.photo ? (
+                                                <img src={player.photo} className="w-full h-full object-cover"/>
+                                            ) : (
+                                                <div className="w-full h-full flex items-center justify-center text-white text-xs bg-gradient-to-br from-indigo-400 to-purple-500 font-bold uppercase">
+                                                    {player.name[0]}
                                                 </div>
-                                              ))}
-                                            {matchSpecificPlayers.length > 10 && (
-                                              <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full border-2 border-white bg-white flex items-center justify-center text-[10px] font-black text-zinc-400 shadow-sm shrink-0">
-                                                +{matchSpecificPlayers.length - 10}
-                                              </div>
                                             )}
-                                          </motion.div>
-                                        )}
-                                      </div>
+                                        </div>
+                                    ))}
+                                    {matchSpecificPlayers.length > 5 && (
+                                        <div className="w-12 h-12 rounded-full border-2 border-[#1c55d4] bg-white/20 backdrop-blur-md flex items-center justify-center text-white font-bold text-sm shadow-[0_4px_10px_rgba(0,0,0,0.3)] shrink-0">
+                                            +{matchSpecificPlayers.length - 5}
+                                        </div>
+                                    )}
+                                    {matchSpecificPlayers.length === 0 && (
+                                        <div className="text-white/30 text-sm font-medium h-12 flex items-center">
+                                            Nenhum jogador configurado
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Inner Details Card */}
+                                <div className="bg-black/30 rounded-[32px] p-5 backdrop-blur-lg border border-white/5 relative overflow-hidden mb-6 group-hover:bg-black/40 transition-colors cursor-pointer" onClick={(e) => {
+                                    e.stopPropagation();
+                                    setSelectedMatchId(match.id);
+                                    setCurrentScreen("players");
+                                    setShowAddPlayerSection(true);
+                                }}>
+                                    <div className="absolute right-[-10%] top-[-10%] pointer-events-none rotate-12 scale-150 transition-transform group-hover:scale-125 duration-700">
+                                        <GiSoccerField size={100} color="rgba(255,255,255,0.05)" />
                                     </div>
-                                  </div>
-                                </motion.div>
+                                    
+                                    <div className="flex justify-between items-center mb-4 relative z-10">
+                                        <span className="text-white/50 text-[12px] font-medium tracking-wide">STATUS DA PELADA</span>
+                                        <span className="text-white/80 text-[12px] hover:text-white underline decoration-white/30 decoration-dashed underline-offset-4">Editar</span>
+                                    </div>
+                                    
+                                    <div className="flex items-center gap-4 relative z-10">
+                                        <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md border border-white/5">
+                                            {totalAvailablePlayers > 0 ? (
+                                                <GiSocks color="#34d399" size={24} />
+                                            ) : (
+                                                <GiWhistle color="rgba(255,255,255,0.4)" size={24} />
+                                            )}
+                                        </div>
+                                        <div>
+                                            <h4 className="text-white font-medium text-lg leading-tight truncate max-w-[120px]">Confirmados</h4>
+                                            <p className="text-white/50 text-xs mt-0.5">{totalAvailablePlayers} na lista</p>
+                                        </div>
+                                        <div className="ml-auto text-white text-[22px] font-bold tracking-tighter flex items-center">
+                                            <span className={`inline-flex mr-2 opacity-30 ${totalAvailablePlayers > 0 ? 'text-emerald-400 opacity-100' : ''}`}>
+                                                <GiSoccerBall size={16} />
+                                            </span>
+                                            {totalAvailablePlayers}
+                                        </div>
+                                    </div>
+                                </div>
+
+                                {/* Bottom Action Buttons */}
+                                <div className="flex items-center gap-3 relative z-10 w-full" onClick={(e) => e.stopPropagation()}>
+                                    <button 
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setMatchConfigOpenId((prev) =>
+                                            prev === match.id ? null : match.id,
+                                          );
+                                        }}
+                                        className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer shadow-[0_8px_20px_rgba(0,0,0,0.2)]"
+                                    >
+                                        <Settings size={22} className="opacity-80" />
+                                    </button>
+                                    <button className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer shadow-[0_8px_20px_rgba(0,0,0,0.2)]">
+                                        <ArrowLeftRight size={22} className="opacity-80" />
+                                    </button>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setSelectedMatchId(match.id);
+                                            setCurrentScreen("players");
+                                            setShowAddPlayerSection(true);
+                                        }}
+                                        className="flex-1 bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm rounded-full h-14 flex items-center justify-center text-white font-medium gap-2 transition-colors shadow-[0_8px_20px_rgba(0,0,0,0.2)]"
+                                    >
+                                        Editar <ArrowDown size={18} className="opacity-80" />
+                                    </button>
+                                    <button
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            setSelectedMatchId(match.id);
+                                            setCurrentScreen("players");
+                                            setShowAddPlayerSection(true);
+                                        }}
+                                        className="flex-1 bg-[#1a65ff] hover:bg-[#357aff] shadow-[0_8px_25px_rgba(26,101,255,0.4)] rounded-full h-14 flex items-center justify-center text-white font-semibold gap-2 transition-all">
+                                        Abrir <ArrowUp size={18} />
+                                    </button>
+                                </div>
+
                               </motion.div>
                             );
                           })}
