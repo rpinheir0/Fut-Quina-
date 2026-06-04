@@ -93,7 +93,7 @@
   @keyframes flash-highlight {
     0%,
     100% {
-      background-color: #b8b8b8;
+      background-color: #dce3ee;
     }
     50% {
       background-color: white;

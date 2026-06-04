@@ -953,7 +953,7 @@ const TieBreakerModal = ({
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="w-full max-w-md h-auto max-h-[90vh] flex flex-col bg-[#b8b8b8] rounded-2xl overflow-hidden border border-black/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative"
+        className="w-full max-w-md h-auto max-h-[90vh] flex flex-col bg-[#dce3ee] rounded-2xl overflow-hidden border border-black/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative"
       >
         {/* Background Decorative Elements */}
         <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl -mr-32 -mt-32" />
@@ -1401,7 +1401,7 @@ const TieBreakerModal = ({
                   </div>
 
                   {/* Marker */}
-                  <div className="w-24 h-24 bg-[#b8b8b8] rounded-full border-4 border-black/5 shadow-inner flex items-center justify-center z-10">
+                  <div className="w-24 h-24 bg-[#dce3ee] rounded-full border-4 border-black/5 shadow-inner flex items-center justify-center z-10">
                     <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center">
                       <SpinningBall size="sm" spin={state.lottery.isSpinning} />
                     </div>
@@ -1705,7 +1705,7 @@ const PlayerManagementModalComponent = ({
         className="w-full max-w-[300px] bg-white rounded-xl relative overflow-hidden flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="bg-[#b8b8b8] border-b border-zinc-200 p-6 flex flex-col items-center gap-4 relative">
+        <div className="bg-[#dce3ee] border-b border-zinc-200 p-6 flex flex-col items-center gap-4 relative">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 p-2 bg-white/50 hover:bg-white rounded-full shadow-sm text-zinc-500 hover:text-black transition-all"
@@ -2126,7 +2126,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
   }, [onComplete]);
 
   return (
-    <div className="fixed inset-0 z-[3000] flex flex-col items-center justify-center bg-[#b8b8b8]">
+    <div className="fixed inset-0 z-[3000] flex flex-col items-center justify-center bg-[#dce3ee]">
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -6477,7 +6477,7 @@ function GroupApp({
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-[#b8b8b8] p-10 text-center relative overflow-hidden">
+              <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
@@ -6606,7 +6606,7 @@ function GroupApp({
                 >
                   {/* Card 1 */}
                   <div className="w-1/2 flex flex-col">
-                    <div className="bg-[#b8b8b8] p-10 text-center relative overflow-hidden">
+                    <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
                       <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                       <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
 
@@ -6621,7 +6621,7 @@ function GroupApp({
                     <div className="p-6 space-y-6">
                       <div className="space-y-3 min-h-[80px] flex items-center">
                         <div className="flex items-start gap-3">
-                          <div className="w-8 h-8 rounded-full bg-[#b8b8b8] text-zinc-800 flex items-center justify-center text-xs font-black shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-[#dce3ee] text-zinc-800 flex items-center justify-center text-xs font-black shrink-0">
                             1
                           </div>
                           <p className="text-[12px] font-bold text-zinc-600 leading-tight pt-1">
@@ -6647,7 +6647,7 @@ function GroupApp({
 
                   {/* Card 2 */}
                   <div className="w-1/2 flex flex-col">
-                    <div className="bg-[#b8b8b8] p-10 text-center relative overflow-hidden">
+                    <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
                       <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                       <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
 
@@ -6662,7 +6662,7 @@ function GroupApp({
                     <div className="p-6 space-y-6">
                       <div className="space-y-3 min-h-[80px] flex items-center">
                         <div className="flex items-start gap-4">
-                          <div className="w-8 h-8 rounded-full bg-[#b8b8b8] text-zinc-800 flex items-center justify-center text-xs font-black shrink-0">
+                          <div className="w-8 h-8 rounded-full bg-[#dce3ee] text-zinc-800 flex items-center justify-center text-xs font-black shrink-0">
                             2
                           </div>
                           <p className="text-[12px] font-bold text-zinc-600 leading-tight pt-1">
@@ -6713,7 +6713,7 @@ function GroupApp({
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-[#b8b8b8] p-8 text-center relative overflow-hidden">
+              <div className="bg-[#dce3ee] p-8 text-center relative overflow-hidden">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
@@ -7351,7 +7351,7 @@ function GroupApp({
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.3 }}
-                              className="bg-gradient-to-br from-[#b8b8b8] to-[#ced7e6] border border-black/5 rounded-lg h-[92px] flex items-center px-6 gap-5 relative overflow-hidden mb-2 shadow-sm"
+                              className="bg-gradient-to-br from-[#dce3ee] to-[#ced7e6] border border-black/5 rounded-lg h-[92px] flex items-center px-6 gap-5 relative overflow-hidden mb-2 shadow-sm"
                             >
                               <div className="w-12 h-12 rounded-full bg-white/50 border border-black/5 flex items-center justify-center text-zinc-400 shrink-0 shadow-sm">
                                 <GiSoccerField size={24} />
@@ -7450,7 +7450,7 @@ function GroupApp({
                                   className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none z-30"
                                 />
                                 {/* Top Header Section */}
-                                <div className="w-full bg-gradient-to-br from-[#b8b8b8] to-[#ced7e6] relative overflow-hidden px-5 py-3 flex items-center justify-between border-b border-black/5">
+                                <div className="w-full bg-gradient-to-br from-[#dce3ee] to-[#ced7e6] relative overflow-hidden px-5 py-3 flex items-center justify-between border-b border-black/5">
                                   <motion.div
                                     animate={{ x: ["-100%", "200%"] }}
                                     transition={{ duration: 3, repeat: Infinity, repeatDelay: 5, ease: "linear" }}
@@ -8963,7 +8963,7 @@ function GroupApp({
                           {match.hasEnded && (
                             <div className="absolute inset-0 z-40 bg-black/10 backdrop-blur-[1px] rounded-2xl pointer-events-auto cursor-default" />
                           )}
-                          <div className="sticky top-[-1px] z-40 bg-[#b8b8b8] backdrop-blur-md border-b border-black/10 ring-1 ring-white/5 py-6 -mx-2 px-2 sm:-mx-4 sm:px-4 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-2xl w-full max-w-3xl mx-auto relative overflow-hidden">
+                          <div className="sticky top-[-1px] z-40 bg-[#dce3ee] backdrop-blur-md border-b border-black/10 ring-1 ring-white/5 py-6 -mx-2 px-2 sm:-mx-4 sm:px-4 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-2xl w-full max-w-3xl mx-auto relative overflow-hidden">
                             <div className="flex-1 flex flex-col items-center text-center space-y-2 sm:space-y-4">
                               <button
                                 className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm"
@@ -10100,7 +10100,7 @@ function GroupApp({
                                   } ${
                                     isCurrent
                                       ? "shadow-2xl z-10 border-[#53B986] bg-white backdrop-blur-md ring-4 ring-[#53B986]/10"
-                                      : "shadow-sm opacity-60 border-black/5 bg-[#b8b8b8]"
+                                      : "shadow-sm opacity-60 border-black/5 bg-[#dce3ee]"
                                   } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? "animate-pulse bg-brand-primary/10 !border-[#53B986]" : ""}`}
                                   style={{
                                     borderColor:
@@ -11396,7 +11396,7 @@ function GroupApp({
                 ) : (
                   <div
                     key="ranking-print"
-                    className="p-8 bg-[#b8b8b8] min-h-screen text-black space-y-8"
+                    className="p-8 bg-[#dce3ee] min-h-screen text-black space-y-8"
                   >
                     <div className="flex items-center justify-between border-b border-black/10 pb-3">
                       <div className="flex items-center gap-2">
@@ -11518,7 +11518,7 @@ function GroupApp({
                         )}
 
                         {isPrintMode && (
-                          <div className="pt-10 pb-6 text-center border-b border-zinc-300 mb-6 bg-[#b8b8b8] flex flex-col items-center relative">
+                          <div className="pt-10 pb-6 text-center border-b border-zinc-300 mb-6 bg-[#dce3ee] flex flex-col items-center relative">
                             <div className="mb-4">
                               <FutQuinaLogo
                                 size="md"
@@ -11557,7 +11557,7 @@ function GroupApp({
                                 className={`p-4 transition-all col-span-2 lg:col-span-1 order-1 lg:order-none ${
                                   isPrintMode
                                     ? "bg-white border-zinc-300 border rounded-none"
-                                    : "bg-[#b8b8b8] border-[#b8b8b8]/20"
+                                    : "bg-[#dce3ee] border-[#dce3ee]/20"
                                 }`}
                               >
                                 <div className="flex justify-between items-center mb-2">
@@ -12126,7 +12126,7 @@ function GroupApp({
                     )}
 
                     {isPrintMode && (
-                      <div className="p-3 bg-[#b8b8b8] text-zinc-800 flex justify-between items-center">
+                      <div className="p-3 bg-[#dce3ee] text-zinc-800 flex justify-between items-center">
                         <FutQuinaLogo
                           size="sm"
                           titleColorClass="text-[#484848]"
@@ -12529,7 +12529,7 @@ function GroupApp({
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-[#b8b8b8] p-10 text-center relative overflow-hidden">
+              <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
@@ -12913,7 +12913,7 @@ function GroupApp({
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-[#b8b8b8] p-10 text-center relative overflow-hidden">
+              <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
@@ -13189,7 +13189,7 @@ function GroupApp({
               animate={{ scale: 1, y: 0 }}
               className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-2xl bg-zinc-50 border border-zinc-200"
             >
-              <div className="bg-[#b8b8b8] p-10 text-center relative overflow-hidden">
+              <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
                 <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
@@ -14280,7 +14280,7 @@ function GroupApp({
               </button>
 
               {/* Modern Header */}
-              <div className="bg-gradient-to-br from-[#b8b8b8] to-[#F1F5F9] p-8 text-center relative overflow-hidden shrink-0">
+              <div className="bg-gradient-to-br from-[#dce3ee] to-[#F1F5F9] p-8 text-center relative overflow-hidden shrink-0">
                 <div className="absolute -top-12 -right-12 w-48 h-48 bg-white/40 rounded-full blur-3xl" />
                 <div className="relative z-10 flex flex-col items-center gap-1">
                   <div className="w-12 h-1 bg-zinc-800/10 rounded-full mb-4" />
@@ -15603,7 +15603,7 @@ function GroupApp({
             className="w-full max-w-md p-8 rounded-[24px] shadow-[0_20px_60px_rgba(0,0,0,0.8)] bg-white border border-black/10 relative overflow-hidden"
           >
             <div className="relative z-10 text-center mb-8">
-              <div className="w-16 h-16 rounded-none text-[#b8b8b8] flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-none text-[#dce3ee] flex items-center justify-center mx-auto mb-4">
                 <GiSoccerBall size={32} />
               </div>
               <h3 className="text-2xl font-black uppercase tracking-tighter text-zinc-900">
