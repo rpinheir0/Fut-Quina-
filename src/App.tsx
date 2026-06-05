@@ -7444,14 +7444,6 @@ function GroupApp({
                                     }}
                                     transition={{ type: "spring", stiffness: 260, damping: 20 }}
                                     className={`group absolute inset-0 rounded-[32px] flex flex-col cursor-pointer transition-all duration-300 p-4 bg-gradient-to-br from-[#1c55d4] via-[#103fa1] to-[#011442] overflow-hidden ${isTop ? 'shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)]' : 'shadow-lg brightness-75'}`}
-                                    onClick={() => {
-                                      if (!isTop) return;
-                                      setSelectedMatchId(match.id);
-                                      setCurrentScreen("players");
-                                      setShowAddPlayerSection(true);
-                                      setTeamsTab("configuracao");
-                                      setPlayersTab("configuracao");
-                                    }}
                                   >
                                     <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/20 rounded-full blur-[80px] pointer-events-none" />
                                     <div className="absolute bottom-0 left-0 w-48 h-48 bg-indigo-500/20 rounded-full blur-[60px] pointer-events-none" />
@@ -7537,29 +7529,29 @@ function GroupApp({
 
 
                       {/* Alert Banner / Tip */}
-                      <motion.div 
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={scheduledMatches.length === 0 ? {
-                          opacity: 1,
-                          scale: [1, 1.02, 1],
-                        } : { opacity: 1, scale: 1 }}
-                        transition={scheduledMatches.length === 0 ? {
-                          opacity: { duration: 0.4 },
-                          scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
-                        } : { delay: 0.4 }}
-                        className={`bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-100 rounded-none p-4 flex items-center gap-4 shadow-sm border border-black/5 mt-auto`}
-                      >
-                        <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
-                          <AlertCircle size={24} />
-                        </div>
-                        <div className="flex-1 flex flex-col">
-                          <p className="text-[12px] font-medium text-zinc-600 leading-tight">
-                            {scheduledMatches.length === 0
-                              ? "Você precisa criar uma pelada no botão acima para continuar."
-                              : "Para iniciar, selecione a pelada que você criou no painel acima."}
-                          </p>
-                        </div>
-                      </motion.div>
+                      {scheduledMatches.length === 0 && (
+                        <motion.div 
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={scheduledMatches.length === 0 ? {
+                            opacity: 1,
+                            scale: [1, 1.02, 1],
+                          } : { opacity: 1, scale: 1 }}
+                          transition={scheduledMatches.length === 0 ? {
+                            opacity: { duration: 0.4 },
+                            scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                          } : { delay: 0.4 }}
+                          className={`bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-100 rounded-none p-4 flex items-center gap-4 shadow-sm border border-black/5 mt-auto`}
+                        >
+                          <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
+                            <AlertCircle size={24} />
+                          </div>
+                          <div className="flex-1 flex flex-col">
+                            <p className="text-[12px] font-medium text-zinc-600 leading-tight">
+                              Você precisa criar uma pelada no botão acima para continuar.
+                            </p>
+                          </div>
+                        </motion.div>
+                      )}
                     </motion.div>
                   ) : (
                     <motion.div
