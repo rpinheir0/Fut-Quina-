@@ -267,8 +267,14 @@
 
 @layer base {
   html,
+  body,
+  #root {
+    @apply h-full overflow-hidden;
+  }
+
+  html,
   body {
-    @apply overflow-x-hidden w-full max-w-[100vw];
+    @apply w-full max-w-[100vw];
     overscroll-behavior-x: none;
   }
 

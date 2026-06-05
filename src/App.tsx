@@ -6951,7 +6951,7 @@ function GroupApp({
         )}
       </AnimatePresence>
 
-      <div className="h-full flex flex-col overflow-hidden">
+      <div className="h-screen flex flex-col overflow-hidden">
         {/* Sticky Header and Tabs Container */}
         <div
           className={`sticky top-0 z-50 bg-[#000000]/95 backdrop-blur-2xl ${isPrintMode ? "hidden" : ""}`}
@@ -7273,7 +7273,7 @@ function GroupApp({
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
-          className={`flex-1 overflow-y-auto pb-20 ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-[#dcdcdc]"}`}
+          className={`flex-1 overflow-y-auto flex flex-col pb-20 ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-[#dcdcdc]"}`}
         >
           <AnimatePresence mode="wait">
             {currentScreen === "players" && !isPrintMode && (
@@ -7283,7 +7283,7 @@ function GroupApp({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="p-4 sm:p-6 space-y-4 bg-zinc-50/30 min-h-full flex flex-col"
+                className="p-4 sm:p-6 space-y-4 bg-zinc-50/30 flex-1 flex flex-col"
               >
                 {/* Dashboard Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
@@ -7333,7 +7333,7 @@ function GroupApp({
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
-                      className="flex-1 flex flex-col space-y-4"
+                      className="w-full flex flex-col space-y-4"
                     >
                       {/* CTA Banner */}
                       <motion.div
@@ -7524,6 +7524,53 @@ function GroupApp({
                               }).reverse()}
                             </AnimatePresence>
                           </div>
+
+                          {/* Remaining Matches List */}
+                          {scheduledMatches.length > 2 && (
+                            <div className="space-y-3 mt-8 pb-4">
+                              <h5 className="text-[10px] font-black uppercase tracking-[0.2em] text-[#7e7e7e] px-1">
+                                Outras Peladas
+                              </h5>
+                              <div className="space-y-3">
+                                {scheduledMatches.slice(2).map((match) => (
+                                  <motion.div
+                                    key={match.id}
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    className="bg-white rounded-2xl p-4 border border-black/5 flex items-center justify-between shadow-sm"
+                                    onClick={() => {
+                                      setSelectedMatchId(match.id);
+                                      setCurrentScreen("players");
+                                      setShowAddPlayerSection(true);
+                                    }}
+                                  >
+                                    <div className="flex items-center gap-3">
+                                      <div className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-400 border border-black/5">
+                                        <GiSoccerBall size={20} />
+                                      </div>
+                                      <div>
+                                        <h6 className="text-[13px] font-bold text-zinc-900 leading-tight capitalize">
+                                          {match.name || "Sem nome"}
+                                        </h6>
+                                        <p className="text-[10px] font-medium text-zinc-500 uppercase tracking-tight">
+                                          {new Date(match.date).toLocaleDateString("pt-BR", { weekday: 'short', day: '2-digit', month: 'short' })} às {match.time}
+                                        </p>
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center gap-2">
+                                       <button 
+                                         onClick={(e) => { e.stopPropagation(); setMatchToDelete(match); }}
+                                         className="w-8 h-8 rounded-full bg-red-50 text-red-400 flex items-center justify-center hover:bg-red-100 transition-colors"
+                                       >
+                                         <Trash2 size={14} />
+                                       </button>
+                                       <ChevronRight size={16} className="text-zinc-300" />
+                                    </div>
+                                  </motion.div>
+                                ))}
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
 
@@ -7851,7 +7898,7 @@ function GroupApp({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="px-2 sm:px-4 pb-6 pt-4 space-y-4 min-h-full bg-transparent flex flex-col text-white"
+                className="px-2 sm:px-4 pb-6 pt-4 space-y-4 flex-1 bg-transparent flex flex-col text-white"
               >
                 <div id="teams-list-section" className="w-full space-y-4">
                   {!selectedMatchId ? (
