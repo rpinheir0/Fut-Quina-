@@ -386,6 +386,27 @@ const TEAM_COLORS = [
   "#000000",
 ];
 
+const TypewriterText = ({ text, className }: { text: string; className?: string }) => {
+  const [displayText, setDisplayText] = useState("");
+  
+  useEffect(() => {
+    setDisplayText("");
+    let timeout: any;
+    let i = 0;
+    const type = () => {
+      if (i <= text.length) {
+        setDisplayText(text.slice(0, i));
+        i++;
+        timeout = setTimeout(type, 30);
+      }
+    };
+    timeout = setTimeout(type, 150); 
+    return () => clearTimeout(timeout);
+  }, [text]);
+
+  return <span className={className}>{displayText}</span>;
+};
+
 const TutorialCarousel = () => {
   const [index, setIndex] = useState(0);
 
@@ -7479,9 +7500,11 @@ function GroupApp({
                                              <GiSoccerBall size={16} color="#fff" />
                                            )}
                                         </div>
-                                        <span className="text-white font-medium text-xs capitalize tracking-wide">
-                                            {(match.name || "S").substring(0, 15)}
-                                        </span>
+                                        <TypewriterText 
+                                          key={match.id}
+                                          text={(match.name || "S").substring(0, 15)} 
+                                          className="text-white font-medium text-xs capitalize tracking-wide" 
+                                        />
                                       </div>
                                       <button onClick={(e) => {
                                           e.stopPropagation();
