@@ -2650,6 +2650,18 @@ function GroupApp({
   );
 
   const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [editingMatchId, setEditingMatchId] = useState<string | null>(null);
+  const handleSwapMatches = () => {
+    if (scheduledMatches.length > 1) {
+      setScheduledMatches((prev) => {
+        const next = [...prev];
+        const first = next.shift();
+        if (first) next.push(first);
+        return next;
+      });
+    }
+  };
+
   const [matchConfigOpenId, setMatchConfigOpenId] = useState<string | null>(
     null,
   );
@@ -2704,20 +2716,43 @@ function GroupApp({
 
       const matchDate = new Date();
       matchDate.setDate(today.getDate() + diff);
-      matchDate.setHours(8, 0, 0, 0); // Reset time to 8am for the date calculation
+      matchDate.setHours(8, 0, 0, 0); 
 
-      const newMatch: ScheduledMatch = {
-        id: generateId(),
-        name: newMatchName.trim(),
-        date: matchDate.getTime(),
-        location: "Arena a definir",
-        time: newMatchTime,
-        status: "Pendente",
-        confirmedPlayers: 0,
-        maxPlayers: 16,
-        imageUrl: newMatchImage || undefined,
-      };
-      setScheduledMatches((prev) => [...prev, newMatch]);
+      if (editingMatchId) {
+        setScheduledMatches((prev) =>
+          prev.map((m) =>
+            m.id === editingMatchId
+              ? {
+                  ...m,
+                  name: newMatchName.trim(),
+                  date: matchDate.getTime(),
+                  time: newMatchTime,
+                  imageUrl: newMatchImage || undefined,
+                }
+              : m,
+          ),
+        );
+        setEditingMatchId(null);
+      } else {
+        const newMatch: ScheduledMatch = {
+          id: generateId(),
+          name: newMatchName.trim(),
+          date: matchDate.getTime(),
+          location: "Arena a definir",
+          time: newMatchTime,
+          status: "Pendente",
+          confirmedPlayers: 0,
+          maxPlayers: 16,
+          imageUrl: newMatchImage || undefined,
+        };
+        setScheduledMatches((prev) => [...prev, newMatch]);
+        setSelectedMatchId(newMatch.id);
+        setCurrentScreen("players");
+        setShowAddPlayerSection(true);
+        setTeamsTab("configuracao");
+        setPlayersTab("configuracao");
+      }
+
       setFixedColors({ teamA: null, teamB: null, enabled: false });
       setOrgProSettings((prev) => ({ ...prev, allowFixedGoalkeeper: false }));
       setNewMatchName("");
@@ -2725,11 +2760,6 @@ function GroupApp({
       setNewMatchTime("08:00");
       setNewMatchImage("");
       setShowScheduleModal(false);
-      setSelectedMatchId(newMatch.id);
-      setCurrentScreen("players");
-      setShowAddPlayerSection(true);
-      setTeamsTab("configuracao");
-      setPlayersTab("configuracao");
     }
   };
   const [sessionPlayerIds, setSessionPlayerIds] = useState<string[]>(() => {
@@ -7370,246 +7400,141 @@ function GroupApp({
                             </motion.div>
                           )}
 
-                          {scheduledMatches.map((match, index) => {
-                            const matchDate = new Date(match.date);
-                            const day = matchDate.getDate();
-                            const month = matchDate
-                              .toLocaleString("pt-BR", { month: "long" })
-                              .toLowerCase();
-                            const weekday = matchDate
-                              .toLocaleString("pt-BR", { weekday: "long" })
-                              .substring(0, 7)
-                              .toLowerCase();
+                          <div className="relative w-full max-w-sm mx-auto h-[410px]">
+                            <AnimatePresence mode="popLayout" initial={false}>
+                              {scheduledMatches.slice(0, 2).map((match, idx) => {
+                                const isTop = idx === 0;
+                                const matchDate = new Date(match.date);
+                                const day = matchDate.getDate();
+                                const month = matchDate
+                                  .toLocaleString("pt-BR", { month: "long" })
+                                  .toLowerCase();
+                                const weekday = matchDate
+                                  .toLocaleString("pt-BR", { weekday: "long" })
+                                  .substring(0, 7)
+                                  .toLowerCase();
 
-                            // Get specific match players and session
-                            const specificSessionSaved =
-                              safeLocalStorage.getItem(
-                                `futquina_session_player_ids_${groupId}_${match.id}`,
-                              );
-                            const matchSessionIds = specificSessionSaved
-                              ? JSON.parse(specificSessionSaved)
-                              : [];
+                                const specificSessionSaved = safeLocalStorage.getItem(`futquina_session_player_ids_${groupId}_${match.id}`);
+                                const matchSessionIds = specificSessionSaved ? JSON.parse(specificSessionSaved) : [];
+                                const specificPlayersSaved = safeLocalStorage.getItem(`futquina_players_${groupId}_${match.id}`);
+                                let matchSpecificPlayers = specificPlayersSaved ? JSON.parse(specificPlayersSaved) : [];
+                                if (!Array.isArray(matchSpecificPlayers)) matchSpecificPlayers = [];
+                                const confirmedPlayers = matchSpecificPlayers.filter((p: any) => matchSessionIds.includes(p.id) && p.isAvailable);
+                                const totalAvailablePlayers = confirmedPlayers.length;
 
-                            const specificPlayersSaved =
-                              safeLocalStorage.getItem(
-                                `futquina_players_${groupId}_${match.id}`,
-                              );
-                            let matchSpecificPlayers = specificPlayersSaved
-                              ? JSON.parse(specificPlayersSaved)
-                              : [];
-                            if (!Array.isArray(matchSpecificPlayers))
-                              matchSpecificPlayers = [];
+                                return (
+                                  <motion.div
+                                    key={match.id}
+                                    layout
+                                    initial={{ opacity: 0, scale: 0.9, y: 30 }}
+                                    animate={{ 
+                                      opacity: 1, 
+                                      scale: isTop ? 1 : 0.94, 
+                                      y: isTop ? 0 : 28,
+                                      zIndex: isTop ? 20 : 10,
+                                      filter: isTop ? 'blur(0px)' : 'blur(1px)',
+                                    }}
+                                    exit={{ 
+                                      opacity: 0, 
+                                      scale: 0.9, 
+                                      x: 200, 
+                                      rotate: 15,
+                                      zIndex: 100,
+                                      transition: { duration: 0.3 }
+                                    }}
+                                    transition={{ type: "spring", stiffness: 260, damping: 20 }}
+                                    className={`group absolute inset-0 rounded-[32px] flex flex-col cursor-pointer transition-all duration-300 p-4 bg-gradient-to-br from-[#1c55d4] via-[#103fa1] to-[#011442] overflow-hidden ${isTop ? 'shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)]' : 'shadow-lg brightness-75'}`}
+                                    onClick={() => {
+                                      if (!isTop) return;
+                                      setSelectedMatchId(match.id);
+                                      setCurrentScreen("players");
+                                      setShowAddPlayerSection(true);
+                                      setTeamsTab("configuracao");
+                                      setPlayersTab("configuracao");
+                                    }}
+                                  >
+                                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/20 rounded-full blur-[80px] pointer-events-none" />
+                                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-indigo-500/20 rounded-full blur-[60px] pointer-events-none" />
 
-                            const confirmedPlayers =
-                              matchSpecificPlayers.filter(
-                                (p: any) =>
-                                  matchSessionIds.includes(p.id) &&
-                                  p.isAvailable,
-                              );
-
-                            const matchPlayers = confirmedPlayers.slice(0, 4);
-                            const totalAvailablePlayers =
-                              confirmedPlayers.length;
-                            const extraPlayersCount = Math.max(
-                              0,
-                              totalAvailablePlayers - 4,
-                            );
-
-                            const isExpanded =
-                              index === 0 ||
-                              expandedMatchCards.includes(match.id);
-
-                            return (
-                              <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.2 + index * 0.05 }}
-                                key={`${match.id}-${index}`}
-                                onClick={() => {
-                                  setSelectedMatchId(match.id);
-                                  setCurrentScreen("players");
-                                  setShowAddPlayerSection(true);
-                                  setTeamsTab("configuracao");
-                                  setPlayersTab("configuracao");
-                                }}
-                                className={`group relative rounded-[32px] flex flex-col cursor-pointer shadow-[0_20px_40px_rgba(0,0,0,0.3)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.4)] transition-all duration-500 ease-in-out p-4 bg-gradient-to-br from-[#1c55d4] via-[#103fa1] to-[#011442] overflow-hidden`}
-                              >
-                                {/* Inner glow and gradient mesh */}
-                                <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/20 rounded-full blur-[80px] pointer-events-none" />
-                                <div className="absolute bottom-0 left-0 w-48 h-48 bg-indigo-500/20 rounded-full blur-[60px] pointer-events-none" />
-
-                                {/* Top Area */}
-                                <div className="flex justify-between items-center mb-3 relative z-10 w-full">
-                                  <div className="flex items-center gap-2">
-                                    <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md p-1 flex items-center justify-center border border-white/10 shadow-inner overflow-hidden">
-                                       {matchSpecificPlayers.length > 0 && matchSpecificPlayers[0].photo ? (
-                                         <img src={matchSpecificPlayers[0].photo} className="w-full h-full object-cover rounded-full" />
-                                       ) : (
-                                         <GiSoccerBall size={16} color="#fff" />
-                                       )}
-                                    </div>
-                                    <span className="text-white font-medium text-xs capitalize tracking-wide">
-                                        {(match.name || "S").substring(0, 15)}
-                                    </span>
-                                  </div>
-                                  
-                                  <div className="relative">
-                                    <AnimatePresence>
-                                        {matchConfigOpenId === match.id && (
-                                          <motion.button
-                                            initial={{ opacity: 0, scale: 0.5, x: 10 }}
-                                            animate={{ opacity: 1, scale: 1, x: -40 }}
-                                            exit={{ opacity: 0, scale: 0.5, x: 10 }}
-                                            transition={{ duration: 0.2 }}
-                                            onClick={(e) => {
-                                              e.stopPropagation();
-                                              setMatchToDelete(match);
-                                              setMatchConfigOpenId(null);
-                                            }}
-                                            className="absolute top-0 right-0 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full shrink-0 shadow-lg"
-                                          >
-                                            <Trash2 size={14} />
-                                          </motion.button>
-                                        )}
-                                    </AnimatePresence>
-                                    <button 
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setMatchConfigOpenId((prev) =>
-                                              prev === match.id ? null : match.id,
-                                            );
-                                          }}
-                                        className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-all border border-white/5"
-                                    >
-                                        <Info size={14} />
-                                    </button>
-                                  </div>
-                                </div>
-
-                                {/* Center Value */}
-                                <div className="text-center mb-4 relative z-10">
-                                    <p className="text-white/60 text-[9px] font-bold tracking-[0.2em] uppercase mb-1">
-                                        PRÓXIMA PELADA
-                                    </p>
-                                    <h3 className="text-white text-3xl font-semibold tracking-tight">
-                                        {day} {month.substring(0, 3)}
-                                    </h3>
-                                    <p className="text-white/80 text-base mt-1 font-medium tracking-wide">
-                                        {weekday.split('-')[0]} as {match.time}
-                                    </p>
-                                </div>
-
-                                {/* Avatars Row */}
-                                <div className="flex justify-center -space-x-2 mb-4 relative z-10 w-full px-4 overflow-hidden py-1" onClick={(e) => {
-                                    e.stopPropagation();
-                                    setSelectedMatchId(match.id);
-                                    setCurrentScreen("players");
-                                    setShowAddPlayerSection(true);
-                                }}>
-                                    {matchSpecificPlayers.slice(0, 5).map((player: any, pIdx: number) => (
-                                        <div key={`avatar-${pIdx}`} className="w-9 h-9 rounded-full border-2 border-[#1c55d4] bg-zinc-800 overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.3)] shrink-0">
-                                            {player.photo ? (
-                                                <img src={player.photo} className="w-full h-full object-cover"/>
-                                            ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-white text-[10px] bg-gradient-to-br from-indigo-400 to-purple-500 font-bold uppercase">
-                                                    {player.name[0]}
-                                                </div>
-                                            )}
+                                    <div className="flex justify-between items-center mb-3 relative z-10 w-full">
+                                      <div className="flex items-center gap-2">
+                                        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md p-1 flex items-center justify-center border border-white/10 shadow-inner overflow-hidden">
+                                           {matchSpecificPlayers.length > 0 && matchSpecificPlayers[0].photo ? (
+                                             <img src={matchSpecificPlayers[0].photo} className="w-full h-full object-cover rounded-full" />
+                                           ) : (
+                                             <GiSoccerBall size={16} color="#fff" />
+                                           )}
                                         </div>
-                                    ))}
-                                    {matchSpecificPlayers.length > 5 && (
-                                        <div className="w-9 h-9 rounded-full border-2 border-[#1c55d4] bg-white/20 backdrop-blur-md flex items-center justify-center text-white font-bold text-xs shadow-[0_4px_10px_rgba(0,0,0,0.3)] shrink-0">
-                                            +{matchSpecificPlayers.length - 5}
-                                        </div>
-                                    )}
-                                    {matchSpecificPlayers.length === 0 && (
-                                        <div className="text-white/30 text-[10px] font-medium h-9 flex items-center">
-                                            Nenhum jogador configurado
-                                        </div>
-                                    )}
-                                </div>
-
-                                {/* Inner Details Card */}
-                                <div className="bg-black/30 rounded-[24px] p-3 backdrop-blur-lg border border-white/5 relative overflow-hidden mb-3 group-hover:bg-black/40 transition-colors cursor-pointer" onClick={(e) => {
-                                    e.stopPropagation();
-                                    setSelectedMatchId(match.id);
-                                    setCurrentScreen("players");
-                                    setShowAddPlayerSection(true);
-                                }}>
-                                    <div className="absolute right-[-10%] top-[-10%] pointer-events-none rotate-12 scale-150 transition-transform group-hover:scale-125 duration-700">
-                                        <GiSoccerField size={80} color="rgba(255,255,255,0.05)" />
-                                    </div>
-                                    
-                                    <div className="flex justify-between items-center mb-2 relative z-10">
-                                        <span className="text-white/50 text-[10px] font-medium tracking-wide">STATUS DA PELADA</span>
-                                        <span className="text-white/80 text-[10px] hover:text-white underline decoration-white/30 decoration-dashed underline-offset-4">Editar</span>
-                                    </div>
-                                    
-                                    <div className="flex items-center gap-3 relative z-10">
-                                        <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md border border-white/5">
-                                            {totalAvailablePlayers > 0 ? (
-                                                <GiSocks color="#34d399" size={18} />
-                                            ) : (
-                                                <GiWhistle color="rgba(255,255,255,0.4)" size={18} />
-                                            )}
-                                        </div>
-                                        <div>
-                                            <h4 className="text-white font-medium text-sm leading-tight truncate max-w-[100px]">Confirmados</h4>
-                                            <p className="text-white/50 text-[10px] mt-0.5">{totalAvailablePlayers} na lista</p>
-                                        </div>
-                                        <div className="ml-auto text-white text-lg font-bold tracking-tighter flex items-center">
-                                            <span className={`inline-flex mr-1.5 opacity-30 ${totalAvailablePlayers > 0 ? 'text-emerald-400 opacity-100' : ''}`}>
-                                                <GiSoccerBall size={14} />
-                                            </span>
-                                            {totalAvailablePlayers}
-                                        </div>
-                                    </div>
-                                </div>
-
-                                {/* Bottom Action Buttons */}
-                                <div className="flex items-center gap-2 relative z-10 w-full" onClick={(e) => e.stopPropagation()}>
-                                    <button 
-                                        onClick={(e) => {
+                                        <span className="text-white font-medium text-xs capitalize tracking-wide">
+                                            {(match.name || "S").substring(0, 15)}
+                                        </span>
+                                      </div>
+                                      <button onClick={(e) => {
                                           e.stopPropagation();
-                                          setMatchConfigOpenId((prev) =>
-                                            prev === match.id ? null : match.id,
-                                          );
+                                          setToast({ message: "Para iniciar, selecione a pelada que você criou no painel acima.", type: "info" });
+                                          setTimeout(() => setToast(null), 4000);
                                         }}
-                                        className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer shadow-[0_8px_20px_rgba(0,0,0,0.2)]"
-                                    >
-                                        <Settings size={18} className="opacity-80" />
-                                    </button>
-                                    <button className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer shadow-[0_8px_20px_rgba(0,0,0,0.2)]">
-                                        <ArrowLeftRight size={18} className="opacity-80" />
-                                    </button>
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setSelectedMatchId(match.id);
-                                            setCurrentScreen("players");
-                                            setShowAddPlayerSection(true);
-                                        }}
-                                        className="flex-1 bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm rounded-full h-11 flex items-center justify-center text-white text-[13px] font-medium gap-1.5 transition-colors shadow-[0_8px_20px_rgba(0,0,0,0.2)]"
-                                    >
-                                        Editar <ArrowDown size={14} className="opacity-80" />
-                                    </button>
-                                    <button
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            setSelectedMatchId(match.id);
-                                            setCurrentScreen("players");
-                                            setShowAddPlayerSection(true);
-                                        }}
-                                        className="flex-1 bg-[#1a65ff] hover:bg-[#357aff] shadow-[0_8px_25px_rgba(26,101,255,0.4)] rounded-full h-11 flex items-center justify-center text-white text-[13px] font-semibold gap-1.5 transition-all">
-                                        Abrir <ArrowUp size={14} />
-                                    </button>
-                                </div>
+                                        className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-all border border-white/5"
+                                      >
+                                        <Info size={14} />
+                                      </button>
+                                    </div>
 
-                              </motion.div>
-                            );
-                          })}
+                                    <div className="text-center mb-4 relative z-10">
+                                        <p className="text-white/60 text-[9px] font-bold tracking-[0.2em] uppercase mb-1">PRÓXIMA PELADA</p>
+                                        <h3 className="text-white text-3xl font-semibold tracking-tight">{day} {month.substring(0, 3)}</h3>
+                                        <p className="text-white/80 text-base mt-1 font-medium tracking-wide">{weekday.split('-')[0]} as {match.time}</p>
+                                    </div>
+
+                                    <div className="flex justify-center -space-x-2 mb-4 relative z-10 w-full px-4 overflow-hidden py-1">
+                                        {matchSpecificPlayers.slice(0, 5).map((player: any, pIdx: number) => (
+                                            <div key={`avatar-${pIdx}`} className="w-9 h-9 rounded-full border-2 border-[#1c55d4] bg-zinc-800 overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.3)] shrink-0">
+                                                {player.photo ? <img src={player.photo} className="w-full h-full object-cover"/> : <div className="w-full h-full flex items-center justify-center text-white text-[10px] bg-gradient-to-br from-indigo-400 to-purple-500 font-bold uppercase">{player.name[0]}</div>}
+                                            </div>
+                                        ))}
+                                        {matchSpecificPlayers.length > 5 && <div className="w-9 h-9 rounded-full border-2 border-[#1c55d4] bg-white/20 backdrop-blur-md flex items-center justify-center text-white font-bold text-xs shadow-[0_4px_10px_rgba(0,0,0,0.3)] shrink-0">+{matchSpecificPlayers.length - 5}</div>}
+                                    </div>
+
+                                    <div className="bg-black/30 rounded-[24px] p-3 backdrop-blur-lg border border-white/5 relative overflow-hidden mb-3">
+                                        <div className="absolute right-[-10%] top-[-10%] pointer-events-none rotate-12 scale-150 transition-transform duration-700"><GiSoccerField size={80} color="rgba(255,255,255,0.05)" /></div>
+                                        <div className="flex justify-between items-center mb-2 relative z-10"><span className="text-white/50 text-[10px] font-medium tracking-wide">STATUS DA PELADA</span></div>
+                                        <div className="flex items-center gap-3 relative z-10">
+                                            <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md border border-white/5"><GiWhistle color="#34d399" size={18} /></div>
+                                            <div>
+                                                <h4 className="text-white font-medium text-sm leading-tight truncate max-w-[100px]">Confirmados</h4>
+                                                <p className="text-white/50 text-[10px] mt-0.5">{totalAvailablePlayers} na lista</p>
+                                            </div>
+                                            <div className="ml-auto text-white text-lg font-bold tracking-tighter flex items-center">
+                                                <span className={`inline-flex mr-1.5 opacity-30 ${totalAvailablePlayers > 0 ? 'text-emerald-400 opacity-100' : ''}`}><GiSoccerBall size={14} /></span>
+                                                {totalAvailablePlayers}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-2 relative z-10 w-full" onClick={(e) => e.stopPropagation()}>
+                                        <button onClick={(e) => { e.stopPropagation(); setMatchToDelete(match); }} className="w-11 h-11 rounded-full bg-white/10 hover:bg-red-500/40 border border-white/5 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer shadow-[0_8px_20px_rgba(0,0,0,0.2)]"><Trash2 size={18} className="opacity-80" /></button>
+                                        {scheduledMatches.length > 1 && (
+                                          <button onClick={(e) => { e.stopPropagation(); handleSwapMatches(); }} className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer shadow-[0_8px_20_px_rgba(0,0,0,0.2)]"><ArrowLeftRight size={18} className="opacity-80" /></button>
+                                        )}
+                                        <button onClick={(e) => {
+                                            e.stopPropagation(); setEditingMatchId(match.id); setNewMatchName(match.name); setNewMatchTime(match.time);
+                                            const days = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+                                            const date = new Date(match.date); setNewMatchDay(days[date.getDay()]); setShowScheduleModal(true);
+                                          }}
+                                          className="flex-1 bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm rounded-full h-11 flex items-center justify-center text-white text-[13px] font-medium gap-1.5 transition-colors shadow-[0_8px_20px_rgba(0,0,0,0.2)]"
+                                        >
+                                            Editar <ArrowDown size={14} className="opacity-80" />
+                                        </button>
+                                        <button onClick={(e) => { e.stopPropagation(); setSelectedMatchId(match.id); setCurrentScreen("players"); setShowAddPlayerSection(true); }} className="flex-1 bg-[#1a65ff] hover:bg-[#357aff] shadow-[0_8px_25px_rgba(26,101,255,0.4)] rounded-full h-11 flex items-center justify-center text-white text-[13px] font-semibold gap-1.5 transition-all">Abrir <ArrowUp size={14} /></button>
+                                    </div>
+                                  </motion.div>
+                                );
+                              }).reverse()}
+                            </AnimatePresence>
+                          </div>
                         </div>
                       </div>
+
 
                       {/* Alert Banner / Tip */}
                       <motion.div 
@@ -15630,7 +15555,7 @@ function GroupApp({
                 <GiSoccerBall size={32} />
               </div>
               <h3 className="text-2xl font-black uppercase tracking-tighter text-zinc-900">
-                Criar pelada
+                {editingMatchId ? "Editar pelada" : "Criar pelada"}
               </h3>
               <p className="text-xs font-black text-zinc-400 mt-1">
                 Como vai se chamar a pelada?
@@ -15698,11 +15623,12 @@ function GroupApp({
                 disabled={!newMatchName.trim()}
                 className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[11px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 disabled:opacity-50"
               >
-                CRIAR
+                {editingMatchId ? "SALVAR" : "CRIAR"}
               </button>
               <button
                 onClick={() => {
                   setShowScheduleModal(false);
+                  setEditingMatchId(null);
                   setNewMatchName("");
                   setNewMatchDay("Segunda");
                   setNewMatchTime("08:00");
