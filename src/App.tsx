@@ -7294,7 +7294,7 @@ function GroupApp({
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
-          className={`flex-1 overflow-y-auto flex flex-col ${(!(currentScreen === "players" && !showAddPlayerSection) && !showPeladaReport) ? "pb-32" : "pb-10"} touch-pan-y ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-[#dcdcdc]"}`}
+          className={`flex-1 overflow-y-auto flex flex-col ${currentScreen === "players" ? "pb-4" : (!showPeladaReport) ? "pb-12" : "pb-10"} touch-pan-y ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-[#dcdcdc]"}`}
         >
           <AnimatePresence mode="wait">
             {currentScreen === "players" && !isPrintMode && (
@@ -7362,7 +7362,7 @@ function GroupApp({
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
                         onClick={() => setShowScheduleModal(true)}
-                        className="cursor-pointer relative overflow-hidden bg-gradient-to-r from-[#1b4d07] via-[#2d6e12] to-[#143b05] rounded-full p-4 shadow-xl hover:shadow-2xl transition-all hover:scale-[1.01] active:scale-[0.99]"
+                        className="cursor-pointer relative overflow-hidden bg-gradient-to-r from-[#1b4d07] via-[#2d6e12] to-[#143b05] rounded-full p-2.5 shadow-xl hover:shadow-2xl transition-all hover:scale-[1.01] active:scale-[0.99]"
                       >
                         {/* Background pattern */}
                         <div className="absolute top-0 right-0 h-full w-2/3 opacity-20 mix-blend-overlay flex justify-end items-center px-10">
@@ -7373,11 +7373,11 @@ function GroupApp({
 
                         <div className="relative z-10 flex items-center justify-between">
                           <div className="flex items-center gap-4">
-                            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#0a180f] flex items-center justify-center shrink-0 shadow-lg">
-                              <Plus size={24} className="text-white" />
+                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#0a180f] flex items-center justify-center shrink-0 shadow-lg">
+                              <Plus size={20} className="text-white" />
                             </div>
                             <div className="flex flex-col text-black">
-                              <h3 className="text-lg sm:text-xl font-black tracking-tighter uppercase text-white">
+                              <h3 className="text-base sm:text-lg font-black tracking-tighter uppercase text-white">
                                 CRIE SUA PELADA
                               </h3>
                             </div>
@@ -7493,7 +7493,21 @@ function GroupApp({
 
                                     <div className="flex justify-between items-center mb-3 relative z-10 w-full">
                                       <div className="flex items-center gap-2">
-                                        <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md p-1 flex items-center justify-center border border-white/10 shadow-inner overflow-hidden">
+                                        <div 
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setEditingMatchId(match.id);
+                                            setNewMatchName(match.name);
+                                            setNewMatchTime(match.time);
+                                            setNewMatchImage(match.imageUrl || "");
+                                            const days = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+                                            const date = new Date(match.date);
+                                            setNewMatchDay(days[date.getDay()]);
+                                            setShowScheduleModal(true);
+                                            setTimeout(() => fileInputRef.current?.click(), 100);
+                                          }}
+                                          className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md p-1 flex items-center justify-center border border-white/10 shadow-inner overflow-hidden cursor-pointer hover:scale-110 transition-transform"
+                                        >
                                            {match.imageUrl ? (
                                              <img src={match.imageUrl} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
                                            ) : matchSpecificPlayers.length > 0 && matchSpecificPlayers[0].photo ? (
@@ -7566,7 +7580,7 @@ function GroupApp({
                                           }}
                                           className="flex-1 bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm rounded-full h-11 flex items-center justify-center text-white text-[13px] font-medium gap-1.5 transition-colors shadow-[0_8px_20px_rgba(0,0,0,0.2)]"
                                         >
-                                            Editar <ArrowDown size={14} className="opacity-80" />
+                                            Editar
                                         </button>
                                         <button onClick={(e) => { e.stopPropagation(); setSelectedMatchId(match.id); setCurrentScreen("players"); setShowAddPlayerSection(true); }} className="flex-1 bg-[#1a65ff] hover:bg-[#357aff] shadow-[0_8px_25px_rgba(26,101,255,0.4)] rounded-full h-11 flex items-center justify-center text-white text-[13px] font-semibold gap-1.5 transition-all">Abrir <ArrowUp size={14} /></button>
                                     </div>
@@ -7599,7 +7613,21 @@ function GroupApp({
                                       }}
                                     >
                                       <div className="flex items-center gap-3">
-                                        <div className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-400 border border-black/5 overflow-hidden">
+                                      <div 
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setEditingMatchId(match.id);
+                                          setNewMatchName(match.name);
+                                          setNewMatchTime(match.time);
+                                          setNewMatchImage(match.imageUrl || "");
+                                          const days = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+                                          const date = new Date(match.date);
+                                          setNewMatchDay(days[date.getDay()]);
+                                          setShowScheduleModal(true);
+                                          setTimeout(() => fileInputRef.current?.click(), 100);
+                                        }}
+                                        className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-400 border border-black/5 overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+                                      >
                                           {match.imageUrl ? (
                                             <img src={match.imageUrl} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                                           ) : matchPlayers.length > 0 && matchPlayers[0].photo ? (
@@ -7664,7 +7692,7 @@ function GroupApp({
                       className="space-y-6"
                     >
                       <div className="space-y-6">
-                        <div className="bg-gradient-to-br from-zinc-200 to-zinc-300 p-4 sm:p-6 rounded-none border border-black/5 space-y-4 sm:space-y-6">
+                        <div className="bg-gradient-to-br from-[#1a65ff] to-[#004dc7] p-4 sm:p-6 rounded-[24px] border border-white/10 space-y-4 sm:space-y-6 shadow-xl">
                           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                             <div className="flex-1 flex gap-2 sm:gap-3">
                               <input
@@ -7695,7 +7723,7 @@ function GroupApp({
                                     input.value = "";
                                   }
                                 }}
-                                className="w-[40px] h-[40px] bg-emerald-500 text-white rounded-none shadow hover:bg-emerald-600 transition-all active:scale-95 flex items-center justify-center shrink-0"
+                                className="w-[40px] h-[40px] bg-black/30 backdrop-blur-md text-white rounded-[12px] border border-white/10 shadow-lg hover:bg-black/40 transition-all active:scale-95 flex items-center justify-center shrink-0"
                               >
                                 <Plus size={22} />
                               </button>
@@ -7996,7 +8024,7 @@ function GroupApp({
                               defaultValue={match.config.duration}
                               min={1}
                               id="tab-match-duration"
-                              className="w-full p-4 rounded-none outline-none font-bold bg-black/5 text-black border border-black/10 focus:border-[#00FF00]/50 transition-all text-sm"
+                              className="w-full p-4 rounded-xl outline-none font-bold bg-gradient-to-br from-zinc-200 to-zinc-300 text-black border border-black/10 focus:border-[#00FF00]/50 transition-all text-sm shadow-sm"
                             />
                           </div>
                           <div className="space-y-2">
@@ -8008,7 +8036,7 @@ function GroupApp({
                               defaultValue={match.config.goalLimit}
                               min={1}
                               id="tab-match-goals"
-                              className="w-full p-4 rounded-none outline-none font-bold bg-black/5 text-black border border-black/10 focus:border-[#00FF00]/50 transition-all text-sm"
+                              className="w-full p-4 rounded-xl outline-none font-bold bg-gradient-to-br from-zinc-200 to-zinc-300 text-black border border-black/10 focus:border-[#00FF00]/50 transition-all text-sm shadow-sm"
                             />
                           </div>
                           <div
@@ -8022,7 +8050,7 @@ function GroupApp({
                               defaultValue={match.config.playersPerTeam}
                               min={1}
                               id="tab-match-players"
-                              className="w-full p-4 rounded-none outline-none font-bold bg-black/5 text-black border border-black/10 focus:border-[#00FF00]/50 transition-all text-sm"
+                              className="w-full p-4 rounded-xl outline-none font-bold bg-gradient-to-br from-zinc-200 to-zinc-300 text-black border border-black/10 focus:border-[#00FF00]/50 transition-all text-sm shadow-sm"
                             />
                           </div>
                         </div>
