@@ -7432,23 +7432,23 @@ function GroupApp({
                                   setTeamsTab("configuracao");
                                   setPlayersTab("configuracao");
                                 }}
-                                className={`group relative rounded-[40px] flex flex-col cursor-pointer shadow-[0_20px_40px_rgba(0,0,0,0.3)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.4)] transition-all duration-500 ease-in-out p-6 bg-gradient-to-br from-[#1c55d4] via-[#103fa1] to-[#011442] overflow-hidden`}
+                                className={`group relative rounded-[32px] flex flex-col cursor-pointer shadow-[0_20px_40px_rgba(0,0,0,0.3)] hover:shadow-[0_30px_60px_rgba(0,0,0,0.4)] transition-all duration-500 ease-in-out p-4 bg-gradient-to-br from-[#1c55d4] via-[#103fa1] to-[#011442] overflow-hidden`}
                               >
                                 {/* Inner glow and gradient mesh */}
                                 <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/20 rounded-full blur-[80px] pointer-events-none" />
                                 <div className="absolute bottom-0 left-0 w-48 h-48 bg-indigo-500/20 rounded-full blur-[60px] pointer-events-none" />
 
                                 {/* Top Area */}
-                                <div className="flex justify-between items-center mb-6 relative z-10 w-full">
-                                  <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md p-1 flex items-center justify-center border border-white/10 shadow-inner overflow-hidden">
+                                <div className="flex justify-between items-center mb-3 relative z-10 w-full">
+                                  <div className="flex items-center gap-2">
+                                    <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md p-1 flex items-center justify-center border border-white/10 shadow-inner overflow-hidden">
                                        {matchSpecificPlayers.length > 0 && matchSpecificPlayers[0].photo ? (
                                          <img src={matchSpecificPlayers[0].photo} className="w-full h-full object-cover rounded-full" />
                                        ) : (
-                                         <GiSoccerBall size={20} color="#fff" />
+                                         <GiSoccerBall size={16} color="#fff" />
                                        )}
                                     </div>
-                                    <span className="text-white font-medium text-sm capitalize tracking-wide">
+                                    <span className="text-white font-medium text-xs capitalize tracking-wide">
                                         {(match.name || "S").substring(0, 15)}
                                     </span>
                                   </div>
@@ -7466,9 +7466,9 @@ function GroupApp({
                                               setMatchToDelete(match);
                                               setMatchConfigOpenId(null);
                                             }}
-                                            className="absolute top-0 right-0 w-10 h-10 flex items-center justify-center bg-red-500 text-white rounded-full shrink-0 shadow-lg"
+                                            className="absolute top-0 right-0 w-8 h-8 flex items-center justify-center bg-red-500 text-white rounded-full shrink-0 shadow-lg"
                                           >
-                                            <Trash2 size={16} />
+                                            <Trash2 size={14} />
                                           </motion.button>
                                         )}
                                     </AnimatePresence>
@@ -7479,87 +7479,87 @@ function GroupApp({
                                               prev === match.id ? null : match.id,
                                             );
                                           }}
-                                        className="w-10 h-10 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-all border border-white/5"
+                                        className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-all border border-white/5"
                                     >
-                                        <Info size={16} />
+                                        <Info size={14} />
                                     </button>
                                   </div>
                                 </div>
 
                                 {/* Center Value */}
-                                <div className="text-center mb-6 relative z-10">
-                                    <p className="text-white/60 text-[10px] font-bold tracking-[0.2em] uppercase mb-2">
+                                <div className="text-center mb-4 relative z-10">
+                                    <p className="text-white/60 text-[9px] font-bold tracking-[0.2em] uppercase mb-1">
                                         PRÓXIMA PELADA
                                     </p>
-                                    <h3 className="text-white text-5xl font-semibold tracking-tight">
+                                    <h3 className="text-white text-3xl font-semibold tracking-tight">
                                         {day} {month.substring(0, 3)}
                                     </h3>
-                                    <p className="text-white/80 text-lg mt-2 font-medium tracking-wide">
+                                    <p className="text-white/80 text-base mt-1 font-medium tracking-wide">
                                         {weekday.split('-')[0]} as {match.time}
                                     </p>
                                 </div>
 
                                 {/* Avatars Row */}
-                                <div className="flex justify-center -space-x-3 mb-8 relative z-10 w-full px-4 overflow-hidden py-2" onClick={(e) => {
+                                <div className="flex justify-center -space-x-2 mb-4 relative z-10 w-full px-4 overflow-hidden py-1" onClick={(e) => {
                                     e.stopPropagation();
                                     setSelectedMatchId(match.id);
                                     setCurrentScreen("players");
                                     setShowAddPlayerSection(true);
                                 }}>
                                     {matchSpecificPlayers.slice(0, 5).map((player: any, pIdx: number) => (
-                                        <div key={`avatar-${pIdx}`} className="w-12 h-12 rounded-full border-2 border-[#1c55d4] bg-zinc-800 overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.3)] shrink-0">
+                                        <div key={`avatar-${pIdx}`} className="w-9 h-9 rounded-full border-2 border-[#1c55d4] bg-zinc-800 overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.3)] shrink-0">
                                             {player.photo ? (
                                                 <img src={player.photo} className="w-full h-full object-cover"/>
                                             ) : (
-                                                <div className="w-full h-full flex items-center justify-center text-white text-xs bg-gradient-to-br from-indigo-400 to-purple-500 font-bold uppercase">
+                                                <div className="w-full h-full flex items-center justify-center text-white text-[10px] bg-gradient-to-br from-indigo-400 to-purple-500 font-bold uppercase">
                                                     {player.name[0]}
                                                 </div>
                                             )}
                                         </div>
                                     ))}
                                     {matchSpecificPlayers.length > 5 && (
-                                        <div className="w-12 h-12 rounded-full border-2 border-[#1c55d4] bg-white/20 backdrop-blur-md flex items-center justify-center text-white font-bold text-sm shadow-[0_4px_10px_rgba(0,0,0,0.3)] shrink-0">
+                                        <div className="w-9 h-9 rounded-full border-2 border-[#1c55d4] bg-white/20 backdrop-blur-md flex items-center justify-center text-white font-bold text-xs shadow-[0_4px_10px_rgba(0,0,0,0.3)] shrink-0">
                                             +{matchSpecificPlayers.length - 5}
                                         </div>
                                     )}
                                     {matchSpecificPlayers.length === 0 && (
-                                        <div className="text-white/30 text-sm font-medium h-12 flex items-center">
+                                        <div className="text-white/30 text-[10px] font-medium h-9 flex items-center">
                                             Nenhum jogador configurado
                                         </div>
                                     )}
                                 </div>
 
                                 {/* Inner Details Card */}
-                                <div className="bg-black/30 rounded-[32px] p-5 backdrop-blur-lg border border-white/5 relative overflow-hidden mb-6 group-hover:bg-black/40 transition-colors cursor-pointer" onClick={(e) => {
+                                <div className="bg-black/30 rounded-[24px] p-3 backdrop-blur-lg border border-white/5 relative overflow-hidden mb-3 group-hover:bg-black/40 transition-colors cursor-pointer" onClick={(e) => {
                                     e.stopPropagation();
                                     setSelectedMatchId(match.id);
                                     setCurrentScreen("players");
                                     setShowAddPlayerSection(true);
                                 }}>
                                     <div className="absolute right-[-10%] top-[-10%] pointer-events-none rotate-12 scale-150 transition-transform group-hover:scale-125 duration-700">
-                                        <GiSoccerField size={100} color="rgba(255,255,255,0.05)" />
+                                        <GiSoccerField size={80} color="rgba(255,255,255,0.05)" />
                                     </div>
                                     
-                                    <div className="flex justify-between items-center mb-4 relative z-10">
-                                        <span className="text-white/50 text-[12px] font-medium tracking-wide">STATUS DA PELADA</span>
-                                        <span className="text-white/80 text-[12px] hover:text-white underline decoration-white/30 decoration-dashed underline-offset-4">Editar</span>
+                                    <div className="flex justify-between items-center mb-2 relative z-10">
+                                        <span className="text-white/50 text-[10px] font-medium tracking-wide">STATUS DA PELADA</span>
+                                        <span className="text-white/80 text-[10px] hover:text-white underline decoration-white/30 decoration-dashed underline-offset-4">Editar</span>
                                     </div>
                                     
-                                    <div className="flex items-center gap-4 relative z-10">
-                                        <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md border border-white/5">
+                                    <div className="flex items-center gap-3 relative z-10">
+                                        <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md border border-white/5">
                                             {totalAvailablePlayers > 0 ? (
-                                                <GiSocks color="#34d399" size={24} />
+                                                <GiSocks color="#34d399" size={18} />
                                             ) : (
-                                                <GiWhistle color="rgba(255,255,255,0.4)" size={24} />
+                                                <GiWhistle color="rgba(255,255,255,0.4)" size={18} />
                                             )}
                                         </div>
                                         <div>
-                                            <h4 className="text-white font-medium text-lg leading-tight truncate max-w-[120px]">Confirmados</h4>
-                                            <p className="text-white/50 text-xs mt-0.5">{totalAvailablePlayers} na lista</p>
+                                            <h4 className="text-white font-medium text-sm leading-tight truncate max-w-[100px]">Confirmados</h4>
+                                            <p className="text-white/50 text-[10px] mt-0.5">{totalAvailablePlayers} na lista</p>
                                         </div>
-                                        <div className="ml-auto text-white text-[22px] font-bold tracking-tighter flex items-center">
-                                            <span className={`inline-flex mr-2 opacity-30 ${totalAvailablePlayers > 0 ? 'text-emerald-400 opacity-100' : ''}`}>
-                                                <GiSoccerBall size={16} />
+                                        <div className="ml-auto text-white text-lg font-bold tracking-tighter flex items-center">
+                                            <span className={`inline-flex mr-1.5 opacity-30 ${totalAvailablePlayers > 0 ? 'text-emerald-400 opacity-100' : ''}`}>
+                                                <GiSoccerBall size={14} />
                                             </span>
                                             {totalAvailablePlayers}
                                         </div>
@@ -7567,7 +7567,7 @@ function GroupApp({
                                 </div>
 
                                 {/* Bottom Action Buttons */}
-                                <div className="flex items-center gap-3 relative z-10 w-full" onClick={(e) => e.stopPropagation()}>
+                                <div className="flex items-center gap-2 relative z-10 w-full" onClick={(e) => e.stopPropagation()}>
                                     <button 
                                         onClick={(e) => {
                                           e.stopPropagation();
@@ -7575,12 +7575,12 @@ function GroupApp({
                                             prev === match.id ? null : match.id,
                                           );
                                         }}
-                                        className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer shadow-[0_8px_20px_rgba(0,0,0,0.2)]"
+                                        className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer shadow-[0_8px_20px_rgba(0,0,0,0.2)]"
                                     >
-                                        <Settings size={22} className="opacity-80" />
+                                        <Settings size={18} className="opacity-80" />
                                     </button>
-                                    <button className="w-14 h-14 rounded-full bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer shadow-[0_8px_20px_rgba(0,0,0,0.2)]">
-                                        <ArrowLeftRight size={22} className="opacity-80" />
+                                    <button className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer shadow-[0_8px_20px_rgba(0,0,0,0.2)]">
+                                        <ArrowLeftRight size={18} className="opacity-80" />
                                     </button>
                                     <button
                                         onClick={(e) => {
@@ -7589,9 +7589,9 @@ function GroupApp({
                                             setCurrentScreen("players");
                                             setShowAddPlayerSection(true);
                                         }}
-                                        className="flex-1 bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm rounded-full h-14 flex items-center justify-center text-white font-medium gap-2 transition-colors shadow-[0_8px_20px_rgba(0,0,0,0.2)]"
+                                        className="flex-1 bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm rounded-full h-11 flex items-center justify-center text-white text-[13px] font-medium gap-1.5 transition-colors shadow-[0_8px_20px_rgba(0,0,0,0.2)]"
                                     >
-                                        Editar <ArrowDown size={18} className="opacity-80" />
+                                        Editar <ArrowDown size={14} className="opacity-80" />
                                     </button>
                                     <button
                                         onClick={(e) => {
@@ -7600,8 +7600,8 @@ function GroupApp({
                                             setCurrentScreen("players");
                                             setShowAddPlayerSection(true);
                                         }}
-                                        className="flex-1 bg-[#1a65ff] hover:bg-[#357aff] shadow-[0_8px_25px_rgba(26,101,255,0.4)] rounded-full h-14 flex items-center justify-center text-white font-semibold gap-2 transition-all">
-                                        Abrir <ArrowUp size={18} />
+                                        className="flex-1 bg-[#1a65ff] hover:bg-[#357aff] shadow-[0_8px_25px_rgba(26,101,255,0.4)] rounded-full h-11 flex items-center justify-center text-white text-[13px] font-semibold gap-1.5 transition-all">
+                                        Abrir <ArrowUp size={14} />
                                     </button>
                                 </div>
 
