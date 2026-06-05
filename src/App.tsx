@@ -7273,7 +7273,7 @@ function GroupApp({
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
-          className={`flex-1 overflow-y-auto flex flex-col pb-32 touch-pan-y ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-[#dcdcdc]"}`}
+          className={`flex-1 overflow-y-auto flex flex-col pb-6 touch-pan-y ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-[#dcdcdc]"}`}
         >
           <AnimatePresence mode="wait">
             {currentScreen === "players" && !isPrintMode && (
@@ -7587,7 +7587,7 @@ function GroupApp({
                             opacity: { duration: 0.4 },
                             scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                           } : { delay: 0.4 }}
-                          className={`bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-100 rounded-2xl mx-4 mb-24 p-4 flex items-center gap-4 shadow-sm border border-black/5 mt-auto`}
+                          className={`bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-100 rounded-2xl mx-4 mb-4 p-4 flex items-center gap-4 shadow-sm border border-black/5 mt-auto`}
                         >
                           <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
                             <AlertCircle size={24} />
