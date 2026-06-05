@@ -7294,7 +7294,7 @@ function GroupApp({
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
-          className={`flex-1 overflow-y-auto flex flex-col pb-6 touch-pan-y ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-[#dcdcdc]"}`}
+          className={`flex-1 overflow-y-auto flex flex-col ${(!(currentScreen === "players" && !showAddPlayerSection) && !showPeladaReport) ? "pb-32" : "pb-10"} touch-pan-y ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-[#dcdcdc]"}`}
         >
           <AnimatePresence mode="wait">
             {currentScreen === "players" && !isPrintMode && (
