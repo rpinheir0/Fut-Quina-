@@ -7086,13 +7086,13 @@ function GroupApp({
               <div className="flex gap-1.5 justify-center">
                 <button
                   onClick={() => navigateTeamsTab("configuracao")}
-                  className={`w-10 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "configuracao" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10"}`}
+                  className={`w-10 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "configuracao" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10"}`}
                 >
                   <PiGearBold size={16} />
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("chegada")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "chegada" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "chegada" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7102,7 +7102,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("historico")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "historico" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "historico" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7112,7 +7112,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("proximos")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "proximos" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "proximos" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7541,11 +7541,11 @@ function GroupApp({
 
                                     <div className="flex justify-center -space-x-2 mb-4 relative z-10 w-full px-4 overflow-hidden py-1">
                                         {matchSpecificPlayers.slice(0, 5).map((player: any, pIdx: number) => (
-                                            <div key={`avatar-${pIdx}`} className="w-9 h-9 rounded-full border-2 border-[#1c55d4] bg-zinc-800 overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.3)] shrink-0">
+                                            <div key={`avatar-${pIdx}`} className="w-9 h-9 rounded-full border-2 border-[#3648ff] bg-zinc-800 overflow-hidden shadow-[0_4px_10px_rgba(0,0,0,0.3)] shrink-0">
                                                 {player.photo ? <img src={player.photo} className="w-full h-full object-cover"/> : <div className="w-full h-full flex items-center justify-center text-white text-[10px] bg-gradient-to-br from-indigo-400 to-purple-500 font-bold uppercase">{player.name[0]}</div>}
                                             </div>
                                         ))}
-                                        {matchSpecificPlayers.length > 5 && <div className="w-9 h-9 rounded-full border-2 border-[#1c55d4] bg-white/20 backdrop-blur-md flex items-center justify-center text-white font-bold text-xs shadow-[0_4px_10px_rgba(0,0,0,0.3)] shrink-0">+{matchSpecificPlayers.length - 5}</div>}
+                                        {matchSpecificPlayers.length > 5 && <div className="w-9 h-9 rounded-full border-2 border-[#3648ff] bg-white/20 backdrop-blur-md flex items-center justify-center text-white font-bold text-xs shadow-[0_4px_10px_rgba(0,0,0,0.3)] shrink-0">+{matchSpecificPlayers.length - 5}</div>}
                                     </div>
 
                                     <div className="bg-black/30 rounded-[24px] p-3 backdrop-blur-lg border border-white/5 relative overflow-hidden mb-3">
@@ -7582,7 +7582,7 @@ function GroupApp({
                                         >
                                             Editar
                                         </button>
-                                        <button onClick={(e) => { e.stopPropagation(); setSelectedMatchId(match.id); setCurrentScreen("players"); setShowAddPlayerSection(true); }} className="flex-1 bg-[#1a65ff] hover:bg-[#357aff] shadow-[0_8px_25px_rgba(26,101,255,0.4)] rounded-full h-11 flex items-center justify-center text-white text-[13px] font-semibold gap-1.5 transition-all">Abrir <ArrowUp size={14} /></button>
+                                        <button onClick={(e) => { e.stopPropagation(); setSelectedMatchId(match.id); setCurrentScreen("players"); setShowAddPlayerSection(true); }} className="flex-1 bg-[#3648ff] hover:bg-[#4d5aff] shadow-[0_8px_25px_rgba(54,72,255,0.4)] rounded-full h-11 flex items-center justify-center text-white text-[13px] font-semibold gap-1.5 transition-all">Abrir <ArrowUp size={14} /></button>
                                     </div>
                                   </motion.div>
                                 );
@@ -7692,7 +7692,7 @@ function GroupApp({
                       className="space-y-6"
                     >
                       <div className="space-y-6">
-                        <div className="bg-gradient-to-br from-[#1a65ff] to-[#004dc7] p-4 sm:p-6 rounded-[24px] border border-white/10 space-y-4 sm:space-y-6 shadow-xl">
+                        <div className="bg-gradient-to-br from-zinc-100 to-zinc-200 p-4 sm:p-6 rounded-[24px] border border-black/5 space-y-4 sm:space-y-6 shadow-xl">
                           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                             <div className="flex-1 flex gap-2 sm:gap-3">
                               <input
@@ -8077,7 +8077,7 @@ function GroupApp({
                                   enabled: !prev.enabled,
                                 }))
                               }
-                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 ${fixedColors.enabled ? "bg-[#00FF00]" : "bg-black/10"}`}
+                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 ${fixedColors.enabled ? "bg-[#34d399]" : "bg-black/10"}`}
                             >
                               <div
                                 className={`w-4 h-4 bg-white rounded-full transition-transform ${fixedColors.enabled ? "translate-x-6" : "translate-x-0"} shadow-sm`}
@@ -8177,7 +8177,7 @@ function GroupApp({
                                     !prev.allowFixedGoalkeeper,
                                 }))
                               }
-                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 ${orgProSettings.allowFixedGoalkeeper !== false ? "bg-[#00FF00]" : "bg-black/10"}`}
+                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 ${orgProSettings.allowFixedGoalkeeper !== false ? "bg-[#34d399]" : "bg-black/10"}`}
                             >
                               <div
                                 className={`w-4 h-4 bg-white rounded-full transition-transform ${orgProSettings.allowFixedGoalkeeper !== false ? "translate-x-6" : "translate-x-0"} shadow-sm`}
