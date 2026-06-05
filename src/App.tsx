@@ -386,7 +386,7 @@ const TEAM_COLORS = [
   "#000000",
 ];
 
-const TypewriterText = ({ text, className }: { text: string; className?: string }) => {
+const TypewriterText = ({ text, className, ...props }: { text: string; className?: string; [key: string]: any }) => {
   const [displayText, setDisplayText] = useState("");
   
   useEffect(() => {
@@ -404,7 +404,7 @@ const TypewriterText = ({ text, className }: { text: string; className?: string 
     return () => clearTimeout(timeout);
   }, [text]);
 
-  return <span className={className}>{displayText}</span>;
+  return <span className={className} {...props}>{displayText}</span>;
 };
 
 const TutorialCarousel = () => {
@@ -7494,8 +7494,10 @@ function GroupApp({
                                     <div className="flex justify-between items-center mb-3 relative z-10 w-full">
                                       <div className="flex items-center gap-2">
                                         <div className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md p-1 flex items-center justify-center border border-white/10 shadow-inner overflow-hidden">
-                                           {matchSpecificPlayers.length > 0 && matchSpecificPlayers[0].photo ? (
-                                             <img src={matchSpecificPlayers[0].photo} className="w-full h-full object-cover rounded-full" />
+                                           {match.imageUrl ? (
+                                             <img src={match.imageUrl} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
+                                           ) : matchSpecificPlayers.length > 0 && matchSpecificPlayers[0].photo ? (
+                                             <img src={matchSpecificPlayers[0].photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
                                            ) : (
                                              <GiSoccerBall size={16} color="#fff" />
                                            )}
@@ -7554,7 +7556,11 @@ function GroupApp({
                                           <button onClick={(e) => { e.stopPropagation(); handleSwapMatches(); }} className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer shadow-[0_8px_20_px_rgba(0,0,0,0.2)]"><ArrowLeftRight size={18} className="opacity-80" /></button>
                                         )}
                                         <button onClick={(e) => {
-                                            e.stopPropagation(); setEditingMatchId(match.id); setNewMatchName(match.name); setNewMatchTime(match.time);
+                                            e.stopPropagation(); 
+                                            setEditingMatchId(match.id); 
+                                            setNewMatchName(match.name); 
+                                            setNewMatchTime(match.time);
+                                            setNewMatchImage(match.imageUrl || "");
                                             const days = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
                                             const date = new Date(match.date); setNewMatchDay(days[date.getDay()]); setShowScheduleModal(true);
                                           }}
@@ -7578,22 +7584,30 @@ function GroupApp({
                                 Outras Peladas
                               </h5>
                               <div className="space-y-3">
-                                {scheduledMatches.slice(2).map((match) => (
-                                  <motion.div
-                                    key={match.id}
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="bg-white rounded-2xl p-4 border border-black/5 flex items-center justify-between shadow-sm"
-                                    onClick={() => {
-                                      setSelectedMatchId(match.id);
-                                      setCurrentScreen("players");
-                                      setShowAddPlayerSection(true);
-                                    }}
-                                  >
-                                    <div className="flex items-center gap-3">
-                                      <div className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-400 border border-black/5">
-                                        <GiSoccerBall size={20} />
-                                      </div>
+                                {scheduledMatches.slice(2).map((match) => {
+                                  const matchPlayers = players.filter(p => p.matchId === match.id);
+                                  return (
+                                    <motion.div
+                                      key={match.id}
+                                      initial={{ opacity: 0, y: 10 }}
+                                      animate={{ opacity: 1, y: 0 }}
+                                      className="bg-white rounded-2xl p-4 border border-black/5 flex items-center justify-between shadow-sm"
+                                      onClick={() => {
+                                        setSelectedMatchId(match.id);
+                                        setCurrentScreen("players");
+                                        setShowAddPlayerSection(true);
+                                      }}
+                                    >
+                                      <div className="flex items-center gap-3">
+                                        <div className="w-10 h-10 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-400 border border-black/5 overflow-hidden">
+                                          {match.imageUrl ? (
+                                            <img src={match.imageUrl} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                                          ) : matchPlayers.length > 0 && matchPlayers[0].photo ? (
+                                            <img src={matchPlayers[0].photo} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                                          ) : (
+                                            <GiSoccerBall size={20} />
+                                          )}
+                                        </div>
                                       <div>
                                         <h6 className="text-[13px] font-bold text-zinc-900 leading-tight capitalize">
                                           {match.name || "Sem nome"}
@@ -7605,6 +7619,22 @@ function GroupApp({
                                     </div>
                                     <div className="flex items-center gap-2">
                                        <button 
+                                         onClick={(e) => { 
+                                           e.stopPropagation(); 
+                                           setEditingMatchId(match.id); 
+                                           setNewMatchName(match.name); 
+                                           setNewMatchTime(match.time);
+                                           setNewMatchImage(match.imageUrl || "");
+                                           const days = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
+                                           const date = new Date(match.date); 
+                                           setNewMatchDay(days[date.getDay()]); 
+                                           setShowScheduleModal(true); 
+                                         }}
+                                         className="w-8 h-8 rounded-full bg-blue-50 text-blue-400 flex items-center justify-center hover:bg-blue-100 transition-colors"
+                                       >
+                                         <Pencil size={14} />
+                                       </button>
+                                       <button 
                                          onClick={(e) => { e.stopPropagation(); setMatchToDelete(match); }}
                                          className="w-8 h-8 rounded-full bg-red-50 text-red-400 flex items-center justify-center hover:bg-red-100 transition-colors"
                                        >
@@ -7613,7 +7643,8 @@ function GroupApp({
                                        <ChevronRight size={16} className="text-zinc-300" />
                                     </div>
                                   </motion.div>
-                                ))}
+                                  );
+                                })}
                               </div>
                             </div>
                           )}
@@ -15625,6 +15656,45 @@ function GroupApp({
             </div>
 
             <div className="space-y-6 relative z-10">
+              {/* Image Upload Area */}
+              <div className="flex flex-col items-center gap-2">
+                <div 
+                  onClick={() => fileInputRef.current?.click()}
+                  className="w-16 h-16 rounded-full bg-zinc-50 border-2 border-dashed border-zinc-200 flex items-center justify-center cursor-pointer overflow-hidden hover:border-emerald-500 transition-all shadow-sm group relative"
+                >
+                  {newMatchImage ? (
+                    <>
+                      <img src={newMatchImage} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                      <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                        <Camera size={16} className="text-white" />
+                      </div>
+                    </>
+                  ) : (
+                    <div className="flex flex-col items-center">
+                      <Camera size={20} className="text-zinc-300 group-hover:text-emerald-500" />
+                    </div>
+                  )}
+                </div>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleImageUpload}
+                  accept="image/*"
+                  className="hidden"
+                />
+                <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                  {newMatchImage ? "Alterar foto" : "Foto da pelada"}
+                </p>
+                {newMatchImage && (
+                  <button 
+                    onClick={() => setNewMatchImage("")}
+                    className="text-[9px] font-bold text-red-500 uppercase tracking-tight"
+                  >
+                    Remover
+                  </button>
+                )}
+              </div>
+
               <div className="space-y-2">
                 <input
                   type="text"
