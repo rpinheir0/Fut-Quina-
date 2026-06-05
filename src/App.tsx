@@ -7400,9 +7400,31 @@ function GroupApp({
                             </motion.div>
                           )}
 
-                          <div className="relative w-full max-w-sm mx-auto h-[410px]">
-                            <AnimatePresence mode="popLayout" initial={false}>
-                              {scheduledMatches.slice(0, 2).map((match, idx) => {
+                          {scheduledMatches.length === 0 && (
+                            <motion.div 
+                              initial={{ opacity: 0, scale: 0.95 }}
+                              animate={{ opacity: 1, scale: [1, 1.02, 1] }}
+                              transition={{
+                                opacity: { duration: 0.4 },
+                                scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                              }}
+                              className={`bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-100 rounded-2xl mx-4 p-4 flex items-center gap-4 shadow-sm border border-black/5`}
+                            >
+                              <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
+                                <AlertCircle size={24} />
+                              </div>
+                              <div className="flex-1 flex flex-col">
+                                <p className="text-[12px] font-medium text-zinc-600 leading-tight">
+                                  Você precisa criar uma pelada no botão acima para continuar.
+                                </p>
+                              </div>
+                            </motion.div>
+                          )}
+
+                          {scheduledMatches.length > 0 && (
+                            <div className="relative w-full max-w-sm mx-auto h-[410px]">
+                              <AnimatePresence mode="popLayout" initial={false}>
+                                {scheduledMatches.slice(0, 2).map((match, idx) => {
                                 const isTop = idx === 0;
                                 const matchDate = new Date(match.date);
                                 const day = matchDate.getDate();
@@ -7524,6 +7546,7 @@ function GroupApp({
                               }).reverse()}
                             </AnimatePresence>
                           </div>
+                          )}
 
                           {/* Remaining Matches List */}
                           {scheduledMatches.length > 2 && (
@@ -7576,29 +7599,6 @@ function GroupApp({
 
 
                       {/* Alert Banner / Tip */}
-                      {scheduledMatches.length === 0 && (
-                        <motion.div 
-                          initial={{ opacity: 0, scale: 0.95 }}
-                          animate={scheduledMatches.length === 0 ? {
-                            opacity: 1,
-                            scale: [1, 1.02, 1],
-                          } : { opacity: 1, scale: 1 }}
-                          transition={scheduledMatches.length === 0 ? {
-                            opacity: { duration: 0.4 },
-                            scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
-                          } : { delay: 0.4 }}
-                          className={`bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-100 rounded-2xl mx-4 mb-4 p-4 flex items-center gap-4 shadow-sm border border-black/5 mt-auto`}
-                        >
-                          <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
-                            <AlertCircle size={24} />
-                          </div>
-                          <div className="flex-1 flex flex-col">
-                            <p className="text-[12px] font-medium text-zinc-600 leading-tight">
-                              Você precisa criar uma pelada no botão acima para continuar.
-                            </p>
-                          </div>
-                        </motion.div>
-                      )}
                     </motion.div>
                   ) : (
                     <motion.div
