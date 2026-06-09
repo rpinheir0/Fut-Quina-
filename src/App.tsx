@@ -564,7 +564,7 @@ const FlipClock = ({
 
   return (
     <div
-      className={`flex items-center ${size === "xs" ? "gap-2.5 p-2 px-4" : "gap-1 p-2"} rounded-xl border border-white/10 bg-gradient-to-b from-zinc-100 via-zinc-200 to-zinc-300 shadow-inner`}
+      className={`flex items-center ${size === "xs" ? "gap-2.5 p-2 px-4" : "gap-1 p-2"} rounded-xl border border-black/5 bg-white/80 backdrop-blur-sm shadow-sm`}
     >
       <div className={`flex ${size === "xs" ? "gap-1.5" : "gap-0.5"}`}>
         <FlipDigit
@@ -3584,15 +3584,15 @@ function GroupApp({
   );
 
   const [teamsTab, setTeamsTab] = useState<
-    "configuracao" | "chegada" | "historico" | "proximos"
-  >("configuracao");
+    "menu" | "configuracao" | "chegada" | "historico" | "proximos"
+  >("menu");
 
   const [swipeDirection, setSwipeDirection] = useState(0);
 
   const navigateTeamsTab = (
-    target: "configuracao" | "chegada" | "historico" | "proximos",
+    target: "menu" | "configuracao" | "chegada" | "historico" | "proximos",
   ) => {
-    const tabs = ["configuracao", "chegada", "historico", "proximos"];
+    const tabs = ["menu", "configuracao", "chegada", "historico", "proximos"];
     const currentIndex = tabs.indexOf(teamsTab as any);
     const targetIndex = tabs.indexOf(target);
     if (currentIndex !== -1 && targetIndex !== -1) {
@@ -7081,9 +7081,15 @@ function GroupApp({
           </header>
 
           {/* Tabs for Teams */}
-          {currentScreen === "teams" && (
+          {currentScreen === "teams" && teamsTab !== "menu" && (
             <div className="px-6 pb-3">
               <div className="flex gap-1.5 justify-center">
+                <button
+                  onClick={() => navigateTeamsTab("menu")}
+                  className="px-3 py-1.5 flex items-center justify-center rounded-lg transition-all bg-white/5 text-white hover:bg-white/10 font-medium"
+                >
+                  <ArrowLeft size={16} />
+                </button>
                 <button
                   onClick={() => navigateTeamsTab("configuracao")}
                   className={`w-10 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "configuracao" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10"}`}
@@ -7130,7 +7136,7 @@ function GroupApp({
               <div className="flex gap-1.5 justify-center">
                 <button
                   onClick={() => setRankingTab("geral")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "geral" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "geral" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7140,7 +7146,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => setRankingTab("artilharia")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "artilharia" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "artilharia" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7150,7 +7156,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => setRankingTab("assistencias")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "assistencias" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "assistencias" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7168,7 +7174,7 @@ function GroupApp({
               <div className="flex gap-1.5 justify-center">
                 <button
                   onClick={() => setFinanceSubScreen("balanco")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${financeSubScreen === "balanco" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${financeSubScreen === "balanco" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors`}
@@ -7178,7 +7184,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => setFinanceSubScreen("mensalidade")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${financeSubScreen === "mensalidade" ? "bg-[#00FF00] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${financeSubScreen === "mensalidade" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10 font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors`}
@@ -7294,7 +7300,7 @@ function GroupApp({
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
-          className={`flex-1 overflow-y-auto flex flex-col ${currentScreen === "players" ? "pb-4" : (!showPeladaReport) ? "pb-12" : "pb-10"} touch-pan-y ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-[#dcdcdc]"}`}
+          className={`flex-1 overflow-y-auto flex flex-col ${currentScreen === "players" ? "pb-32" : (!showPeladaReport) ? "pb-12" : "pb-10"} touch-pan-y ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-[#dcdcdc]"}`}
         >
           <AnimatePresence mode="wait">
             {currentScreen === "players" && !isPrintMode && (
@@ -7934,7 +7940,7 @@ function GroupApp({
                           )}
                         </section>
 
-                        {players.length > 5 && (
+                        {players.length > 0 && (
                           <div className="flex justify-center pt-6 border-t border-black/5">
                             {!showClearConfirm ? (
                               <button
@@ -8005,6 +8011,49 @@ function GroupApp({
                         Ir
                       </button>
                     </div>
+                  ) : teamsTab === "menu" ? (
+                    <div className="flex-1 flex flex-col items-center justify-center min-h-[70vh] px-4">
+                      <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-center mb-10"
+                      >
+                        <p className="text-black/30 text-[10px] font-black uppercase tracking-[0.4em] mb-2">GERENCIAMENTO</p>
+                        <h2 className="text-2xl font-black uppercase tracking-tight text-zinc-900">Painel da Partida</h2>
+                      </motion.div>
+
+                      <div className="grid grid-cols-2 gap-4 w-full max-w-lg">
+                        {[
+                          { id: 'configuracao', label: 'CONFIGURAÇÃO', icon: PiGearBold, subtitle: 'Ajustes' },
+                          { id: 'chegada', label: 'PRESENÇA', icon: PiCheckCircleBold, subtitle: 'Lista' },
+                          { id: 'historico', label: 'CONFRONTOS', icon: Swords, subtitle: 'Placar' },
+                          { id: 'proximos', label: 'PRÓXIMOS', icon: PiCalendarBlankBold, subtitle: 'Agenda' }
+                        ].map((item, idx) => (
+                          <motion.button
+                            key={item.id}
+                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            animate={{ opacity: 1, scale: 1, y: 0 }}
+                            transition={{ delay: idx * 0.05 }}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => setTeamsTab(item.id as any)}
+                            className="bg-gradient-to-br from-[#1c55d4] via-[#103fa1] to-[#011442] rounded-[32px] p-6 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center text-center gap-3 border border-white/5 relative overflow-hidden group min-h-[160px]"
+                          >
+                            {/* Decorative Glows */}
+                            <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-400/20 rounded-full blur-[40px] pointer-events-none group-hover:bg-blue-400/30 transition-colors" />
+                            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-indigo-500/20 rounded-full blur-[40px] pointer-events-none group-hover:bg-indigo-500/30 transition-colors" />
+                            
+                            <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/10 shadow-inner mb-1 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
+                              <item.icon size={28} className="text-white" />
+                            </div>
+                            <div className="space-y-1 relative z-10">
+                              <p className="text-white/40 text-[8px] font-bold tracking-[0.2em] uppercase">{item.subtitle}</p>
+                              <h3 className="text-white text-[11px] font-black uppercase tracking-widest">{item.label}</h3>
+                            </div>
+                          </motion.button>
+                        ))}
+                      </div>
+                    </div>
                   ) : teamsTab === "configuracao" ? (
                     <div className="space-y-6">
                       <div className="sticky top-[-1px] z-40 bg-[#dcdcdc] backdrop-blur-md py-4 -mx-2 px-2 sm:-mx-4 sm:px-4 flex justify-between items-center border-b border-black/5">
@@ -8024,7 +8073,7 @@ function GroupApp({
                               defaultValue={match.config.duration}
                               min={1}
                               id="tab-match-duration"
-                              className="w-full p-4 rounded-xl outline-none font-bold bg-gradient-to-br from-zinc-200 to-zinc-300 text-black border border-black/10 focus:border-[#00FF00]/50 transition-all text-sm shadow-sm"
+                              className="w-full p-4 rounded-xl outline-none font-bold bg-gradient-to-br from-zinc-200 to-zinc-300 text-black border border-black/10 focus:border-[#34d399]/50 transition-all text-sm shadow-sm"
                             />
                           </div>
                           <div className="space-y-2">
@@ -8036,7 +8085,7 @@ function GroupApp({
                               defaultValue={match.config.goalLimit}
                               min={1}
                               id="tab-match-goals"
-                              className="w-full p-4 rounded-xl outline-none font-bold bg-gradient-to-br from-zinc-200 to-zinc-300 text-black border border-black/10 focus:border-[#00FF00]/50 transition-all text-sm shadow-sm"
+                              className="w-full p-4 rounded-xl outline-none font-bold bg-gradient-to-br from-zinc-200 to-zinc-300 text-black border border-black/10 focus:border-[#34d399]/50 transition-all text-sm shadow-sm"
                             />
                           </div>
                           <div
@@ -8050,7 +8099,7 @@ function GroupApp({
                               defaultValue={match.config.playersPerTeam}
                               min={1}
                               id="tab-match-players"
-                              className="w-full p-4 rounded-xl outline-none font-bold bg-gradient-to-br from-zinc-200 to-zinc-300 text-black border border-black/10 focus:border-[#00FF00]/50 transition-all text-sm shadow-sm"
+                              className="w-full p-4 rounded-xl outline-none font-bold bg-gradient-to-br from-zinc-200 to-zinc-300 text-black border border-black/10 focus:border-[#34d399]/50 transition-all text-sm shadow-sm"
                             />
                           </div>
                         </div>
@@ -9032,7 +9081,7 @@ function GroupApp({
                           {match.hasEnded && (
                             <div className="absolute inset-0 z-40 bg-black/10 backdrop-blur-[1px] rounded-2xl pointer-events-auto cursor-default" />
                           )}
-                          <div className="sticky top-[-1px] z-40 bg-gradient-to-br from-zinc-50 via-zinc-100 to-zinc-200 backdrop-blur-md border-b border-black/10 ring-1 ring-white/5 py-6 -mx-2 px-2 sm:-mx-4 sm:px-4 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-2xl w-full max-w-3xl mx-auto relative overflow-hidden">
+                          <div className="sticky top-[-1px] z-40 bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-300 backdrop-blur-md border-b border-black/10 ring-1 ring-white/5 py-6 -mx-2 px-2 sm:-mx-4 sm:px-4 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-2xl w-full max-w-3xl mx-auto relative overflow-hidden">
                             <div className="flex-1 flex flex-col items-center text-center space-y-2 sm:space-y-4">
                               <button
                                 className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm"
@@ -9113,7 +9162,7 @@ function GroupApp({
                                         };
                                       });
                                     }}
-                                    className={`w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center rounded-full transition-all shadow-md ${match.isPaused ? "bg-[#00FF00] text-black hover:opacity-90" : "bg-black/10 text-black/40 hover:bg-white/20"} disabled:opacity-20 disabled:cursor-not-allowed`}
+                                    className={`w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center rounded-full transition-all shadow-md ${match.isPaused ? "bg-[#34d399] text-white hover:opacity-90" : "bg-black/10 text-black/30 hover:bg-black/20"} disabled:opacity-20 disabled:cursor-not-allowed border border-black/5`}
                                   >
                                     {match.isPaused ? (
                                       <Play
@@ -9187,7 +9236,7 @@ function GroupApp({
                                     match.scoreB >= match.config.goalLimit
                                   }
                                   onClick={finishMatch}
-                                  className="px-2 sm:px-4 py-1 rounded-full bg-red-500/10 text-red-600 text-[6px] sm:text-[8px] font-black uppercase tracking-widest hover:bg-red-500/20 transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-red-500/10"
+                                  className="px-2 sm:px-4 py-1 rounded-full bg-red-500/20 text-red-700 text-[6px] sm:text-[8px] font-black uppercase tracking-widest hover:bg-red-500/30 transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-red-500/20"
                                 >
                                   Encerrar
                                 </button>
@@ -9867,7 +9916,7 @@ function GroupApp({
                                     });
                                   }
                                 }}
-                                className={`w-9 h-5 rounded-full p-0.5 transition-all duration-300 relative ${autoCompleteTeams ? "bg-[#00FF00]" : "bg-zinc-300"}`}
+                                className={`w-9 h-5 rounded-full p-0.5 transition-all duration-300 relative ${autoCompleteTeams ? "bg-[#34d399]" : "bg-zinc-300"}`}
                                 title="Subir automaticamente"
                               >
                                 <div
@@ -15338,7 +15387,7 @@ function GroupApp({
                   setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
                   setCurrentScreen("teams");
                   // Reset PARTIDA tabs
-                  setTeamsTab("configuracao");
+                  setTeamsTab("menu");
                   setPlayersTab("configuracao");
                 }}
                 className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
@@ -15485,7 +15534,7 @@ function GroupApp({
                 <div className="flex justify-center">
                   <button
                     onClick={() => setShowAutoCompleteModal(false)}
-                    className="w-full h-12 bg-[#00FF00] text-[#1E3D2F] rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg shadow-[#00FF00]/20 hover:scale-[1.02] transition-all active:scale-95"
+                    className="w-full h-12 bg-[#34d399] text-[#1E3D2F] rounded-2xl font-black uppercase tracking-widest text-xs shadow-lg shadow-[#34d399]/20 hover:scale-[1.02] transition-all active:scale-95"
                   >
                     OK
                   </button>
