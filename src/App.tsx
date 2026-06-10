@@ -8013,42 +8013,42 @@ function GroupApp({
                     </div>
                   ) : teamsTab === "menu" ? (
                     <div className="flex-1 flex flex-col items-center justify-center min-h-[70vh] px-4">
-                      <motion.div 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-center mb-10"
-                      >
-                        <p className="text-black/30 text-[10px] font-black uppercase tracking-[0.4em] mb-2">GERENCIAMENTO</p>
-                        <h2 className="text-2xl font-black uppercase tracking-tight text-zinc-900">Painel da Partida</h2>
-                      </motion.div>
-
-                      <div className="grid grid-cols-2 gap-4 w-full max-w-lg">
+                      <div className="flex flex-col gap-4 w-full max-w-md">
                         {[
-                          { id: 'configuracao', label: 'CONFIGURAÇÃO', icon: PiGearBold, subtitle: 'Ajustes' },
-                          { id: 'chegada', label: 'PRESENÇA', icon: PiCheckCircleBold, subtitle: 'Lista' },
-                          { id: 'historico', label: 'CONFRONTOS', icon: Swords, subtitle: 'Placar' },
-                          { id: 'proximos', label: 'PRÓXIMOS', icon: PiCalendarBlankBold, subtitle: 'Agenda' }
+                          { id: 'configuracao', label: 'CONFIGURAÇÃO', icon: PiGearBold, subtitle: 'Ajustes', image: '/i1.png' },
+                          { id: 'chegada', label: 'PRESENÇA', icon: PiCheckCircleBold, subtitle: 'Lista', image: '/i2.png' },
+                          { id: 'historico', label: 'CONFRONTOS', icon: Swords, subtitle: 'Placar', image: '/i3.png' },
+                          { id: 'proximos', label: 'PRÓXIMOS', icon: PiCalendarBlankBold, subtitle: 'Agenda', image: '/i4.png' }
                         ].map((item, idx) => (
                           <motion.button
                             key={item.id}
-                            initial={{ opacity: 0, scale: 0.9, y: 20 }}
+                            initial={{ opacity: 0, scale: 0.95, y: 10 }}
                             animate={{ opacity: 1, scale: 1, y: 0 }}
                             transition={{ delay: idx * 0.05 }}
-                            whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
+                            whileHover={{ scale: 1.01 }}
+                            whileTap={{ scale: 0.99 }}
                             onClick={() => setTeamsTab(item.id as any)}
-                            className="bg-gradient-to-br from-[#1c55d4] via-[#103fa1] to-[#011442] rounded-[32px] p-6 shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] flex flex-col items-center justify-center text-center gap-3 border border-white/5 relative overflow-hidden group min-h-[160px]"
+                            className="bg-gradient-to-br from-[#1c55d4] via-[#103fa1] to-[#011442] rounded-none p-3 shadow-[0_15px_30px_-12px_rgba(0,0,0,0.5)] flex items-center gap-5 border border-white/5 relative overflow-hidden group w-full"
                           >
                             {/* Decorative Glows */}
-                            <div className="absolute -top-10 -right-10 w-32 h-32 bg-blue-400/20 rounded-full blur-[40px] pointer-events-none group-hover:bg-blue-400/30 transition-colors" />
-                            <div className="absolute -bottom-10 -left-10 w-32 h-32 bg-indigo-500/20 rounded-full blur-[40px] pointer-events-none group-hover:bg-indigo-500/30 transition-colors" />
+                            <div className="absolute -top-10 -right-10 w-48 h-48 bg-blue-400/10 rounded-full blur-[60px] pointer-events-none group-hover:bg-blue-400/20 transition-colors" />
                             
-                            <div className="w-14 h-14 rounded-2xl bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/10 shadow-inner mb-1 group-hover:scale-110 group-hover:rotate-3 transition-all duration-500">
-                              <item.icon size={28} className="text-white" />
+                            <div className="w-14 h-14 rounded-lg bg-white/5 flex items-center justify-center border border-white/10 shadow-inner group-hover:scale-105 transition-all duration-500 overflow-hidden relative z-10 shrink-0">
+                              <item.icon size={24} className="text-white/10 absolute" />
+                              <img 
+                                src={item.image} 
+                                alt={item.label} 
+                                className="w-12 h-12 object-contain relative z-20"
+                                loading="eager"
+                                referrerPolicy="no-referrer"
+                              />
                             </div>
-                            <div className="space-y-1 relative z-10">
-                              <p className="text-white/40 text-[8px] font-bold tracking-[0.2em] uppercase">{item.subtitle}</p>
-                              <h3 className="text-white text-[11px] font-black uppercase tracking-widest">{item.label}</h3>
+                            <div className="text-left space-y-0.5 relative z-10">
+                              <p className="text-white/40 text-[8px] font-bold tracking-[0.3em] uppercase">{item.subtitle}</p>
+                              <h3 className="text-white text-sm font-black uppercase tracking-widest">{item.label}</h3>
+                            </div>
+                            <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity pr-2">
+                               <ChevronRight size={24} className="text-white/30" />
                             </div>
                           </motion.button>
                         ))}
