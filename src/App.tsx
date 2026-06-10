@@ -11500,14 +11500,20 @@ function GroupApp({
                           </div>
                         </motion.div>
                       ))}
-                      {players.length === 0 && (
-                        <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
-                          <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
-                            <span className="font-bold uppercase tracking-widest text-[11px]">
-                              Nenhum jogador adicionado ainda.
-                            </span>
+                      {sortedRankingPlayers.length === 0 && (
+                        <motion.div
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          className="flex items-center p-3.5 rounded-xl bg-[#d5deed] animate-pulse w-full mt-2"
+                        >
+                          <div className="w-[52px] h-[52px] rounded-full bg-[#f4f6fb] shrink-0 border border-black/5 flex items-center justify-center mr-5 shadow-sm">
+                            <GiSoccerField size={26} color="rgba(0,0,0,0.3)" />
                           </div>
-                        </div>
+                          <div className="flex flex-col gap-2.5 flex-1">
+                            <div className="h-[14px] bg-[#f4f6fb] rounded-2xl w-4/5 shadow-sm"></div>
+                            <div className="h-[10px] bg-[#f4f6fb] rounded-2xl w-2/5 shadow-sm"></div>
+                          </div>
+                        </motion.div>
                       )}
                     </div>
                   </motion.div>
