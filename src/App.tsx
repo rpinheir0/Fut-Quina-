@@ -7303,7 +7303,7 @@ function GroupApp({
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
-          className={`flex-1 overflow-y-auto flex flex-col ${currentScreen === "players" ? "pb-32" : (!showPeladaReport) ? "pb-12" : "pb-10"} touch-pan-y ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-[#dcdcdc]"}`}
+          className={`flex-1 overflow-y-auto flex flex-col ${currentScreen === "players" ? "pb-32" : (!showPeladaReport) ? "pb-12" : "pb-10"} touch-pan-y ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-[#0a0a0a]"}`}
         >
           <AnimatePresence mode="wait">
             {currentScreen === "players" && !isPrintMode && (
@@ -7313,19 +7313,19 @@ function GroupApp({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="p-4 sm:p-6 space-y-4 bg-zinc-50/30 flex-1 flex flex-col"
+                className="p-4 sm:p-6 space-y-4 flex-1 flex flex-col"
               >
                 {/* Dashboard Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   {!showAddPlayerSection ? (
                     <div className="flex flex-col gap-0.5">
-                      <h2 className="text-[12px] font-black uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">
+                      <h2 className="text-[12px] font-black uppercase tracking-widest bg-gradient-to-r from-zinc-400 to-zinc-200 bg-clip-text text-transparent">
                         Painel de controle
                       </h2>
                     </div>
                   ) : (
                     <div className="flex flex-col gap-0.5">
-                      <h2 className="text-[12px] font-black uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">
+                      <h2 className="text-[12px] font-black uppercase tracking-widest bg-gradient-to-r from-zinc-400 to-zinc-200 bg-clip-text text-transparent">
                         GERENCIAMENTO
                       </h2>
                       <p className="text-[9px] font-black uppercase tracking-widest text-zinc-400">
@@ -7419,7 +7419,7 @@ function GroupApp({
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.3 }}
-                              className="bg-gradient-to-br from-[#dce3ee] to-[#ced7e6] border border-black/5 rounded-lg h-[92px] flex items-center px-6 gap-5 relative overflow-hidden mb-2 shadow-sm"
+                              className="bg-gradient-to-br from-zinc-900 via-zinc-950 to-zinc-900 border border-white/5 rounded-lg h-[92px] flex items-center px-6 gap-5 relative overflow-hidden mb-2 shadow-sm"
                             >
                               <div className="w-12 h-12 rounded-full bg-white/50 border border-black/5 flex items-center justify-center text-zinc-400 shrink-0 shadow-sm">
                                 <GiSoccerField size={24} />
@@ -7444,7 +7444,7 @@ function GroupApp({
                                 opacity: { duration: 0.4 },
                                 scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                               }}
-                              className={`bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-100 rounded-2xl mx-4 p-4 flex items-center gap-4 shadow-sm border border-black/5`}
+                              className={`bg-gradient-to-br from-zinc-900 via-zinc-950 to-zinc-900 rounded-2xl mx-4 p-4 flex items-center gap-4 shadow-sm border border-white/5`}
                             >
                               <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
                                 <AlertCircle size={24} />
@@ -8001,7 +8001,7 @@ function GroupApp({
                   {!selectedMatchId ? (
                     <div className="flex flex-col items-center justify-center py-24 px-4 text-center">
                       <div className="w-16 h-16 rounded-full bg-black/5 flex items-center justify-center mb-6">
-                        <div className="text-black/30">
+                        <div className="text-white/30">
                           <IoInformationCircleOutline size={32} />
                         </div>
                       </div>
@@ -8446,7 +8446,7 @@ function GroupApp({
                         players.filter((p) => sessionPlayerIds.includes(p.id))
                           .length > 0 && (
                           <div className="flex justify-between items-center">
-                            <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">
+                            <h3 className="text-sm font-black uppercase tracking-widest text-zinc-100">
                               ORDEM DE CHEGADA
                             </h3>
                             <div className="flex flex-row items-center gap-2">
@@ -11435,9 +11435,9 @@ function GroupApp({
                       <div className="flex items-center gap-1">
                         {/* Ranking print button removed */}
                       </div>
-                      <div className="text-zinc-800/30 text-xs font-bold font-mono tracking-tighter uppercase"></div>
+                      <div className="text-zinc-100/30 text-xs font-bold font-mono tracking-tighter uppercase"></div>
                       <div
-                        className={`flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-zinc-800/50 ${rankingTab === "artilharia" ? "flex-row-reverse" : ""}`}
+                        className={`flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-zinc-100/50 ${rankingTab === "artilharia" ? "flex-row-reverse" : ""}`}
                       >
                         <div
                           className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== "assistencias" ? "" : "opacity-0"}`}
@@ -11469,7 +11469,7 @@ function GroupApp({
                           key={`${player.id}-${index}`}
                           className="flex items-center py-3 px-2 transition-colors rounded-xl bg-transparent border-b border-black/5"
                         >
-                          <div className="w-8 text-sm font-black text-zinc-800/40 text-center shrink-0">
+                          <div className="w-8 text-sm font-black text-zinc-100/40 text-center shrink-0">
                             {index + 1}
                           </div>
 
@@ -11484,14 +11484,14 @@ function GroupApp({
                                   className="w-full h-full object-cover"
                                 />
                               ) : (
-                                <span className="text-zinc-800/40 flex items-center shrink-0">
+                                <span className="text-zinc-100/40 flex items-center shrink-0">
                                   <IoPersonOutline size={20} />
                                 </span>
                               )}
                             </div>
                           </div>
 
-                          <div className="flex-1 text-xs text-zinc-800/90 tracking-tight truncate mr-4 font-normal capitalize flex flex-col gap-0.5">
+                          <div className="flex-1 text-xs text-zinc-100/90 tracking-tight truncate mr-4 font-normal capitalize flex flex-col gap-0.5">
                             <span className="leading-none">
                               {player.name.toLowerCase()}
                             </span>
@@ -11703,7 +11703,7 @@ function GroupApp({
                                 className={`p-4 transition-all col-span-2 lg:col-span-1 order-1 lg:order-none ${
                                   isPrintMode
                                     ? "bg-white border-zinc-300 border rounded-none"
-                                    : "bg-[#dce3ee] border-[#dce3ee]/20"
+                                    : "bg-zinc-900 border-zinc-800"
                                 }`}
                               >
                                 <div className="flex justify-between items-center mb-2">
@@ -11738,8 +11738,8 @@ function GroupApp({
                                     isPrintMode
                                       ? "text-black"
                                       : netBalance >= 0
-                                        ? "text-emerald-700"
-                                        : "text-red-700"
+                                        ? "text-emerald-400"
+                                        : "text-red-400"
                                   }`}
                                 >
                                   R$ <AnimatedCounter value={netBalance} />
@@ -11761,7 +11761,7 @@ function GroupApp({
                                   <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
                                 )}
                                 <p
-                                  className={`text-[10px] font-black uppercase tracking-widest mb-3 relative z-10 ${isPrintMode ? "text-zinc-600" : "text-[#1E3D2F]/60"}`}
+                                  className={`text-[10px] font-black uppercase tracking-widest mb-3 relative z-10 ${isPrintMode ? "text-zinc-600" : "text-emerald-400/60"}`}
                                 >
                                   Arrecadação
                                 </p>
@@ -11772,7 +11772,7 @@ function GroupApp({
                                       onClick={(e) => e.stopPropagation()}
                                     >
                                       <span
-                                        className={`text-sm font-bold ${isPrintMode ? "opacity-60" : "text-[#1E3D2F]/60"}`}
+                                        className={`text-sm font-bold ${isPrintMode ? "opacity-60" : "text-emerald-400/60"}`}
                                       >
                                         R$
                                       </span>
@@ -11797,13 +11797,13 @@ function GroupApp({
                                             setIsEditingTotal(false);
                                           }
                                         }}
-                                        className={`w-full bg-transparent border-b-2 border-brand-primary outline-none text-xl sm:text-2xl lg:text-3xl font-black ${isPrintMode ? "text-zinc-900" : "text-[#1E3D2F]"}`}
+                                        className={`w-full bg-transparent border-b-2 border-brand-primary outline-none text-xl sm:text-2xl lg:text-3xl font-black ${isPrintMode ? "text-zinc-900" : "text-emerald-400"}`}
                                       />
                                     </div>
                                   ) : (
                                     <div className="flex flex-col">
                                       <p
-                                        className={`text-xl sm:text-2xl lg:text-3xl font-black ${isPrintMode ? "text-black" : "text-[#1E3D2F]"}`}
+                                        className={`text-xl sm:text-2xl lg:text-3xl font-black ${isPrintMode ? "text-black" : "text-emerald-400"}`}
                                       >
                                         R$ {totalRevenue},00
                                       </p>
@@ -11816,7 +11816,7 @@ function GroupApp({
                                             );
                                             setIsEditingTotal(true);
                                           }}
-                                          className="text-[8px] font-bold uppercase tracking-widest text-[#1E3D2F]/60 flex items-center gap-1 hover:text-[#1E3D2F] w-fit mt-1"
+                                          className="text-[8px] font-bold uppercase tracking-widest text-emerald-400/60 flex items-center gap-1 hover:text-emerald-400 w-fit mt-1"
                                         >
                                           Ajustar Manual (R$ {manualAdjustment})
                                         </button>
@@ -11839,7 +11839,7 @@ function GroupApp({
                                   }
                                   !isPrintMode && setShowExpenseModal(true);
                                 }}
-                                className={`p-5 transition-all order-3 lg:order-none ${isPrintMode ? "bg-white border-zinc-300 border rounded-none" : "cursor-pointer hover:opacity-90 bg-red-500/10 border border-white/10 rounded-none"}`}
+                                className={`p-5 transition-all order-3 lg:order-none ${isPrintMode ? "bg-white border-zinc-300 border rounded-none" : "cursor-pointer hover:opacity-90 bg-red-500/10 border border-white/10"}`}
                               >
                                 <p
                                   className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? "text-zinc-600" : "text-zinc-500"}`}
@@ -11847,7 +11847,7 @@ function GroupApp({
                                   Despesas
                                 </p>
                                 <p
-                                  className={`text-xl sm:text-2xl lg:text-3xl font-black mb-4 ${isPrintMode ? "text-black" : "text-red-700"}`}
+                                  className={`text-xl sm:text-2xl lg:text-3xl font-black mb-4 ${isPrintMode ? "text-black" : "text-red-400"}`}
                                 >
                                   R$ {totalExpenses},00
                                 </p>
