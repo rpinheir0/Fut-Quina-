@@ -7493,14 +7493,14 @@ function GroupApp({
                                       transition: { duration: 0.3 }
                                     }}
                                     transition={{ type: "spring", stiffness: 260, damping: 20 }}
-                                    className={`group absolute inset-0 rounded-[32px] flex flex-col cursor-pointer transition-all duration-300 p-4 bg-gradient-to-br from-[#1c55d4] via-[#103fa1] to-[#011442] overflow-hidden ${isTop ? 'shadow-[0_25px_50px_-12px_rgba(0,0,0,0.5)]' : 'shadow-lg brightness-75'}`}
+                                    className={`group absolute inset-0 rounded-[32px] flex flex-col cursor-pointer transition-all duration-300 p-4 bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-300 overflow-hidden ${isTop ? 'shadow-[0_25px_50px_-12px_rgba(0,0,0,0.1)] border border-black/5' : 'shadow-md brightness-90 border border-black/5'}`}
                                   >
-                                    <div className="absolute top-0 right-0 w-64 h-64 bg-blue-400/20 rounded-full blur-[80px] pointer-events-none" />
-                                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-indigo-500/20 rounded-full blur-[60px] pointer-events-none" />
+                                    <div className="absolute top-0 right-0 w-64 h-64 bg-white/40 rounded-full blur-[80px] pointer-events-none" />
+                                    <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/20 rounded-full blur-[60px] pointer-events-none" />
 
                                     <div className="flex justify-between items-center mb-3 relative z-10 w-full">
                                       <div className="flex items-center gap-2">
-                                        <div 
+                                        <button 
                                           onClick={(e) => {
                                             e.stopPropagation();
                                             setEditingMatchId(match.id);
@@ -7513,20 +7513,20 @@ function GroupApp({
                                             setShowScheduleModal(true);
                                             setTimeout(() => fileInputRef.current?.click(), 100);
                                           }}
-                                          className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md p-1 flex items-center justify-center border border-white/10 shadow-inner overflow-hidden cursor-pointer hover:scale-110 transition-transform"
+                                          className="w-8 h-8 rounded-full bg-black/5 backdrop-blur-md p-1 flex items-center justify-center border border-black/5 shadow-inner overflow-hidden cursor-pointer hover:scale-110 transition-transform"
                                         >
                                            {match.imageUrl ? (
                                              <img src={match.imageUrl} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
                                            ) : matchSpecificPlayers.length > 0 && matchSpecificPlayers[0].photo ? (
                                              <img src={matchSpecificPlayers[0].photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
                                            ) : (
-                                             <GiSoccerBall size={16} color="#fff" />
+                                             <GiSoccerBall size={16} color="#71717a" />
                                            )}
-                                        </div>
+                                        </button>
                                         <TypewriterText 
                                           key={match.id}
                                           text={(match.name || "S").substring(0, 15)} 
-                                          className="text-white font-medium text-xs capitalize tracking-wide" 
+                                          className="text-zinc-900 font-bold text-xs capitalize tracking-wide" 
                                         />
                                       </div>
                                       <button onClick={(e) => {
@@ -7534,16 +7534,16 @@ function GroupApp({
                                           setToast({ message: "Para iniciar, selecione a pelada que você criou no painel acima.", type: "info" });
                                           setTimeout(() => setToast(null), 4000);
                                         }}
-                                        className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-all border border-white/5"
+                                        className="w-8 h-8 rounded-full bg-black/5 backdrop-blur-md flex items-center justify-center text-zinc-500 hover:bg-black/10 transition-all border border-black/5"
                                       >
                                         <Info size={14} />
                                       </button>
                                     </div>
 
                                     <div className="text-center mb-4 relative z-10">
-                                        <p className="text-white/60 text-[9px] font-bold tracking-[0.2em] uppercase mb-1">PRÓXIMA PELADA</p>
-                                        <h3 className="text-white text-3xl font-semibold tracking-tight">{day} {month.substring(0, 3)}</h3>
-                                        <p className="text-white/80 text-base mt-1 font-medium tracking-wide">{weekday.split('-')[0]} as {match.time}</p>
+                                        <p className="text-black/40 text-[9px] font-bold tracking-[0.2em] uppercase mb-1">PRÓXIMA PELADA</p>
+                                        <h3 className="text-zinc-900 text-3xl font-black tracking-tight">{day} {month.substring(0, 3)}</h3>
+                                        <p className="text-zinc-600 text-base mt-1 font-medium tracking-wide">{weekday.split('-')[0]} as {match.time}</p>
                                     </div>
 
                                     <div className="flex justify-center -space-x-2 mb-4 relative z-10 w-full px-4 overflow-hidden py-1">
@@ -7555,26 +7555,26 @@ function GroupApp({
                                         {matchSpecificPlayers.length > 5 && <div className="w-9 h-9 rounded-full border-2 border-[#3648ff] bg-white/20 backdrop-blur-md flex items-center justify-center text-white font-bold text-xs shadow-[0_4px_10px_rgba(0,0,0,0.3)] shrink-0">+{matchSpecificPlayers.length - 5}</div>}
                                     </div>
 
-                                    <div className="bg-black/30 rounded-[24px] p-3 backdrop-blur-lg border border-white/5 relative overflow-hidden mb-3">
-                                        <div className="absolute right-[-10%] top-[-10%] pointer-events-none rotate-12 scale-150 transition-transform duration-700"><GiSoccerField size={80} color="rgba(255,255,255,0.05)" /></div>
-                                        <div className="flex justify-between items-center mb-2 relative z-10"><span className="text-white/50 text-[10px] font-medium tracking-wide">STATUS DA PELADA</span></div>
+                                    <div className="bg-white/50 rounded-[24px] p-3 backdrop-blur-lg border border-black/5 relative overflow-hidden mb-3 shadow-inner">
+                                        <div className="absolute right-[-10%] top-[-10%] pointer-events-none rotate-12 scale-150 transition-transform duration-700"><GiSoccerField size={80} color="rgba(0,0,0,0.03)" /></div>
+                                        <div className="flex justify-between items-center mb-2 relative z-10"><span className="text-black/40 text-[10px] font-bold tracking-wide">STATUS DA PELADA</span></div>
                                         <div className="flex items-center gap-3 relative z-10">
-                                            <div className="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center backdrop-blur-md border border-white/5"><GiWhistle color="#34d399" size={18} /></div>
+                                            <div className="w-9 h-9 rounded-full bg-black/5 flex items-center justify-center backdrop-blur-md border border-black/5"><GiWhistle color="#14532d" size={18} /></div>
                                             <div>
-                                                <h4 className="text-white font-medium text-sm leading-tight truncate max-w-[100px]">Confirmados</h4>
-                                                <p className="text-white/50 text-[10px] mt-0.5">{totalAvailablePlayers} na lista</p>
+                                                <h4 className="text-zinc-900 font-bold text-sm leading-tight truncate max-w-[100px]">Confirmados</h4>
+                                                <p className="text-black/40 text-[10px] mt-0.5">{totalAvailablePlayers} na lista</p>
                                             </div>
-                                            <div className="ml-auto text-white text-lg font-bold tracking-tighter flex items-center">
-                                                <span className={`inline-flex mr-1.5 opacity-30 ${totalAvailablePlayers > 0 ? 'text-emerald-400 opacity-100' : ''}`}><GiSoccerBall size={14} /></span>
+                                            <div className="ml-auto text-zinc-900 text-lg font-black tracking-tighter flex items-center">
+                                                <span className={`inline-flex mr-1.5 opacity-10 ${totalAvailablePlayers > 0 ? 'text-emerald-600 opacity-100' : ''}`}><GiSoccerBall size={14} /></span>
                                                 {totalAvailablePlayers}
                                             </div>
                                         </div>
                                     </div>
 
                                     <div className="flex items-center gap-2 relative z-10 w-full" onClick={(e) => e.stopPropagation()}>
-                                        <button onClick={(e) => { e.stopPropagation(); setMatchToDelete(match); }} className="w-11 h-11 rounded-full bg-white/10 hover:bg-red-500/40 border border-white/5 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer shadow-[0_8px_20px_rgba(0,0,0,0.2)]"><Trash2 size={18} className="opacity-80" /></button>
+                                        <button onClick={(e) => { e.stopPropagation(); setMatchToDelete(match); }} className="w-11 h-11 rounded-full bg-black/5 hover:bg-red-500/20 border border-black/5 backdrop-blur-sm flex items-center justify-center text-zinc-600 transition-colors cursor-pointer shadow-sm"><Trash2 size={18} className="opacity-80" /></button>
                                         {scheduledMatches.length > 1 && (
-                                          <button onClick={(e) => { e.stopPropagation(); handleSwapMatches(); }} className="w-11 h-11 rounded-full bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm flex items-center justify-center text-white transition-colors cursor-pointer shadow-[0_8px_20_px_rgba(0,0,0,0.2)]"><ArrowLeftRight size={18} className="opacity-80" /></button>
+                                          <button onClick={(e) => { e.stopPropagation(); handleSwapMatches(); }} className="w-11 h-11 rounded-full bg-black/5 hover:bg-black/10 border border-black/5 backdrop-blur-sm flex items-center justify-center text-zinc-600 transition-colors cursor-pointer shadow-sm"><ArrowLeftRight size={18} className="opacity-80" /></button>
                                         )}
                                         <button onClick={(e) => {
                                             e.stopPropagation(); 
@@ -7585,11 +7585,11 @@ function GroupApp({
                                             const days = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
                                             const date = new Date(match.date); setNewMatchDay(days[date.getDay()]); setShowScheduleModal(true);
                                           }}
-                                          className="flex-1 bg-white/10 hover:bg-white/20 border border-white/5 backdrop-blur-sm rounded-full h-11 flex items-center justify-center text-white text-[13px] font-medium gap-1.5 transition-colors shadow-[0_8px_20px_rgba(0,0,0,0.2)]"
+                                          className="flex-1 bg-black/5 hover:bg-black/10 border border-black/5 backdrop-blur-sm rounded-full h-11 flex items-center justify-center text-zinc-900 text-[13px] font-bold gap-1.5 transition-colors shadow-sm"
                                         >
                                             Editar
                                         </button>
-                                        <button onClick={(e) => { e.stopPropagation(); setSelectedMatchId(match.id); setCurrentScreen("players"); setShowAddPlayerSection(true); }} className="flex-1 bg-[#3648ff] hover:bg-[#4d5aff] shadow-[0_8px_25px_rgba(54,72,255,0.4)] rounded-full h-11 flex items-center justify-center text-white text-[13px] font-semibold gap-1.5 transition-all">Abrir <ArrowUp size={14} /></button>
+                                        <button onClick={(e) => { e.stopPropagation(); setSelectedMatchId(match.id); setCurrentScreen("players"); setShowAddPlayerSection(true); }} className="flex-1 bg-[#3648ff] hover:bg-[#4d5aff] shadow-[0_8px_25px_rgba(54,72,255,0.2)] rounded-full h-11 flex items-center justify-center text-white text-[13px] font-black gap-1.5 transition-all">Abrir <ArrowUp size={14} /></button>
                                     </div>
                                   </motion.div>
                                 );
@@ -8019,7 +8019,7 @@ function GroupApp({
                           { id: 'configuracao', label: 'CONFIGURAÇÃO', icon: PiGearBold, subtitle: 'Ajustes', image: '/i1.png' },
                           { id: 'chegada', label: 'PRESENÇA', icon: PiCheckCircleBold, subtitle: 'Lista', image: '/i2.png' },
                           { id: 'historico', label: 'CONFRONTOS', icon: Swords, subtitle: 'Placar', image: '/i3.png' },
-                          { id: 'proximos', label: 'PRÓXIMOS', icon: PiCalendarBlankBold, subtitle: 'Agenda', image: '/i4.png' }
+                          { id: 'proximos', label: 'TIMES', icon: PiCalendarBlankBold, subtitle: 'Equipes', image: '/i4.png' }
                         ].map((item, idx) => (
                           <motion.button
                             key={item.id}
@@ -8029,13 +8029,13 @@ function GroupApp({
                             whileHover={{ scale: 1.01 }}
                             whileTap={{ scale: 0.99 }}
                             onClick={() => setTeamsTab(item.id as any)}
-                            className="bg-gradient-to-br from-[#1c55d4] via-[#103fa1] to-[#011442] rounded-none p-3 shadow-[0_15px_30px_-12px_rgba(0,0,0,0.5)] flex items-center gap-5 border border-white/5 relative overflow-hidden group w-full"
+                            className="bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-300 rounded-none p-3 shadow-[0_15px_30px_-12px_rgba(0,0,0,0.1)] flex items-center gap-5 border border-black/5 relative overflow-hidden group w-full"
                           >
-                            {/* Decorative Glows */}
-                            <div className="absolute -top-10 -right-10 w-48 h-48 bg-blue-400/10 rounded-full blur-[60px] pointer-events-none group-hover:bg-blue-400/20 transition-colors" />
+                            {/* Decorative Glows - Adjusted for light theme */}
+                            <div className="absolute -top-10 -right-10 w-48 h-48 bg-white/40 rounded-full blur-[60px] pointer-events-none group-hover:bg-white/60 transition-colors" />
                             
-                            <div className="w-14 h-14 rounded-lg bg-white/5 flex items-center justify-center border border-white/10 shadow-inner group-hover:scale-105 transition-all duration-500 overflow-hidden relative z-10 shrink-0">
-                              <item.icon size={24} className="text-white/10 absolute" />
+                            <div className="w-14 h-14 rounded-lg bg-black/5 flex items-center justify-center border border-black/5 shadow-inner group-hover:scale-105 transition-all duration-500 overflow-hidden relative z-10 shrink-0">
+                              <item.icon size={24} className="text-black/5 absolute" />
                               <img 
                                 src={item.image} 
                                 alt={item.label} 
@@ -8045,11 +8045,11 @@ function GroupApp({
                               />
                             </div>
                             <div className="text-left space-y-0.5 relative z-10">
-                              <p className="text-white/40 text-[8px] font-bold tracking-[0.3em] uppercase">{item.subtitle}</p>
-                              <h3 className="text-white text-sm font-black uppercase tracking-widest">{item.label}</h3>
+                              <p className="text-black/40 text-[8px] font-bold tracking-[0.3em] uppercase">{item.subtitle}</p>
+                              <h3 className="text-zinc-900 text-sm font-medium uppercase tracking-widest">{item.label}</h3>
                             </div>
                             <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity pr-2">
-                               <ChevronRight size={24} className="text-white/30" />
+                               <ChevronRight size={24} className="text-black/20" />
                             </div>
                           </motion.button>
                         ))}
