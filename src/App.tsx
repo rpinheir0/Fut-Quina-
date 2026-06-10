@@ -2520,6 +2520,7 @@ function GroupApp({
     );
     return saved === "true";
   });
+  const [shouldPulseConfig, setShouldPulseConfig] = useState(false);
 
   const [monthlyFee, setMonthlyFee] = useState<number>(() => {
     const saved = safeLocalStorage.getItem(`futquina_monthly_fee_${groupId}`);
@@ -4687,6 +4688,7 @@ function GroupApp({
 
   const addBulkPlayers = (text: string) => {
     setIsAiProcessing(true);
+    setShouldPulseConfig(true);
 
     setTimeout(() => {
       const lines = text.split("\n");
@@ -7335,18 +7337,24 @@ function GroupApp({
                   <div className="flex gap-2 w-full sm:w-auto">
                     {showAddPlayerSection ? (
                       <>
-                        <button
+                        <motion.button
                           onClick={() => {
+                            setShouldPulseConfig(false);
                             setCurrentScreen("teams");
                             setTeamsTab("configuracao");
                             if (!firstSetupDone) {
                               setIsInitialSetupFlow(true);
                             }
                           }}
+                          animate={shouldPulseConfig ? { 
+                            scale: [1, 1.05, 1],
+                            boxShadow: ["0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)", "0px 20px 25px -5px rgba(89, 184, 35, 0.4), 0px 10px 10px -5px rgba(89, 184, 35, 0.2)", "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"]
+                          } : {}}
+                          transition={shouldPulseConfig ? { repeat: Infinity, duration: 1.5 } : {}}
                           className="flex-1 sm:flex-none px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                         >
                           CONFIGURAR PARTIDA
-                        </button>
+                        </motion.button>
                       </>
                     ) : null}
                   </div>
@@ -8784,12 +8792,25 @@ function GroupApp({
                                   });
                                 }
                               }}
-                              className={`flex items-center gap-3 p-3 rounded-xl border transition-all active:scale-[0.98] ${
+                              className={`flex items-center gap-3 p-3 rounded-xl border transition-all active:scale-[0.98] relative overflow-hidden ${
                                 p.isAvailable
                                   ? "bg-[#ededed] border-[#ededed] text-black shadow-lg shadow-[#ededed]/10"
                                   : "bg-black/5 border-black/5 text-black/50 opacity-100 hover:bg-black/10"
                               }`}
                             >
+                              {p.isAvailable && (
+                                <motion.div
+                                  key={`sweep-${p.id}`}
+                                  initial={{ x: "-200%", opacity: 0 }}
+                                  animate={{ x: "200%", opacity: [0, 1, 1, 0] }}
+                                  transition={{ 
+                                    duration: 1, 
+                                    ease: "easeInOut",
+                                    times: [0, 0.2, 0.8, 1]
+                                  }}
+                                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent skew-x-[-25deg] pointer-events-none z-20"
+                                />
+                              )}
                               <div
                                 className={`w-10 h-10 rounded-full bg-gradient-to-br from-zinc-100 to-zinc-300 flex items-center justify-center overflow-hidden border border-black/10`}
                               >
