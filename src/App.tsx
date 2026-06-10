@@ -119,6 +119,7 @@ import {
 import { CiSaveUp1, CiMemoPad, CiImport } from "react-icons/ci";
 import { TiMap } from "react-icons/ti";
 import {
+  GiLaurelCrown,
   GiGloves,
   GiGoalKeeper,
   GiSoccerKick,
@@ -11507,7 +11508,7 @@ function GroupApp({
                           className="flex items-center p-3.5 rounded-xl bg-[#d5deed] animate-pulse w-full mt-2"
                         >
                           <div className="w-[52px] h-[52px] rounded-full bg-[#f4f6fb] shrink-0 border border-black/5 flex items-center justify-center mr-5 shadow-sm">
-                            <GiSoccerField size={26} color="rgba(0,0,0,0.3)" />
+                            <GiLaurelCrown size={26} color="rgba(0,0,0,0.3)" />
                           </div>
                           <div className="flex flex-col gap-2.5 flex-1">
                             <div className="h-[14px] bg-[#f4f6fb] rounded-2xl w-4/5 shadow-sm"></div>
