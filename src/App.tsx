@@ -3682,14 +3682,14 @@ function GroupApp({
 
   const [teamsTab, setTeamsTab] = useState<
     "menu" | "configuracao" | "chegada" | "historico" | "proximos"
-  >("menu");
+  >("historico");
 
   const [swipeDirection, setSwipeDirection] = useState(0);
 
   const navigateTeamsTab = (
     target: "menu" | "configuracao" | "chegada" | "historico" | "proximos",
   ) => {
-    const tabs = ["menu", "configuracao", "chegada", "historico", "proximos"];
+    const tabs = ["configuracao", "chegada", "historico", "proximos"];
     const currentIndex = tabs.indexOf(teamsTab as any);
     const targetIndex = tabs.indexOf(target);
     if (currentIndex !== -1 && targetIndex !== -1) {
@@ -7189,15 +7189,9 @@ function GroupApp({
           </header>
 
           {/* Tabs for Teams */}
-          {currentScreen === "teams" && teamsTab !== "menu" && (
+          {currentScreen === "teams" && (
             <div className="px-6 pb-3">
               <div className="flex gap-1.5 justify-center">
-                <button
-                  onClick={() => navigateTeamsTab("menu")}
-                  className="px-3 py-1.5 flex items-center justify-center rounded-lg transition-all bg-white/5 text-white hover:bg-white/10 font-medium"
-                >
-                  <ArrowLeft size={16} />
-                </button>
                 <button
                   onClick={() => navigateTeamsTab("configuracao")}
                   className={`w-10 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "configuracao" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-white/5 text-white hover:bg-white/10"}`}
@@ -8259,21 +8253,18 @@ function GroupApp({
                                     setShowColorPicker({
                                       teamIdx: -1,
                                       color:
-                                        fixedColors.teamA || TEAM_COLORS[0],
+                                        fixedColors.teamA || SHIRT_COLORS[8],
                                     })
                                   }
                                   className="w-full h-12 rounded-full flex items-center justify-between px-4 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all"
                                 >
                                   <div className="flex items-center gap-2">
-                                    <span
-                                      className="drop-shadow-sm"
-                                      style={{
-                                        color:
-                                          fixedColors.teamA || TEAM_COLORS[0],
-                                      }}
-                                    >
-                                      <PiShieldFill size={20} />
-                                    </span>
+                                    {(() => {
+                                      const color = fixedColors.teamA || SHIRT_COLORS[8];
+                                      const idx = SHIRT_COLORS.indexOf(color);
+                                      const ShirtIcon = idx !== -1 ? TEAM_ICONS[idx] : TEAM_ICONS[8];
+                                      return <ShirtIcon size={28} className="brightness-110 drop-shadow-md inline-block" />;
+                                    })()}
                                   </div>
                                   <Palette
                                     size={14}
@@ -8290,21 +8281,18 @@ function GroupApp({
                                     setShowColorPicker({
                                       teamIdx: -2,
                                       color:
-                                        fixedColors.teamB || TEAM_COLORS[1],
+                                        fixedColors.teamB || SHIRT_COLORS[7],
                                     })
                                   }
                                   className="w-full h-12 rounded-full flex items-center justify-between px-4 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all"
                                 >
                                   <div className="flex items-center gap-2">
-                                    <span
-                                      className="drop-shadow-sm"
-                                      style={{
-                                        color:
-                                          fixedColors.teamB || TEAM_COLORS[1],
-                                      }}
-                                    >
-                                      <PiShieldFill size={20} />
-                                    </span>
+                                    {(() => {
+                                      const color = fixedColors.teamB || SHIRT_COLORS[7];
+                                      const idx = SHIRT_COLORS.indexOf(color);
+                                      const ShirtIcon = idx !== -1 ? TEAM_ICONS[idx] : TEAM_ICONS[7];
+                                      return <ShirtIcon size={28} className="brightness-110 drop-shadow-md inline-block" />;
+                                    })()}
                                   </div>
                                   <Palette
                                     size={14}
@@ -15532,7 +15520,7 @@ function GroupApp({
                   setSwipeDirection(targetIndex > currentIndex ? -1 : 1);
                   setCurrentScreen("teams");
                   // Reset PARTIDA tabs
-                  setTeamsTab("menu");
+                  setTeamsTab("historico");
                   setPlayersTab("configuracao");
                 }}
                 className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
