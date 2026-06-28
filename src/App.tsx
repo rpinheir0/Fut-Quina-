@@ -971,29 +971,29 @@ const TieBreakerModal = ({
   const isLotteryOngoing = state.type === "lottery";
 
   return (
-    <div className="fixed inset-0 z-[2500] flex items-center justify-center p-4 bg-brand-dark/20 backdrop-blur-xl">
+    <div className="fixed inset-0 z-[2500] flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl">
       <motion.div
         initial={{ scale: 0.95, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 20 }}
         transition={{ type: "spring", damping: 25, stiffness: 200 }}
-        className="w-full max-w-md h-auto max-h-[90vh] flex flex-col bg-[#dce3ee] rounded-2xl overflow-hidden border border-black/5 shadow-[0_20px_50px_rgba(0,0,0,0.3)] relative"
+        className="w-full max-w-md h-auto max-h-[90vh] flex flex-col bg-[#0b1329]/95 rounded-[24px] overflow-hidden border border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)] relative text-white"
       >
         {/* Background Decorative Elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-primary/5 rounded-full blur-3xl -mr-32 -mt-32" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/20 rounded-full blur-3xl -ml-32 -mb-32" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -mr-32 -mt-32 animate-pulse" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl -ml-32 -mb-32" />
 
         {/* Header Section */}
         <div className="pt-10 pb-4 px-6 relative z-10 shrink-0">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-3">
-              <div className="w-2 h-8 bg-zinc-900 rounded-full shadow-[0_0_15px_rgba(0,0,0,0.1)]" />
-              <span className="text-xs font-black text-zinc-900 uppercase tracking-[0.4em]">
+              <div className="w-2 h-8 bg-emerald-400 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.5)]" />
+              <span className="text-xs font-black text-white uppercase tracking-[0.4em]">
                 Desempate
               </span>
             </div>
             {state.type === "penalties" && (
-              <span className="text-zinc-600 text-xs font-medium ml-5 mt-[-4px]">
+              <span className="text-white/60 text-xs font-medium ml-5 mt-[-4px]">
                 Disputa de pênaltis
               </span>
             )}
@@ -1001,7 +1001,7 @@ const TieBreakerModal = ({
           {state.type !== "none" && (
             <button
               onClick={() => onTypeSelect("none")}
-              className="absolute right-6 top-10 w-8 h-8 rounded-full bg-black/5 border border-black/10 flex items-center justify-center text-zinc-400 hover:text-zinc-600 hover:bg-black/10 transition-all active:scale-90"
+              className="absolute right-6 top-10 w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all active:scale-90"
             >
               <ArrowLeft size={18} />
             </button>
@@ -1012,10 +1012,10 @@ const TieBreakerModal = ({
         <div className="flex-1 overflow-y-auto p-6 pt-0 relative z-10 custom-scrollbar">
           {state.type === "none" && !showQueueOrder && (
             <div className="space-y-4">
-              <div className="flex items-center gap-4 bg-white/40 p-5 rounded-xl border border-black/5 mb-6 backdrop-blur-sm">
+              <div className="flex items-center gap-4 bg-white/5 p-5 rounded-2xl border border-white/10 mb-6 backdrop-blur-sm">
                 <div className="flex-1 flex flex-col items-center">
                   <div
-                    className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-2"
+                    className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-2 drop-shadow-[0_0_10px_rgba(255,255,255,0.15)]"
                     style={{ color: resolvedColorA }}
                   >
                     {(() => {
@@ -1023,7 +1023,7 @@ const TieBreakerModal = ({
                       return <IconA size={48} />;
                     })()}
                   </div>
-                  <div className="text-[10px] font-black text-zinc-800 uppercase tracking-widest">
+                  <div className="text-[10px] font-black text-white uppercase tracking-widest">
                     {teamA.name}
                   </div>
                   <div className="mt-2 flex flex-wrap justify-center gap-1 px-2">
@@ -1040,7 +1040,7 @@ const TieBreakerModal = ({
                         return (
                           <span
                             key={`${pid}-${idx}-firstmatch`}
-                            className="text-[7px] font-black text-black uppercase tracking-tighter"
+                            className="text-[7px] font-bold text-white/70 uppercase tracking-tighter"
                           >
                             {p?.name}
                             {idx < arr.length - 1 ? " •" : ""}
@@ -1049,10 +1049,10 @@ const TieBreakerModal = ({
                       })}
                   </div>
                 </div>
-                <div className="text-black/10 font-black text-xl">VS</div>
+                <div className="text-white/20 font-black text-xl">VS</div>
                 <div className="flex-1 flex flex-col items-center">
                   <div
-                    className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-2"
+                    className="w-14 h-14 sm:w-16 sm:h-16 flex items-center justify-center mb-2 drop-shadow-[0_0_10px_rgba(255,255,255,0.15)]"
                     style={{ color: resolvedColorB }}
                   >
                     {(() => {
@@ -1060,7 +1060,7 @@ const TieBreakerModal = ({
                       return <IconB size={48} />;
                     })()}
                   </div>
-                  <div className="text-[10px] font-black text-zinc-800 uppercase tracking-widest">
+                  <div className="text-[10px] font-black text-white uppercase tracking-widest">
                     {teamB.name}
                   </div>
                   <div className="mt-2 flex flex-wrap justify-center gap-1 px-2">
@@ -1077,7 +1077,7 @@ const TieBreakerModal = ({
                         return (
                           <span
                             key={`${pid}-${idx}-secondmatch`}
-                            className="text-[7px] font-black text-black uppercase tracking-tighter"
+                            className="text-[7px] font-bold text-white/70 uppercase tracking-tighter"
                           >
                             {p?.name}
                             {idx < arr.length - 1 ? " •" : ""}
@@ -1092,75 +1092,75 @@ const TieBreakerModal = ({
                 {queueCount >= 2 && (
                   <button
                     onClick={() => setShowQueueOrder(true)}
-                    className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] transition-all duration-400 transform active:scale-95 text-left shadow-lg hover:opacity-90"
+                    className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-red-500/30 hover:bg-red-500/5 transition-all duration-300 transform active:scale-95 text-left shadow-md"
                   >
-                    <div className="w-12 h-12 text-black flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                      <LogOut size={28} />
+                    <div className="w-10 h-10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform text-red-400">
+                      <LogOut size={24} />
                     </div>
                     <div className="flex flex-col">
-                      <span className="font-black uppercase tracking-widest text-[11px] text-black">
+                      <span className="font-bold uppercase tracking-widest text-[11px] text-white group-hover:text-red-300 transition-colors">
                         Os dois times deixam a partida
                       </span>
-                      <span className="text-[10px] text-black/60 font-bold tracking-tight mt-0.5">
+                      <span className="text-[10px] text-white/50 font-medium tracking-tight mt-0.5">
                         Ambos vão para o final da fila
                       </span>
                     </div>
                     <ChevronRight
                       size={18}
-                      className="ml-auto text-black/30 group-hover:text-black transition-colors"
+                      className="ml-auto text-white/30 group-hover:text-red-400 group-hover:translate-x-0.5 transition-all"
                     />
                   </button>
                 )}
 
                 <button
                   onClick={() => onTypeSelect("penalties")}
-                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] transition-all duration-400 transform active:scale-95 text-left shadow-lg hover:opacity-90"
+                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all duration-300 transform active:scale-95 text-left shadow-md"
                 >
-                  <div className="w-12 h-12 text-black flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <GiSoccerKick size={28} />
+                  <div className="w-10 h-10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform text-emerald-400">
+                    <GiSoccerKick size={24} />
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-black uppercase tracking-widest text-[11px] text-black">
+                    <span className="font-bold uppercase tracking-widest text-[11px] text-white group-hover:text-emerald-300 transition-colors">
                       Disputa de Pênaltis
                     </span>
-                    <span className="text-[10px] text-black/60 font-bold tracking-tight mt-0.5">
+                    <span className="text-[10px] text-white/50 font-medium tracking-tight mt-0.5">
                       Marcar acertos e erros
                     </span>
                   </div>
                   <ChevronRight
                     size={18}
-                    className="ml-auto text-black/30 group-hover:text-black transition-colors"
+                    className="ml-auto text-white/30 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all"
                   />
                 </button>
 
                 <button
                   onClick={() => onTypeSelect("lottery")}
-                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] transition-all duration-400 transform active:scale-95 text-left shadow-lg hover:opacity-90"
+                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-blue-500/30 hover:bg-blue-500/5 transition-all duration-300 transform active:scale-95 text-left shadow-md"
                 >
-                  <div className="w-12 h-12 text-black flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                    <RefreshCw size={28} strokeWidth={2} />
+                  <div className="w-10 h-10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform text-blue-400">
+                    <RefreshCw size={22} />
                   </div>
                   <div className="flex flex-col">
-                    <span className="font-black uppercase tracking-widest text-[11px] text-black">
+                    <span className="font-bold uppercase tracking-widest text-[11px] text-white group-hover:text-blue-300 transition-colors">
                       Sorteio Aleatório
                     </span>
-                    <span className="text-[10px] text-black/60 font-bold tracking-tight mt-0.5">
+                    <span className="text-[10px] text-white/50 font-medium tracking-tight mt-0.5">
                       Roleta da sorte
                     </span>
                   </div>
                   <ChevronRight
                     size={18}
-                    className="ml-auto text-black/30 group-hover:text-black transition-colors"
+                    className="ml-auto text-white/30 group-hover:text-blue-400 group-hover:translate-x-0.5 transition-all"
                   />
                 </button>
 
                 <div className="pt-6">
                   <button
                     onClick={() => onConfirm()}
-                    className="w-full p-4 mt-4 rounded-2xl bg-zinc-200 text-black font-black uppercase tracking-widest text-[10px] transition-all hover:bg-zinc-300 active:scale-95 flex items-center justify-center gap-3 group shadow-sm"
+                    className="w-full p-4 mt-4 rounded-2xl bg-white/5 border border-white/10 text-white/80 font-bold uppercase tracking-widest text-[10px] transition-all hover:bg-white/10 active:scale-95 flex items-center justify-center gap-3 group shadow-sm"
                   >
                     <span>Manter o resultado atual</span>
-                    <ChevronRight size={14} className="text-black/30 group-hover:translate-x-1 transition-transform" />
+                    <ChevronRight size={14} className="text-white/30 group-hover:translate-x-1 transition-transform group-hover:text-white" />
                   </button>
                 </div>
               </div>
@@ -1170,10 +1170,10 @@ const TieBreakerModal = ({
           {state.type === "none" && showQueueOrder && (
             <div className="space-y-6">
               <div className="text-center">
-                <h3 className="text-lg font-black text-zinc-900 uppercase tracking-tighter">
+                <h3 className="text-lg font-bold text-white uppercase tracking-tighter">
                   Posição na Fila
                 </h3>
-                <p className="text-xs text-zinc-500 font-bold uppercase tracking-widest mt-1">
+                <p className="text-xs text-white/60 font-bold uppercase tracking-widest mt-1">
                   Quem entra primeiro na fila?
                 </p>
               </div>
@@ -1181,25 +1181,26 @@ const TieBreakerModal = ({
               <div className="grid grid-cols-1 gap-3">
                 <button
                   onClick={() => onBothLeave("A")}
-                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] transition-all duration-400 transform active:scale-95 hover:scale-[1.02] text-left shadow-lg hover:opacity-90"
+                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all duration-300 transform active:scale-95 text-left shadow-md"
                 >
                   <div
-                    className="w-12 h-12 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform text-black shadow-black/20 drop-shadow-sm"
+                    className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform"
+                    style={{ color: resolvedColorA }}
                   >
                     {(() => {
                       const IconA = TEAM_ICONS[teamA.iconIdx ?? 0];
-                      return <IconA size={32} />;
+                      return <IconA size={24} />;
                     })()}
                   </div>
                   <div className="flex flex-col overflow-hidden">
-                    <span className="font-black uppercase tracking-widest text-xs text-black truncate">
+                    <span className="font-bold uppercase tracking-widest text-xs text-white group-hover:text-emerald-400 transition-colors truncate">
                       {teamA.name} primeiro
                     </span>
                     <div className="flex flex-wrap gap-x-1.5 mt-1">
                       {(teamA.playerIds || []).map((pid, idx) => (
                         <span
                           key={`${pid}-${idx}-2`}
-                          className="text-[8px] text-black/60 font-black tracking-tight"
+                          className="text-[8px] text-white/50 font-semibold tracking-tight"
                         >
                           {players.find((p) => p.id === pid)?.name}
                           {idx < (teamA.playerIds?.length || 0) - 1 ? " •" : ""}
@@ -1211,25 +1212,26 @@ const TieBreakerModal = ({
 
                 <button
                   onClick={() => onBothLeave("B")}
-                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] transition-all duration-400 transform active:scale-95 hover:scale-[1.02] text-left shadow-lg hover:opacity-90"
+                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-blue-500/30 hover:bg-blue-500/5 transition-all duration-300 transform active:scale-95 text-left shadow-md"
                 >
                   <div
-                    className="w-12 h-12 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform text-black shadow-black/20 drop-shadow-sm"
+                    className="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform"
+                    style={{ color: resolvedColorB }}
                   >
                     {(() => {
                       const IconB = TEAM_ICONS[teamB.iconIdx ?? 1];
-                      return <IconB size={32} />;
+                      return <IconB size={24} />;
                     })()}
                   </div>
                   <div className="flex flex-col overflow-hidden">
-                    <span className="font-black uppercase tracking-widest text-xs text-black truncate">
+                    <span className="font-bold uppercase tracking-widest text-xs text-white group-hover:text-blue-400 transition-colors truncate">
                       {teamB.name} primeiro
                     </span>
                     <div className="flex flex-wrap gap-x-1.5 mt-1">
                       {(teamB.playerIds || []).map((pid, idx) => (
                         <span
                           key={`${pid}-${idx}-3`}
-                          className="text-[8px] text-black/60 font-black tracking-tight"
+                          className="text-[8px] text-white/50 font-semibold tracking-tight"
                         >
                           {players.find((p) => p.id === pid)?.name}
                           {idx < (teamB.playerIds?.length || 0) - 1 ? " •" : ""}
@@ -1241,7 +1243,7 @@ const TieBreakerModal = ({
 
                 <button
                   onClick={() => setShowQueueOrder(false)}
-                  className="w-full p-4 mt-4 rounded-2xl bg-zinc-200 text-black font-black uppercase tracking-widest text-[10px] transition-all hover:bg-zinc-300 active:scale-95 text-center shadow-sm"
+                  className="w-full p-4 mt-4 rounded-2xl bg-white/5 border border-white/10 text-white font-bold uppercase tracking-widest text-[10px] transition-all hover:bg-white/10 active:scale-95 text-center shadow-sm"
                 >
                   Voltar
                 </button>
@@ -1251,10 +1253,10 @@ const TieBreakerModal = ({
 
           {isPenaltiesOngoing && (
             <div className="space-y-6">
-              <div className="flex justify-between items-center bg-white/40 p-6 rounded-[32px] border border-black/5 backdrop-blur-sm">
+              <div className="flex justify-between items-center bg-white/5 p-6 rounded-[32px] border border-white/10 backdrop-blur-sm">
                 <div className="text-center flex-1 flex flex-col items-center">
                   <div
-                    className="w-14 h-14 flex items-center justify-center drop-shadow-md mb-3"
+                    className="w-14 h-14 flex items-center justify-center drop-shadow-[0_0_10px_rgba(255,255,255,0.15)] mb-3"
                     style={{ color: teamA.color || TEAM_COLORS[0] }}
                   >
                     {(() => {
@@ -1262,16 +1264,16 @@ const TieBreakerModal = ({
                       return <IconA size={48} />;
                     })()}
                   </div>
-                  <div className="text-4xl font-black text-zinc-900 tracking-tighter">
+                  <div className="text-4xl font-black text-white tracking-tighter">
                     {teamAGoals}
                   </div>
                 </div>
-                <div className="text-black/10 font-black text-2xl tracking-tighter uppercase mx-4">
+                <div className="text-white/20 font-black text-2xl tracking-tighter uppercase mx-4">
                   VS
                 </div>
                 <div className="text-center flex-1 flex flex-col items-center">
                   <div
-                    className="w-14 h-14 flex items-center justify-center drop-shadow-md mb-3"
+                    className="w-14 h-14 flex items-center justify-center drop-shadow-[0_0_10px_rgba(255,255,255,0.15)] mb-3"
                     style={{ color: teamB.color || TEAM_COLORS[1] }}
                   >
                     {(() => {
@@ -1279,7 +1281,7 @@ const TieBreakerModal = ({
                       return <IconB size={48} />;
                     })()}
                   </div>
-                  <div className="text-4xl font-black text-zinc-900 tracking-tighter">
+                  <div className="text-4xl font-black text-white tracking-tighter">
                     {teamBGoals}
                   </div>
                 </div>
@@ -1295,14 +1297,14 @@ const TieBreakerModal = ({
                     return (
                       <div
                         key={`pen-a-${idx}`}
-                        className="p-3 bg-gradient-to-br from-zinc-100 to-zinc-200 border border-black/5 rounded-2xl space-y-3 relative overflow-hidden group shadow-sm"
+                        className="p-3 bg-white/5 border border-white/10 rounded-2xl space-y-3 relative overflow-hidden group shadow-sm"
                       >
                         <div className="flex items-center gap-2">
                           <div className="flex flex-col min-w-0">
-                            <span className="text-[10px] font-black text-black truncate uppercase tracking-tight leading-none">
+                            <span className="text-[10px] font-bold text-white truncate uppercase tracking-tight leading-none">
                               {p?.name}
                             </span>
-                            <span className="text-[7px] text-black/40 font-black uppercase tracking-widest mt-0.5">
+                            <span className="text-[7px] text-white/40 font-bold uppercase tracking-widest mt-0.5">
                               Batedor {idx + 1}
                             </span>
                           </div>
@@ -1310,13 +1312,13 @@ const TieBreakerModal = ({
                         <div className="flex gap-2">
                           <button
                             onClick={() => onPenaltyToggle("A", idx)}
-                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? "bg-emerald-500/20 text-emerald-600 border border-emerald-500/30 shadow-sm" : "bg-black/5 text-emerald-500/30 hover:bg-black/10"}`}
+                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-sm" : "bg-white/5 text-emerald-400/20 hover:bg-white/10"}`}
                           >
                             <PiCheckCircleBold size={18} />
                           </button>
                           <button
                             onClick={() => onPenaltyToggle("A", idx)}
-                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === false ? "bg-red-500/20 text-red-600 border border-red-500/30 shadow-sm" : "bg-black/5 text-red-500/30 hover:bg-black/10"}`}
+                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === false ? "bg-red-500/20 text-red-400 border border-red-500/30 shadow-sm" : "bg-white/5 text-red-400/20 hover:bg-white/10"}`}
                           >
                             <X size={18} />
                           </button>
@@ -1335,14 +1337,14 @@ const TieBreakerModal = ({
                     return (
                       <div
                         key={`pen-b-${idx}`}
-                        className="p-3 bg-gradient-to-br from-zinc-100 to-zinc-200 border border-black/5 rounded-2xl space-y-3 relative overflow-hidden group shadow-sm"
+                        className="p-3 bg-white/5 border border-white/10 rounded-2xl space-y-3 relative overflow-hidden group shadow-sm"
                       >
                         <div className="flex items-center gap-2">
                           <div className="flex flex-col min-w-0">
-                            <span className="text-[10px] font-black text-black truncate uppercase tracking-tight leading-none">
+                            <span className="text-[10px] font-bold text-white truncate uppercase tracking-tight leading-none">
                               {p?.name}
                             </span>
-                            <span className="text-[7px] text-black/40 font-black uppercase tracking-widest mt-0.5">
+                            <span className="text-[7px] text-white/40 font-bold uppercase tracking-widest mt-0.5">
                               Batedor {idx + 1}
                             </span>
                           </div>
@@ -1350,13 +1352,13 @@ const TieBreakerModal = ({
                         <div className="flex gap-2">
                           <button
                             onClick={() => onPenaltyToggle("B", idx)}
-                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? "bg-emerald-500/20 text-emerald-600 border border-emerald-500/30 shadow-sm" : "bg-black/5 text-emerald-500/30 hover:bg-black/10"}`}
+                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shadow-sm" : "bg-white/5 text-emerald-400/20 hover:bg-white/10"}`}
                           >
                             <PiCheckCircleBold size={18} />
                           </button>
                           <button
                             onClick={() => onPenaltyToggle("B", idx)}
-                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === false ? "bg-red-500/20 text-red-600 border border-red-500/30 shadow-sm" : "bg-black/5 text-red-500/30 hover:bg-black/10"}`}
+                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === false ? "bg-red-500/20 text-red-400 border border-red-500/30 shadow-sm" : "bg-white/5 text-red-400/20 hover:bg-white/10"}`}
                           >
                             <X size={18} />
                           </button>
@@ -1370,7 +1372,7 @@ const TieBreakerModal = ({
               <button
                 disabled={teamAGoals === teamBGoals}
                 onClick={() => onConfirm()}
-                className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 disabled:opacity-30 disabled:saturate-50"
+                className="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold uppercase tracking-widest text-[11px] rounded-2xl shadow-lg shadow-emerald-500/20 hover:opacity-90 transition-all active:scale-95 disabled:opacity-30 disabled:saturate-50"
               >
                 {teamAGoals === teamBGoals
                   ? "Placar Empatado"
@@ -1400,7 +1402,7 @@ const TieBreakerModal = ({
                             : 0,
                         }
                   }
-                  className="w-56 h-56 rounded-full bg-white/5 border-[10px] border-[#1a3a2e] relative shadow-[0_0_50px_rgba(0,0,0,0.5)] flex items-center justify-center"
+                  className="w-56 h-56 rounded-full bg-white/5 border-[10px] border-emerald-500/20 relative shadow-[0_0_50px_rgba(0,0,0,0.5)] flex items-center justify-center"
                 >
                   <div className="absolute top-0 bottom-0 left-1/2 w-[2px] bg-white/10 -translate-x-1/2" />
 
@@ -1425,7 +1427,7 @@ const TieBreakerModal = ({
                   </div>
 
                   {/* Marker */}
-                  <div className="w-24 h-24 bg-[#dce3ee] rounded-full border-4 border-black/5 shadow-inner flex items-center justify-center z-10">
+                  <div className="w-24 h-24 bg-[#0b1528] rounded-full border border-white/10 shadow-lg flex items-center justify-center z-10">
                     <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center">
                       <SpinningBall size="sm" spin={state.lottery.isSpinning} />
                     </div>
@@ -1433,12 +1435,12 @@ const TieBreakerModal = ({
                 </motion.div>
 
                 {/* Arrow Pointer */}
-                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[20px] border-t-brand-primary drop-shadow-[0_0_10px_rgba(183,217,108,0.5)]" />
+                <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-0 h-0 border-l-[15px] border-l-transparent border-r-[15px] border-r-transparent border-t-[20px] border-t-emerald-400 drop-shadow-[0_0_10px_rgba(52,211,153,0.5)]" />
               </div>
 
               {!state.lottery.winnerId && !state.lottery.isSpinning && (
                 <div className="w-full space-y-6">
-                  <div className="flex items-center gap-4 bg-white/40 p-5 rounded-[24px] border border-black/5 backdrop-blur-sm">
+                  <div className="flex items-center gap-4 bg-white/5 p-5 rounded-[24px] border border-white/10 backdrop-blur-sm">
                     <div className="flex-1 flex flex-col items-center">
                       <div
                         className="w-10 h-10 flex items-center justify-center drop-shadow-lg mb-2"
@@ -1449,7 +1451,7 @@ const TieBreakerModal = ({
                           return <IconA size={32} />;
                         })()}
                       </div>
-                      <div className="text-[8px] font-black text-zinc-500 uppercase tracking-widest">
+                      <div className="text-[8px] font-bold text-white/60 uppercase tracking-widest">
                         {teamA.name}
                       </div>
                       <div className="mt-1 flex flex-wrap justify-center gap-0.5">
@@ -1469,7 +1471,7 @@ const TieBreakerModal = ({
                             return (
                               <span
                                 key={`${pid}-${idx}-third`}
-                                className="text-[6px] font-bold text-zinc-400 uppercase"
+                                className="text-[6px] font-semibold text-white/50 uppercase"
                               >
                                 {p?.name}
                                 {idx < arr.length - 1 ? "," : ""}
@@ -1478,7 +1480,7 @@ const TieBreakerModal = ({
                           })}
                       </div>
                     </div>
-                    <div className="text-black/10 font-bold text-xs uppercase">
+                    <div className="text-white/20 font-bold text-xs uppercase">
                       VS
                     </div>
                     <div className="flex-1 flex flex-col items-center">
@@ -1491,7 +1493,7 @@ const TieBreakerModal = ({
                           return <IconB size={32} />;
                         })()}
                       </div>
-                      <div className="text-[8px] font-black text-zinc-500 uppercase tracking-widest">
+                      <div className="text-[8px] font-bold text-white/60 uppercase tracking-widest">
                         {teamB.name}
                       </div>
                       <div className="mt-1 flex flex-wrap justify-center gap-0.5">
@@ -1511,7 +1513,7 @@ const TieBreakerModal = ({
                             return (
                               <span
                                 key={`${pid}-${idx}-fourth`}
-                                className="text-[6px] font-bold text-zinc-400 uppercase"
+                                className="text-[6px] font-semibold text-white/50 uppercase"
                               >
                                 {p?.name}
                                 {idx < arr.length - 1 ? "," : ""}
@@ -1523,7 +1525,7 @@ const TieBreakerModal = ({
                   </div>
                   <button
                     onClick={onLotterySpin}
-                    className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
+                    className="w-full py-4 bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold uppercase tracking-widest text-[11px] rounded-2xl shadow-lg shadow-blue-500/20 hover:opacity-90 transition-all active:scale-95"
                   >
                     Girar Roleta
                   </button>
@@ -1532,8 +1534,8 @@ const TieBreakerModal = ({
 
               {state.lottery.winnerId && !state.lottery.isSpinning && (
                 <div className="w-full space-y-6 text-center">
-                  <div className="bg-white/40 p-6 rounded-[32px] border border-black/5 animate-in fade-in zoom-in duration-500 backdrop-blur-sm">
-                    <div className="text-[10px] font-black text-brand-primary uppercase tracking-[0.2em] mb-4">
+                  <div className="bg-white/5 p-6 rounded-[32px] border border-white/10 animate-in fade-in zoom-in duration-500 backdrop-blur-sm">
+                    <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-[0.2em] mb-4">
                       Vencedor Sorteado
                     </div>
                     <div className="flex flex-col items-center gap-3">
@@ -1554,7 +1556,7 @@ const TieBreakerModal = ({
                           return <IconWinner size={64} />;
                         })()}
                       </div>
-                      <div className="text-xl font-black text-zinc-900 uppercase tracking-tighter">
+                      <div className="text-xl font-black text-white uppercase tracking-tighter">
                         {state.lottery.winnerId === teamA.id
                           ? teamA.name
                           : teamB.name}
@@ -1570,7 +1572,7 @@ const TieBreakerModal = ({
                           return (
                             <span
                               key={`${pid}-${idx}-fifth`}
-                              className="text-[8px] font-black text-black uppercase tracking-widest"
+                              className="text-[8px] font-bold text-white/80 uppercase tracking-widest"
                             >
                               {p?.name}
                               {idx < arr.length - 1 ? " •" : ""}
@@ -1582,7 +1584,7 @@ const TieBreakerModal = ({
                   </div>
                   <button
                     onClick={() => onConfirm()}
-                    className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
+                    className="w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold uppercase tracking-widest text-[11px] rounded-2xl shadow-lg shadow-emerald-500/20 hover:opacity-90 transition-all active:scale-95"
                   >
                     Confirmar Resultado
                   </button>
@@ -8074,8 +8076,8 @@ function GroupApp({
                     </div>
                   ) : teamsTab === "configuracao" ? (
                     <div className="space-y-6">
-                      <div className="sticky top-[-1px] z-40 bg-[#dcdcdc] backdrop-blur-md py-4 -mx-2 px-2 sm:-mx-4 sm:px-4 flex justify-between items-center border-b border-black/5">
-                        <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">
+                      <div className="sticky top-[-1px] z-40 bg-transparent backdrop-blur-md py-4 -mx-2 px-2 sm:-mx-4 sm:px-4 flex justify-between items-center border-b border-white/10">
+                        <h3 className="text-sm font-black uppercase tracking-widest text-white">
                           Configuração
                         </h3>
                       </div>
@@ -8083,7 +8085,7 @@ function GroupApp({
                       <div className="space-y-6">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                           <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-black/40">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-blue-200/60">
                               Tempo (Minutos)
                             </label>
                             <input
@@ -8095,7 +8097,7 @@ function GroupApp({
                             />
                           </div>
                           <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-black/40">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-blue-200/60">
                               Limite de Gols
                             </label>
                             <input
@@ -8109,7 +8111,7 @@ function GroupApp({
                           <div
                             className={`space-y-2 transition-all duration-500 rounded-xl p-2 ${isFlashingConfig ? "animate-flash-highlight" : ""}`}
                           >
-                            <label className="text-[10px] font-black uppercase tracking-widest text-black/40">
+                            <label className="text-[10px] font-black uppercase tracking-widest text-blue-200/60">
                               Jogadores por Time
                             </label>
                             <input
@@ -8122,18 +8124,18 @@ function GroupApp({
                           </div>
                         </div>
 
-                        <div className="p-5 bg-black/5 rounded-none border border-black/10 space-y-4 shadow-inner">
+                        <div className="p-5 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 space-y-4 shadow-xl">
                           <div className="flex items-start justify-between">
                             <div className="flex flex-col">
                               <div className="flex items-center gap-1.5 h-6">
-                                <span className="text-black/70">
+                                <span className="text-blue-400">
                                   <Shirt size={14} />
                                 </span>
-                                <span className="text-[11px] font-black uppercase tracking-widest text-black/90">
+                                <span className="text-[11px] font-black uppercase tracking-widest text-white">
                                   Fixar cores.
                                 </span>
                               </div>
-                              <p className="text-[11px] text-black/40 font-bold mt-0.5">
+                              <p className="text-[11px] text-blue-200/50 font-bold mt-0.5">
                                 Defina as cores permanentes para os times selecionados.
                               </p>
                             </div>
@@ -8144,7 +8146,7 @@ function GroupApp({
                                   enabled: !prev.enabled,
                                 }))
                               }
-                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 ${fixedColors.enabled ? "bg-[#34d399]" : "bg-black/10"}`}
+                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 ${fixedColors.enabled ? "bg-blue-500" : "bg-white/10"}`}
                             >
                               <div
                                 className={`w-4 h-4 bg-white rounded-full transition-transform ${fixedColors.enabled ? "translate-x-6" : "translate-x-0"} shadow-sm`}
@@ -8155,7 +8157,7 @@ function GroupApp({
                           {fixedColors.enabled && (
                             <div className="grid grid-cols-2 gap-4 pt-2 animate-in fade-in slide-in-from-top-1 duration-300">
                               <div className="space-y-2">
-                                <label className="text-[9px] font-black uppercase tracking-widest text-black/30">
+                                <label className="text-[9px] font-black uppercase tracking-widest text-blue-200/50">
                                   Cor Time A
                                 </label>
                                 <button
@@ -8166,7 +8168,7 @@ function GroupApp({
                                         fixedColors.teamA || TEAM_COLORS[0],
                                     })
                                   }
-                                  className="w-full h-12 rounded-full flex items-center justify-between px-4 bg-black/5 border border-black/5 hover:border-white/20 transition-all"
+                                  className="w-full h-12 rounded-full flex items-center justify-between px-4 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all"
                                 >
                                   <div className="flex items-center gap-2">
                                     <span
@@ -8181,12 +8183,12 @@ function GroupApp({
                                   </div>
                                   <Palette
                                     size={14}
-                                    className="text-black/40"
+                                    className="text-blue-400"
                                   />
                                 </button>
                               </div>
                               <div className="space-y-2">
-                                <label className="text-[9px] font-black uppercase tracking-widest text-black/30">
+                                <label className="text-[9px] font-black uppercase tracking-widest text-blue-200/50">
                                   Cor Time B
                                 </label>
                                 <button
@@ -8197,7 +8199,7 @@ function GroupApp({
                                         fixedColors.teamB || TEAM_COLORS[1],
                                     })
                                   }
-                                  className="w-full h-12 rounded-full flex items-center justify-between px-4 bg-black/5 border border-black/5 hover:border-white/20 transition-all"
+                                  className="w-full h-12 rounded-full flex items-center justify-between px-4 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all"
                                 >
                                   <div className="flex items-center gap-2">
                                     <span
@@ -8212,7 +8214,7 @@ function GroupApp({
                                   </div>
                                   <Palette
                                     size={14}
-                                    className="text-zinc-400"
+                                    className="text-blue-400"
                                   />
                                 </button>
                               </div>
@@ -8220,18 +8222,18 @@ function GroupApp({
                           )}
                         </div>
 
-                        <div className="p-5 bg-black/5 rounded-none border border-black/10 space-y-4 shadow-inner">
+                        <div className="p-5 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 space-y-4 shadow-xl">
                           <div className="flex items-start justify-between">
                             <div className="flex flex-col">
                               <div className="flex items-center gap-1.5 h-6">
-                                <span className="flex items-center justify-center border border-black/40 rounded-full w-5 h-5 text-[10px] font-black text-black/70">
+                                <span className="flex items-center justify-center border border-white/30 rounded-full w-5 h-5 text-[10px] font-black text-blue-400">
                                   G
                                 </span>
-                                <span className="text-[11px] font-black uppercase tracking-widest text-black/90">
+                                <span className="text-[11px] font-black uppercase tracking-widest text-white">
                                   Goleiro fixo.
                                 </span>
                               </div>
-                              <p className="text-[11px] text-black/40 font-bold mt-0.5">
+                              <p className="text-[11px] text-blue-200/50 font-bold mt-0.5">
                                 Ativa a opção de definir goleiros nas ações do
                                 jogador
                               </p>
@@ -8244,7 +8246,7 @@ function GroupApp({
                                     !prev.allowFixedGoalkeeper,
                                 }))
                               }
-                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 ${orgProSettings.allowFixedGoalkeeper !== false ? "bg-[#34d399]" : "bg-black/10"}`}
+                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 ${orgProSettings.allowFixedGoalkeeper !== false ? "bg-blue-500" : "bg-white/10"}`}
                             >
                               <div
                                 className={`w-4 h-4 bg-white rounded-full transition-transform ${orgProSettings.allowFixedGoalkeeper !== false ? "translate-x-6" : "translate-x-0"} shadow-sm`}
@@ -8455,7 +8457,7 @@ function GroupApp({
                         players.filter((p) => sessionPlayerIds.includes(p.id))
                           .length > 0 && (
                           <div className="flex justify-between items-center">
-                            <h3 className="text-sm font-black uppercase tracking-widest text-zinc-800">
+                            <h3 className="text-sm font-black uppercase tracking-widest text-white">
                               ORDEM DE CHEGADA
                             </h3>
                             <div className="flex flex-row items-center gap-2">
@@ -8657,12 +8659,12 @@ function GroupApp({
                         match.config.playersPerTeam * 2 &&
                         players.filter((p) => sessionPlayerIds.includes(p.id))
                           .length > 0 && (
-                          <div className="bg-[#eff5e8] rounded-[20px] p-4 flex items-center gap-4 border border-black/5 shadow-sm mb-4">
-                            <div className="text-[#25660e] flex items-center justify-center shrink-0">
+                          <div className="bg-emerald-500/10 rounded-2xl p-4 flex items-center gap-4 border border-emerald-500/20 shadow-sm mb-4 backdrop-blur-md">
+                            <div className="text-emerald-400 flex items-center justify-center shrink-0">
                               <IoMdDoneAll size={24} />
                             </div>
                             <div className="flex-1 flex flex-col">
-                              <h5 className="text-[13px] font-bold text-zinc-900 border-black/10 leading-tight">
+                              <h5 className="text-[13px] font-medium text-white border-black/10 leading-tight">
                                 Marque os jogadores que já estão presentes na
                                 pelada
                               </h5>
@@ -8801,10 +8803,10 @@ function GroupApp({
                                   });
                                 }
                               }}
-                              className={`flex items-center gap-3 p-3 rounded-xl border transition-all active:scale-[0.98] relative overflow-hidden ${
+                              className={`flex items-center gap-3 p-3 rounded-2xl border transition-all active:scale-[0.98] relative overflow-hidden ${
                                 p.isAvailable
-                                  ? "bg-[#ededed] border-[#ededed] text-black shadow-lg shadow-[#ededed]/10"
-                                  : "bg-black/5 border-black/5 text-black/50 opacity-100 hover:bg-black/10"
+                                  ? "bg-white/5 backdrop-blur-md border-white/10 text-white shadow-sm"
+                                  : "bg-white/5 border-white/5 text-white/40 opacity-60 hover:bg-white/10"
                               }`}
                             >
                               {p.isAvailable && (
@@ -8817,11 +8819,11 @@ function GroupApp({
                                     ease: "easeInOut",
                                     times: [0, 0.2, 0.8, 1]
                                   }}
-                                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent skew-x-[-25deg] pointer-events-none z-20"
+                                  className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent skew-x-[-25deg] pointer-events-none z-20"
                                 />
                               )}
                               <div
-                                className={`w-10 h-10 rounded-full bg-gradient-to-br from-zinc-100 to-zinc-300 flex items-center justify-center overflow-hidden border border-black/10`}
+                                className={`w-10 h-10 rounded-full bg-white/10 flex items-center justify-center overflow-hidden border border-white/10`}
                               >
                                 {p.photo ? (
                                   <img
@@ -8834,8 +8836,8 @@ function GroupApp({
                                   <span
                                     className={
                                       (p.isAvailable
-                                        ? "text-zinc-500"
-                                        : "text-black/40") +
+                                        ? "text-white/80"
+                                        : "text-white/40") +
                                       " flex items-center shrink-0"
                                     }
                                   >
@@ -8845,12 +8847,12 @@ function GroupApp({
                               </div>
                               <div className="flex-1 text-left flex flex-col gap-0.5">
                                 <div
-                                  className={`text-xs font-normal tracking-tight capitalize leading-none ${p.isAvailable ? "text-black/90" : "text-black/50"}`}
+                                  className={`text-xs font-normal tracking-tight capitalize leading-none ${p.isAvailable ? "text-white" : "text-white/50"}`}
                                 >
                                   {p.name.toLowerCase()}
                                 </div>
                                 <div
-                                  className={`text-[8px] font-bold uppercase ${p.isAvailable ? "text-green-600" : "text-black/30"}`}
+                                  className={`text-[8px] font-bold uppercase ${p.isAvailable ? "text-emerald-400" : "text-white/30"}`}
                                 >
                                   {p.isAvailable ? "CONFIRMADO" : "Aguardando"}
                                 </div>
@@ -8858,7 +8860,7 @@ function GroupApp({
                               {p.isAvailable && (
                                 <CheckCircle2
                                   size={16}
-                                  className="text-green-700"
+                                  className="text-emerald-400"
                                 />
                               )}
                             </button>
@@ -11440,28 +11442,28 @@ function GroupApp({
               >
                 {!isPrintMode ? (
                   <motion.div className={`w-full overflow-hidden`}>
-                    <div className="flex items-center justify-between pb-2 border-b border-dashed border-black/10 mb-4 px-2">
+                    <div className="flex items-center justify-between pb-2 border-b border-dashed border-white/10 mb-4 px-2">
                       <div className="flex items-center gap-1">
                         {/* Ranking print button removed */}
                       </div>
-                      <div className="text-zinc-800/30 text-xs font-bold font-mono tracking-tighter uppercase"></div>
+                      <div className="text-white/30 text-xs font-bold font-mono tracking-tighter uppercase"></div>
                       <div
-                        className={`flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-zinc-800/50 ${rankingTab === "artilharia" ? "flex-row-reverse" : ""}`}
+                        className={`flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-blue-200/60 ${rankingTab === "artilharia" ? "flex-row-reverse" : ""}`}
                       >
                         <div
-                          className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== "assistencias" ? "" : "opacity-0"}`}
+                          className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== "assistencias" ? "text-emerald-400" : "opacity-0"}`}
                         >
-                          <IoFootballOutline size={14} /> Gols
+                          <span className="text-emerald-400"><IoFootballOutline size={14} /></span> Gols
                         </div>
                         <div
-                          className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== "artilharia" ? "" : "opacity-0"}`}
+                          className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== "artilharia" ? "text-blue-400" : "opacity-0"}`}
                         >
-                          <GiSoccerKick size={14} /> Ass
+                          <span className="text-blue-400"><GiSoccerKick size={14} /></span> Ass
                         </div>
                       </div>
                     </div>
 
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-1.5">
                       {sortedRankingPlayers.map((player, index) => (
                         <motion.div
                           layout
@@ -11476,15 +11478,15 @@ function GroupApp({
                             opacity: { duration: 0.2 },
                           }}
                           key={`${player.id}-${index}`}
-                          className="flex items-center py-3 px-2 transition-colors rounded-xl bg-transparent border-b border-black/5"
+                          className="flex items-center py-3 px-3 transition-colors rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 shadow-sm"
                         >
-                          <div className="w-8 text-sm font-black text-zinc-800/40 text-center shrink-0">
+                          <div className="w-8 text-sm font-black text-blue-400 text-center shrink-0">
                             {index + 1}
                           </div>
 
                           <div className="relative ml-2 mr-4 shrink-0">
                             <div
-                              className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-black/10 border border-black/10 relative z-10`}
+                              className={`w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-white/10 border border-white/10 relative z-10`}
                             >
                               {player.photo ? (
                                 <img
@@ -11493,15 +11495,15 @@ function GroupApp({
                                   className="w-full h-full object-cover"
                                 />
                               ) : (
-                                <span className="text-zinc-800/40 flex items-center shrink-0">
+                                <span className="text-white/40 flex items-center shrink-0">
                                   <IoPersonOutline size={20} />
                                 </span>
                               )}
                             </div>
                           </div>
 
-                          <div className="flex-1 text-xs text-zinc-800/90 tracking-tight truncate mr-4 font-normal capitalize flex flex-col gap-0.5">
-                            <span className="leading-none">
+                          <div className="flex-1 text-xs text-white tracking-tight truncate mr-4 font-normal capitalize flex flex-col gap-1">
+                            <span className="leading-none font-medium">
                               {player.name.toLowerCase()}
                             </span>
                             <div className="flex gap-0.5">
@@ -11509,7 +11511,7 @@ function GroupApp({
                                 <Star
                                   key={`star-rank-${player.id}-${star}`}
                                   size={8}
-                                  className={`${(player.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-zinc-800/10"}`}
+                                  className={`${(player.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-white/10"}`}
                                 />
                               ))}
                             </div>
@@ -11519,12 +11521,12 @@ function GroupApp({
                             className={`flex gap-4 sm:gap-8 shrink-0 ${rankingTab === "artilharia" ? "flex-row-reverse" : ""}`}
                           >
                             <div
-                              className={`w-12 text-center text-sm font-black text-brand-text-primary ${rankingTab === "assistencias" ? "opacity-0" : ""}`}
+                              className={`w-12 text-center text-sm font-black text-emerald-400 ${rankingTab === "assistencias" ? "opacity-0" : ""}`}
                             >
                               {player.goals}
                             </div>
                             <div
-                              className={`w-12 text-center text-sm font-black text-brand-text-primary ${rankingTab === "artilharia" ? "opacity-0" : ""}`}
+                              className={`w-12 text-center text-sm font-black text-blue-400 ${rankingTab === "artilharia" ? "opacity-0" : ""}`}
                             >
                               {player.assists}
                             </div>
