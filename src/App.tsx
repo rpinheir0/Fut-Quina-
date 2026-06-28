@@ -362,14 +362,52 @@ interface TieBreakerState {
   };
 }
 
+const CamisaAmarela = ({ size = 24, className = "", ...props }: { size?: number; className?: string; [key: string]: any }) => (
+  <img src="/Amarelo.png" alt="Camisa Amarela" width={size} height={size} className={`object-contain ${className}`} referrerPolicy="no-referrer" {...props} />
+);
+
+const CamisaAzulClaro = ({ size = 24, className = "", ...props }: { size?: number; className?: string; [key: string]: any }) => (
+  <img src="/Azul claro.png" alt="Camisa Azul Claro" width={size} height={size} className={`object-contain ${className}`} referrerPolicy="no-referrer" {...props} />
+);
+
+const CamisaAzul = ({ size = 24, className = "", ...props }: { size?: number; className?: string; [key: string]: any }) => (
+  <img src="/Azul.png" alt="Camisa Azul" width={size} height={size} className={`object-contain ${className}`} referrerPolicy="no-referrer" {...props} />
+);
+
+const CamisaBranca = ({ size = 24, className = "", ...props }: { size?: number; className?: string; [key: string]: any }) => (
+  <img src="/Branca.png" alt="Camisa Branca" width={size} height={size} className={`object-contain ${className}`} referrerPolicy="no-referrer" {...props} />
+);
+
+const CamisaLaranja = ({ size = 24, className = "", ...props }: { size?: number; className?: string; [key: string]: any }) => (
+  <img src="/Laranja.png" alt="Camisa Laranja" width={size} height={size} className={`object-contain ${className}`} referrerPolicy="no-referrer" {...props} />
+);
+
+const CamisaPreta = ({ size = 24, className = "", ...props }: { size?: number; className?: string; [key: string]: any }) => (
+  <img src="/Preta.png" alt="Camisa Preta" width={size} height={size} className={`object-contain ${className}`} referrerPolicy="no-referrer" {...props} />
+);
+
+const CamisaRoxa = ({ size = 24, className = "", ...props }: { size?: number; className?: string; [key: string]: any }) => (
+  <img src="/Roxo.png" alt="Camisa Roxa" width={size} height={size} className={`object-contain ${className}`} referrerPolicy="no-referrer" {...props} />
+);
+
+const CamisaVerde = ({ size = 24, className = "", ...props }: { size?: number; className?: string; [key: string]: any }) => (
+  <img src="/Verde.png" alt="Camisa Verde" width={size} height={size} className={`object-contain ${className}`} referrerPolicy="no-referrer" {...props} />
+);
+
+const CamisaVermelha = ({ size = 24, className = "", ...props }: { size?: number; className?: string; [key: string]: any }) => (
+  <img src="/Vermelho.png" alt="Camisa Vermelha" width={size} height={size} className={`object-contain ${className}`} referrerPolicy="no-referrer" {...props} />
+);
+
 const TEAM_ICONS = [
-  GiCrossShield,
-  GiDragonShield,
-  GiEdgedShield,
-  GiRank3,
-  GiBoltShield,
-  GiBorderedShield,
-  GiCrownedSkull,
+  CamisaAmarela,
+  CamisaAzulClaro,
+  CamisaAzul,
+  CamisaBranca,
+  CamisaLaranja,
+  CamisaPreta,
+  CamisaRoxa,
+  CamisaVerde,
+  CamisaVermelha,
 ];
 const TEAM_COLORS = [
   "#2563EB",
