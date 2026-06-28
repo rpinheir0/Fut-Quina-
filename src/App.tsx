@@ -1092,31 +1092,6 @@ const TieBreakerModal = ({
                       return <IconA size={48} />;
                     })()}
                   </div>
-                  <div className="text-[10px] font-black text-white uppercase tracking-widest">
-                    {teamA.name}
-                  </div>
-                  <div className="mt-2 flex flex-wrap justify-center gap-1 px-2">
-                    {[...teamA.playerIds]
-                      .sort((a, b) => {
-                        const pA = players.find((p) => p.id === a);
-                        const pB = players.find((p) => p.id === b);
-                        if (pA?.isGoalkeeper && !pB?.isGoalkeeper) return -1;
-                        if (!pA?.isGoalkeeper && pB?.isGoalkeeper) return 1;
-                        return 0;
-                      })
-                      .map((pid, idx, arr) => {
-                        const p = players.find((player) => player.id === pid);
-                        return (
-                          <span
-                            key={`${pid}-${idx}-firstmatch`}
-                            className="text-[7px] font-bold text-white/70 uppercase tracking-tighter"
-                          >
-                            {p?.name}
-                            {idx < arr.length - 1 ? " •" : ""}
-                          </span>
-                        );
-                      })}
-                  </div>
                 </div>
                 <div className="text-white/20 font-black text-xl">VS</div>
                 <div className="flex-1 flex flex-col items-center">
@@ -1129,31 +1104,6 @@ const TieBreakerModal = ({
                       return <IconB size={48} />;
                     })()}
                   </div>
-                  <div className="text-[10px] font-black text-white uppercase tracking-widest">
-                    {teamB.name}
-                  </div>
-                  <div className="mt-2 flex flex-wrap justify-center gap-1 px-2">
-                    {[...teamB.playerIds]
-                      .sort((a, b) => {
-                        const pA = players.find((p) => p.id === a);
-                        const pB = players.find((p) => p.id === b);
-                        if (pA?.isGoalkeeper && !pB?.isGoalkeeper) return -1;
-                        if (!pA?.isGoalkeeper && pB?.isGoalkeeper) return 1;
-                        return 0;
-                      })
-                      .map((pid, idx, arr) => {
-                        const p = players.find((player) => player.id === pid);
-                        return (
-                          <span
-                            key={`${pid}-${idx}-secondmatch`}
-                            className="text-[7px] font-bold text-white/70 uppercase tracking-tighter"
-                          >
-                            {p?.name}
-                            {idx < arr.length - 1 ? " •" : ""}
-                          </span>
-                        );
-                      })}
-                  </div>
                 </div>
               </div>
 
@@ -1163,8 +1113,8 @@ const TieBreakerModal = ({
                     onClick={() => setShowQueueOrder(true)}
                     className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-red-500/30 hover:bg-red-500/5 transition-all duration-300 transform active:scale-95 text-left shadow-md"
                   >
-                    <div className="w-10 h-10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform text-red-400">
-                      <LogOut size={24} />
+                    <div className="w-10 h-10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                      <img src="/deixa partida.png" referrerPolicy="no-referrer" className="w-10 h-10 object-contain" alt="" />
                     </div>
                     <div className="flex flex-col">
                       <span className="font-bold uppercase tracking-widest text-[11px] text-white group-hover:text-red-300 transition-colors">
@@ -1185,8 +1135,8 @@ const TieBreakerModal = ({
                   onClick={() => onTypeSelect("penalties")}
                   className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all duration-300 transform active:scale-95 text-left shadow-md"
                 >
-                  <div className="w-10 h-10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform text-emerald-400">
-                    <GiSoccerKick size={24} />
+                  <div className="w-10 h-10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <img src="/penalti.png" referrerPolicy="no-referrer" className="w-10 h-10 object-contain" alt="" />
                   </div>
                   <div className="flex flex-col">
                     <span className="font-bold uppercase tracking-widest text-[11px] text-white group-hover:text-emerald-300 transition-colors">
@@ -1206,8 +1156,8 @@ const TieBreakerModal = ({
                   onClick={() => onTypeSelect("lottery")}
                   className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-blue-500/30 hover:bg-blue-500/5 transition-all duration-300 transform active:scale-95 text-left shadow-md"
                 >
-                  <div className="w-10 h-10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform text-blue-400">
-                    <RefreshCw size={22} />
+                  <div className="w-10 h-10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                    <img src="/roleta.png" referrerPolicy="no-referrer" className="w-10 h-10 object-contain" alt="" />
                   </div>
                   <div className="flex flex-col">
                     <span className="font-bold uppercase tracking-widest text-[11px] text-white group-hover:text-blue-300 transition-colors">
