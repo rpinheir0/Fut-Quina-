@@ -10276,14 +10276,14 @@ function GroupApp({
                                       return;
                                     }
                                   }}
-                                  className={`p-4 rounded-none border-2 transition-all relative min-h-[110px] flex flex-col justify-center overflow-hidden ${
+                                  className={`p-4 rounded-2xl border transition-all relative min-h-[110px] flex flex-col justify-center overflow-hidden ${
                                     movingPlayers && isSelectingDestination
                                       ? "cursor-pointer hover:opacity-90"
                                       : "cursor-default"
                                   } ${
                                     isCurrent
-                                      ? "shadow-2xl z-10 border-[#53B986] bg-white backdrop-blur-md ring-4 ring-[#53B986]/10"
-                                      : "shadow-sm opacity-60 border-black/5 bg-[#dce3ee]"
+                                      ? "shadow-2xl z-10 border-[#53B986] bg-white/5 backdrop-blur-md ring-4 ring-[#53B986]/10"
+                                      : "shadow-sm opacity-60 border-white/10 bg-white/5 backdrop-blur-md"
                                   } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? "animate-pulse bg-brand-primary/10 !border-[#53B986]" : ""}`}
                                   style={{
                                     borderColor:
@@ -10565,19 +10565,19 @@ function GroupApp({
                                     t.playerIds.length <
                                       match.config.playersPerTeam && (
                                       <div className="flex flex-col items-center justify-center pt-6 pb-2 relative z-10 w-full px-4">
-                                        <div className="w-6 h-6 rounded-full border border-black/20 flex items-center justify-center mb-1">
+                                        <div className="w-6 h-6 rounded-full border border-white/20 flex items-center justify-center mb-1">
                                           <Info
-                                            className="text-black/80"
+                                            className="text-white/80"
                                             size={12}
                                           />
                                         </div>
-                                        <h3 className="text-sm font-black text-[#302f2f] uppercase tracking-tighter">
+                                        <h3 className="text-sm font-black text-white uppercase tracking-tighter">
                                           Time Incompleto!
                                         </h3>
-                                        <p className="text-[8px] font-bold uppercase tracking-widest text-[#302f2f] leading-tight text-center mt-1">
+                                        <p className="text-[8px] font-bold uppercase tracking-widest text-white/70 leading-tight text-center mt-1">
                                           Times devem estar equilibrados.
                                           <br />
-                                          <span className="text-amber-600 font-black">
+                                          <span className="text-amber-400 font-black">
                                             Toque em um jogador de outro time
                                           </span>{" "}
                                           para completar esta vaga.
@@ -10590,7 +10590,7 @@ function GroupApp({
                                       match.config.playersPerTeam && (
                                       <div className="absolute top-4 left-0 right-0 flex justify-center z-10 pointer-events-none">
                                         <div className="flex items-center gap-1.5 pointer-events-auto">
-                                          <span className="text-[10px] font-bold text-black/40 uppercase tracking-widest">
+                                          <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest">
                                             Falta{" "}
                                             {match.config.playersPerTeam -
                                               t.playerIds.length}{" "}
@@ -10603,7 +10603,7 @@ function GroupApp({
                                           </span>
                                           <button
                                             type="button"
-                                            className="text-black/40 hover:text-amber-500 cursor-pointer transition-all active:scale-90 hover:bg-black/5 p-1 rounded-full flex items-center justify-center pointer-events-auto"
+                                            className="text-white/40 hover:text-amber-400 cursor-pointer transition-all active:scale-90 hover:bg-white/5 p-1 rounded-full flex items-center justify-center pointer-events-auto"
                                             onClick={(e) => {
                                               e.preventDefault();
                                               e.stopPropagation();
@@ -10987,7 +10987,7 @@ function GroupApp({
                                                   movingPlayers?.playerIds.includes(
                                                     pid,
                                                   )
-                                                    ? "bg-[#53B986]/20 text-black border-2 border-[#53B986] shadow-lg scale-105"
+                                                    ? "bg-[#53B986]/20 text-white border-2 border-[#53B986] shadow-lg scale-105"
                                                     : (swappingPlayerId &&
                                                           swappingPlayerId !==
                                                             pid) ||
@@ -11008,7 +11008,7 @@ function GroupApp({
                                                                 .playersPerTeam,
                                                         )
                                                       ? "bg-[#53B986]/10 text-[#53B986] animate-pulse shadow-sm shadow-[#53B986]/10"
-                                                      : `border group shadow-sm ${isCurrent ? "bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white border-transparent" : "text-black bg-gradient-to-br from-white to-[#f4f4f5] border-black/5 hover:border-black/10"}`
+                                                      : `border group shadow-sm ${isCurrent ? "bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white border-transparent" : "text-white bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20"}`
                                                 }`}
                                                 style={{
                                                   backgroundColor: !(
@@ -11039,12 +11039,12 @@ function GroupApp({
                                                     : undefined,
                                                 }}
                                               >
-                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden ${isCurrent ? "bg-black/5" : "bg-gradient-to-br from-zinc-100 to-zinc-300"}`}>
+                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden ${isCurrent ? "bg-black/20" : "bg-white/10"}`}>
                                                   {p.isGoalkeeper &&
                                                   orgProSettings.allowFixedGoalkeeper !==
                                                     false ? (
                                                     <div
-                                                      className={`flex items-center justify-center shrink-0 rounded-full w-4 h-4 text-[9px] font-black leading-none ${isCurrent ? "text-white" : "text-black/30"}`}
+                                                      className={`flex items-center justify-center shrink-0 rounded-full w-4 h-4 text-[9px] font-black leading-none ${isCurrent ? "text-white" : "text-white/40"}`}
                                                     >
                                                       G
                                                     </div>
@@ -11056,7 +11056,7 @@ function GroupApp({
                                                     />
                                                   ) : (
                                                     <span
-                                                      className={`flex items-center shrink-0 ${isCurrent ? "text-black" : "text-zinc-500"}`}
+                                                      className={`flex items-center shrink-0 ${isCurrent ? "text-white/60" : "text-white/40"}`}
                                                     >
                                                       <IoPersonOutline
                                                         size={12}
@@ -11066,7 +11066,7 @@ function GroupApp({
                                                 </div>
                                                 <div className="flex flex-col items-start gap-1 overflow-hidden">
                                                   <span
-                                                    className={`text-xs font-bold tracking-tight capitalize truncate leading-none ${isCurrent ? "text-black" : "text-black/90"}`}
+                                                    className={`text-xs font-bold tracking-tight capitalize truncate leading-none ${isCurrent ? "text-white" : "text-white/90"}`}
                                                   >
                                                     {p.name.toLowerCase()}
                                                   </span>
@@ -11076,7 +11076,7 @@ function GroupApp({
                                                         <Star
                                                           key={`star-q-${p.id}-${star}`}
                                                           size={8}
-                                                          className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/20"}`}
+                                                          className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-white/20"}`}
                                                         />
                                                       ),
                                                     )}
