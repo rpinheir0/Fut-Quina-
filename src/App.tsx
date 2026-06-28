@@ -6492,8 +6492,17 @@ function GroupApp({
 
   return (
     <div
-      className={`h-[100dvh] bg-brand-dark text-brand-text-primary font-sans overflow-hidden flex flex-col transition-colors duration-500 ${theme === "dark" ? "dark" : ""}`}
+      className={`h-[100dvh] ${isPrintMode ? "bg-white text-black" : "bg-[#020510] text-zinc-100"} font-sans overflow-hidden flex flex-col transition-colors duration-500 relative ${theme === "dark" ? "dark" : ""}`}
     >
+      {/* Aurora Mesh Gradient Background Elements */}
+      {!isPrintMode && (
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-[#1e3a8a]/20 blur-[100px]" />
+          <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-[#0ea5e9]/10 blur-[120px]" />
+          <div className="absolute top-[40%] left-[30%] w-[400px] h-[400px] rounded-full bg-[#3b82f6]/10 blur-[90px]" />
+        </div>
+      )}
+
       {/* Logo Animation Overlay */}
       <AnimatePresence>
         {showLogoAnimation && (
@@ -7303,7 +7312,7 @@ function GroupApp({
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
-          className={`flex-1 overflow-y-auto flex flex-col ${currentScreen === "players" ? "pb-32" : (!showPeladaReport) ? "pb-12" : "pb-10"} touch-pan-y ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-[#dcdcdc]"}`}
+          className={`flex-1 overflow-y-auto flex flex-col ${currentScreen === "players" ? "pb-32" : (!showPeladaReport) ? "pb-12" : "pb-10"} touch-pan-y ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-transparent relative z-10"}`}
         >
           <AnimatePresence mode="wait">
             {currentScreen === "players" && !isPrintMode && (
@@ -7313,22 +7322,22 @@ function GroupApp({
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
-                className="p-4 sm:p-6 space-y-4 bg-zinc-50/30 flex-1 flex flex-col"
+                className="p-4 sm:p-6 space-y-4 bg-transparent flex-1 flex flex-col"
               >
                 {/* Dashboard Header */}
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                   {!showAddPlayerSection ? (
                     <div className="flex flex-col gap-0.5">
-                      <h2 className="text-[12px] font-black uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">
+                      <h2 className="text-[12px] font-black uppercase tracking-widest text-white">
                         Painel de controle
                       </h2>
                     </div>
                   ) : (
                     <div className="flex flex-col gap-0.5">
-                      <h2 className="text-[12px] font-black uppercase tracking-widest bg-gradient-to-r from-zinc-600 to-zinc-900 bg-clip-text text-transparent">
+                      <h2 className="text-[12px] font-black uppercase tracking-widest text-white">
                         GERENCIAMENTO
                       </h2>
-                      <p className="text-[9px] font-black uppercase tracking-widest text-zinc-400">
+                      <p className="text-[9px] font-black uppercase tracking-widest text-blue-200/50">
                         JOGADORES
                       </p>
                     </div>
@@ -7348,10 +7357,10 @@ function GroupApp({
                           }}
                           animate={shouldPulseConfig ? { 
                             scale: [1, 1.05, 1],
-                            boxShadow: ["0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)", "0px 20px 25px -5px rgba(89, 184, 35, 0.4), 0px 10px 10px -5px rgba(89, 184, 35, 0.2)", "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"]
+                            boxShadow: ["0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)", "0px 20px 25px -5px rgba(59, 130, 246, 0.4), 0px 10px 10px -5px rgba(59, 130, 246, 0.2)", "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"]
                           } : {}}
                           transition={shouldPulseConfig ? { repeat: Infinity, duration: 1.5 } : {}}
-                          className="flex-1 sm:flex-none px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                          className="flex-1 sm:flex-none px-4 py-3 sm:py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                         >
                           CONFIGURAR PARTIDA
                         </motion.button>
@@ -7707,13 +7716,13 @@ function GroupApp({
                       className="space-y-6"
                     >
                       <div className="space-y-6">
-                        <div className="bg-gradient-to-br from-zinc-100 to-zinc-200 p-4 sm:p-6 rounded-[24px] border border-black/5 space-y-4 sm:space-y-6 shadow-xl">
+                        <div className="bg-white/5 backdrop-blur-xl p-4 sm:p-6 rounded-[32px] border border-white/10 space-y-4 sm:space-y-6 shadow-[0_0_15px_rgba(59,130,246,0.1)]">
                           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                             <div className="flex-1 flex gap-2 sm:gap-3">
                               <input
                                 type="text"
                                 placeholder="Nome do jogador..."
-                                className={`flex-1 px-4 sm:px-5 py-3 rounded-none border border-black/5 outline-none transition-all bg-white text-[#1E3D2F] placeholder-[#1E3D2F]/30 focus:ring-4 focus:ring-emerald-500/10 text-[13px] sm:text-sm font-bold shadow-sm h-[40px]`}
+                                className={`flex-1 px-4 sm:px-5 py-3 rounded-2xl border border-white/10 outline-none transition-all bg-black/40 text-white placeholder-blue-200/40 focus:ring-2 focus:ring-blue-500/50 text-[13px] sm:text-sm font-medium shadow-inner h-[48px]`}
                                 onKeyDown={(e) => {
                                   if (e.key === "Enter") {
                                     addPlayer(e.currentTarget.value);
@@ -7723,10 +7732,10 @@ function GroupApp({
                               />
                               <button
                                 onClick={handleImportContacts}
-                                className="w-[40px] h-[40px] bg-white text-[#83A8EF] rounded-none shadow-sm hover:opacity-90 transition-all active:scale-95 flex items-center justify-center border border-black/5 shrink-0"
+                                className="w-[48px] h-[48px] bg-black/40 text-blue-400 rounded-2xl shadow-inner hover:bg-blue-500/10 transition-all active:scale-95 flex items-center justify-center border border-white/10 shrink-0"
                                 title="Importar dos Contatos"
                               >
-                                <Contact size={20} />
+                                <Contact size={20} strokeWidth={1.5} />
                               </button>
                               <button
                                 onClick={() => {
@@ -7738,9 +7747,9 @@ function GroupApp({
                                     input.value = "";
                                   }
                                 }}
-                                className="w-[40px] h-[40px] bg-black/30 backdrop-blur-md text-white rounded-[12px] border border-white/10 shadow-lg hover:bg-black/40 transition-all active:scale-95 flex items-center justify-center shrink-0"
+                                className="w-[48px] h-[48px] bg-black/40 text-blue-400 rounded-2xl border border-white/10 shadow-inner hover:bg-blue-500/10 transition-all active:scale-95 flex items-center justify-center shrink-0"
                               >
-                                <Plus size={22} />
+                                <Plus size={22} strokeWidth={1.5} />
                               </button>
                             </div>
                           </div>
@@ -7796,7 +7805,7 @@ function GroupApp({
                             </AnimatePresence>
                             <textarea
                               placeholder=" "
-                              className={`w-full h-28 sm:h-32 px-5 sm:px-6 py-5 sm:py-6 rounded-none border border-black/5 outline-none transition-all text-sm font-bold resize-none bg-white text-[#1E3D2F] focus:ring-4 focus:ring-emerald-500/10 peer shadow-sm`}
+                              className={`w-full h-28 sm:h-32 px-5 sm:px-6 py-5 sm:py-6 rounded-2xl border border-white/10 outline-none transition-all text-sm font-medium resize-none bg-black/40 text-white placeholder-blue-200/40 focus:ring-2 focus:ring-blue-500/50 peer shadow-inner`}
                               onChange={(e) => {
                                 if (
                                   e.target.value.includes("\n") ||
@@ -7809,16 +7818,16 @@ function GroupApp({
                             />
                             <div className="absolute inset-0 flex items-center justify-center pb-8 sm:pb-8 pointer-events-none transition-all peer-focus:hidden peer-[:not(:placeholder-shown)]:hidden">
                               <div className="flex items-center gap-1">
-                                <div className="text-emerald-500/40">
+                                <div className="text-blue-400">
                                   <IoLogoWhatsapp size={20} />
                                 </div>
-                                <span className="text-xs sm:text-sm text-[#1E3D2F]/40 leading-tight block text-center">
+                                <span className="text-xs sm:text-sm text-blue-200/50 leading-tight block text-center">
                                   Cole aqui a lista do whatsapp.
                                 </span>
                               </div>
                             </div>
                             <div
-                              className={`absolute right-5 sm:right-6 bottom-4 sm:bottom-6 text-[#1E3D2F]/40 cursor-pointer hover:text-emerald-600 transition-colors flex items-center gap-1.5 sm:gap-2 bg-white/80 backdrop-blur-sm p-1.5 sm:p-2 pl-3 sm:pl-3 rounded-none`}
+                              className={`absolute right-5 sm:right-6 bottom-4 sm:bottom-6 text-blue-400 cursor-pointer hover:text-blue-300 transition-colors flex items-center gap-1.5 sm:gap-2 bg-white/5 backdrop-blur-xl p-1.5 sm:p-2 pl-3 sm:pl-3 rounded-2xl border border-white/10`}
                               onClick={async () => {
                                 try {
                                   const text =
@@ -7844,18 +7853,19 @@ function GroupApp({
                               <ClipboardPaste
                                 size={14}
                                 className="sm:w-4 sm:h-4"
+                                strokeWidth={1.5}
                               />
-                              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">
-                                Caixa Inteligente
+                              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-blue-200">
+                                CAIXA INTELIGENTE
                               </span>
                             </div>
                           </div>
                         </div>
 
-                        <section className="w-full relative pt-6 border-t border-black/5">
+                        <section className="w-full relative pt-6 border-t border-white/10">
                           {visiblePlayers.length === 0 ? (
                             <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
-                              <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
+                              <div className="flex flex-col items-center gap-4 opacity-50 text-blue-200 text-xs">
                                 <span className="font-bold uppercase tracking-widest text-[11px]">
                                   Nenhum jogador adicionado ainda.
                                 </span>
@@ -7867,7 +7877,7 @@ function GroupApp({
                                 <motion.div
                                   layout
                                   key={`player-list-dash-switch-${player.id}`}
-                                  className={`flex items-center justify-between p-2 px-3 rounded-none transition-all cursor-pointer hover:bg-zinc-50 active:bg-zinc-100 border border-black/5 bg-white shadow-sm`}
+                                  className={`flex items-center justify-between p-2 px-3 rounded-2xl transition-all cursor-pointer hover:bg-white/10 active:bg-white/5 border border-white/10 bg-white/5 backdrop-blur-md shadow-sm`}
                                   onClick={() => {
                                     if (editingPlayerId !== player.id) {
                                       setPlayerManagementModal(player);
@@ -7875,7 +7885,7 @@ function GroupApp({
                                   }}
                                 >
                                   <div className="flex items-center gap-3 flex-1 min-w-0">
-                                    <div className="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 bg-zinc-100 text-zinc-400 border border-black/5 overflow-hidden">
+                                    <div className="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 bg-white/10 text-white/50 border border-white/5 overflow-hidden">
                                       {player.photo ? (
                                         <img
                                           src={player.photo}
@@ -7893,7 +7903,7 @@ function GroupApp({
                                       <input
                                         autoFocus
                                         defaultValue={player.name}
-                                        className={`flex-1 bg-zinc-100 border-b border-emerald-500 outline-none text-xs font-bold py-1 px-3 rounded-none text-zinc-900 min-w-0`}
+                                        className={`flex-1 bg-black/40 border-b border-blue-500 outline-none text-xs font-medium py-1 px-3 rounded-none text-white min-w-0 placeholder-white/30`}
                                         onClick={(e) => e.stopPropagation()}
                                         onKeyDown={(e) => {
                                           if (e.key === "Enter")
@@ -7914,7 +7924,7 @@ function GroupApp({
                                     ) : (
                                       <div className="flex flex-col gap-0 flex-1 min-w-0">
                                         <div className="flex items-center gap-2">
-                                          <span className="text-xs font-normal truncate text-left leading-none text-zinc-900 uppercase tracking-tight">
+                                          <span className="text-xs font-normal truncate text-left leading-none text-white uppercase tracking-tight">
                                             {player.name}
                                           </span>
                                           {orgProData[player.id] && (
@@ -7928,7 +7938,7 @@ function GroupApp({
                                             <Star
                                               key={`star-dash-m-switch-${player.id}-${star}`}
                                               size={8}
-                                              className={`${(player.stars || 3) >= star ? "fill-emerald-500 text-emerald-500" : "text-zinc-200"}`}
+                                              className={`${(player.stars || 3) >= star ? "fill-blue-500 text-blue-500" : "text-white/20"}`}
                                             />
                                           ))}
                                         </div>
@@ -7939,7 +7949,7 @@ function GroupApp({
                                     {editingPlayerId !== player.id && (
                                       <ChevronRight
                                         size={14}
-                                        className="text-zinc-300"
+                                        className="text-white/20"
                                       />
                                     )}
                                   </div>
@@ -7950,11 +7960,11 @@ function GroupApp({
                         </section>
 
                         {players.length > 0 && (
-                          <div className="flex justify-center pt-6 border-t border-black/5">
+                          <div className="flex justify-center pt-6 border-t border-white/10">
                             {!showClearConfirm ? (
                               <button
                                 onClick={() => setShowClearConfirm(true)}
-                                className="w-full flex items-center justify-center gap-3 px-8 py-4 bg-red-50 text-red-600 rounded-none border border-red-100 hover:bg-red-100 transition-all active:scale-95 text-[10px] font-black uppercase tracking-[0.2em]"
+                                className="w-full flex items-center justify-center gap-3 px-8 py-4 bg-red-500/10 text-red-400 rounded-2xl border border-red-500/20 hover:bg-red-500/20 transition-all active:scale-95 text-[10px] font-black uppercase tracking-[0.2em]"
                               >
                                 <Trash2 size={16} />
                                 Apagar todos os jogadores
@@ -7967,13 +7977,13 @@ function GroupApp({
                                     setSessionPlayerIds([]);
                                     setShowClearConfirm(false);
                                   }}
-                                  className="w-full px-8 py-4 bg-red-600 text-white rounded-none font-black uppercase tracking-widest text-[10px] shadow-lg shadow-red-600/20 active:scale-95 transition-all"
+                                  className="w-full px-8 py-4 bg-red-600/80 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-[0_0_15px_rgba(220,38,38,0.3)] active:scale-95 transition-all backdrop-blur-md"
                                 >
                                   Confirmar Exclusão
                                 </button>
                                 <button
                                   onClick={() => setShowClearConfirm(false)}
-                                  className="w-full px-8 py-4 bg-zinc-100 text-zinc-600 rounded-none font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all"
+                                  className="w-full px-8 py-4 bg-white/5 text-white/50 rounded-2xl font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all border border-white/10"
                                 >
                                   Cancelar
                                 </button>
@@ -8042,12 +8052,11 @@ function GroupApp({
                             {/* Decorative Glows - Adjusted for light theme */}
                             <div className="absolute -top-10 -right-10 w-48 h-48 bg-white/40 rounded-full blur-[60px] pointer-events-none group-hover:bg-white/60 transition-colors" />
                             
-                            <div className="w-14 h-14 rounded-lg bg-black/5 flex items-center justify-center border border-black/5 shadow-inner group-hover:scale-105 transition-all duration-500 overflow-hidden relative z-10 shrink-0">
-                              <item.icon size={24} className="text-black/5 absolute" />
+                            <div className="w-14 h-14 flex items-center justify-center group-hover:scale-105 transition-all duration-500 relative z-10 shrink-0">
                               <img 
                                 src={item.image} 
                                 alt={item.label} 
-                                className="w-12 h-12 object-contain relative z-20"
+                                className="w-14 h-14 object-contain relative z-20"
                                 loading="eager"
                                 referrerPolicy="no-referrer"
                               />
