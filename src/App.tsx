@@ -425,6 +425,18 @@ const TEAM_COLORS = [
   "#000000",
 ];
 
+const SHIRT_COLORS = [
+  "#EAB308", // 0: Yellow (CamisaAmarela)
+  "#38BDF8", // 1: Light blue (CamisaAzulClaro)
+  "#2563EB", // 2: Blue (CamisaAzul)
+  "#ffffff", // 3: White (CamisaBranca)
+  "#F97316", // 4: Orange (CamisaLaranja)
+  "#000000", // 5: Black (CamisaPreta)
+  "#8B5CF6", // 6: Purple (CamisaRoxa)
+  "#16A34A", // 7: Green (CamisaVerde)
+  "#DC2626", // 8: Red (CamisaVermelha)
+];
+
 const TypewriterText = ({ text, className, ...props }: { text: string; className?: string; [key: string]: any }) => {
   const [displayText, setDisplayText] = useState("");
   
@@ -678,7 +690,7 @@ const ColorPickerModal = ({
         <div className="flex items-center justify-between mb-6">
           <div className="flex flex-col">
             <h3 className="text-xl font-black uppercase tracking-tighter text-zinc-900">
-              Cor do Escudo
+              COR DO ESCUDO
             </h3>
             <span className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">
               {teamName}
@@ -692,36 +704,37 @@ const ColorPickerModal = ({
           </button>
         </div>
 
-        <div className="grid grid-cols-5 gap-3 mb-8">
-          {TEAM_COLORS.map((color) => (
-            <button
-              key={color}
-              onClick={() => onSelect(color)}
-              className={`aspect-square rounded-xl transition-all relative ${color === currentColor ? "ring-4 ring-black/5 scale-110 shadow-lg" : "hover:scale-105"}`}
-              style={{
-                backgroundColor: color,
-                border: color === "#ffffff" ? "1px solid #e4e4e7" : "none",
-              }}
-            >
-              {color === currentColor && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Check
-                    size={16}
-                    className={
-                      color === "#ffffff" ? "text-black" : "text-white"
-                    }
-                  />
+        <div className="grid grid-cols-3 gap-3 mb-8">
+          {TEAM_ICONS.map((Icon, idx) => {
+            const isSelected = SHIRT_COLORS[idx] === currentColor;
+            return (
+              <button
+                key={`shirt-choice-${idx}`}
+                onClick={() => onSelect(SHIRT_COLORS[idx])}
+                className={`aspect-square rounded-2xl border transition-all relative flex flex-col items-center justify-center p-2 bg-zinc-50 ${
+                  isSelected 
+                    ? "border-brand-primary ring-2 ring-brand-primary shadow-md scale-105 bg-white" 
+                    : "border-zinc-200/60 hover:border-zinc-400 hover:scale-105 hover:bg-white"
+                }`}
+              >
+                <div className="w-14 h-14 flex items-center justify-center">
+                  <Icon size={48} />
                 </div>
-              )}
-            </button>
-          ))}
+                {isSelected && (
+                  <div className="absolute top-1.5 right-1.5 w-4 h-4 bg-brand-primary rounded-full flex items-center justify-center shadow-sm">
+                    <Check size={10} className="text-white font-bold" />
+                  </div>
+                )}
+              </button>
+            );
+          })}
         </div>
 
         <div className="p-4 bg-zinc-50 rounded-xl border border-black/5 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex flex-col">
               <span className="text-[11px] font-bold text-zinc-900 uppercase tracking-wider mb-0.5">
-                Manter cor fixa?
+                MANTER COR FIXA?
               </span>
               <p className="text-[9px] text-zinc-500 font-medium leading-relaxed">
                 A cor será mantida para esta posição nos próximos jogos.
@@ -742,7 +755,7 @@ const ColorPickerModal = ({
           onClick={onClose}
           className="w-full py-4 bg-brand-gradient text-black font-black uppercase tracking-widest text-xs rounded-xl shadow-xl active:scale-95 transition-all"
         >
-          Confirmar
+          CONFIRMAR
         </button>
       </motion.div>
     </div>
@@ -977,6 +990,7 @@ const TieBreakerModal = ({
   colorA,
   colorB,
   queueCount = 0,
+  fixedColors,
 }: {
   state: TieBreakerState;
   onTypeSelect: (type: "penalties" | "lottery" | "none") => void;
@@ -990,10 +1004,27 @@ const TieBreakerModal = ({
   colorA?: string;
   colorB?: string;
   queueCount?: number;
+  fixedColors?: {
+    teamA: string | null;
+    teamB: string | null;
+    enabled: boolean;
+  };
 }) => {
   const [showQueueOrder, setShowQueueOrder] = useState(false);
 
   if (!state.showSelection || !teamA || !teamB) return null;
+
+  const getTeamIcon = (team: Team | undefined, position: "A" | "B") => {
+    if (fixedColors?.enabled) {
+      const fixedColor = position === "A" ? fixedColors.teamA : fixedColors.teamB;
+      if (fixedColor) {
+        const idx = SHIRT_COLORS.indexOf(fixedColor);
+        if (idx !== -1) return TEAM_ICONS[idx];
+      }
+    }
+    if (!team) return TEAM_ICONS[position === "A" ? 0 : 1];
+    return TEAM_ICONS[team.iconIdx ?? (position === "A" ? 0 : 1)];
+  };
 
   const resolvedColorA = colorA || teamA.color || TEAM_COLORS[0];
   const resolvedColorB = colorB || teamB.color || TEAM_COLORS[1];
@@ -1057,7 +1088,7 @@ const TieBreakerModal = ({
                     style={{ color: resolvedColorA }}
                   >
                     {(() => {
-                      const IconA = TEAM_ICONS[teamA.iconIdx ?? 0];
+                      const IconA = getTeamIcon(teamA, "A");
                       return <IconA size={48} />;
                     })()}
                   </div>
@@ -1094,7 +1125,7 @@ const TieBreakerModal = ({
                     style={{ color: resolvedColorB }}
                   >
                     {(() => {
-                      const IconB = TEAM_ICONS[teamB.iconIdx ?? 1];
+                      const IconB = getTeamIcon(teamB, "B");
                       return <IconB size={48} />;
                     })()}
                   </div>
@@ -1226,7 +1257,7 @@ const TieBreakerModal = ({
                     style={{ color: resolvedColorA }}
                   >
                     {(() => {
-                      const IconA = TEAM_ICONS[teamA.iconIdx ?? 0];
+                      const IconA = getTeamIcon(teamA, "A");
                       return <IconA size={24} />;
                     })()}
                   </div>
@@ -1257,7 +1288,7 @@ const TieBreakerModal = ({
                     style={{ color: resolvedColorB }}
                   >
                     {(() => {
-                      const IconB = TEAM_ICONS[teamB.iconIdx ?? 1];
+                      const IconB = getTeamIcon(teamB, "B");
                       return <IconB size={24} />;
                     })()}
                   </div>
@@ -1298,7 +1329,7 @@ const TieBreakerModal = ({
                     style={{ color: teamA.color || TEAM_COLORS[0] }}
                   >
                     {(() => {
-                      const IconA = TEAM_ICONS[teamA.iconIdx ?? 0];
+                      const IconA = getTeamIcon(teamA, "A");
                       return <IconA size={48} />;
                     })()}
                   </div>
@@ -1315,7 +1346,7 @@ const TieBreakerModal = ({
                     style={{ color: teamB.color || TEAM_COLORS[1] }}
                   >
                     {(() => {
-                      const IconB = TEAM_ICONS[teamB.iconIdx ?? 1];
+                      const IconB = getTeamIcon(teamB, "B");
                       return <IconB size={48} />;
                     })()}
                   </div>
@@ -1450,7 +1481,7 @@ const TieBreakerModal = ({
                     style={{ color: teamA.color || TEAM_COLORS[0] }}
                   >
                     {(() => {
-                      const IconA = TEAM_ICONS[teamA.iconIdx ?? 0];
+                      const IconA = getTeamIcon(teamA, "A");
                       return <IconA size={32} />;
                     })()}
                   </div>
@@ -1459,7 +1490,7 @@ const TieBreakerModal = ({
                     style={{ color: teamB.color || TEAM_COLORS[1] }}
                   >
                     {(() => {
-                      const IconB = TEAM_ICONS[teamB.iconIdx ?? 1];
+                      const IconB = getTeamIcon(teamB, "B");
                       return <IconB size={32} />;
                     })()}
                   </div>
@@ -1485,7 +1516,7 @@ const TieBreakerModal = ({
                         style={{ color: teamA.color || TEAM_COLORS[0] }}
                       >
                         {(() => {
-                          const IconA = TEAM_ICONS[teamA.iconIdx ?? 0];
+                          const IconA = getTeamIcon(teamA, "A");
                           return <IconA size={32} />;
                         })()}
                       </div>
@@ -1527,7 +1558,7 @@ const TieBreakerModal = ({
                         style={{ color: teamB.color || TEAM_COLORS[1] }}
                       >
                         {(() => {
-                          const IconB = TEAM_ICONS[teamB.iconIdx ?? 1];
+                          const IconB = getTeamIcon(teamB, "B");
                           return <IconB size={32} />;
                         })()}
                       </div>
@@ -1589,8 +1620,8 @@ const TieBreakerModal = ({
                         {(() => {
                           const isTeamA = state.lottery.winnerId === teamA.id;
                           const IconWinner = isTeamA
-                            ? TEAM_ICONS[teamA.iconIdx ?? 0]
-                            : TEAM_ICONS[teamB.iconIdx ?? 1];
+                            ? getTeamIcon(teamA, "A")
+                            : getTeamIcon(teamB, "B");
                           return <IconWinner size={64} />;
                         })()}
                       </div>
@@ -2692,7 +2723,19 @@ function GroupApp({
       );
       if (saved) {
         try {
-          return JSON.parse(saved);
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed)) {
+            const uniqueMatches: ScheduledMatch[] = [];
+            const seenMatchIds = new Set<string>();
+            for (const m of parsed) {
+              if (!m || typeof m !== "object") continue;
+              const id = m.id && !seenMatchIds.has(m.id) ? m.id : generateId();
+              uniqueMatches.push({ ...m, id });
+              seenMatchIds.add(id);
+            }
+            return uniqueMatches;
+          }
+          return [];
         } catch (e) {
           return [];
         }
@@ -3260,6 +3303,18 @@ function GroupApp({
       ? JSON.parse(saved)
       : { teamA: null, teamB: null, enabled: false };
   });
+
+  const getTeamIcon = (team: Team | undefined, position: "A" | "B") => {
+    if (fixedColors.enabled) {
+      const fixedColor = position === "A" ? fixedColors.teamA : fixedColors.teamB;
+      if (fixedColor) {
+        const idx = SHIRT_COLORS.indexOf(fixedColor);
+        if (idx !== -1) return TEAM_ICONS[idx];
+      }
+    }
+    if (!team) return TEAM_ICONS[position === "A" ? 0 : 1];
+    return TEAM_ICONS[team.iconIdx ?? (position === "A" ? 0 : 1)];
+  };
 
   const [autoCompleteTeams, setAutoCompleteTeams] = useState(() => {
     const saved = safeLocalStorage.getItem(
@@ -6925,6 +6980,7 @@ function GroupApp({
         }
         players={players}
         queueCount={teams.length - 2}
+        fixedColors={fixedColors}
       />
 
       {/* Global Application Settings Modal handled below in sticky header */}
@@ -7070,7 +7126,7 @@ function GroupApp({
                         >
                           {(() => {
                             const team = teams[match.teamAIndex];
-                            const Icon = TEAM_ICONS[team?.iconIdx ?? 0];
+                            const Icon = getTeamIcon(team, "A");
                             return <Icon size={12} />;
                           })()}
                         </div>
@@ -7093,7 +7149,7 @@ function GroupApp({
                         >
                           {(() => {
                             const team = teams[match.teamBIndex];
-                            const Icon = TEAM_ICONS[team?.iconIdx ?? 1];
+                            const Icon = getTeamIcon(team, "B");
                             return <Icon size={12} />;
                           })()}
                         </div>
@@ -9172,7 +9228,7 @@ function GroupApp({
                                 {(() => {
                                   const team = teams[match.teamAIndex];
                                   if (!team) return null;
-                                  const Icon = TEAM_ICONS[team.iconIdx ?? 0];
+                                  const Icon = getTeamIcon(team, "A");
                                   const color =
                                     (fixedColors.enabled &&
                                       fixedColors.teamA) ||
@@ -9333,7 +9389,7 @@ function GroupApp({
                                 {(() => {
                                   const team = teams[match.teamBIndex];
                                   if (!team) return null;
-                                  const Icon = TEAM_ICONS[team.iconIdx ?? 1];
+                                  const Icon = getTeamIcon(team, "B");
                                   const color =
                                     (fixedColors.enabled &&
                                       fixedColors.teamB) ||
@@ -15282,26 +15338,38 @@ function GroupApp({
             const idx = showColorPicker.teamIdx;
             const isTeamA = idx === -1 || idx === match.teamAIndex;
             const isTeamB = idx === -2 || idx === match.teamBIndex;
+            const iconIdx = SHIRT_COLORS.indexOf(color);
 
             if (idx === -1) {
               setFixedColors((prev) => ({ ...prev, teamA: color }));
+              if (match.teamAIndex !== -1) {
+                setTeams((prev) =>
+                  prev.map((t, i) => (i === match.teamAIndex ? { ...t, color, iconIdx } : t)),
+                );
+              }
             } else if (idx === -2) {
               setFixedColors((prev) => ({ ...prev, teamB: color }));
+              if (match.teamBIndex !== -1) {
+                setTeams((prev) =>
+                  prev.map((t, i) => (i === match.teamBIndex ? { ...t, color, iconIdx } : t)),
+                );
+              }
             } else if (fixedColors.enabled) {
               setFixedColors((prev) => ({
                 ...prev,
                 teamA: isTeamA ? color : prev.teamA,
                 teamB: isTeamB ? color : prev.teamB,
               }));
-              // Also update specific team if needed, but fixed takes precedence usually
+              // Also update specific team
               setTeams((prev) =>
-                prev.map((t, i) => (i === idx ? { ...t, color } : t)),
+                prev.map((t, i) => (i === idx ? { ...t, color, iconIdx } : t)),
               );
             } else {
               setTeams((prev) => {
                 const newTeams = [...prev];
                 if (newTeams[idx]) {
                   newTeams[idx].color = color;
+                  newTeams[idx].iconIdx = iconIdx;
                 }
                 return newTeams;
               });
