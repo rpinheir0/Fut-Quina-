@@ -7164,7 +7164,21 @@ function GroupApp({
                   onClick={(e) => e.stopPropagation()}
                 >
                   {/* Header */}
-                  <div className="px-6 pt-6 pb-4 border-b border-white/10 flex items-center justify-end">
+                  <div className="px-6 pt-6 pb-4 border-b border-white/10 flex items-center justify-between">
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => setTheme("light")}
+                        className={`w-8 h-8 rounded-full border border-white/10 flex items-center justify-center transition-all cursor-pointer ${theme === "light" ? "bg-white text-black" : "bg-white/5 text-white/60 hover:text-white hover:bg-white/10"}`}
+                      >
+                        <Sun size={14} />
+                      </button>
+                      <button
+                        onClick={() => setTheme("dark")}
+                        className={`w-8 h-8 rounded-full border border-white/10 flex items-center justify-center transition-all cursor-pointer ${theme === "dark" ? "bg-white text-black" : "bg-white/5 text-white/60 hover:text-white hover:bg-white/10"}`}
+                      >
+                        <Moon size={14} />
+                      </button>
+                    </div>
                     <button
                       onClick={() => setShowGlobalSettings(false)}
                       className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 active:scale-90 transition-all cursor-pointer"
@@ -15516,49 +15530,51 @@ function GroupApp({
       </AnimatePresence>
 
       {matchToDelete && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
           <motion.div
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="w-full max-w-sm bg-white p-8 rounded-[20px] shadow-[0_20px_60px_rgba(0,0,0,0.3)] border border-black/5 relative overflow-hidden"
+            initial={{ scale: 0.9, y: 20, opacity: 0 }}
+            animate={{ scale: 1, y: 0, opacity: 1 }}
+            exit={{ scale: 0.9, y: 20, opacity: 0 }}
+            className="w-full max-w-[280px] p-6 rounded-[24px] bg-[#0b0e17]/95 border border-white/10 text-white backdrop-blur-xl shadow-2xl relative flex flex-col items-center text-center space-y-4"
           >
-            <div className="relative z-10 text-center space-y-6">
-              <div className="flex items-center justify-center mx-auto scale-90">
-                <FcHighPriority size={36} />
-              </div>
-              
-              <div className="space-y-1">
-                <h3 className="text-xl font-bold uppercase tracking-tight text-zinc-900">
-                  EXCLUIR PELADA
-                </h3>
-                <p className="text-sm font-medium text-zinc-500 max-w-[260px] mx-auto leading-normal">
-                  Tem certeza que deseja excluir a pelada?
-                </p>
-              </div>
+            <div className="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20 shadow-sm relative overflow-hidden shrink-0">
+              <div className="absolute inset-0 bg-red-500/10 rounded-full blur-xl" />
+              <span className="text-red-500 relative z-10">
+                <Trash2 size={24} />
+              </span>
+            </div>
+            
+            <div className="space-y-1">
+              <h3 className="text-lg font-black uppercase tracking-tight text-white leading-none">
+                EXCLUIR PELADA
+              </h3>
+              <p className="text-[10px] font-bold text-white/60 leading-relaxed px-2 mt-2">
+                Tem certeza que deseja excluir a pelada?
+              </p>
+            </div>
 
-              <div className="grid grid-cols-2 gap-3 pt-2">
-                <button
-                  onClick={() => setMatchToDelete(null)}
-                  className="w-full h-12 rounded-xl font-bold uppercase tracking-widest text-[10px] transition-all bg-zinc-50 text-zinc-400 hover:bg-zinc-100 active:scale-95 border border-black/5"
-                >
-                  CANCELAR
-                </button>
-                <button
-                  onClick={() => {
-                    setScheduledMatches((prev) =>
-                      prev.filter((m) => m.id !== matchToDelete.id),
-                    );
-                    setToast({
-                      message: "Pelada deletada com sucesso!",
-                      type: "success",
-                    });
-                    setMatchToDelete(null);
-                  }}
-                  className="w-full h-12 rounded-xl font-bold uppercase tracking-widest text-[10px] bg-gradient-to-br from-red-50 to-red-100 text-red-600 hover:shadow-lg hover:shadow-red-500/10 transition-all active:scale-95 border border-red-200/50"
-                >
-                  EXCLUIR
-                </button>
-              </div>
+            <div className="grid grid-cols-2 gap-2 w-full pt-2">
+              <button
+                onClick={() => setMatchToDelete(null)}
+                className="w-full h-10 rounded-xl font-black uppercase tracking-widest text-[9px] transition-all bg-white/5 text-white/70 hover:bg-white/10 hover:text-white active:scale-95 border border-white/10"
+              >
+                CANCELAR
+              </button>
+              <button
+                onClick={() => {
+                  setScheduledMatches((prev) =>
+                    prev.filter((m) => m.id !== matchToDelete.id),
+                  );
+                  setToast({
+                    message: "Pelada deletada com sucesso!",
+                    type: "success",
+                  });
+                  setMatchToDelete(null);
+                }}
+                className="w-full h-10 rounded-xl font-black uppercase tracking-widest text-[9px] bg-red-500 hover:bg-red-600 text-white shadow-lg shadow-red-500/20 transition-all active:scale-95"
+              >
+                EXCLUIR
+              </button>
             </div>
           </motion.div>
         </div>
