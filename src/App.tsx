@@ -7737,31 +7737,31 @@ function GroupApp({
                                   initial={{ opacity: 0 }}
                                   animate={{ opacity: 1 }}
                                   exit={{ opacity: 0 }}
-                                  className="absolute inset-0 bg-[#0b0e17]/95 backdrop-blur-md z-20 flex flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl"
+                                  className="absolute inset-0 bg-[#1E3D2F]/95 backdrop-blur-md z-20 flex items-center justify-center gap-3 overflow-hidden rounded-2xl border border-white/10 shadow-lg"
                                 >
-                                  <div className="flex gap-1">
+                                  <div className="flex gap-1.5">
                                     {[0, 1, 2].map((i) => (
                                       <motion.div
                                         key={i}
                                         animate={{
                                           scale: [1, 1.2, 1],
-                                          opacity: [0.3, 1, 0.3],
+                                          opacity: [0.5, 1, 0.5],
                                         }}
                                         transition={{
                                           duration: 0.8,
                                           repeat: Infinity,
                                           delay: i * 0.2,
                                         }}
-                                        className="w-1.5 h-1.5 bg-[#34d399] rounded-full shadow-[0_0_8px_rgba(52,211,153,0.5)]"
+                                        className="w-1.5 h-1.5 bg-[#53B986] rounded-full shadow-[0_0_8px_rgba(83,185,134,0.5)]"
                                       />
                                     ))}
                                   </div>
                                   <motion.div
-                                    animate={{ opacity: [0.5, 1, 0.5] }}
+                                    animate={{ opacity: [0.7, 1, 0.7] }}
                                     transition={{ duration: 1.5, repeat: Infinity }}
-                                    className="text-[9px] uppercase tracking-[0.2em] text-[#34d399] font-black"
+                                    className="text-[10px] uppercase tracking-wider text-[#53B986] font-bold"
                                   >
-                                    Adicionando a lista
+                                    Adicionando...
                                   </motion.div>
 
                                   {/* Background shimmer effect */}
@@ -7774,7 +7774,7 @@ function GroupApp({
                                       repeat: Infinity,
                                       ease: "linear",
                                     }}
-                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12"
+                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12 pointer-events-none"
                                   />
                                 </motion.div>
                               )}
@@ -7794,23 +7794,23 @@ function GroupApp({
                             />
                             <div className="absolute inset-0 flex items-center justify-center pb-8 sm:pb-8 pointer-events-none transition-all peer-focus:opacity-0 peer-[:not(:placeholder-shown)]:opacity-0">
                               <motion.div
-                                initial={{ maxWidth: 20 }}
+                                initial={{ maxWidth: 24 }}
                                 animate={{ maxWidth: 240 }}
-                                transition={{ duration: 0.5, delay: 0.8, ease: "easeInOut" }}
-                                className="flex items-center gap-1.5 overflow-hidden whitespace-nowrap"
+                                transition={{ duration: 0.6, delay: 1.0, ease: "easeInOut" }}
+                                className="flex items-center gap-2 overflow-hidden whitespace-nowrap"
                               >
                                 <motion.div
                                   initial={{ scale: 0, rotate: -180 }}
                                   animate={{ scale: 1, rotate: 0 }}
                                   transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.2 }}
-                                  className="text-[#25D366] shrink-0"
+                                  className="text-[#25D366] shrink-0 flex items-center justify-center"
                                 >
-                                  <IoLogoWhatsapp size={20} />
+                                  <IoLogoWhatsapp size={24} />
                                 </motion.div>
                                 <motion.span
                                   initial={{ opacity: 0 }}
                                   animate={{ opacity: 1 }}
-                                  transition={{ duration: 0.4, delay: 1 }}
+                                  transition={{ duration: 0.4, delay: 1.2 }}
                                   className="text-xs sm:text-sm text-blue-200/50 leading-tight shrink-0 pt-0.5"
                                 >
                                   Cole aqui a lista do whatsapp.
@@ -9096,7 +9096,7 @@ function GroupApp({
                           {match.hasEnded && (
                             <div className="absolute inset-0 z-40 bg-black/10 backdrop-blur-[1px] rounded-2xl pointer-events-auto cursor-default" />
                           )}
-                          <div className="sticky top-[-1px] z-40 bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-300 backdrop-blur-md border-b border-black/10 ring-1 ring-white/5 py-6 -mx-2 px-2 sm:-mx-4 sm:px-4 flex flex-row items-center justify-between gap-2 sm:gap-6 rounded-2xl w-full max-w-3xl mx-auto relative overflow-hidden">
+                          <div className="sticky top-[-1px] z-40 bg-white/5 backdrop-blur-md border border-white/10 p-4 sm:p-6 flex flex-row items-center justify-between gap-2 sm:gap-4 rounded-2xl w-full max-w-3xl mx-auto relative overflow-hidden shadow-lg">
                             <div className="flex-1 flex flex-col items-center text-center space-y-2 sm:space-y-4">
                               <button
                                 className="w-10 h-10 sm:w-20 sm:h-20 transition-transform hover:scale-110 active:scale-95 flex items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed drop-shadow-sm"
@@ -9133,7 +9133,7 @@ function GroupApp({
                                 })()}
                               </button>
                               <div
-                                className={`text-4xl sm:text-7xl font-black origin-center text-black ${!match.isActive || match.isPaused ? "opacity-50" : ""} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24`}
+                                className={`text-4xl sm:text-6xl font-black origin-center text-white ${!match.isActive || match.isPaused ? "opacity-50" : ""} tabular-nums tracking-tighter leading-none flex items-center justify-center w-12 h-12 sm:w-20 sm:h-20`}
                               >
                                 {match.scoreA}
                               </div>
@@ -9177,7 +9177,7 @@ function GroupApp({
                                         };
                                       });
                                     }}
-                                    className={`w-8 h-8 sm:w-12 sm:h-12 flex items-center justify-center rounded-full transition-all shadow-md ${match.isPaused ? "bg-[#34d399] text-white hover:opacity-90" : "bg-black/10 text-black/30 hover:bg-black/20"} disabled:opacity-20 disabled:cursor-not-allowed border border-black/5`}
+                                    className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all shadow-md ${match.isPaused ? "bg-[#34d399] text-[#1E3D2F] hover:opacity-90" : "bg-white/10 text-white/50 hover:bg-white/20"} disabled:opacity-20 disabled:cursor-not-allowed border border-white/5`}
                                   >
                                     {match.isPaused ? (
                                       <Play
@@ -9251,7 +9251,7 @@ function GroupApp({
                                     match.scoreB >= match.config.goalLimit
                                   }
                                   onClick={finishMatch}
-                                  className="px-2 sm:px-4 py-1 rounded-full bg-red-500/20 text-red-700 text-[6px] sm:text-[8px] font-black uppercase tracking-widest hover:bg-red-500/30 transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-red-500/20"
+                                  className="px-2 sm:px-4 py-1 rounded-full bg-red-500/20 text-red-400 text-[6px] sm:text-[8px] font-black uppercase tracking-widest hover:bg-red-500/30 transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-red-500/20"
                                 >
                                   Encerrar
                                 </button>
@@ -9294,14 +9294,14 @@ function GroupApp({
                                 })()}
                               </button>
                               <div
-                                className={`text-4xl sm:text-7xl font-black origin-center text-black ${!match.isActive || match.isPaused ? "opacity-50" : ""} tabular-nums tracking-tighter leading-none flex items-center justify-center w-14 h-14 sm:w-24 sm:h-24`}
+                                className={`text-4xl sm:text-6xl font-black origin-center text-white ${!match.isActive || match.isPaused ? "opacity-50" : ""} tabular-nums tracking-tighter leading-none flex items-center justify-center w-12 h-12 sm:w-20 sm:h-20`}
                               >
                                 {match.scoreB}
                               </div>
                             </div>
                           </div>
 
-                          <div className="grid grid-cols-2 gap-4 bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef] p-4 pt-6 rounded-xl border border-black/5 shadow-inner mb-8 relative overflow-hidden">
+                          <div className="grid grid-cols-2 gap-3 bg-white/5 p-3 pt-4 rounded-xl border border-white/10 mb-8 relative overflow-hidden">
                             {/* Team Color Top Bars */}
                             <div
                               className="absolute top-0 left-0 w-1/2 h-1 z-10"
@@ -9425,17 +9425,17 @@ function GroupApp({
                                         playerId: pid,
                                       });
                                     }}
-                                    className={`w-full flex flex-row-reverse items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br from-white to-[#f4f4f5] hover:opacity-90 hover:border-black/10 ${
+                                    className={`w-full flex flex-row-reverse items-center p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-white/5 hover:bg-white/10 ${
                                       swappingPlayerId === pid
                                         ? "border-2 border-[#53B986] shadow-lg scale-105 relative z-10"
                                         : swappingPlayerId && swappingPlayerId !== pid
                                           ? "border-2 border-[#53B986] shadow-sm animate-pulse shadow-[#53B986]/10"
-                                          : "border border-black/5 group"
+                                          : "border border-white/5 group"
                                     }`}
                                   >
                                     <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-transparent flex items-center justify-center shrink-0 overflow-hidden ml-3">
                                       {p.isGoalkeeper ? (
-                                        <div className="flex items-center justify-center rounded-full w-4 h-4 text-[9px] font-black leading-none text-black/70">
+                                        <div className="flex items-center justify-center rounded-full w-4 h-4 text-[9px] font-black leading-none text-white/70">
                                           G
                                         </div>
                                       ) : p.photo ? (
@@ -9445,13 +9445,13 @@ function GroupApp({
                                           referrerPolicy="no-referrer"
                                         />
                                       ) : (
-                                        <span className="text-black/40 flex items-center shrink-0">
+                                        <span className="text-white/40 flex items-center shrink-0">
                                           <IoPersonOutline size={10} />
                                         </span>
                                       )}
                                     </div>
                                     <div className="flex flex-col items-end gap-0.5 overflow-hidden">
-                                      <span className="text-xs font-normal tracking-tight capitalize truncate text-black/90 leading-none text-right">
+                                      <span className="text-xs font-normal tracking-tight capitalize truncate text-white/90 leading-none text-right">
                                         {p.name.toLowerCase()}
                                       </span>
                                       <div className="flex flex-row-reverse gap-0.5">
@@ -9459,20 +9459,20 @@ function GroupApp({
                                           <Star
                                             key={`star-${p.id}-${star}`}
                                             size={6}
-                                            className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10"}`}
+                                            className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-white/20"}`}
                                           />
                                         ))}
                                       </div>
                                     </div>
                                     <div className="flex items-center gap-1 mr-auto">
                                       {matchAssists > 0 && (
-                                        <div className="flex items-center gap-0.5 text-[10px] font-bold text-black/50">
+                                        <div className="flex items-center gap-0.5 text-[10px] font-bold text-white/50">
                                           <Footprints size={10} />{" "}
                                           {matchAssists}
                                         </div>
                                       )}
                                       {matchGoals > 0 && (
-                                        <div className="flex items-center gap-0.5 text-[10px] font-bold text-black/50">
+                                        <div className="flex items-center gap-0.5 text-[10px] font-bold text-white/50">
                                           <CircleDot size={10} /> {matchGoals}
                                         </div>
                                       )}
@@ -9605,11 +9605,7 @@ function GroupApp({
                                       }
                                     }
                                   }}
-                                  className={`w-full flex items-center justify-center p-2 sm:p-1.5 rounded-xl border border-dashed transition-all active:scale-95 ${
-                                    theme === "light"
-                                      ? "border-zinc-300 bg-zinc-50 text-zinc-300 hover:bg-zinc-100"
-                                      : "border-black/10 bg-black/5 text-black/5 hover:bg-black/10"
-                                  } ${movingPlayers && isSelectingDestination ? "animate-pulse border-brand-primary" : ""}`}
+                                  className={`w-full flex items-center justify-center p-1.5 rounded-xl border border-dashed transition-all active:scale-95 border-white/10 bg-white/5 text-white/20 hover:bg-white/10 ${movingPlayers && isSelectingDestination ? "animate-pulse border-brand-primary" : ""}`}
                                 >
                                   <Plus size={12} />
                                 </button>
@@ -9719,17 +9715,17 @@ function GroupApp({
                                         playerId: pid,
                                       });
                                     }}
-                                    className={`w-full flex items-center p-2 sm:p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-gradient-to-br from-white to-[#f4f4f5] hover:opacity-90 hover:border-black/10 ${
+                                    className={`w-full flex items-center p-1.5 rounded-xl transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed bg-white/5 hover:bg-white/10 ${
                                       swappingPlayerId === pid
                                         ? "border-2 border-[#53B986] shadow-lg scale-105 relative z-10"
                                         : swappingPlayerId && swappingPlayerId !== pid
                                           ? "border-2 border-[#53B986] shadow-sm animate-pulse shadow-[#53B986]/10"
-                                          : "border border-black/5 group"
+                                          : "border border-white/5 group"
                                     }`}
                                   >
                                     <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-transparent flex items-center justify-center shrink-0 overflow-hidden mr-3">
                                       {p.isGoalkeeper ? (
-                                        <div className="flex items-center justify-center rounded-full w-4 h-4 text-[9px] font-black leading-none text-black/70">
+                                        <div className="flex items-center justify-center rounded-full w-4 h-4 text-[9px] font-black leading-none text-white/70">
                                           G
                                         </div>
                                       ) : p.photo ? (
@@ -9739,13 +9735,13 @@ function GroupApp({
                                           referrerPolicy="no-referrer"
                                         />
                                       ) : (
-                                        <span className="text-black/40 flex items-center shrink-0">
+                                        <span className="text-white/40 flex items-center shrink-0">
                                           <IoPersonOutline size={10} />
                                         </span>
                                       )}
                                     </div>
                                     <div className="flex flex-col gap-0.5 overflow-hidden">
-                                      <span className="text-xs font-normal tracking-tight capitalize truncate text-black/90 leading-none">
+                                      <span className="text-xs font-normal tracking-tight capitalize truncate text-white/90 leading-none">
                                         {p.name.toLowerCase()}
                                       </span>
                                       <div className="flex gap-0.5">
@@ -9753,7 +9749,7 @@ function GroupApp({
                                           <Star
                                             key={`star-b-${p.id}-${star}`}
                                             size={6}
-                                            className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10"}`}
+                                            className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-white/20"}`}
                                           />
                                         ))}
                                       </div>
@@ -9781,12 +9777,12 @@ function GroupApp({
                                         </div>
                                       )}
                                       {matchGoals > 0 && (
-                                        <div className="flex items-center gap-0.5 text-[10px] font-bold text-black/50">
+                                        <div className="flex items-center gap-0.5 text-[10px] font-bold text-white/50">
                                           <CircleDot size={10} /> {matchGoals}
                                         </div>
                                       )}
                                       {matchAssists > 0 && (
-                                        <div className="flex items-center gap-0.5 text-[10px] font-bold text-black/50">
+                                        <div className="flex items-center gap-0.5 text-[10px] font-bold text-white/50">
                                           <Footprints size={10} />{" "}
                                           {matchAssists}
                                         </div>
@@ -9898,11 +9894,7 @@ function GroupApp({
                                       }
                                     }
                                   }}
-                                  className={`w-full flex items-center justify-center p-2 sm:p-1.5 rounded-xl border border-dashed transition-all active:scale-95 ${
-                                    theme === "light"
-                                      ? "border-zinc-300 bg-zinc-50 text-zinc-300 hover:bg-zinc-100"
-                                      : "border-black/10 bg-black/5 text-black/5 hover:bg-black/10"
-                                  } ${movingPlayers && isSelectingDestination ? "animate-pulse border-brand-primary" : ""}`}
+                                  className={`w-full flex items-center justify-center p-1.5 rounded-xl border border-dashed transition-all active:scale-95 border-white/10 bg-white/5 text-white/20 hover:bg-white/10 ${movingPlayers && isSelectingDestination ? "animate-pulse border-brand-primary" : ""}`}
                                 >
                                   <Plus size={12} />
                                 </button>
