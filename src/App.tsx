@@ -334,20 +334,6 @@ interface MatchResult {
   duration: number;
 }
 
-interface PeladaReport {
-  id: string;
-  timestamp: number;
-  playersStats: Record<string, { 
-    goals: number; 
-    assists: number; 
-    matches: number; 
-    time: number; 
-    playerName: string;
-    photo?: string;
-  }>;
-  absentPlayers: { id: string, name: string, photo?: string }[];
-}
-
 interface TieBreakerState {
   showSelection: boolean;
   type: "penalties" | "lottery" | "none";
@@ -3451,7 +3437,6 @@ function GroupApp({
   const [showArrivalStepGuide, setShowArrivalStepGuide] = useState(false);
   const [arrivalCardIndex, setArrivalCardIndex] = useState(0);
   const [isAiProcessing, setIsAiProcessing] = useState(false);
-  const [reportCardIndex, setReportCardIndex] = useState(0);
   const [showAddPlayerSection, setShowAddPlayerSection] = useState(false);
   const [showPlayerSummary, setShowPlayerSummary] = useState(false);
   const [isFlashingConfig, setIsFlashingConfig] = useState(false);
@@ -3483,110 +3468,6 @@ function GroupApp({
     message: string;
     type: "info" | "warning" | "gray" | "success";
   } | null>(null);
-  const [showPeladaReport, setShowPeladaReport] = useState(false);
-  const [lastPeladaReport, setLastPeladaReport] = useState<PeladaReport | null>(() => {
-    const saved = localStorage.getItem("futquina_last_report");
-    return saved ? JSON.parse(saved) : null;
-  });
-
-  const generatePeladaReportData = (): PeladaReport => {
-    const playersStats: Record<string, {
-      goals: number;
-      assists: number;
-      matches: number;
-      time: number;
-      playerName: string;
-      photo?: string;
-    }> = {};
-    
-    // Initialize stats for players who are in session
-    sessionPlayerIds.forEach(id => {
-      const p = players.find(player => player.id === id);
-      if (p) {
-        playersStats[id] = {
-          goals: 0,
-          assists: 0,
-          matches: 0,
-          time: 0,
-          playerName: p.name,
-          photo: p.photo
-        };
-      }
-    });
-
-    // Process match history
-    matchHistory.forEach(historyItem => {
-      // Goals/Assists from events
-      historyItem.events.forEach(event => {
-        if (event.type === "goal") {
-          if (playersStats[event.playerId]) {
-            playersStats[event.playerId].goals++;
-          }
-          if (event.assistId && playersStats[event.assistId]) {
-            playersStats[event.assistId].assists++;
-          }
-        }
-      });
-
-      // Matches played
-      const rosterA = historyItem.teamAPlayerIds || [];
-      const rosterB = historyItem.teamBPlayerIds || [];
-      const matchDuration = historyItem.duration || historyItem.config?.duration || 0;
-
-      [...rosterA, ...rosterB].forEach(pid => {
-        if (playersStats[pid]) {
-          playersStats[pid].matches++;
-          playersStats[pid].time += matchDuration;
-        } else {
-          const p = players.find(player => player.id === pid);
-          if (p) {
-            playersStats[pid] = {
-              goals: 0, // already counted from events if they had any
-              assists: 0,
-              matches: 1,
-              time: matchDuration,
-              playerName: p.name,
-              photo: p.photo
-            };
-          }
-        }
-      });
-    });
-
-    // Final goals/assists pass for players NOT in session but who played (edge case)
-    matchHistory.forEach(historyItem => {
-       historyItem.events.forEach(event => {
-        if (event.type === "goal") {
-          if (playersStats[event.playerId]) {
-             // Already incremented
-          } else {
-             const p = players.find(player => player.id === event.playerId);
-             if (p) {
-               playersStats[event.playerId] = { goals: 1, assists: 0, matches: 0, time: 0, playerName: p.name, photo: p.photo };
-             }
-          }
-           if (event.assistId && !playersStats[event.assistId]) {
-             const p = players.find(player => player.id === event.assistId);
-             if (p) {
-                playersStats[event.assistId] = { goals: 0, assists: 1, matches: 0, time: 0, playerName: p.name, photo: p.photo };
-             }
-          }
-        }
-      });
-    });
-
-    const absentPlayers = players
-      .filter(p => !sessionPlayerIds.includes(p.id))
-      .map(p => ({ id: p.id, name: p.name, photo: p.photo }));
-
-    return {
-      id: generateId(),
-      timestamp: Date.now(),
-      playersStats,
-      absentPlayers
-    };
-  };
-
   const confirmEndPelada = () => {
     setShowEndPeladaConfirm(false);
     setIsSavingPeladaFlow(true);
@@ -3599,10 +3480,6 @@ function GroupApp({
   };
 
   const handleEndPelada = () => {
-    const report = generatePeladaReportData();
-    setLastPeladaReport(report);
-    localStorage.setItem("futquina_last_report", JSON.stringify(report));
-    
     // Resets
     setSessionPlayerIds([]);
     setMatchHistory([]);
@@ -3621,7 +3498,6 @@ function GroupApp({
     setLastMatchResult(null);
     setCurrentScreen("teams");
     setTeamsTab("chegada");
-    setShowPeladaReport(true);
     setShowGlobalSettings(false);
 
     // Also update all players to not available
@@ -7397,7 +7273,7 @@ function GroupApp({
           onTouchStart={onTouchStart}
           onTouchMove={onTouchMove}
           onTouchEnd={onTouchEnd}
-          className={`flex-1 overflow-y-auto flex flex-col ${currentScreen === "players" ? "pb-32" : (!showPeladaReport) ? "pb-12" : "pb-10"} touch-pan-y ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-transparent relative z-10"}`}
+          className={`flex-1 overflow-y-auto flex flex-col ${currentScreen === "players" ? "pb-32" : "pb-12"} touch-pan-y ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-transparent relative z-10"}`}
         >
           <AnimatePresence mode="wait">
             {currentScreen === "players" && !isPrintMode && (
@@ -14609,257 +14485,6 @@ function GroupApp({
           </motion.div>
         )}
 
-        {showPeladaReport && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 backdrop-blur-xl z-[300] flex items-center justify-center p-2 sm:p-6"
-            onClick={() => setShowPeladaReport(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, y: 20, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              className="w-full max-w-lg bg-[#F8FAFC] rounded-[40px] shadow-2xl overflow-hidden flex flex-col max-h-[80vh] border border-white/20 relative"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* Close Button UI */}
-              <button 
-                onClick={() => {
-                  setShowPeladaReport(false);
-                  setReportCardIndex(0);
-                }}
-                className="absolute top-6 right-6 z-[100] w-10 h-10 flex items-center justify-center rounded-full bg-black/5 hover:bg-black/10 transition-colors text-zinc-500 hover:text-zinc-900"
-              >
-                <X size={20} />
-              </button>
-
-              {/* Modern Header */}
-              <div className="bg-gradient-to-br from-[#dce3ee] to-[#F1F5F9] p-8 text-center relative overflow-hidden shrink-0">
-                <div className="absolute -top-12 -right-12 w-48 h-48 bg-white/40 rounded-full blur-3xl" />
-                <div className="relative z-10 flex flex-col items-center gap-1">
-                  <div className="w-12 h-1 bg-zinc-800/10 rounded-full mb-4" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-400">Dashboard de Performance</span>
-                  <h2 className="text-2xl font-black uppercase tracking-tight text-zinc-900">Relatório da Pelada</h2>
-                </div>
-              </div>
-
-              {/* Content area for stacked cards */}
-              <div className="flex-1 relative flex items-center justify-center p-6 overflow-hidden bg-zinc-50/50">
-                {(() => {
-                  const report = matchHistory.length > 0 ? generatePeladaReportData() : lastPeladaReport;
-                  if (!report) return (
-                    <div className="text-zinc-400 text-xs font-bold uppercase tracking-widest">Aguardando dados...</div>
-                  );
-                  
-                  const statsArray = Object.values(report.playersStats) as any[];
-                  if (statsArray.length === 0) return (
-                    <div className="text-zinc-400 text-xs font-bold uppercase tracking-widest">Sem estatísticas</div>
-                  );
-
-                  const topScorer = [...statsArray].sort((a, b) => b.goals - a.goals || b.matches - a.matches)[0];
-                  const topAssister = [...statsArray].sort((a, b) => b.assists - a.assists || b.matches - a.matches)[0];
-                  const topPlayer = [...statsArray].sort((a, b) => (b.goals + b.assists) - (a.goals + a.assists) || b.matches - a.matches)[0];
-
-                  const cards = [
-                    {
-                      id: 'mvp',
-                      title: 'Craque da Pelada',
-                      icon: <Star className="text-amber-500" />,
-                      content: (
-                        <div className="h-full flex flex-col justify-center gap-6">
-                           <div className="relative mx-auto group">
-                              <div className="absolute inset-0 bg-brand-primary/20 blur-2xl rounded-full scale-125 animate-pulse" />
-                              <div className="w-32 h-32 rounded-[40px] bg-zinc-900 border-4 border-white shadow-2xl relative overflow-hidden flex items-center justify-center">
-                                 {topPlayer.photo ? (
-                                    <img src={topPlayer.photo} alt="" className="w-full h-full object-cover" />
-                                  ) : (
-                                    <div className="text-white/20"><User size={48} /></div>
-                                  )}
-                              </div>
-                              <div className="absolute -bottom-4 -right-4 w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center text-white shadow-xl rotate-12">
-                                <Award size={24} />
-                              </div>
-                           </div>
-                           <div className="text-center">
-                              <h4 className="text-2xl font-black text-zinc-900 uppercase tracking-tight">{(topPlayer.playerName || "").toLowerCase()}</h4>
-                              <p className="text-[10px] font-black text-emerald-600 uppercase tracking-[0.3em] mt-1">Status: Imbatível</p>
-                           </div>
-                           <div className="grid grid-cols-2 gap-3 mt-4">
-                              <div className="bg-emerald-50 p-4 rounded-3xl text-center">
-                                <span className="text-[10px] font-bold text-emerald-700 uppercase">Gols</span>
-                                <div className="text-xl font-black text-emerald-900">{topPlayer.goals}</div>
-                              </div>
-                              <div className="bg-blue-50 p-4 rounded-3xl text-center">
-                                <span className="text-[10px] font-bold text-blue-700 uppercase">Assists</span>
-                                <div className="text-xl font-black text-blue-900">{topPlayer.assists}</div>
-                              </div>
-                           </div>
-                        </div>
-                      )
-                    },
-                    {
-                      id: 'artilharia',
-                      title: 'Top Artilheiros',
-                      icon: <GiSoccerField color="#a1a1aa" />,
-                      content: (
-                        <div className="space-y-3 pt-2">
-                          {statsArray.sort((a,b) => b.goals-a.goals).slice(0, 5).map((p, i) => (
-                            <div key={`rep-art-${i}`} className="flex items-center justify-between p-4 bg-zinc-50 border border-zinc-100 rounded-2xl hover:bg-white transition-colors">
-                              <div className="flex items-center gap-3">
-                                <span className={`w-6 h-6 flex items-center justify-center rounded-lg text-[10px] font-black ${i === 0 ? 'bg-amber-100 text-amber-600' : 'bg-zinc-100 text-zinc-400'}`}>
-                                  {i + 1}
-                                </span>
-                                <span className="text-sm font-bold text-zinc-800 capitalize truncate max-w-[120px]">{(p.playerName || "").toLowerCase()}</span>
-                              </div>
-                              <span className="text-sm font-black text-zinc-900">{p.goals} <span className="text-[10px] text-zinc-400">GOLS</span></span>
-                            </div>
-                          ))}
-                        </div>
-                      )
-                    },
-                    {
-                      id: 'garcons',
-                      title: 'Top Garçons',
-                      icon: <GiSoccerKick color="#a1a1aa" />,
-                      content: (
-                        <div className="space-y-3 pt-2">
-                          {statsArray.sort((a,b) => b.assists-a.assists).slice(0, 5).map((p, i) => (
-                            <div key={`rep-ass-${i}`} className="flex items-center justify-between p-4 bg-zinc-50 border border-zinc-100 rounded-2xl hover:bg-white transition-colors">
-                              <div className="flex items-center gap-3">
-                                <span className={`w-6 h-6 flex items-center justify-center rounded-lg text-[10px] font-black ${i === 0 ? 'bg-blue-100 text-blue-600' : 'bg-zinc-100 text-zinc-400'}`}>
-                                  {i + 1}
-                                </span>
-                                <span className="text-sm font-bold text-zinc-800 capitalize truncate max-w-[120px]">{(p.playerName || "").toLowerCase()}</span>
-                              </div>
-                              <span className="text-sm font-black text-zinc-900">{p.assists} <span className="text-[10px] text-zinc-400">ASS</span></span>
-                            </div>
-                          ))}
-                        </div>
-                      )
-                    },
-                    {
-                      id: 'ausentes',
-                      title: 'Não Compareceram',
-                      icon: <Trophy className="text-zinc-300 opacity-30" />,
-                      content: (
-                        <div className="h-full flex flex-col pt-4">
-                           <div className="bg-zinc-100/50 rounded-[32px] p-6 border border-dashed border-zinc-200 flex flex-wrap justify-center gap-2 overflow-y-auto max-h-[280px] custom-scrollbar">
-                              {report.absentPlayers.length > 0 ? report.absentPlayers.map((p, i) => (
-                                <div key={`rep-abs-${i}`} className="px-4 py-2 bg-white rounded-full border border-zinc-200 shadow-sm flex items-center gap-2">
-                                   <div className="w-5 h-5 rounded-full bg-zinc-100 overflow-hidden grayscale">
-                                      {p.photo ? <img src={p.photo} alt="" className="w-full h-full object-cover" /> : <User size={10} className="text-zinc-400" />}
-                                   </div>
-                                   <span className="text-[10px] font-bold text-zinc-500 capitalize">{p.name.toLowerCase()}</span>
-                                </div>
-                              )) : (
-                                <div className="text-center py-10 opacity-30 italic text-xs">Todos presentes!</div>
-                              )}
-                           </div>
-                           <p className="mt-auto text-center text-[9px] font-bold text-zinc-400 uppercase tracking-widest px-4">
-                             Estes jogadores não participaram desta sessão.
-                           </p>
-                        </div>
-                      )
-                    }
-                  ];
-
-                  return (
-                    <div className="relative w-full h-full flex flex-col items-center">
-                      <div className="relative w-full aspect-[4/5] max-w-[320px]">
-                        <AnimatePresence>
-                          {cards.map((card, i) => {
-                            if (i < reportCardIndex) return null;
-                            if (i > reportCardIndex + 2) return null;
-
-                            const isFront = i === reportCardIndex;
-                            const offset = i - reportCardIndex;
-
-                            return (
-                              <motion.div
-                                key={card.id}
-                                style={{ zIndex: cards.length - i }}
-                                drag={isFront ? "x" : false}
-                                dragConstraints={{ left: 0, right: 0 }}
-                                onDragEnd={(_, info) => {
-                                  if (info.offset.x < -100 && reportCardIndex < cards.length - 1) {
-                                    setReportCardIndex(prev => prev + 1);
-                                  } else if (info.offset.x > 100 && reportCardIndex > 0) {
-                                    setReportCardIndex(prev => prev - 1);
-                                  }
-                                }}
-                                animate={{
-                                  scale: 1 - offset * 0.05,
-                                  y: offset * -15,
-                                  opacity: 1 - offset * 0.3,
-                                  rotate: isFront ? 0 : (i % 2 === 0 ? 1.5 : -1.5) * offset,
-                                }}
-                                whileDrag={{ scale: 1.02 }}
-                                exit={{ x: -500, opacity: 0, rotate: -20 }}
-                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                                className={`absolute inset-0 bg-white shadow-[0_30px_60px_rgba(0,0,0,0.12)] rounded-[48px] p-8 flex flex-col border border-zinc-100 ${isFront ? 'cursor-grab active:cursor-grabbing' : 'pointer-events-none'}`}
-                              >
-                                <div className="flex items-center justify-between mb-8">
-                                  <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-2xl bg-zinc-50 border border-zinc-100 flex items-center justify-center text-xl">
-                                      {card.icon}
-                                    </div>
-                                    <h3 className="text-lg font-black text-zinc-900 tracking-tight uppercase">{card.title}</h3>
-                                  </div>
-                                  <div className="px-3 py-1 bg-zinc-900 text-white rounded-full text-[9px] font-black tracking-widest">
-                                    {i + 1}/{cards.length}
-                                  </div>
-                                </div>
-                                
-                                <div className="flex-1 overflow-hidden">
-                                  {card.content}
-                                </div>
-
-                                {isFront && (
-                                   <div className="mt-8 flex justify-center gap-1.5">
-                                      {cards.map((_, dotIdx) => (
-                                          <div 
-                                              key={`dot-${dotIdx}`} 
-                                              className={`h-1 rounded-full transition-all duration-300 ${dotIdx === reportCardIndex ? 'w-6 bg-zinc-900' : 'w-1.5 bg-zinc-200'}`}
-                                          />
-                                      ))}
-                                   </div>
-                                )}
-                              </motion.div>
-                            );
-                          })}
-                        </AnimatePresence>
-                      </div>
-
-                      {/* Control Instructions */}
-                      <div className="mt-10 flex items-center gap-6">
-                         <button 
-                            disabled={reportCardIndex === 0}
-                            onClick={() => setReportCardIndex(prev => prev - 1)}
-                            className={`w-10 h-10 rounded-full border border-zinc-200 flex items-center justify-center text-zinc-400 transition-all ${reportCardIndex === 0 ? 'opacity-20' : 'hover:bg-zinc-100 active:scale-90 hover:text-zinc-600'}`}
-                         >
-                            <ArrowLeft size={16} />
-                         </button>
-                         <div className="flex flex-col items-center gap-0.5">
-                            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-zinc-400">Navegação</span>
-                            <div className="text-[8px] font-bold text-zinc-300 uppercase tracking-widest">Deslize para o lado</div>
-                         </div>
-                         <button 
-                            disabled={reportCardIndex === cards.length - 1}
-                            onClick={() => setReportCardIndex(prev => prev + 1)}
-                            className={`w-10 h-10 rounded-full border border-zinc-200 flex items-center justify-center text-zinc-400 transition-all ${reportCardIndex === cards.length - 1 ? 'opacity-20' : 'hover:bg-zinc-100 active:scale-90 hover:text-zinc-600'}`}
-                         >
-                            <ArrowRight size={16} />
-                         </button>
-                      </div>
-                    </div>
-                  );
-                })()}
-              </div>
-
-            </motion.div>
-          </motion.div>
-        )}
 
         {showEventModal && (
           <motion.div
@@ -15578,7 +15203,7 @@ function GroupApp({
         </AnimatePresence>
 
         {/* Bottom Navigation */}
-        {!(currentScreen === "players" && !showAddPlayerSection) && !showPeladaReport && (
+        {!(currentScreen === "players" && !showAddPlayerSection) && (
           <div
             className={`fixed bottom-0 left-0 right-0 z-[100] w-full ${isPrintMode ? "hidden" : ""}`}
           >
@@ -15848,55 +15473,51 @@ function GroupApp({
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
-              className="w-full max-w-[310px] p-6 rounded-[24px] bg-[#0b0e17]/95 border border-white/10 text-white backdrop-blur-xl shadow-2xl"
+              className="w-full max-w-[280px] p-5 rounded-[20px] bg-[#0b0e17]/95 border border-white/10 text-white backdrop-blur-xl shadow-2xl"
             >
-              <div className="flex flex-col items-center text-center space-y-4">
-                <div className="w-14 h-14 rounded-full bg-[#34d399]/10 flex items-center justify-center border border-[#34d399]/20 shadow-sm">
-                  <Play size={18} className="text-[#34d399] fill-[#34d399] ml-0.5" />
-                </div>
-
-                <div className="space-y-1">
-                  <h3 className="text-xl font-black uppercase tracking-tight text-white">
-                    Tudo Pronto!
+              <div className="flex flex-col items-center text-center space-y-3">
+                <div className="space-y-0.5">
+                  <h3 className="text-lg font-black uppercase tracking-tight text-white">
+                    Guia
                   </h3>
-                  <p className="text-[10px] font-medium leading-relaxed text-white/50 max-w-[200px] mx-auto">
-                    Siga estes passos simples para organizar suas partidas:
+                  <p className="text-[9px] font-medium leading-relaxed text-white/50 max-w-[180px] mx-auto">
+                    Siga estes passos simples:
                   </p>
                 </div>
 
-                <div className="w-full space-y-3 text-left py-1">
-                  <div className="flex gap-3 items-start">
-                    <div className="w-6 h-6 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] text-xs font-black flex items-center justify-center shrink-0 shadow-sm">
+                <div className="w-full space-y-2.5 text-left py-1">
+                  <div className="flex gap-2 items-start">
+                    <div className="w-5 h-5 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm mt-0.5">
                       1
                     </div>
-                    <p className="text-[9px] font-medium text-white/60 leading-relaxed pt-0.5">
+                    <p className="text-[9px] font-medium text-white/60 leading-tight">
                       <span className="text-white font-bold block mb-0.5">Crie sua Pelada</span>
-                      Clique no banner verde para definir nome, data e local. Suas peladas ficarão salvas para acesso rápido.
+                      Clique no banner verde para definir nome, data e local.
                     </p>
                   </div>
-                  <div className="flex gap-3 items-start">
-                    <div className="w-6 h-6 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] text-xs font-black flex items-center justify-center shrink-0 shadow-sm">
+                  <div className="flex gap-2 items-start">
+                    <div className="w-5 h-5 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm mt-0.5">
                       2
                     </div>
-                    <p className="text-[9px] font-medium text-white/60 leading-relaxed pt-0.5">
+                    <p className="text-[9px] font-medium text-white/60 leading-tight">
                       <span className="text-white font-bold block mb-0.5">Acesse o Gerenciamento</span>
-                      Toque na pelada criada em sua lista para abrir o painel onde você poderá adicionar e confirmar jogadores.
+                      Toque na pelada criada na sua lista para adicionar jogadores.
                     </p>
                   </div>
-                  <div className="flex gap-3 items-start">
-                    <div className="w-6 h-6 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] text-xs font-black flex items-center justify-center shrink-0 shadow-sm">
+                  <div className="flex gap-2 items-start">
+                    <div className="w-5 h-5 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm mt-0.5">
                       3
                     </div>
-                    <p className="text-[9px] font-medium text-white/60 leading-relaxed pt-0.5">
+                    <p className="text-[9px] font-medium text-white/60 leading-tight">
                       <span className="text-white font-bold block mb-0.5">Organize as Partidas</span>
-                      Confirme a presença para o sorteio equilibrado. Ao final, registre os gols para atualizar o Ranking e gerencie o fluxo de caixa no menu Financeiro.
+                      Confirme presenças, registre gols e gerencie o financeiro.
                     </p>
                   </div>
                 </div>
 
                 <button
                   onClick={() => setShowSetupGuide(false)}
-                  className="w-full py-3 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] rounded-xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-[#34d399]/20 active:scale-95 transition-all text-center cursor-pointer"
+                  className="w-full py-2.5 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] rounded-lg font-black uppercase tracking-widest text-[9px] shadow-lg shadow-[#34d399]/20 active:scale-95 transition-all text-center cursor-pointer mt-1"
                 >
                   Entendi, vamos lá!
                 </button>
