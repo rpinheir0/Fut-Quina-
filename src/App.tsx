@@ -3455,6 +3455,20 @@ function GroupApp({
   const [showAddPlayerSection, setShowAddPlayerSection] = useState(false);
   const [showPlayerSummary, setShowPlayerSummary] = useState(false);
   const [isFlashingConfig, setIsFlashingConfig] = useState(false);
+  const [shrinkEditButton, setShrinkEditButton] = useState(false);
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    if (currentScreen === "players" && !showAddPlayerSection) {
+      setShrinkEditButton(false);
+      timer = setTimeout(() => {
+        setShrinkEditButton(true);
+      }, 7000);
+    } else {
+      setShrinkEditButton(false);
+    }
+    return () => clearTimeout(timer);
+  }, [currentScreen, showAddPlayerSection]);
 
   useEffect(() => {
     if (isFlashingConfig) {
@@ -7673,9 +7687,9 @@ function GroupApp({
                                             const days = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
                                             const date = new Date(match.date); setNewMatchDay(days[date.getDay()]); setShowScheduleModal(true);
                                           }}
-                                          className="flex-1 bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-sm rounded-full h-8 flex items-center justify-center text-white text-[11px] font-bold gap-1 transition-colors shadow-sm"
+                                          className={`${shrinkEditButton ? "w-8 shrink-0" : "flex-1"} bg-white/5 hover:bg-white/10 border border-white/10 backdrop-blur-sm rounded-full h-8 flex items-center justify-center text-white text-[11px] font-bold gap-1 transition-all duration-300 shadow-sm overflow-hidden`}
                                         >
-                                            Editar
+                                            {shrinkEditButton ? <Pencil size={14} /> : "Editar"}
                                         </button>
                                         <button onClick={(e) => { e.stopPropagation(); setSelectedMatchId(match.id); setCurrentScreen("players"); setShowAddPlayerSection(true); }} className="flex-1 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] hover:opacity-90 shadow-lg shadow-emerald-500/10 rounded-full h-8 flex items-center justify-center text-white text-[11px] font-black gap-1 transition-all active:scale-95">Abrir <ArrowUp size={12} /></button>
                                     </div>
