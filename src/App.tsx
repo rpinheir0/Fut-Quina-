@@ -1741,25 +1741,28 @@ const PlayerManagementModalComponent = ({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
       onClick={onClose}
     >
       <motion.div
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        className="w-full max-w-[300px] bg-white rounded-xl relative overflow-hidden flex flex-col"
+        className="w-full max-w-[280px] bg-[#0b0e17]/95 border border-white/10 text-white backdrop-blur-xl rounded-[24px] relative overflow-hidden flex flex-col shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="bg-[#dce3ee] border-b border-zinc-200 p-6 flex flex-col items-center gap-4 relative">
+        <div className="bg-white/5 p-6 text-center relative overflow-hidden border-b border-white/5 flex flex-col items-center">
+          <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
+          <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
+
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 bg-white/50 hover:bg-white rounded-full shadow-sm text-zinc-500 hover:text-black transition-all"
+            className="absolute top-4 right-4 p-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/60 hover:text-white transition-all cursor-pointer"
           >
-            <X size={16} />
+            <X size={14} />
           </button>
 
-          <div className="relative group mt-4">
-            <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white shadow-md bg-zinc-200 flex items-center justify-center relative">
+          <div className="relative group mt-2">
+            <div className="w-20 h-20 rounded-full overflow-hidden border border-white/10 shadow-lg bg-white/5 flex items-center justify-center relative">
               {player.photo ? (
                 <img
                   src={player.photo}
@@ -1768,17 +1771,17 @@ const PlayerManagementModalComponent = ({
                   referrerPolicy="no-referrer"
                 />
               ) : (
-                <div className="flex flex-col items-center justify-center text-zinc-400">
-                  <IoPersonOutline size={40} />
-                  <span className="text-[9px] font-black uppercase mt-1 tracking-widest">
+                <div className="flex flex-col items-center justify-center text-white/40">
+                  <IoPersonOutline size={32} />
+                  <span className="text-[8px] font-black uppercase mt-1 tracking-widest">
                     Sem Foto
                   </span>
                 </div>
               )}
             </div>
 
-            <label className="absolute bottom-0 right-0 w-8 h-8 bg-black text-white rounded-full flex items-center justify-center cursor-pointer shadow-md hover:scale-105 active:scale-95 transition-all">
-              <Camera size={14} />
+            <label className="absolute bottom-0 right-0 w-6 h-6 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] rounded-full flex items-center justify-center cursor-pointer shadow-md transition-all active:scale-95">
+              <Camera size={11} />
               <input
                 type="file"
                 className="hidden"
@@ -1788,7 +1791,7 @@ const PlayerManagementModalComponent = ({
             </label>
           </div>
 
-          <div className="w-full mt-2">
+          <div className="w-full mt-3 relative z-10">
             <div className="text-center w-full">
               <input
                 type="text"
@@ -1800,20 +1803,20 @@ const PlayerManagementModalComponent = ({
                     e.currentTarget.blur();
                   }
                 }}
-                className={`w-full bg-transparent text-2xl font-black uppercase tracking-tighter text-black leading-none text-center outline-none border-b border-transparent focus:border-black/20 transition-all placeholder:text-zinc-500 py-1`}
+                className="w-full bg-transparent text-xl font-black uppercase tracking-tight text-white leading-none text-center outline-none border-b border-transparent focus:border-white/20 transition-all placeholder:text-white/40 py-1"
               />
-              <div className="flex flex-wrap items-center justify-center gap-1 mt-2">
+              <div className="flex flex-wrap items-center justify-center gap-0.5 mt-1">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <button
                     key={`modal-star-${star}`}
                     onClick={() =>
                       onUpdateStars && onUpdateStars(player.id, star)
                     }
-                    className="transition-all active:scale-95 p-1"
+                    className="transition-all active:scale-95 p-0.5"
                   >
                     <Star
-                      size={20}
-                      className={`${(player.stars || 0) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10"}`}
+                      size={16}
+                      className={`${(player.stars || 0) >= star ? "fill-yellow-400 text-yellow-400" : "text-white/10"}`}
                     />
                   </button>
                 ))}
@@ -1824,28 +1827,28 @@ const PlayerManagementModalComponent = ({
 
         <div className="p-4 space-y-4">
           <div className="grid grid-cols-2 gap-2">
-            <div className="p-3 bg-zinc-50 rounded-xl border border-zinc-100 flex flex-col items-center justify-center">
-              <div className="text-xl font-black text-black leading-none mb-1">
+            <div className="p-2.5 bg-white/5 rounded-xl border border-white/10 flex flex-col items-center justify-center">
+              <div className="text-lg font-black text-white leading-none mb-0.5">
                 {player.goals}
               </div>
-              <div className="text-[8px] font-bold uppercase tracking-widest text-zinc-500">
+              <div className="text-[8px] font-bold uppercase tracking-widest text-white/50">
                 Gols
               </div>
             </div>
-            <div className="p-3 bg-zinc-50 rounded-xl border border-zinc-100 flex flex-col items-center justify-center">
-              <div className="text-xl font-black text-black leading-none mb-1">
+            <div className="p-2.5 bg-white/5 rounded-xl border border-white/10 flex flex-col items-center justify-center">
+              <div className="text-lg font-black text-white leading-none mb-0.5">
                 {player.assists}
               </div>
-              <div className="text-[8px] font-bold uppercase tracking-widest text-zinc-500">
+              <div className="text-[8px] font-bold uppercase tracking-widest text-white/50">
                 Assistências
               </div>
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 pt-2">
+          <div className="flex flex-col gap-2 pt-1">
             <button
               onClick={onClose}
-              className="w-full py-3.5 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white shadow-lg rounded-xl font-black uppercase tracking-widest hover:opacity-90 active:scale-95 transition-all text-[11px]"
+              className="w-full py-2.5 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] shadow-lg shadow-[#34d399]/20 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all active:scale-95 text-center cursor-pointer"
             >
               Confirmar
             </button>
@@ -1856,7 +1859,7 @@ const PlayerManagementModalComponent = ({
                   onRemove(player.id);
                   onClose();
                 }}
-                className="w-full py-3 flex items-center justify-center gap-2 text-red-500 bg-red-50 hover:bg-red-100 rounded-xl font-black uppercase tracking-widest text-[9px] transition-all border border-red-100 active:scale-95"
+                className="w-full py-2.5 flex items-center justify-center gap-2 text-red-400 bg-red-500/5 hover:bg-red-500/10 border border-red-500/20 rounded-xl font-bold uppercase tracking-widest text-[9px] transition-all active:scale-95 cursor-pointer"
               >
                 <Trash2 size={12} />
                 Remover
@@ -6576,39 +6579,43 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
             onClick={() => setShowExpenseModal(false)}
           >
             <motion.div
               initial={{ scale: 0.9, y: 30, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.9, y: 30, opacity: 0 }}
-              className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-2xl bg-zinc-50 border border-zinc-200"
+              className="w-full max-w-[280px] rounded-[24px] overflow-hidden shadow-2xl bg-[#0b0e17]/95 border border-white/10 text-white backdrop-blur-xl relative flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
-                {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
+              <div className="bg-white/5 p-6 text-center relative overflow-hidden border-b border-white/5 flex flex-col items-center">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
+                <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
 
-                <div className="mx-auto flex items-center justify-center relative z-10 mb-6">
-                  <span className="text-zinc-500 flex items-center shrink-0">
-                    <ClipboardPaste size={40} />
-                  </span>
+                <button
+                  onClick={() => setShowExpenseModal(false)}
+                  className="absolute top-4 right-4 p-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/60 hover:text-white transition-all cursor-pointer"
+                >
+                  <X size={14} />
+                </button>
+
+                <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 shadow-lg text-[#34d399] flex items-center justify-center mx-auto mb-2 relative z-10">
+                  <ClipboardPaste size={24} />
                 </div>
 
-                <h3 className="text-2xl font-black uppercase tracking-tighter text-black leading-none">
+                <h3 className="text-lg font-black uppercase tracking-tight text-white leading-none relative z-10">
                   Nova Despesa
                 </h3>
-                <p className="text-[10px] text-black/60 font-black mt-2 uppercase tracking-[0.2em]">
+                <p className="text-[8px] text-white/50 font-black mt-1.5 uppercase tracking-[0.2em] relative z-10">
                   GESTÃO FINANCEIRA
                 </p>
               </div>
 
-              <div className="p-6 space-y-5">
+              <div className="p-4 space-y-4">
                 <div>
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-1.5 block">
+                  <label className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 mb-1 block">
                     Nome da Despesa
                   </label>
                   <input
@@ -6621,11 +6628,11 @@ function GroupApp({
                       }))
                     }
                     placeholder="Aluguel da quadra"
-                    className="w-full p-4 bg-zinc-100 rounded-xl outline-none focus:ring-2 ring-black/5 text-sm border border-zinc-200"
+                    className="w-full h-10 px-3 rounded-xl outline-none bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-[#34d399] focus:bg-white/10 transition-all text-xs"
                   />
                 </div>
                 <div>
-                  <label className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-400 mb-1.5 block">
+                  <label className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 mb-1 block">
                     Valor (R$)
                   </label>
                   <input
@@ -6638,11 +6645,11 @@ function GroupApp({
                       }))
                     }
                     placeholder="0.00"
-                    className="w-full p-4 bg-zinc-100 rounded-xl outline-none focus:ring-2 ring-black/5 text-base border border-zinc-200"
+                    className="w-full h-10 px-3 bg-white/5 border border-white/10 rounded-xl outline-none focus:border-[#34d399] focus:bg-white/10 transition-all text-xs text-white"
                   />
                 </div>
 
-                <div className="flex flex-col gap-2 pt-2">
+                <div className="flex flex-col gap-2 pt-1">
                   <button
                     onClick={() => {
                       if (!newExpense.name || !newExpense.amount) return;
@@ -6663,14 +6670,14 @@ function GroupApp({
                       });
                       setTimeout(() => setToast(null), 3000);
                     }}
-                    className="w-full h-11 bg-gradient-to-r from-[#1E3D2F] via-[#2a5541] to-[#1E3D2F] text-white rounded-xl font-black uppercase text-[10px] tracking-widest flex items-center justify-center px-4 transition-all hover:opacity-90 active:scale-[0.98] shadow-md shadow-black/10 group font-roboto-flex"
+                    className="w-full h-10 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-[#34d399]/10 transition-all active:scale-95 disabled:opacity-50 cursor-pointer flex items-center justify-center"
                   >
                     Confirmar Despesa
                   </button>
 
                   <button
                     onClick={() => setShowExpenseModal(false)}
-                    className="w-full h-11 bg-zinc-200 text-zinc-600 rounded-xl font-black uppercase text-[10px] tracking-widest flex items-center justify-center px-4 transition-all hover:bg-zinc-300 active:scale-[0.98]"
+                    className="w-full h-10 rounded-xl font-bold uppercase tracking-widest text-[9px] transition-all bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-95 cursor-pointer flex items-center justify-center"
                   >
                     Cancelar
                   </button>
@@ -7420,10 +7427,10 @@ function GroupApp({
                           }}
                           animate={shouldPulseConfig ? { 
                             scale: [1, 1.05, 1],
-                            boxShadow: ["0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)", "0px 20px 25px -5px rgba(59, 130, 246, 0.4), 0px 10px 10px -5px rgba(59, 130, 246, 0.2)", "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"]
+                            boxShadow: ["0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)", "0px 20px 25px -5px rgba(52, 211, 153, 0.4), 0px 10px 10px -5px rgba(52, 211, 153, 0.2)", "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"]
                           } : {}}
                           transition={shouldPulseConfig ? { repeat: Infinity, duration: 1.5 } : {}}
-                          className="flex-1 sm:flex-none px-4 py-3 sm:py-2 bg-gradient-to-r from-blue-500 to-blue-700 text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                          className="flex-1 sm:flex-none px-4 py-3 sm:py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                         >
                           CONFIGURAR PARTIDA
                         </motion.button>
@@ -8745,7 +8752,7 @@ function GroupApp({
                                   setTeamsTab("configuracao");
                                 }
                               }}
-                              className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl hover:opacity-90 transition-all active:scale-95 border border-white/10"
+                              className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 cursor-pointer"
                             >
                               {players.length < 2
                                 ? "CRIAR JOGADORES"
@@ -8948,7 +8955,7 @@ function GroupApp({
                                     }
                                   }
                                 }}
-                                className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl hover:opacity-90 transition-all active:scale-95 border border-white/10"
+                                className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 cursor-pointer"
                               >
                                 {players.length < 2
                                   ? "CRIAR JOGADORES"
@@ -10127,7 +10134,7 @@ function GroupApp({
                                   }
                                 }
                               }}
-                              className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-black font-black uppercase tracking-widest text-[10px] rounded-2xl hover:opacity-90 transition-all active:scale-95 border border-white/10"
+                              className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 cursor-pointer"
                             >
                               {players.filter((p) =>
                                 sessionPlayerIds.includes(p.id),
@@ -15866,41 +15873,60 @@ function GroupApp({
 
       {/* Schedule Match Modal */}
       {showScheduleModal && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/90 backdrop-blur-md">
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
           <motion.div
             initial={{ y: 50, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            className="w-full max-w-md p-8 rounded-[24px] shadow-[0_20px_60px_rgba(0,0,0,0.8)] bg-white border border-black/10 relative overflow-hidden"
+            className="w-full max-w-[280px] rounded-[24px] overflow-hidden shadow-2xl bg-[#0b0e17]/95 border border-white/10 text-white backdrop-blur-xl relative flex flex-col"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative z-10 text-center mb-8">
-              <div className="w-16 h-16 rounded-none text-[#dce3ee] flex items-center justify-center mx-auto mb-4">
-                <GiSoccerBall size={32} />
+            {/* Header */}
+            <div className="bg-white/5 p-6 text-center relative overflow-hidden border-b border-white/5 flex flex-col items-center">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
+              <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
+
+              <button
+                onClick={() => {
+                  setShowScheduleModal(false);
+                  setEditingMatchId(null);
+                  setNewMatchName("");
+                  setNewMatchDay("Segunda");
+                  setNewMatchTime("08:00");
+                  setNewMatchImage("");
+                }}
+                className="absolute top-4 right-4 p-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/60 hover:text-white transition-all cursor-pointer"
+              >
+                <X size={14} />
+              </button>
+
+              <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 shadow-lg text-[#34d399] flex items-center justify-center mx-auto mb-2 relative z-10">
+                <GiSoccerBall size={24} />
               </div>
-              <h3 className="text-2xl font-black uppercase tracking-tighter text-zinc-900">
+              <h3 className="text-lg font-black uppercase tracking-tight text-white leading-none relative z-10">
                 {editingMatchId ? "Editar pelada" : "Criar pelada"}
               </h3>
-              <p className="text-xs font-black text-zinc-400 mt-1">
+              <p className="text-[8px] text-white/50 font-black mt-1.5 uppercase tracking-[0.2em] relative z-10">
                 Como vai se chamar a pelada?
               </p>
             </div>
 
-            <div className="space-y-6 relative z-10">
+            <div className="p-4 space-y-4">
               {/* Image Upload Area */}
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-1.5">
                 <div 
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-16 h-16 rounded-full bg-zinc-50 border-2 border-dashed border-zinc-200 flex items-center justify-center cursor-pointer overflow-hidden hover:border-emerald-500 transition-all shadow-sm group relative"
+                  className="w-14 h-14 rounded-full bg-white/5 border border-dashed border-white/20 flex items-center justify-center cursor-pointer overflow-hidden hover:border-[#34d399]/60 transition-all shadow-sm group relative"
                 >
                   {newMatchImage ? (
                     <>
                       <img src={newMatchImage} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                       <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
-                        <Camera size={16} className="text-white" />
+                        <Camera size={14} className="text-white" />
                       </div>
                     </>
                   ) : (
                     <div className="flex flex-col items-center">
-                      <Camera size={20} className="text-zinc-300 group-hover:text-emerald-500" />
+                      <Camera size={16} className="text-white/40 group-hover:text-[#34d399]" />
                     </div>
                   )}
                 </div>
@@ -15911,13 +15937,13 @@ function GroupApp({
                   accept="image/*"
                   className="hidden"
                 />
-                <p className="text-[10px] font-black text-zinc-400 uppercase tracking-widest">
+                <p className="text-[8px] font-black text-white/50 uppercase tracking-widest">
                   {newMatchImage ? "Alterar foto" : "Foto da pelada"}
                 </p>
                 {newMatchImage && (
                   <button 
                     onClick={() => setNewMatchImage("")}
-                    className="text-[9px] font-bold text-red-500 uppercase tracking-tight"
+                    className="text-[8px] font-bold text-red-400 hover:text-red-300 uppercase tracking-tight mt-0.5"
                   >
                     Remover
                   </button>
@@ -15930,20 +15956,20 @@ function GroupApp({
                   value={newMatchName}
                   onChange={(e) => setNewMatchName(e.target.value)}
                   placeholder="Nome da pelada"
-                  className="w-full p-4 rounded-xl outline-none bg-zinc-50 border border-black/5 text-zinc-900 placeholder:text-zinc-400 focus:border-emerald-500 transition-all text-center text-base shadow-sm"
+                  className="w-full h-10 px-3 rounded-xl outline-none bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-[#34d399] focus:bg-white/10 transition-all text-center text-xs"
                   autoFocus
                 />
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest block text-center">
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <label className="text-[8px] font-black text-white/50 uppercase tracking-[0.15em] block text-center">
                     Dia da Semana
                   </label>
                   <select
                     value={newMatchDay}
                     onChange={(e) => setNewMatchDay(e.target.value)}
-                    className="w-full p-4 bg-zinc-50 border border-black/5 rounded-xl font-bold text-center text-xs outline-none focus:border-emerald-500 appearance-none shadow-sm cursor-pointer"
+                    className="w-full h-10 bg-[#0b0e17] border border-white/10 rounded-xl font-bold text-center text-xs text-white outline-none focus:border-[#34d399] shadow-sm cursor-pointer"
                   >
                     {[
                       "Segunda",
@@ -15954,51 +15980,51 @@ function GroupApp({
                       "Sábado",
                       "Domingo",
                     ].map((day) => (
-                      <option key={day} value={day}>
+                      <option key={day} value={day} className="bg-[#0b0e17] text-white">
                         {day}
                       </option>
                     ))}
                   </select>
                 </div>
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-zinc-400 uppercase tracking-widest block text-center">
+                <div className="space-y-1">
+                  <label className="text-[8px] font-black text-white/50 uppercase tracking-[0.15em] block text-center">
                     Horário
                   </label>
-                  <div className="flex items-center justify-center bg-zinc-50 border border-black/5 px-2 rounded-xl shadow-sm w-full h-[50px] overflow-hidden">
+                  <div className="flex items-center justify-center bg-[#0b0e17] border border-white/10 px-2 rounded-xl shadow-sm w-full h-10 overflow-hidden">
                     <input
                       type="time"
                       value={newMatchTime}
                       onChange={(e) => {
                         setNewMatchTime(e.target.value);
                       }}
-                      className="bg-transparent font-bold text-center text-[11px] sm:text-xs outline-none focus:text-emerald-500 cursor-pointer w-full"
+                      className="bg-transparent font-bold text-center text-xs outline-none focus:text-[#34d399] cursor-pointer w-full text-white [color-scheme:dark]"
                     />
                   </div>
                 </div>
               </div>
-            </div>
 
-            <div className="relative z-10 flex flex-col gap-4 mt-8">
-              <button
-                onClick={handleScheduleMatch}
-                disabled={!newMatchName.trim()}
-                className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[11px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 disabled:opacity-50"
-              >
-                {editingMatchId ? "SALVAR" : "CRIAR"}
-              </button>
-              <button
-                onClick={() => {
-                  setShowScheduleModal(false);
-                  setEditingMatchId(null);
-                  setNewMatchName("");
-                  setNewMatchDay("Segunda");
-                  setNewMatchTime("08:00");
-                  setNewMatchImage("");
-                }}
-                className="w-full py-4 rounded-2xl font-black uppercase tracking-widest text-[10px] transition-all bg-zinc-50 text-zinc-400 border border-zinc-200 hover:bg-zinc-100"
-              >
-                Cancelar
-              </button>
+              <div className="flex flex-col gap-2 pt-1">
+                <button
+                  onClick={handleScheduleMatch}
+                  disabled={!newMatchName.trim()}
+                  className="w-full h-10 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-[#34d399]/10 transition-all active:scale-95 disabled:opacity-50 cursor-pointer flex items-center justify-center"
+                >
+                  {editingMatchId ? "SALVAR" : "CRIAR"}
+                </button>
+                <button
+                  onClick={() => {
+                    setShowScheduleModal(false);
+                    setEditingMatchId(null);
+                    setNewMatchName("");
+                    setNewMatchDay("Segunda");
+                    setNewMatchTime("08:00");
+                    setNewMatchImage("");
+                  }}
+                  className="w-full h-10 rounded-xl font-bold uppercase tracking-widest text-[9px] transition-all bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-95 cursor-pointer flex items-center justify-center"
+                >
+                  Cancelar
+                </button>
+              </div>
             </div>
           </motion.div>
         </div>
@@ -16006,49 +16032,59 @@ function GroupApp({
 
       {/* End Pelada Confirm Modal */}
       {showEndPeladaConfirm && (
-        <div className="fixed inset-0 z-[310] flex items-center justify-center p-4 bg-black/95 backdrop-blur-xl">
+        <div className="fixed inset-0 z-[310] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="w-full max-w-sm bg-white p-8 rounded-[20px] shadow-2xl border border-black/5 relative overflow-hidden"
+            className="w-full max-w-[280px] rounded-[24px] overflow-hidden shadow-2xl bg-[#0b0e17]/95 border border-white/10 text-white backdrop-blur-xl relative flex flex-col"
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className="relative z-10 text-center space-y-6">
-              <div className="text-emerald-600 flex items-center justify-center mx-auto">
-                 <IoIosSave size={40} />
-              </div>
-              
-              <div className="space-y-1">
-                <h3 className="text-xl font-bold uppercase tracking-tight text-zinc-900">
-                  ENCERRAR PELADA
-                </h3>
-                <p className="text-sm font-medium text-zinc-500 max-w-[300px] mx-auto leading-normal">
-                  {matchHistory.length > 0 ? (
-                    <>
-                      Isso irá salvar as informações de <span className="text-zinc-800 font-bold">presença</span>, <span className="text-zinc-800 font-bold">confrontos</span> e <span className="text-zinc-800 font-bold">próximos</span>.
-                      <br />
-                      Deseja continuar?
-                    </>
-                  ) : (
-                    <span className="text-red-500 font-bold block py-2">
-                      É necessário que pelo menos uma partida tenha ocorrido para encerrar e salvar as informações.
-                    </span>
-                  )}
-                </p>
-              </div>
+            {/* Header */}
+            <div className="bg-white/5 p-6 text-center relative overflow-hidden border-b border-white/5 flex flex-col items-center">
+              <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
+              <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
 
-              <div className="grid grid-cols-2 gap-3 pt-2">
+              <button
+                onClick={() => setShowEndPeladaConfirm(false)}
+                className="absolute top-4 right-4 p-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/60 hover:text-white transition-all cursor-pointer"
+              >
+                <X size={14} />
+              </button>
+
+              <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 shadow-lg text-[#34d399] flex items-center justify-center mx-auto mb-2 relative z-10">
+                <IoIosSave size={24} />
+              </div>
+              <h3 className="text-lg font-black uppercase tracking-tight text-white leading-none relative z-10">
+                ENCERRAR PELADA
+              </h3>
+            </div>
+
+            <div className="p-4 space-y-4">
+              <p className="text-xs font-medium text-white/70 text-center leading-normal">
+                {matchHistory.length > 0 ? (
+                  <>
+                    Isso irá salvar as informações de <span className="text-[#34d399] font-bold">presença</span>, <span className="text-[#34d399] font-bold">confrontos</span> e <span className="text-[#34d399] font-bold">próximos</span>.
+                    <br />
+                    Deseja continuar?
+                  </>
+                ) : (
+                  <span className="text-red-400 font-bold block">
+                    É necessário que pelo menos uma partida tenha ocorrido para encerrar e salvar as informações.
+                  </span>
+                )}
+              </p>
+
+              <div className="grid grid-cols-2 gap-3 pt-1">
                 <button
                   onClick={() => setShowEndPeladaConfirm(false)}
-                  className="w-full h-12 rounded-xl font-bold uppercase tracking-widest text-[10px] transition-all bg-zinc-50 text-zinc-400 hover:bg-zinc-100 active:scale-95 border border-black/5"
+                  className="w-full h-10 rounded-xl font-bold uppercase tracking-widest text-[9px] transition-all bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-95 cursor-pointer flex items-center justify-center"
                 >
                   CANCELAR
                 </button>
                 <button
                   onClick={confirmEndPelada}
                   disabled={matchHistory.length === 0}
-                  className={`w-full h-12 rounded-xl font-bold uppercase tracking-widest text-[10px] bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white shadow-lg shadow-emerald-500/20 active:scale-95 transition-all ${
-                    matchHistory.length === 0 ? "opacity-50 grayscale cursor-not-allowed" : ""
-                  }`}
+                  className={`w-full h-10 rounded-xl font-black uppercase tracking-widest text-[9px] bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] shadow-lg shadow-[#34d399]/10 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center`}
                 >
                   CONFIRMAR
                 </button>
