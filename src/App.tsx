@@ -2169,7 +2169,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
         className="flex flex-col items-center gap-4"
       >
         <motion.img
-          src="/logo.png"
+          src="/icone%20logo.png"
           alt="FutQuina Logo"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -2238,7 +2238,7 @@ const FutQuinaLogo = ({
     >
       <div className="relative shrink-0 flex items-center justify-center">
         <img
-          src="/logo.png"
+          src="/icone%20logo.png"
           alt="FutQuina Logo"
           width={iconSizes[size]}
           height={iconSizes[size]}
