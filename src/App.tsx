@@ -77,6 +77,7 @@ import {
   History,
   Crown,
   MousePointerClick,
+  Calendar,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { FcHighPriority } from "react-icons/fc";
@@ -11770,7 +11771,65 @@ function GroupApp({
                         >
                           {/* Summary Cards */}
                           {!isPrintPaymentsOnly && (
-                            <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+                            <>
+                              {/* Quick Navigation / Action Row */}
+                              <div className="flex items-center justify-center gap-6 py-3 bg-white/5 border border-white/10 rounded-2xl shadow-sm mb-2">
+                                {/* Arrecadação Shortcut */}
+                                <button
+                                  onClick={() => {
+                                    setTotalInput(manualAdjustment.toString());
+                                    setIsEditingTotal(true);
+                                  }}
+                                  className="flex flex-col items-center gap-1.5 group cursor-pointer"
+                                >
+                                  <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5 text-[#34d399] flex items-center justify-center shadow-lg shadow-black/20 group-hover:border-[#34d399]/50 group-hover:bg-[#34d399]/10 transition-all active:scale-95">
+                                    <DollarSign size={18} />
+                                  </div>
+                                  <span className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 group-hover:text-[#34d399] transition-colors">
+                                    Arrecadação
+                                  </span>
+                                </button>
+
+                                {/* Despesas Detalhadas Shortcut */}
+                                <button
+                                  onClick={() => {
+                                    if (players.length === 0) {
+                                      setToast({
+                                        message: "Adicione jogadores para detalhar despesas",
+                                        type: "info",
+                                      });
+                                      setTimeout(() => setToast(null), 3000);
+                                      return;
+                                    }
+                                    setShowExpenseModal(true);
+                                  }}
+                                  className="flex flex-col items-center gap-1.5 group cursor-pointer"
+                                >
+                                  <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5 text-red-400 flex items-center justify-center shadow-lg shadow-black/20 group-hover:border-red-400/50 group-hover:bg-red-400/10 transition-all active:scale-95">
+                                    <ClipboardPaste size={18} />
+                                  </div>
+                                  <span className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 group-hover:text-red-400 transition-colors">
+                                    Despesas Det.
+                                  </span>
+                                </button>
+
+                                {/* Mensalidade Shortcut */}
+                                <button
+                                  onClick={() => {
+                                    setFinanceSubScreen("mensalidade");
+                                  }}
+                                  className="flex flex-col items-center gap-1.5 group cursor-pointer"
+                                >
+                                  <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5 text-[#34d399] flex items-center justify-center shadow-lg shadow-black/20 group-hover:border-[#34d399]/50 group-hover:bg-[#34d399]/10 transition-all active:scale-95">
+                                    <Calendar size={18} />
+                                  </div>
+                                  <span className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 group-hover:text-[#34d399] transition-colors">
+                                    Mensalidade
+                                  </span>
+                                </button>
+                              </div>
+
+                              <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                               {/* Saldo Líquido Card */}
                               <div
                                 className={`p-4 transition-all col-span-2 lg:col-span-1 order-1 lg:order-none ${
@@ -11966,7 +12025,7 @@ function GroupApp({
                                 </div>
                               </div>
                             </div>
-                          )}
+                          </>)}
 
                           {/* Expenses List */}
                           {!isPrintPaymentsOnly && (
@@ -12279,7 +12338,7 @@ function GroupApp({
                     );
                   })()}
                 {financeSubScreen === "mensalidade" && (
-                  <motion.div>
+                  <motion.div className="space-y-4">
                     {!isPrintMode && (
                       <div className="flex justify-end px-4">
                         <div className="flex gap-1.5">
@@ -12295,19 +12354,19 @@ function GroupApp({
                               }
                               setIsPrintMode(true);
                             }}
-                            className="text-zinc-400 p-2 hover:bg-zinc-800 rounded-full transition-colors"
+                            className="text-white/60 hover:text-white p-1.5 hover:bg-white/10 rounded-full border border-white/10 transition-colors cursor-pointer"
                           >
-                            <Eye size={20} />
+                            <Eye size={18} />
                           </button>
                         </div>
                       </div>
                     )}
 
                     {!isPrintMode && (
-                      <div className="grid grid-cols-2 gap-2 px-4 mb-8">
-                        <div className="p-3 shadow-sm rounded-none bg-[#83A8FF] border border-black/5 flex items-center justify-between">
+                      <div className="grid grid-cols-2 gap-2 px-4 mb-4">
+                        <div className="p-3 bg-white/5 border border-white/10 rounded-xl flex items-center justify-between">
                           <div className="space-y-0.5">
-                            <span className="text-[8px] font-bold text-zinc-800/60 uppercase tracking-widest">
+                            <span className="text-[8px] font-black text-white/50 uppercase tracking-[0.15em]">
                               Mensalidade
                             </span>
                             {isEditingFee ? (
@@ -12328,7 +12387,7 @@ function GroupApp({
                                     setIsEditingFee(false);
                                   }
                                 }}
-                                className="w-16 bg-white border border-transparent text-zinc-900 font-black text-sm rounded px-1 outline-none"
+                                className="w-16 bg-white/10 border border-white/20 text-white font-black text-xs rounded px-1.5 py-0.5 outline-none focus:border-[#34d399] focus:bg-white/15"
                               />
                             ) : (
                               <div
@@ -12336,7 +12395,7 @@ function GroupApp({
                                   setTempFee(monthlyFee.toString());
                                   setIsEditingFee(true);
                                 }}
-                                className="text-base font-black text-zinc-900 cursor-pointer hover:opacity-80 transition-opacity"
+                                className="text-xs font-black text-white cursor-pointer hover:text-[#34d399] transition-colors"
                               >
                                 R$ {monthlyFee},00
                               </div>
@@ -12345,24 +12404,24 @@ function GroupApp({
                           <div className="flex flex-col gap-1">
                             <button
                               onClick={() => setMonthlyFee((prev) => prev + 1)}
-                              className="p-1 bg-white text-zinc-800 border-none rounded shadow-sm hover:opacity-90 transition-all"
+                              className="p-1 bg-white/5 text-white/80 border border-white/10 rounded hover:bg-white/10 transition-all cursor-pointer active:scale-95"
                             >
-                              <Plus size={10} />
+                              <Plus size={8} />
                             </button>
                             <button
                               onClick={() =>
                                 setMonthlyFee((prev) => Math.max(0, prev - 1))
                               }
-                              className="p-1 bg-white text-zinc-800 border-none rounded shadow-sm hover:opacity-90 transition-all"
+                              className="p-1 bg-white/5 text-white/80 border border-white/10 rounded hover:bg-white/10 transition-all cursor-pointer active:scale-95"
                             >
-                              <Minus size={10} />
+                              <Minus size={8} />
                             </button>
                           </div>
                         </div>
 
-                        <div className="p-3 shadow-sm rounded-none bg-gradient-to-br from-zinc-100 to-zinc-200 border border-zinc-300 flex items-center justify-between">
+                        <div className="p-3 bg-white/5 border border-white/10 rounded-xl flex items-center justify-between">
                           <div className="space-y-0.5">
-                            <span className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">
+                            <span className="text-[8px] font-black text-white/50 uppercase tracking-[0.15em]">
                               Ano Selecionado
                             </span>
                             <select
@@ -12370,13 +12429,13 @@ function GroupApp({
                               onChange={(e) =>
                                 setSelectedYear(parseInt(e.target.value))
                               }
-                              className="bg-transparent text-base font-black text-zinc-900 outline-none cursor-pointer"
+                              className="bg-transparent text-xs font-black text-white outline-none cursor-pointer [color-scheme:dark]"
                             >
                               {availableYears.map((y) => (
                                 <option
                                   key={y}
                                   value={y}
-                                  className="bg-white text-zinc-900"
+                                  className="bg-[#0b0e17] text-white"
                                 >
                                   {y}
                                 </option>
@@ -12385,10 +12444,10 @@ function GroupApp({
                           </div>
                           <button
                             onClick={addYear}
-                            className="w-7 h-7 rounded-lg bg-[#ffffff] shadow-sm text-[#1E3D2F] flex items-center justify-center hover:opacity-90 transition-all active:scale-90"
+                            className="w-6 h-6 rounded-lg bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-md shadow-[#34d399]/15"
                             title="Adicionar Novo Ano"
                           >
-                            <Plus size={14} />
+                            <Plus size={12} />
                           </button>
                         </div>
                       </div>
@@ -12402,7 +12461,7 @@ function GroupApp({
                         />
                         <button
                           onClick={() => setIsPrintMode(false)}
-                          className="p-1.5 bg-black/10 rounded-sm"
+                          className="p-1.5 bg-black/10 rounded-sm cursor-pointer"
                         >
                           <X size={16} />
                         </button>
@@ -12420,46 +12479,46 @@ function GroupApp({
                         >
                           <thead>
                             <tr
-                              className={`${isPrintMode ? "bg-zinc-100 text-zinc-900" : "bg-zinc-200 text-zinc-900"} font-black uppercase tracking-tighter`}
+                              className={`${isPrintMode ? "bg-zinc-100 text-zinc-900" : "bg-white/5 text-white border-b border-white/10"} font-black uppercase tracking-tighter`}
                             >
                               <th
-                                className={`p-1.5 text-left border ${isPrintMode ? "border-zinc-300" : "border-zinc-300 rounded-tl-xl sticky left-0 z-10 bg-zinc-200"}`}
+                                className={`p-1.5 text-left border ${isPrintMode ? "border-zinc-300" : "border-white/10 rounded-tl-xl sticky left-0 z-10 bg-[#0c101b]"}`}
                               >
                                 Nome
                               </th>
                               <th
-                                className={`p-1.5 text-center border ${isPrintMode ? "border-zinc-300" : "border-zinc-300"}`}
+                                className={`p-1.5 text-center border ${isPrintMode ? "border-zinc-300" : "border-white/10"}`}
                                 colSpan={12}
                               >
                                 {selectedYear} (R$ {monthlyFee},00)
                               </th>
                               <th
-                                className={`p-1.5 text-center border ${isPrintMode ? "border-zinc-300" : "border-zinc-300 rounded-tr-xl"}`}
+                                className={`p-1.5 text-center border ${isPrintMode ? "border-zinc-300" : "border-white/10 rounded-tr-xl"}`}
                               >
                                 Dívida
                               </th>
                             </tr>
                             <tr
-                              className={`${isPrintMode ? "bg-zinc-50 text-zinc-700" : "bg-zinc-100 text-zinc-800"} font-bold uppercase tracking-tighter`}
+                              className={`${isPrintMode ? "bg-zinc-50 text-zinc-700" : "bg-white/5 text-white/80"} font-bold uppercase tracking-tighter`}
                             >
                               <th
-                                className={`border ${isPrintMode ? "border-zinc-300" : "border-zinc-300 sticky left-0 z-10 bg-zinc-100"}`}
+                                className={`border ${isPrintMode ? "border-zinc-300" : "border-white/10 sticky left-0 z-10 bg-[#0c101b]"}`}
                               ></th>
                               {MONTHS.map((month) => (
                                 <th
                                   key={month}
-                                  className={`p-0.5 border ${isPrintMode ? "border-zinc-300" : "border-zinc-300"}`}
+                                  className={`p-0.5 border ${isPrintMode ? "border-zinc-300" : "border-white/10"}`}
                                 >
                                   {month}
                                 </th>
                               ))}
                               <th
-                                className={`border ${isPrintMode ? "border-zinc-300" : "border-zinc-300"}`}
+                                className={`border ${isPrintMode ? "border-zinc-300" : "border-white/10"}`}
                               ></th>
                             </tr>
                           </thead>
                           <tbody
-                            className={`${isPrintMode ? "bg-white text-black" : "bg-white text-[#1E3D2F]"}`}
+                            className={`${isPrintMode ? "bg-white text-black" : "text-white bg-transparent"}`}
                           >
                             {players.map((player, index) => {
                               const record = payments.find(
@@ -12482,13 +12541,16 @@ function GroupApp({
                               );
                               const remaining = totalDebt - paidMonths;
 
+                              const rowBg = index % 2 === 0 ? "bg-white/5" : "bg-transparent";
+                              const stickyBg = index % 2 === 0 ? "bg-[#141926]" : "bg-[#0b0e17]";
+
                               return (
                                 <tr
                                   key={`finance-row-${player.id}-${index}`}
-                                  className={`${index % 2 === 0 ? (isPrintMode ? "bg-zinc-50" : "bg-zinc-50") : "bg-white"} ${!isPrintMode ? "hover:bg-emerald-50 transition-colors" : ""}`}
+                                  className={`${isPrintMode ? (index % 2 === 0 ? "bg-zinc-50" : "bg-white") : rowBg} ${!isPrintMode ? "hover:bg-white/10 transition-colors" : ""}`}
                                 >
                                   <td
-                                    className={`p-1 border ${isPrintMode ? "border-zinc-200" : "border-zinc-200 font-bold sticky left-0 z-10 bg-inherit"}`}
+                                    className={`p-1 border ${isPrintMode ? "border-zinc-200" : "border-white/10 font-bold sticky left-0 z-10"} ${isPrintMode ? "bg-inherit" : stickyBg}`}
                                   >
                                     <span className="p-0.5 font-bold">
                                       {player.name}
@@ -12500,7 +12562,7 @@ function GroupApp({
                                     return (
                                       <td
                                         key={`month-cell-${player.id}-${month}`}
-                                        className={`p-0.5 border border-zinc-200 text-center`}
+                                        className={`p-0.5 border ${isPrintMode ? "border-zinc-200" : "border-white/10"} text-center`}
                                       >
                                         {isPrintMode ? (
                                           <span
@@ -12517,7 +12579,7 @@ function GroupApp({
                                                 monthlyFee,
                                               )
                                             }
-                                            className={`w-full h-full py-0.5 rounded-none transition-all ${isPaid ? "bg-emerald-500 text-zinc-800 font-black" : "text-zinc-400 font-bold"}`}
+                                            className={`w-full py-1 text-[8px] tracking-tight rounded transition-all cursor-pointer ${isPaid ? "bg-[#34d399] text-[#1e3d2f] font-black hover:opacity-90" : "bg-white/5 hover:bg-white/10 text-white/40 font-bold"}`}
                                           >
                                             {isPaid
                                               ? "PAGO"
@@ -12528,7 +12590,7 @@ function GroupApp({
                                     );
                                   })}
                                   <td
-                                    className={`p-1 border border-zinc-200 text-center font-black ${remaining > 0 ? "text-red-600" : "text-emerald-700"}`}
+                                    className={`p-1 border ${isPrintMode ? "border-zinc-200" : "border-white/10"} text-center font-black ${remaining > 0 ? (isPrintMode ? "text-red-600" : "text-red-400") : (isPrintMode ? "text-emerald-700" : "text-[#34d399]")}`}
                                   >
                                     R$ {remaining}
                                   </td>
@@ -12539,7 +12601,7 @@ function GroupApp({
                               <tr>
                                 <td
                                   colSpan={14}
-                                  className="p-4 text-center text-zinc-400 italic normal-case"
+                                  className={`p-4 text-center italic normal-case ${isPrintMode ? "text-zinc-400" : "text-white/40 bg-white/5 border border-white/10"}`}
                                 >
                                   Nenhum jogador cadastrado.
                                 </td>
@@ -12551,14 +12613,14 @@ function GroupApp({
                     </div>
 
                     {!isPrintMode && (
-                      <div className="p-3 rounded-md bg-black/5 border border-black/10 space-y-1">
-                        <div className="flex items-center gap-1.5 text-brand-primary">
+                      <div className="p-3 bg-white/5 border border-white/10 rounded-xl space-y-1 mt-4">
+                        <div className="flex items-center gap-1.5 text-[#34d399]">
                           <Info size={12} />
-                          <span className="text-[8px] font-bold uppercase tracking-widest">
+                          <span className="text-[8px] font-black uppercase tracking-[0.15em]">
                             Dica
                           </span>
                         </div>
-                        <p className="text-[8px] text-brand-text-secondary leading-relaxed">
+                        <p className="text-[9px] text-white/60 leading-relaxed">
                           Clique no valor da mensalidade para editar. Use o
                           botão "+" para criar um novo ano de controle.
                         </p>
