@@ -7889,7 +7889,7 @@ function GroupApp({
                             />
                             <div className="absolute inset-0 flex items-center justify-center pb-8 sm:pb-8 pointer-events-none transition-all peer-focus:hidden peer-[:not(:placeholder-shown)]:hidden">
                               <div className="flex items-center gap-1">
-                                <div className="text-blue-400">
+                                <div className="text-[#25D366]">
                                   <IoLogoWhatsapp size={20} />
                                 </div>
                                 <span className="text-xs sm:text-sm text-blue-200/50 leading-tight block text-center">
@@ -8009,7 +8009,7 @@ function GroupApp({
                                             <Star
                                               key={`star-dash-m-switch-${player.id}-${star}`}
                                               size={8}
-                                              className={`${(player.stars || 3) >= star ? "fill-blue-500 text-blue-500" : "text-white/20"}`}
+                                              className={`${(player.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-white/20"}`}
                                             />
                                           ))}
                                         </div>
