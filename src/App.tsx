@@ -7737,14 +7737,14 @@ function GroupApp({
                                   initial={{ opacity: 0 }}
                                   animate={{ opacity: 1 }}
                                   exit={{ opacity: 0 }}
-                                  className="absolute inset-0 bg-white/90 backdrop-blur-sm z-20 flex flex-col items-center justify-center gap-3 overflow-hidden"
+                                  className="absolute inset-0 bg-[#0b0e17]/95 backdrop-blur-md z-20 flex flex-col items-center justify-center gap-2 overflow-hidden rounded-2xl"
                                 >
-                                  <div className="flex gap-1.5">
+                                  <div className="flex gap-1">
                                     {[0, 1, 2].map((i) => (
                                       <motion.div
                                         key={i}
                                         animate={{
-                                          scale: [1, 1.5, 1],
+                                          scale: [1, 1.2, 1],
                                           opacity: [0.3, 1, 0.3],
                                         }}
                                         transition={{
@@ -7752,14 +7752,14 @@ function GroupApp({
                                           repeat: Infinity,
                                           delay: i * 0.2,
                                         }}
-                                        className="w-2 h-2 bg-zinc-400 rounded-full"
+                                        className="w-1.5 h-1.5 bg-[#34d399] rounded-full shadow-[0_0_8px_rgba(52,211,153,0.5)]"
                                       />
                                     ))}
                                   </div>
                                   <motion.div
-                                    animate={{ opacity: [0.4, 1, 0.4] }}
+                                    animate={{ opacity: [0.5, 1, 0.5] }}
                                     transition={{ duration: 1.5, repeat: Infinity }}
-                                    className="text-[10px] uppercase tracking-[0.2em] text-[#888888]"
+                                    className="text-[9px] uppercase tracking-[0.2em] text-[#34d399] font-black"
                                   >
                                     Adicionando a lista
                                   </motion.div>
@@ -7774,7 +7774,7 @@ function GroupApp({
                                       repeat: Infinity,
                                       ease: "linear",
                                     }}
-                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-zinc-100/30 to-transparent skew-x-12"
+                                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-12"
                                   />
                                 </motion.div>
                               )}
@@ -7792,15 +7792,30 @@ function GroupApp({
                                 }
                               }}
                             />
-                            <div className="absolute inset-0 flex items-center justify-center pb-8 sm:pb-8 pointer-events-none transition-all peer-focus:hidden peer-[:not(:placeholder-shown)]:hidden">
-                              <div className="flex items-center gap-1">
-                                <div className="text-[#25D366]">
+                            <div className="absolute inset-0 flex items-center justify-center pb-8 sm:pb-8 pointer-events-none transition-all peer-focus:opacity-0 peer-[:not(:placeholder-shown)]:opacity-0">
+                              <motion.div
+                                initial={{ maxWidth: 20 }}
+                                animate={{ maxWidth: 240 }}
+                                transition={{ duration: 0.5, delay: 0.8, ease: "easeInOut" }}
+                                className="flex items-center gap-1.5 overflow-hidden whitespace-nowrap"
+                              >
+                                <motion.div
+                                  initial={{ scale: 0, rotate: -180 }}
+                                  animate={{ scale: 1, rotate: 0 }}
+                                  transition={{ type: "spring", stiffness: 260, damping: 20, delay: 0.2 }}
+                                  className="text-[#25D366] shrink-0"
+                                >
                                   <IoLogoWhatsapp size={20} />
-                                </div>
-                                <span className="text-xs sm:text-sm text-blue-200/50 leading-tight block text-center">
+                                </motion.div>
+                                <motion.span
+                                  initial={{ opacity: 0 }}
+                                  animate={{ opacity: 1 }}
+                                  transition={{ duration: 0.4, delay: 1 }}
+                                  className="text-xs sm:text-sm text-blue-200/50 leading-tight shrink-0 pt-0.5"
+                                >
                                   Cole aqui a lista do whatsapp.
-                                </span>
-                              </div>
+                                </motion.span>
+                              </motion.div>
                             </div>
                             <div
                               className={`absolute right-5 sm:right-6 bottom-4 sm:bottom-6 text-blue-400 cursor-pointer hover:text-blue-300 transition-colors flex items-center gap-1.5 sm:gap-2 bg-white/5 backdrop-blur-xl p-1.5 sm:p-2 pl-3 sm:pl-3 rounded-2xl border border-white/10`}
