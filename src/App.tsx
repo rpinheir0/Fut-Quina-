@@ -8151,7 +8151,7 @@ function GroupApp({
                         </h3>
                       </div>
 
-                      <div className="space-y-6">
+                      <div className="space-y-6 pb-24">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                           <div className="space-y-1">
                             <label className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 block text-center mb-1.5">
@@ -8514,7 +8514,7 @@ function GroupApp({
                       </div>
                     </div>
                   ) : teamsTab === "chegada" ? (
-                    <div className="space-y-6">
+                    <div className="space-y-6 pb-24">
                       {firstSetupDone &&
                         players.filter((p) => sessionPlayerIds.includes(p.id))
                           .length > 0 && (
@@ -8932,7 +8932,7 @@ function GroupApp({
                     </div>
                   ) : teamsTab === "historico" ? (
                     <div
-                      className={`space-y-6 w-full ${match.isActive ? "pt-6 px-2 sm:px-6 pb-0 overflow-hidden" : ""}`}
+                      className={`space-y-6 w-full ${match.isActive ? "pt-6 px-2 sm:px-6 pb-0 overflow-hidden" : "pb-24"}`}
                     >
                       {!match.isActive ? (
                         <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
@@ -9993,7 +9993,7 @@ function GroupApp({
                       )}
                     </div>
                   ) : teamsTab === "proximos" ? (
-                    <div className="space-y-6 relative overflow-visible w-full">
+                    <div className="space-y-6 pb-24 relative overflow-visible w-full">
                       {firstSetupDone && teams.length >= 2 && (
                         <div className="sticky top-0 z-40 bg-[#dcdcdc] backdrop-blur-md rounded-2xl p-1 mb-2 shadow-sm border border-black/5 flex justify-between items-center">
                           <div className="flex gap-1 bg-white rounded-[11px]">
