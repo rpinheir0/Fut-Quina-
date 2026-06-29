@@ -80,7 +80,7 @@ import {
   Calendar,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
-import { FcHighPriority } from "react-icons/fc";
+import { FcHighPriority, FcRules, FcGrid, FcMoneyTransfer } from "react-icons/fc";
 import {
   IoPersonOutline,
   IoFootballOutline,
@@ -11519,14 +11519,17 @@ function GroupApp({
                         <motion.div
                           initial={{ opacity: 0 }}
                           animate={{ opacity: 1 }}
-                          className="flex items-center p-3.5 rounded-xl bg-[#d5deed] animate-pulse w-full mt-2"
+                          className="flex items-center py-3 px-3 rounded-2xl bg-white/5 border border-white/10 animate-pulse w-full mt-2"
                         >
-                          <div className="w-[52px] h-[52px] rounded-full bg-[#f4f6fb] shrink-0 border border-black/5 flex items-center justify-center mr-5 shadow-sm">
-                            <GiLaurelCrown size={26} color="rgba(0,0,0,0.3)" />
+                          <div className="w-8 text-sm font-black text-white/20 text-center shrink-0">
+                            -
                           </div>
-                          <div className="flex flex-col gap-2.5 flex-1">
-                            <div className="h-[14px] bg-[#f4f6fb] rounded-2xl w-4/5 shadow-sm"></div>
-                            <div className="h-[10px] bg-[#f4f6fb] rounded-2xl w-2/5 shadow-sm"></div>
+                          <div className="w-10 h-10 rounded-full bg-white/10 shrink-0 border border-white/10 flex items-center justify-center mr-4 shadow-sm ml-2">
+                            <GiLaurelCrown size={20} color="rgba(255,255,255,0.2)" />
+                          </div>
+                          <div className="flex flex-col gap-2 flex-1">
+                            <div className="h-3 bg-white/10 rounded-2xl w-3/5 shadow-sm"></div>
+                            <div className="h-2 bg-white/10 rounded-2xl w-1/4 shadow-sm"></div>
                           </div>
                         </motion.div>
                       )}
@@ -11696,13 +11699,21 @@ function GroupApp({
                                 {/* Arrecadação Shortcut */}
                                 <button
                                   onClick={() => {
+                                    if (players.length === 0) {
+                                      setToast({
+                                        message: "Adicione jogadores para ajustar arrecadação",
+                                        type: "info",
+                                      });
+                                      setTimeout(() => setToast(null), 3000);
+                                      return;
+                                    }
                                     setTotalInput(manualAdjustment.toString());
                                     setIsEditingTotal(true);
                                   }}
                                   className="flex flex-col items-center gap-1.5 group cursor-pointer"
                                 >
                                   <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center shadow-lg shadow-black/20 group-hover:border-[#34d399]/50 group-hover:bg-[#34d399]/10 transition-all active:scale-95">
-                                    <img src="/arrecadacao.png" referrerPolicy="no-referrer" className="w-6 h-6 object-contain" alt="Arrecadação" />
+                                    <FcMoneyTransfer size={24} />
                                   </div>
                                   <span className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 group-hover:text-[#34d399] transition-colors">
                                     Arrecadação
@@ -11725,7 +11736,7 @@ function GroupApp({
                                   className="flex flex-col items-center gap-1.5 group cursor-pointer"
                                 >
                                   <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center shadow-lg shadow-black/20 group-hover:border-red-400/50 group-hover:bg-red-400/10 transition-all active:scale-95">
-                                    <img src="/despesas%20detalhadas.png" referrerPolicy="no-referrer" className="w-6 h-6 object-contain" alt="Despesas Det." />
+                                    <FcRules size={24} />
                                   </div>
                                   <span className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 group-hover:text-red-400 transition-colors">
                                     Despesas Det.
@@ -11740,7 +11751,7 @@ function GroupApp({
                                   className="flex flex-col items-center gap-1.5 group cursor-pointer"
                                 >
                                   <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center shadow-lg shadow-black/20 group-hover:border-[#34d399]/50 group-hover:bg-[#34d399]/10 transition-all active:scale-95">
-                                    <img src="/mensalidade.png" referrerPolicy="no-referrer" className="w-6 h-6 object-contain" alt="Mensalidade" />
+                                    <FcGrid size={24} />
                                   </div>
                                   <span className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 group-hover:text-[#34d399] transition-colors">
                                     Mensalidade
@@ -11802,6 +11813,14 @@ function GroupApp({
                               <div
                                 onClick={() => {
                                   if (!isPrintMode && !isEditingTotal) {
+                                    if (players.length === 0) {
+                                      setToast({
+                                        message: "Adicione jogadores para ajustar arrecadação",
+                                        type: "info",
+                                      });
+                                      setTimeout(() => setToast(null), 3000);
+                                      return;
+                                    }
                                     setTotalInput(manualAdjustment.toString());
                                     setIsEditingTotal(true);
                                   }
