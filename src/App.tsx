@@ -6687,17 +6687,17 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
             onClick={() => setShowArrivalStepGuide(false)}
           >
             <motion.div
               initial={{ scale: 0.9, y: 30, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.9, y: 30, opacity: 0 }}
-              className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-2xl bg-zinc-50 border border-zinc-200"
+              className="w-full max-w-[280px] rounded-[24px] overflow-hidden shadow-2xl bg-[#0b0e17]/95 border border-white/10 text-white backdrop-blur-xl"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="relative overflow-hidden w-full bg-zinc-50">
+              <div className="relative overflow-hidden w-full bg-transparent">
                 <motion.div
                   drag="x"
                   dragConstraints={{ left: 0, right: 0 }}
@@ -6716,39 +6716,39 @@ function GroupApp({
                 >
                   {/* Card 1 */}
                   <div className="w-1/2 flex flex-col">
-                    <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
-                      <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
+                    <div className="bg-white/5 p-6 text-center relative overflow-hidden border-b border-white/5">
+                      <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
+                      <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
 
-                      <h3 className="text-2xl font-black uppercase tracking-tighter text-black leading-none mb-1">
+                      <h3 className="text-lg font-black uppercase tracking-tight text-white leading-none mb-1">
                         Próximo Passo
                       </h3>
-                      <p className="text-[10px] text-black/60 font-black tracking-[0.2em]">
+                      <p className="text-[8px] text-[#34d399]/85 font-black tracking-[0.2em] uppercase">
                         Ordem de chegada (1/2)
                       </p>
                     </div>
 
-                    <div className="p-6 space-y-6">
-                      <div className="space-y-3 min-h-[80px] flex items-center">
+                    <div className="p-5 space-y-4">
+                      <div className="space-y-3 min-h-[60px] flex items-center">
                         <div className="flex items-start gap-3">
-                          <div className="w-8 h-8 rounded-full bg-[#dce3ee] text-zinc-800 flex items-center justify-center text-xs font-black shrink-0">
+                          <div className="w-6 h-6 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] flex items-center justify-center text-xs font-black shrink-0">
                             1
                           </div>
-                          <p className="text-[12px] font-bold text-zinc-600 leading-tight pt-1">
+                          <p className="text-[11px] font-medium text-white/70 leading-relaxed pt-0.5">
                             Toque nos jogadores para confirmar a presença deles na
                             pelada de hoje.
                           </p>
                         </div>
                       </div>
 
-                      <div className="flex justify-center gap-2 pb-4">
-                        <div className={`w-2 h-2 rounded-full transition-all ${arrivalCardIndex === 0 ? "bg-[#75c628] w-4" : "bg-zinc-300"}`} />
-                        <div className={`w-2 h-2 rounded-full transition-all ${arrivalCardIndex === 1 ? "bg-[#75c628] w-4" : "bg-zinc-300"}`} />
+                      <div className="flex justify-center gap-2 pb-1">
+                        <div className={`w-1.5 h-1.5 rounded-full transition-all ${arrivalCardIndex === 0 ? "bg-[#34d399] w-3" : "bg-white/10"}`} />
+                        <div className={`w-1.5 h-1.5 rounded-full transition-all ${arrivalCardIndex === 1 ? "bg-[#34d399] w-3" : "bg-white/10"}`} />
                       </div>
 
                       <button
                         onClick={() => setArrivalCardIndex(1)}
-                        className="w-full py-4 bg-zinc-200 text-zinc-600 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-zinc-300 transition-all active:scale-95 flex items-center justify-center gap-2"
+                        className="w-full py-2.5 bg-white/5 hover:bg-white/10 text-white border border-white/10 rounded-xl font-bold uppercase tracking-widest text-[9px] transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                       >
                         Próximo
                       </button>
@@ -6757,34 +6757,34 @@ function GroupApp({
 
                   {/* Card 2 */}
                   <div className="w-1/2 flex flex-col">
-                    <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
-                      <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
+                    <div className="bg-white/5 p-6 text-center relative overflow-hidden border-b border-white/5">
+                      <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
+                      <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
 
-                      <h3 className="text-2xl font-black uppercase tracking-tighter text-black leading-none mb-1">
+                      <h3 className="text-lg font-black uppercase tracking-tight text-white leading-none mb-1">
                         Próximo Passo
                       </h3>
-                      <p className="text-[10px] text-black/60 font-black tracking-[0.2em]">
+                      <p className="text-[8px] text-[#34d399]/85 font-black tracking-[0.2em] uppercase">
                         Ordem de chegada (2/2)
                       </p>
                     </div>
 
-                    <div className="p-6 space-y-6">
-                      <div className="space-y-3 min-h-[80px] flex items-center">
-                        <div className="flex items-start gap-4">
-                          <div className="w-8 h-8 rounded-full bg-[#dce3ee] text-zinc-800 flex items-center justify-center text-xs font-black shrink-0">
+                    <div className="p-5 space-y-4">
+                      <div className="space-y-3 min-h-[60px] flex items-center">
+                        <div className="flex items-start gap-3">
+                          <div className="w-6 h-6 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] flex items-center justify-center text-xs font-black shrink-0">
                             2
                           </div>
-                          <p className="text-[12px] font-bold text-zinc-600 leading-tight pt-1">
+                          <p className="text-[11px] font-medium text-white/70 leading-relaxed pt-0.5">
                             Você precisa de pelo menos o dobro de jogadores (ex: 2
                             times de {match.config.playersPerTeam}) para prosseguir.
                           </p>
                         </div>
                       </div>
 
-                      <div className="flex justify-center gap-2 pb-4">
-                        <div className={`w-2 h-2 rounded-full transition-all ${arrivalCardIndex === 0 ? "bg-[#75c628] w-4" : "bg-zinc-300"}`} />
-                        <div className={`w-2 h-2 rounded-full transition-all ${arrivalCardIndex === 1 ? "bg-[#75c628] w-4" : "bg-zinc-300"}`} />
+                      <div className="flex justify-center gap-2 pb-1">
+                        <div className={`w-1.5 h-1.5 rounded-full transition-all ${arrivalCardIndex === 0 ? "bg-[#34d399] w-3" : "bg-white/10"}`} />
+                        <div className={`w-1.5 h-1.5 rounded-full transition-all ${arrivalCardIndex === 1 ? "bg-[#34d399] w-3" : "bg-white/10"}`} />
                       </div>
 
                       <button
@@ -6792,9 +6792,9 @@ function GroupApp({
                           setShowArrivalStepGuide(false);
                           setArrivalCardIndex(0);
                         }}
-                        className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                        className="w-full py-2.5 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] rounded-xl font-black uppercase tracking-widest text-[9px] shadow-lg shadow-[#34d399]/20 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                       >
-                        <CheckCircle2 size={16} />
+                        <CheckCircle2 size={12} />
                         OK, Entendi!
                       </button>
                     </div>
@@ -7295,7 +7295,7 @@ function GroupApp({
                           className="w-full flex items-center gap-4 p-4 hover:bg-white/10 rounded-xl transition-all group cursor-pointer"
                         >
                           <div className="flex items-center gap-4 text-left w-full">
-                            <LayoutPanelLeft size={20} className="text-[#34d399] group-hover:scale-110 transition-transform shrink-0" />
+                            <img src="/painel%20de%20controle.png" referrerPolicy="no-referrer" className="w-5 h-5 object-contain group-hover:scale-110 transition-transform shrink-0" alt="Painel de controle" />
                             <div className="flex flex-col">
                               <span className="text-[14px] font-bold text-white tracking-wide">
                                 Painel de controle
@@ -7317,7 +7317,7 @@ function GroupApp({
                         className="w-full flex items-center justify-between p-4 hover:bg-red-500/10 rounded-xl transition-all group cursor-pointer"
                       >
                         <div className="flex items-center gap-4 text-left w-full">
-                          <IoIosSave size={20} className="text-red-400 group-hover:scale-110 transition-transform shrink-0" />
+                          <img src="/fim%20da%20pelada.png" referrerPolicy="no-referrer" className="w-5 h-5 object-contain group-hover:scale-110 transition-transform shrink-0" alt="Fim da pelada" />
                           <div className="flex flex-col">
                             <span className="text-[14px] font-bold text-white tracking-wide">
                               Fim da pelada
@@ -7338,7 +7338,7 @@ function GroupApp({
                         className="w-full flex items-center justify-between p-4 hover:bg-white/10 rounded-xl transition-all group cursor-pointer"
                       >
                         <div className="flex items-center gap-4 text-left w-full">
-                          <TiMap size={20} className="text-blue-400 group-hover:scale-110 transition-transform shrink-0" />
+                          <img src="/guia%20inicial.png" referrerPolicy="no-referrer" className="w-5 h-5 object-contain group-hover:scale-110 transition-transform shrink-0" alt="Guia Inicial" />
                           <div className="flex-1 flex flex-col">
                             <span className="text-[14px] font-bold text-white tracking-wide">
                               Guia Inicial
@@ -8730,7 +8730,7 @@ function GroupApp({
                       {players.filter((p) => sessionPlayerIds.includes(p.id))
                         .length === 0 ? (
                         <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
-                          <div className="flex flex-col items-center gap-4 opacity-20 text-black text-xs">
+                          <div className="flex flex-col items-center gap-4 opacity-20 text-white text-xs">
                             <span className="font-bold uppercase tracking-widest text-[11px]">
                               Nenhum jogador na sessão
                             </span>
@@ -11723,10 +11723,10 @@ function GroupApp({
 
                     return (
                       <div
-                        className={`space-y-6 ${isPrintMode ? "bg-white min-h-screen text-black p-4 pb-12 font-mono" : "font-mono"}`}
+                        className={`space-y-4 ${isPrintMode ? "bg-white min-h-screen text-black p-4 pb-12 font-mono" : "font-mono"}`}
                       >
                         {!isPrintMode && (
-                          <div className="h-4" />
+                          <div className="h-2" />
                         )}
 
                         {isPrintMode && (
@@ -11759,7 +11759,7 @@ function GroupApp({
                         )}
 
                         <div
-                          className={`px-2 sm:px-4 space-y-6 w-full sm:w-[98%] max-w-7xl mx-auto`}
+                          className={`px-2 sm:px-4 space-y-4 w-full sm:w-[98%] max-w-7xl mx-auto`}
                         >
                           {/* Summary Cards */}
                           {!isPrintPaymentsOnly && (
@@ -11769,12 +11769,12 @@ function GroupApp({
                                 className={`p-4 transition-all col-span-2 lg:col-span-1 order-1 lg:order-none ${
                                   isPrintMode
                                     ? "bg-white border-zinc-300 border rounded-none"
-                                    : "bg-[#dce3ee] border-[#dce3ee]/20"
+                                    : "bg-white/5 border border-white/10 rounded-2xl shadow-sm"
                                 }`}
                               >
-                                <div className="flex justify-between items-center mb-2">
+                                <div className="flex justify-between items-center mb-1">
                                   <p
-                                    className={`text-[10px] font-black uppercase tracking-widest ${isPrintMode ? "text-zinc-600" : "opacity-60"}`}
+                                    className={`text-[9px] font-black uppercase tracking-widest ${isPrintMode ? "text-zinc-600" : "text-white/50"}`}
                                   >
                                     Saldo em Caixa
                                   </p>
@@ -11792,20 +11792,20 @@ function GroupApp({
                                         }
                                         setIsPrintMode(true);
                                       }}
-                                      className="text-zinc-400 hover:text-zinc-600 transition-colors"
+                                      className="text-white/40 hover:text-[#34d399] transition-colors"
                                       title="Gerar Print"
                                     >
-                                      <Eye size={16} />
+                                      <Eye size={14} />
                                     </button>
                                   )}
                                 </div>
                                 <p
-                                  className={`text-xl sm:text-2xl lg:text-3xl font-black ${
+                                  className={`text-lg sm:text-xl lg:text-2xl font-black ${
                                     isPrintMode
                                       ? "text-black"
                                       : netBalance >= 0
-                                        ? "text-emerald-700"
-                                        : "text-red-700"
+                                        ? "text-[#34d399]"
+                                        : "text-red-400"
                                   }`}
                                 >
                                   R$ <AnimatedCounter value={netBalance} />
@@ -11821,24 +11821,30 @@ function GroupApp({
                                     setIsEditingTotal(true);
                                   }
                                 }}
-                                className={`p-5 transition-all order-2 lg:order-none ${isPrintMode ? "bg-white border-zinc-300 border rounded-none text-black" : "bg-[#83A8FF]/10 backdrop-blur-md border border-white/10 cursor-pointer hover:bg-[#83A8FF]/20 overflow-hidden relative rounded-none"}`}
+                                className={`p-4 transition-all order-2 lg:order-none ${
+                                  isPrintMode
+                                    ? "bg-white border-zinc-300 border rounded-none text-black"
+                                    : "bg-[#34d399]/5 border border-[#34d399]/20 rounded-2xl cursor-pointer hover:bg-[#34d399]/10 overflow-hidden relative shadow-sm"
+                                }`}
                               >
                                 {!isPrintMode && (
-                                  <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent pointer-events-none" />
+                                  <div className="absolute inset-0 bg-gradient-to-br from-[#34d399]/5 to-transparent pointer-events-none" />
                                 )}
                                 <p
-                                  className={`text-[10px] font-black uppercase tracking-widest mb-3 relative z-10 ${isPrintMode ? "text-zinc-600" : "text-[#1E3D2F]/60"}`}
+                                  className={`text-[9px] font-black uppercase tracking-widest mb-1 relative z-10 ${
+                                    isPrintMode ? "text-zinc-600" : "text-[#34d399]/80"
+                                  }`}
                                 >
                                   Arrecadação
                                 </p>
-                                <div className="flex items-baseline gap-2 mb-4 relative z-10">
+                                <div className="flex items-baseline gap-2 relative z-10">
                                   {isEditingTotal ? (
                                     <div
                                       className="flex items-center gap-1 w-full"
                                       onClick={(e) => e.stopPropagation()}
                                     >
                                       <span
-                                        className={`text-sm font-bold ${isPrintMode ? "opacity-60" : "text-[#1E3D2F]/60"}`}
+                                        className={`text-xs font-bold ${isPrintMode ? "opacity-60" : "text-white/60"}`}
                                       >
                                         R$
                                       </span>
@@ -11863,13 +11869,17 @@ function GroupApp({
                                             setIsEditingTotal(false);
                                           }
                                         }}
-                                        className={`w-full bg-transparent border-b-2 border-brand-primary outline-none text-xl sm:text-2xl lg:text-3xl font-black ${isPrintMode ? "text-zinc-900" : "text-[#1E3D2F]"}`}
+                                        className={`w-full bg-transparent border-b border-[#34d399] outline-none text-base sm:text-lg font-black ${
+                                          isPrintMode ? "text-zinc-900" : "text-white"
+                                        }`}
                                       />
                                     </div>
                                   ) : (
                                     <div className="flex flex-col">
                                       <p
-                                        className={`text-xl sm:text-2xl lg:text-3xl font-black ${isPrintMode ? "text-black" : "text-[#1E3D2F]"}`}
+                                        className={`text-lg sm:text-xl font-black ${
+                                          isPrintMode ? "text-black" : "text-white"
+                                        }`}
                                       >
                                         R$ {totalRevenue},00
                                       </p>
@@ -11882,7 +11892,7 @@ function GroupApp({
                                             );
                                             setIsEditingTotal(true);
                                           }}
-                                          className="text-[8px] font-bold uppercase tracking-widest text-[#1E3D2F]/60 flex items-center gap-1 hover:text-[#1E3D2F] w-fit mt-1"
+                                          className="text-[8px] font-black uppercase tracking-widest text-white/40 flex items-center gap-1 hover:text-white w-fit mt-1.5 transition-colors"
                                         >
                                           Ajustar Manual (R$ {manualAdjustment})
                                         </button>
@@ -11905,20 +11915,28 @@ function GroupApp({
                                   }
                                   !isPrintMode && setShowExpenseModal(true);
                                 }}
-                                className={`p-5 transition-all order-3 lg:order-none ${isPrintMode ? "bg-white border-zinc-300 border rounded-none" : "cursor-pointer hover:opacity-90 bg-red-500/10 border border-white/10 rounded-none"}`}
+                                className={`p-4 transition-all order-3 lg:order-none ${
+                                  isPrintMode
+                                    ? "bg-white border-zinc-300 border rounded-none"
+                                    : "bg-red-500/5 border border-red-500/20 rounded-2xl cursor-pointer hover:bg-red-500/10 shadow-sm relative overflow-hidden"
+                                }`}
                               >
                                 <p
-                                  className={`text-[10px] font-black uppercase tracking-widest mb-3 ${isPrintMode ? "text-zinc-600" : "text-zinc-500"}`}
+                                  className={`text-[9px] font-black uppercase tracking-widest mb-1 ${
+                                    isPrintMode ? "text-zinc-600" : "text-red-400"
+                                  }`}
                                 >
                                   Despesas
                                 </p>
                                 <p
-                                  className={`text-xl sm:text-2xl lg:text-3xl font-black mb-4 ${isPrintMode ? "text-black" : "text-red-700"}`}
+                                  className={`text-lg sm:text-xl font-black mb-2 ${
+                                    isPrintMode ? "text-black" : "text-white"
+                                  }`}
                                 >
                                   R$ {totalExpenses},00
                                 </p>
-                                <div className="space-y-1.5">
-                                  <div className="h-2 w-full bg-zinc-200/50 rounded-full overflow-hidden">
+                                <div className="space-y-1">
+                                  <div className="h-1.5 w-full bg-white/10 rounded-full overflow-hidden">
                                     <div
                                       className="h-full bg-red-500 transition-all duration-1000"
                                       style={{
@@ -11926,7 +11944,7 @@ function GroupApp({
                                       }}
                                     />
                                   </div>
-                                  <div className="flex justify-between text-[8px] font-bold uppercase tracking-wider opacity-60">
+                                  <div className="flex justify-between text-[7px] font-bold uppercase tracking-wider opacity-60 text-white/50">
                                     <span>Gasto Total</span>
                                     <span>
                                       {totalRevenue > 0
@@ -11946,50 +11964,57 @@ function GroupApp({
                           {/* Expenses List */}
                           {!isPrintPaymentsOnly && (
                             <div
-                              className={`transition-all overflow-hidden ${isPrintMode ? "bg-white border border-zinc-300 rounded-none" : "rounded-none border border-white/10 bg-transparent"}`}
+                              className={`transition-all overflow-hidden ${
+                                isPrintMode
+                                  ? "bg-white border border-zinc-300 rounded-none"
+                                  : "rounded-2xl border border-white/10 bg-white/5"
+                              }`}
                             >
                               <div
-                                className={`flex justify-between items-center ${isPrintMode ? "border-b border-zinc-300 bg-zinc-100 p-2" : "p-4 border-b bg-gradient-to-br from-zinc-50 to-zinc-100 border-zinc-200"}`}
+                                className={`flex justify-between items-center ${
+                                  isPrintMode
+                                    ? "border-b border-zinc-300 bg-zinc-100 p-2"
+                                    : "p-3.5 border-b border-white/10 bg-white/5"
+                                }`}
                               >
                                 <h3
-                                  className={`text-[10px] sm:text-xs font-black uppercase tracking-widest flex items-center gap-2 ${isPrintMode ? "text-zinc-800" : "text-zinc-500"}`}
+                                  className={`text-[9px] sm:text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${
+                                    isPrintMode ? "text-zinc-800" : "text-white/70"
+                                  }`}
                                 >
                                   {isPrintMode ? (
                                     "DESPESAS DETALHADAS"
                                   ) : (
                                     <>
-                                      <ClipboardPaste size={14} /> Despesas
-                                      Detalhadas
+                                      <ClipboardPaste size={14} className="text-[#34d399]" /> Despesas Detalhadas
                                     </>
                                   )}
                                 </h3>
                                 {!isPrintMode && (
-                                  <div className="p-[1.5px] bg-gradient-to-r from-red-500 to-rose-600 rounded-lg">
-                                    <button
-                                      onClick={() => {
-                                        if (players.length === 0) {
-                                          setToast({
-                                            message: "Adicione jogadores para detalhar despesas",
-                                            type: "info"
-                                          });
-                                          setTimeout(() => setToast(null), 3000);
-                                          return;
-                                        }
-                                        setShowExpenseModal(true);
-                                      }}
-                                      className="p-1.5 bg-[#ffffff] text-[#1E3D2F] rounded-[7px] hover:opacity-90 transition-all active:scale-90 block"
-                                    >
-                                      <Plus size={16} />
-                                    </button>
-                                  </div>
+                                  <button
+                                    onClick={() => {
+                                      if (players.length === 0) {
+                                        setToast({
+                                          message: "Adicione jogadores para detalhar despesas",
+                                          type: "info"
+                                        });
+                                        setTimeout(() => setToast(null), 3000);
+                                        return;
+                                      }
+                                      setShowExpenseModal(true);
+                                    }}
+                                    className="p-1.5 bg-[#34d399] text-[#1E3D2F] rounded-lg hover:opacity-90 active:scale-95 transition-all block cursor-pointer"
+                                  >
+                                    <Plus size={14} />
+                                  </button>
                                 )}
                               </div>
                               <div
-                                className={`divide-y ${isPrintMode ? "divide-zinc-200" : "divide-zinc-100"}`}
+                                className={`divide-y ${isPrintMode ? "divide-zinc-200" : "divide-white/5"}`}
                               >
                                 {(expenses || []).length === 0 ? (
                                   <div
-                                    className={`text-center text-zinc-400 text-xs uppercase tracking-widest ${isPrintMode ? "p-2" : "p-8"}`}
+                                    className={`text-center text-white/35 text-[10px] font-medium uppercase tracking-widest ${isPrintMode ? "p-2" : "p-6"}`}
                                   >
                                     Nenhuma despesa registrada
                                   </div>
@@ -11997,16 +12022,20 @@ function GroupApp({
                                   sortedExpenses.map((expense, idx) => (
                                     <div
                                       key={`expense-${expense.id}-${idx}`}
-                                      className={`flex items-center justify-between group ${isPrintMode ? "p-2 bg-white" : "p-4"}`}
+                                      className={`flex items-center justify-between group ${isPrintMode ? "p-2 bg-white" : "p-3 bg-transparent hover:bg-white/5 transition-all"}`}
                                     >
                                       <div>
                                         <p
-                                          className={`text-xs uppercase tracking-tight ${isPrintMode ? "font-mono text-zinc-800" : "text-sm font-black text-zinc-800 font-mono"}`}
+                                          className={`text-xs uppercase tracking-tight ${
+                                            isPrintMode ? "font-mono text-zinc-800" : "font-black text-white font-mono"
+                                          }`}
                                         >
                                           {expense.name}
                                         </p>
                                         <p
-                                          className={`text-[8px] font-bold uppercase tracking-widest ${isPrintMode ? "text-zinc-500" : "text-zinc-400"}`}
+                                          className={`text-[8px] font-bold uppercase tracking-widest ${
+                                            isPrintMode ? "text-zinc-500" : "text-white/40"
+                                          }`}
                                         >
                                           {new Date(
                                             expense.date,
@@ -12015,7 +12044,9 @@ function GroupApp({
                                       </div>
                                       <div className="flex items-center gap-4">
                                         <p
-                                          className={`text-xs font-bold ${isPrintMode ? "text-zinc-900" : "text-md font-black text-red-600"}`}
+                                          className={`text-xs font-bold ${
+                                            isPrintMode ? "text-zinc-900" : "font-black text-red-400 font-mono"
+                                          }`}
                                         >
                                           R$ {expense.amount},00
                                         </p>
@@ -12028,9 +12059,9 @@ function GroupApp({
                                                 ),
                                               )
                                             }
-                                            className="p-1.5 text-zinc-300 hover:text-red-500 transition-colors opacity-0 group-hover:opacity-100"
+                                            className="p-1 text-white/30 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100 cursor-pointer"
                                           >
-                                            <Trash2 size={14} />
+                                            <Trash2 size={13} />
                                           </button>
                                         )}
                                       </div>
@@ -12044,20 +12075,25 @@ function GroupApp({
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {/* Em Dia */}
                             <div
-                              className={`transition-all overflow-hidden ${isPrintMode ? "bg-white border border-zinc-300 rounded-none" : "rounded-none border border-zinc-200/20 bg-emerald-500/5"}`}
+                              className={`transition-all overflow-hidden ${
+                                isPrintMode
+                                  ? "bg-white border border-zinc-300 rounded-none"
+                                  : "rounded-2xl border border-white/10 bg-[#34d399]/5 p-4 space-y-3 shadow-sm"
+                              }`}
                             >
                               <div
-                                className={`flex justify-between items-center ${isPrintMode ? "border-b border-zinc-300 bg-zinc-100 p-2 text-zinc-900" : "mb-4"}`}
+                                className={`flex justify-between items-center ${isPrintMode ? "border-b border-zinc-300 bg-zinc-100 p-2 text-zinc-900" : ""}`}
                               >
                                 <h3
-                                  className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${isPrintMode ? "text-zinc-800" : "text-emerald-600"}`}
+                                  className={`text-[9px] font-black uppercase tracking-widest flex items-center gap-2 ${
+                                    isPrintMode ? "text-zinc-800" : "text-[#34d399]"
+                                  }`}
                                 >
                                   {isPrintMode ? (
                                     "PAGOS"
                                   ) : (
                                     <>
-                                      <CheckCircle2 size={14} /> Jogadores em
-                                      Dia
+                                      <CheckCircle2 size={14} /> Jogadores em Dia
                                     </>
                                   )}{" "}
                                   ({MONTHS[new Date().getMonth()]})
@@ -12077,7 +12113,7 @@ function GroupApp({
                                       setIsPrintMode(true);
                                       setIsPrintPaymentsOnly(true);
                                     }}
-                                    className="p-1.5 text-emerald-600 hover:bg-emerald-100 rounded-full transition-colors"
+                                    className="p-1 text-[#34d399] hover:bg-[#34d399]/10 rounded-lg transition-colors cursor-pointer"
                                     title="Gerar Print desta lista"
                                   >
                                     <Eye size={14} />
@@ -12104,21 +12140,25 @@ function GroupApp({
                                 ).map((p, pIndex) => (
                                   <div
                                     key={`em-dia-${p.id}-${pIndex}`}
-                                    className={`flex items-center justify-between ${isPrintMode ? "p-2 bg-white" : "p-3 rounded-none bg-white border border-emerald-100 shadow-sm"}`}
+                                    className={`flex items-center justify-between ${
+                                      isPrintMode ? "p-2 bg-white" : "p-2.5 rounded-xl bg-white/5 border border-white/5"
+                                    }`}
                                   >
                                     <span
-                                      className={`text-xs uppercase tracking-tight ${isPrintMode ? "font-mono text-zinc-800" : "font-bold text-zinc-800 font-mono"}`}
+                                      className={`text-xs uppercase tracking-tight ${
+                                        isPrintMode ? "font-mono text-zinc-800" : "font-bold text-white/90 font-mono"
+                                      }`}
                                     >
                                       {p.name}
                                     </span>
                                     {isPrintMode ? (
-                                      <span className="text-[10px] uppercase font-bold text-emerald-600 tracking-widest">
+                                      <span className="text-[10px] uppercase font-bold text-[#34d399] tracking-widest">
                                         Pago
                                       </span>
                                     ) : (
                                       <Check
                                         size={14}
-                                        className="text-emerald-500"
+                                        className="text-[#34d399]"
                                       />
                                     )}
                                   </div>
@@ -12128,13 +12168,19 @@ function GroupApp({
 
                             {/* Em Débito */}
                             <div
-                              className={`transition-all overflow-hidden ${isPrintMode ? "bg-white border border-zinc-300 rounded-none" : "rounded-none bg-red-500/5"}`}
+                              className={`transition-all overflow-hidden ${
+                                isPrintMode
+                                  ? "bg-white border border-zinc-300 rounded-none"
+                                  : "rounded-2xl border border-white/10 bg-red-500/5 p-4 space-y-3 shadow-sm"
+                              }`}
                             >
                               <div
-                                className={`flex justify-between items-center ${isPrintMode ? "border-b border-zinc-300 bg-zinc-100 p-2 text-zinc-900" : "mb-4"}`}
+                                className={`flex justify-between items-center ${isPrintMode ? "border-b border-zinc-300 bg-zinc-100 p-2 text-zinc-900" : ""}`}
                               >
                                 <h3
-                                  className={`text-[10px] font-black uppercase tracking-widest flex items-center gap-2 ${isPrintMode ? "text-zinc-800" : "text-red-500"}`}
+                                  className={`text-[9px] font-black uppercase tracking-widest flex items-center gap-2 ${
+                                    isPrintMode ? "text-zinc-800" : "text-red-400"
+                                  }`}
                                 >
                                   {isPrintMode ? (
                                     "DEVENDO"
@@ -12160,7 +12206,7 @@ function GroupApp({
                                       setIsPrintMode(true);
                                       setIsPrintPaymentsOnly(true);
                                     }}
-                                    className="p-1.5 text-red-600 hover:bg-red-100 rounded-full transition-colors"
+                                    className="p-1 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors cursor-pointer"
                                     title="Gerar Print desta lista"
                                   >
                                     <Eye size={14} />
@@ -12187,10 +12233,14 @@ function GroupApp({
                                 ).map((p, pIndex) => (
                                   <div
                                     key={`em-debito-${p.id}-${pIndex}`}
-                                    className={`flex items-center justify-between ${isPrintMode ? "p-2 bg-white" : "p-3 rounded-none bg-white shadow-none"}`}
+                                    className={`flex items-center justify-between ${
+                                      isPrintMode ? "p-2 bg-white" : "p-2.5 rounded-xl bg-white/5 border border-white/5"
+                                    }`}
                                   >
                                     <span
-                                      className={`text-xs uppercase tracking-tight ${isPrintMode ? "font-mono text-zinc-800" : "font-bold text-zinc-800 font-mono"}`}
+                                      className={`text-xs uppercase tracking-tight ${
+                                        isPrintMode ? "font-mono text-zinc-800" : "font-bold text-white/90 font-mono"
+                                      }`}
                                     >
                                       {p.name}
                                     </span>
@@ -12199,7 +12249,7 @@ function GroupApp({
                                         Pendente
                                       </span>
                                     ) : (
-                                      <span className="text-[8px] font-black text-red-500 uppercase tracking-tighter">
+                                      <span className="text-[8px] font-black text-red-400 uppercase tracking-tighter">
                                         Pendente
                                       </span>
                                     )}
@@ -15686,7 +15736,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={resetAllStats}
-                  className="flex-1 py-3 bg-emerald-500 text-white rounded-xl font-black uppercase tracking-widest text-xs hover:bg-emerald-600 transition-colors shadow-lg shadow-emerald-500/20"
+                  className="flex-1 py-3 bg-emerald-500 text-[#1e3d2f] rounded-xl font-black uppercase tracking-widest text-xs hover:bg-emerald-600 transition-colors"
                 >
                   Zerar Agora
                 </button>
@@ -15695,61 +15745,57 @@ function GroupApp({
           </motion.div>
         )}
 
-        {/* Back To Home Confirm Modal */}
-
         {showSetupGuide && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] flex items-center justify-center p-6"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
-              className="w-full max-w-sm p-8 rounded-[40px] bg-white shadow-[0_20px_50px_rgba(0,0,0,0.2)] border border-black/5"
+              className="w-full max-w-[310px] p-6 rounded-[24px] bg-[#0b0e17]/95 border border-white/10 text-white backdrop-blur-xl shadow-2xl"
             >
-              <div className="flex flex-col items-center text-center space-y-6">
-                <div className="w-20 h-20 rounded-full bg-[#f0f9eb] flex items-center justify-center">
-                  <div className="w-16 h-16 rounded-full bg-[#e1f3d8] flex items-center justify-center ring-4 ring-white shadow-sm">
-                    <Play size={24} className="text-[#67c23a] fill-[#67c23a] ml-1" />
-                  </div>
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div className="w-14 h-14 rounded-full bg-[#34d399]/10 flex items-center justify-center border border-[#34d399]/20 shadow-sm">
+                  <Play size={18} className="text-[#34d399] fill-[#34d399] ml-0.5" />
                 </div>
 
-                <div className="space-y-2">
-                  <h3 className="text-2xl font-black uppercase tracking-tighter text-zinc-900">
+                <div className="space-y-1">
+                  <h3 className="text-xl font-black uppercase tracking-tight text-white">
                     Tudo Pronto!
                   </h3>
-                  <p className="text-[11px] font-medium leading-relaxed text-zinc-400 max-w-[240px] mx-auto">
+                  <p className="text-[10px] font-medium leading-relaxed text-white/50 max-w-[200px] mx-auto">
                     Siga estes passos simples para organizar suas partidas:
                   </p>
                 </div>
 
-                <div className="w-full space-y-4 text-left py-2">
-                  <div className="flex gap-4 items-start">
-                    <div className="w-8 h-8 rounded-full bg-[#95d475] text-white text-xs font-black flex items-center justify-center shrink-0 shadow-sm">
+                <div className="w-full space-y-3 text-left py-1">
+                  <div className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] text-xs font-black flex items-center justify-center shrink-0 shadow-sm">
                       1
                     </div>
-                    <p className="text-[10px] font-bold text-zinc-600 leading-relaxed pt-1">
-                      <span className="text-zinc-900 block mb-0.5">Crie sua Pelada</span>
+                    <p className="text-[9px] font-medium text-white/60 leading-relaxed pt-0.5">
+                      <span className="text-white font-bold block mb-0.5">Crie sua Pelada</span>
                       Clique no banner verde para definir nome, data e local. Suas peladas ficarão salvas para acesso rápido.
                     </p>
                   </div>
-                  <div className="flex gap-4 items-start">
-                    <div className="w-8 h-8 rounded-full bg-[#95d475] text-white text-xs font-black flex items-center justify-center shrink-0 shadow-sm">
+                  <div className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] text-xs font-black flex items-center justify-center shrink-0 shadow-sm">
                       2
                     </div>
-                    <p className="text-[10px] font-bold text-zinc-600 leading-relaxed pt-1">
-                      <span className="text-zinc-900 block mb-0.5">Acesse o Gerenciamento</span>
+                    <p className="text-[9px] font-medium text-white/60 leading-relaxed pt-0.5">
+                      <span className="text-white font-bold block mb-0.5">Acesse o Gerenciamento</span>
                       Toque na pelada criada em sua lista para abrir o painel onde você poderá adicionar e confirmar jogadores.
                     </p>
                   </div>
-                  <div className="flex gap-4 items-start">
-                    <div className="w-8 h-8 rounded-full bg-[#95d475] text-white text-xs font-black flex items-center justify-center shrink-0 shadow-sm">
+                  <div className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] text-xs font-black flex items-center justify-center shrink-0 shadow-sm">
                       3
                     </div>
-                    <p className="text-[10px] font-bold text-zinc-600 leading-relaxed pt-1">
-                      <span className="text-zinc-900 block mb-0.5">Organize as Partidas</span>
+                    <p className="text-[9px] font-medium text-white/60 leading-relaxed pt-0.5">
+                      <span className="text-white font-bold block mb-0.5">Organize as Partidas</span>
                       Confirme a presença para o sorteio equilibrado. Ao final, registre os gols para atualizar o Ranking e gerencie o fluxo de caixa no menu Financeiro.
                     </p>
                   </div>
@@ -15757,7 +15803,7 @@ function GroupApp({
 
                 <button
                   onClick={() => setShowSetupGuide(false)}
-                  className="w-full py-5 bg-[#a3cf54] hover:bg-[#95d475] text-black rounded-[24px] font-black uppercase tracking-widest text-[11px] shadow-lg shadow-[#a3cf54]/20 active:scale-95 transition-all text-center border-b-4 border-black/20"
+                  className="w-full py-3 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] rounded-xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-[#34d399]/20 active:scale-95 transition-all text-center cursor-pointer"
                 >
                   Entendi, vamos lá!
                 </button>
