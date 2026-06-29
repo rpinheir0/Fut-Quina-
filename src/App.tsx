@@ -7600,7 +7600,7 @@ function GroupApp({
                                            ) : matchSpecificPlayers.length > 0 && matchSpecificPlayers[0].photo ? (
                                              <img src={matchSpecificPlayers[0].photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
                                            ) : (
-                                             <GiSoccerBall size={14} className="text-white/60" />
+                                             <span className="text-white/60"><GiSoccerBall size={14} /></span>
                                            )}
                                         </button>
                                         <TypewriterText 
@@ -12780,23 +12780,23 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/0 backdrop-blur-none z-[200] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
             onClick={() => setShowPlayerActionsModal(null)}
           >
             <motion.div
               initial={{ scale: 0.9, y: 30, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.9, y: 30, opacity: 0 }}
-              className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-2xl bg-zinc-50 border border-zinc-200"
+              className="w-full max-w-[280px] rounded-[24px] overflow-hidden shadow-2xl bg-[#0b0e17]/95 border border-white/10 text-white backdrop-blur-xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
+              <div className="bg-white/5 p-6 text-center relative overflow-hidden border-b border-white/5">
                 {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
+                <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
+                <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
 
-                <div className="w-20 h-20 mx-auto rounded-full bg-white flex items-center justify-center overflow-hidden border-4 border-zinc-300 shadow-xl relative z-10 mb-6">
+                <div className="w-14 h-14 mx-auto rounded-full bg-white/5 flex items-center justify-center overflow-hidden border border-white/10 shadow-lg relative z-10 mb-3">
                   {players.find((p) => p.id === showPlayerActionsModal.playerId)
                     ?.photo ? (
                     <img
@@ -12810,29 +12810,29 @@ function GroupApp({
                       referrerPolicy="no-referrer"
                     />
                   ) : (
-                    <span className="text-zinc-200 flex items-center shrink-0">
-                      <User size={40} />
+                    <span className="text-white/40 flex items-center shrink-0">
+                      <User size={28} />
                     </span>
                   )}
                 </div>
 
-                <h3 className="text-2xl font-black uppercase tracking-tighter text-black leading-none">
+                <h3 className="text-lg font-black uppercase tracking-tight text-white leading-none">
                   {
                     players.find(
                       (p) => p.id === showPlayerActionsModal.playerId,
                     )?.name
                   }
                 </h3>
-                <div className="flex justify-center gap-1 mt-1">
+                <div className="flex justify-center gap-0.5 mt-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <Star
                       key={`star-action-${showPlayerActionsModal.playerId}-${star}`}
-                      size={10}
-                      className={`${(players.find((p) => p.id === showPlayerActionsModal.playerId)?.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10"}`}
+                      size={8}
+                      className={`${(players.find((p) => p.id === showPlayerActionsModal.playerId)?.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-white/10"}`}
                     />
                   ))}
                 </div>
-                <p className="text-[10px] text-black/60 font-black mt-2 uppercase tracking-[0.2em]">
+                <p className="text-[8px] text-white/50 font-black mt-1.5 uppercase tracking-[0.2em]">
                   AÇÕES DO JOGADOR
                 </p>
               </div>
@@ -12866,10 +12866,10 @@ function GroupApp({
                           match.scoreA >= match.config.goalLimit ||
                           match.scoreB >= match.config.goalLimit
                         }
-                        className="w-full h-10 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white rounded-xl font-black uppercase text-xs flex items-center justify-center px-4 transition-all hover:opacity-90 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-[#59b823]/20 group font-roboto-flex"
+                        className="w-full h-9 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] rounded-xl font-black uppercase text-[10px] tracking-wider flex items-center justify-center px-4 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#34d399]/20 group font-roboto-flex cursor-pointer"
                       >
                         <div className="flex items-center gap-2">
-                          <span className="text-emerald-200 group-hover:scale-110 transition-transform flex items-center">
+                          <span className="text-[#1e3d2f] group-hover:scale-110 transition-transform flex items-center">
                             <IoIosFootball size={14} />
                           </span>
                           <span className="tracking-widest">Registrar Gol</span>
@@ -12936,7 +12936,7 @@ function GroupApp({
                           setSwappingPlayerId(null);
                           setShowPlayerActionsModal(null);
                         }}
-                        className="w-full h-10 bg-amber-500 text-black rounded-xl font-black uppercase text-xs flex items-center justify-between px-4 transition-all hover:bg-amber-600 active:scale-[0.98] shadow-md shadow-amber-500/10 group font-roboto-flex"
+                        className="w-full h-9 bg-amber-500 hover:bg-amber-600 text-black rounded-xl font-black uppercase text-[10px] tracking-wider flex items-center justify-between px-4 transition-all active:scale-95 shadow-md shadow-amber-500/20 group font-roboto-flex cursor-pointer"
                       >
                         <div className="flex items-center gap-2">
                           <RefreshCw
@@ -12997,11 +12997,11 @@ function GroupApp({
 
                           setShowPlayerActionsModal(null);
                         }}
-                        className={`w-full h-10 mt-2 text-black rounded-xl font-black text-xs flex items-center justify-center px-4 transition-all active:scale-[0.98] shadow-md group font-roboto-flex ${players.find((p) => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? "bg-sky-200 hover:bg-sky-300" : "bg-sky-100 hover:bg-sky-200"}`}
+                        className={`w-full h-9 mt-1.5 rounded-xl font-bold text-[10px] uppercase tracking-wider flex items-center justify-center px-4 transition-all active:scale-[0.98] shadow-sm group border cursor-pointer ${players.find((p) => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? "bg-sky-500/10 border-sky-500/20 text-sky-400 hover:bg-sky-500/20" : "bg-white/5 border-white/10 text-white hover:bg-white/10"}`}
                       >
                         <div className="flex items-center gap-2">
                           <span
-                            className={`${players.find((p) => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? "text-sky-800" : "text-sky-600"} flex items-center shrink-0 border border-current rounded-full w-5 h-5 justify-center text-[10px] font-black leading-none`}
+                            className={`${players.find((p) => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? "text-sky-400 border-sky-400/40" : "text-white/40 border-white/20"} flex items-center border rounded-full w-4 h-4 justify-center text-[9px] font-black leading-none`}
                           >
                             G
                           </span>
@@ -13015,7 +13015,7 @@ function GroupApp({
                         </div>
                       </button>
                     )}
-                  <div className="grid grid-cols-2 gap-1.5 mt-2">
+                  <div className="grid grid-cols-2 gap-1.5 mt-1.5">
                     {/* Substituir */}
                     {swappingPlayerId !== showPlayerActionsModal.playerId && (
                       <button
@@ -13028,11 +13028,11 @@ function GroupApp({
                             type: "info",
                           });
                         }}
-                        className="py-2.5 px-2 bg-white text-zinc-900 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-zinc-50 active:scale-95 border border-zinc-200 hover:border-zinc-300 shadow-sm group"
+                        className="py-2.5 bg-white/5 border border-white/10 text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
                         <ArrowLeftRight
                           size={14}
-                          className="text-zinc-400 group-hover:text-zinc-900 transition-colors"
+                          className="text-white/60 group-hover:text-white transition-colors"
                         />
                         Substituir
                       </button>
@@ -13055,11 +13055,11 @@ function GroupApp({
                             type: "info",
                           });
                         }}
-                        className="py-2.5 px-2 bg-white text-zinc-900 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-zinc-50 active:scale-95 border border-zinc-200 hover:border-zinc-300 shadow-sm group"
+                        className="py-2.5 bg-white/5 border border-white/10 text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
                         <MoveRight
                           size={14}
-                          className="text-zinc-400 group-hover:text-zinc-900 transition-colors"
+                          className="text-white/60 group-hover:text-white transition-colors"
                         />
                         Mover
                       </button>
@@ -13121,11 +13121,11 @@ function GroupApp({
 
                           setShowPlayerActionsModal(null);
                         }}
-                        className="py-2.5 px-2 bg-white text-red-600 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-red-50 active:scale-95 border border-red-100 hover:border-red-200 shadow-sm group"
+                        className="py-2.5 bg-red-500/5 border border-red-500/20 text-red-400 rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-red-500/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
                         <LogOut
                           size={14}
-                          className="opacity-70 group-hover:opacity-100 transition-opacity"
+                          className="text-red-400 opacity-80 group-hover:opacity-100 transition-opacity"
                         />
                         Ausente
                       </button>
@@ -13138,18 +13138,18 @@ function GroupApp({
                           setSwappingPlayerId(null);
                           setShowPlayerActionsModal(null);
                         }}
-                        className="py-2.5 px-2 bg-white text-red-600 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-red-50 active:scale-95 border border-red-100 hover:border-red-200 shadow-sm"
+                        className="py-2.5 bg-red-500/5 border border-red-500/20 text-red-400 rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-red-500/10 active:scale-95 shadow-sm cursor-pointer"
                       >
-                        <X size={14} />
+                        <X size={14} className="text-red-400 opacity-80" />
                         Cancelar
                       </button>
                     )}
 
                     <button
                       onClick={() => setShowPlayerActionsModal(null)}
-                      className="py-2.5 px-2 bg-zinc-200 text-zinc-600 rounded-xl font-black uppercase text-[7px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-zinc-300 active:scale-95 border border-transparent shadow-sm"
+                      className="py-2.5 bg-white/5 border border-white/10 text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-white/10 active:scale-95 shadow-sm cursor-pointer"
                     >
-                      <X size={14} />
+                      <X size={14} className="text-white/60" />
                       Fechar
                     </button>
                   </div>
@@ -13164,23 +13164,23 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/0 backdrop-blur-none z-[200] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
             onClick={() => setShowQueuePlayerModal(null)}
           >
             <motion.div
               initial={{ scale: 0.9, y: 30, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.9, y: 30, opacity: 0 }}
-              className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-2xl bg-zinc-50 border border-zinc-200"
+              className="w-full max-w-[280px] rounded-[24px] overflow-hidden shadow-2xl bg-[#0b0e17]/95 border border-white/10 text-white backdrop-blur-xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-[#dce3ee] p-10 text-center relative overflow-hidden">
+              <div className="bg-white/5 p-6 text-center relative overflow-hidden border-b border-white/5">
                 {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
+                <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
+                <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
 
-                <div className="w-20 h-20 mx-auto rounded-full bg-white flex items-center justify-center overflow-hidden border-4 border-zinc-300 shadow-xl relative z-10 mb-6">
+                <div className="w-14 h-14 mx-auto rounded-full bg-white/5 flex items-center justify-center overflow-hidden border border-white/10 shadow-lg relative z-10 mb-3">
                   {players.find((p) => p.id === showQueuePlayerModal.playerId)
                     ?.photo ? (
                     <img
@@ -13194,19 +13194,19 @@ function GroupApp({
                       referrerPolicy="no-referrer"
                     />
                   ) : (
-                    <span className="text-zinc-200 flex items-center shrink-0">
-                      <User size={40} />
+                    <span className="text-white/40 flex items-center shrink-0">
+                      <User size={28} />
                     </span>
                   )}
                 </div>
 
-                <h3 className="text-2xl font-black uppercase tracking-tighter text-black leading-none">
+                <h3 className="text-lg font-black uppercase tracking-tight text-white leading-none">
                   {
                     players.find((p) => p.id === showQueuePlayerModal.playerId)
                       ?.name
                   }
                 </h3>
-                <p className="text-[10px] text-black/60 font-black mt-2 uppercase tracking-[0.2em]">
+                <p className="text-[8px] text-white/50 font-black mt-1.5 uppercase tracking-[0.2em]">
                   AÇÕES DO JOGADOR
                 </p>
               </div>
@@ -13214,7 +13214,7 @@ function GroupApp({
               <div className="p-4">
                 <div className="space-y-2.5">
                   {!showQueuePlayerModal.showMoveOptions ? (
-                    <div className="grid grid-cols-2 gap-2">
+                    <div className="grid grid-cols-2 gap-1.5">
                       {orgProSettings.allowFixedGoalkeeper !== false &&
                         (!teams[showQueuePlayerModal.teamIndex]?.playerIds.some(
                           (pid) =>
@@ -13260,10 +13260,10 @@ function GroupApp({
 
                               setShowQueuePlayerModal(null);
                             }}
-                            className={`col-span-2 p-4 rounded-2xl font-bold text-[9px] flex flex-col items-center justify-center gap-1.5 transition-all active:scale-95 border group ${players.find((p) => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? "bg-sky-50 text-sky-600 border-sky-100 hover:bg-sky-100" : "bg-zinc-50 text-zinc-900 border-zinc-100 hover:border-zinc-300 hover:bg-zinc-100"}`}
+                            className={`col-span-2 py-2.5 rounded-xl font-bold text-[9px] uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 border group cursor-pointer ${players.find((p) => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? "bg-sky-500/10 border-sky-500/20 text-sky-400 hover:bg-sky-500/20" : "bg-white/5 border-white/10 text-white hover:bg-white/10"}`}
                           >
                             <span
-                              className={`${players.find((p) => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? "text-sky-500" : "text-zinc-400 group-hover:text-zinc-600 transition-colors"} flex items-center border border-current rounded-full w-5 h-5 justify-center text-[10px] font-black leading-none`}
+                              className={`${players.find((p) => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? "text-sky-400 border-sky-400/40" : "text-white/40 border-white/20"} flex items-center border rounded-full w-4 h-4 justify-center text-[9px] font-black leading-none`}
                             >
                               G
                             </span>
@@ -13284,11 +13284,11 @@ function GroupApp({
                             type: "info",
                           });
                         }}
-                        className="p-4 bg-zinc-50 text-zinc-900 rounded-2xl font-bold uppercase text-[9px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
+                        className="py-2.5 bg-white/5 border border-white/10 text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
                         <ArrowLeftRight
-                          size={18}
-                          className="text-zinc-400 group-hover:text-zinc-900 transition-colors"
+                          size={14}
+                          className="text-white/60 group-hover:text-white transition-colors"
                         />
                         Substituir
                       </button>
@@ -13307,11 +13307,11 @@ function GroupApp({
                             type: "info",
                           });
                         }}
-                        className="p-4 bg-zinc-50 text-zinc-900 rounded-2xl font-bold uppercase text-[9px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-zinc-100 active:scale-95 border border-zinc-100 hover:border-zinc-300 group"
+                        className="py-2.5 bg-white/5 border border-white/10 text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
                         <MoveRight
-                          size={18}
-                          className="text-zinc-400 group-hover:text-zinc-900 transition-colors"
+                          size={14}
+                          className="text-white/60 group-hover:text-white transition-colors"
                         />
                         Mover
                       </button>
@@ -13345,20 +13345,20 @@ function GroupApp({
                             type: "info",
                           });
                         }}
-                        className="p-4 bg-red-50 text-red-600 rounded-2xl font-bold uppercase text-[9px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-red-100 active:scale-95 border border-red-100 hover:border-red-200 group"
+                        className="py-2.5 bg-red-500/5 border border-red-500/20 text-red-400 rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-red-500/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
                         <LogOut
-                          size={18}
-                          className="opacity-70 group-hover:opacity-100 transition-opacity"
+                          size={14}
+                          className="text-red-400 opacity-80 group-hover:opacity-100 transition-opacity"
                         />
                         Ausente
                       </button>
 
                       <button
                         onClick={() => setShowQueuePlayerModal(null)}
-                        className="p-4 bg-zinc-100 text-zinc-500 rounded-2xl font-bold uppercase text-[9px] flex flex-col items-center justify-center gap-1.5 transition-all hover:bg-zinc-200 active:scale-95"
+                        className="py-2.5 bg-white/5 border border-white/10 text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-white/10 active:scale-95 shadow-sm cursor-pointer"
                       >
-                        <X size={18} />
+                        <X size={14} className="text-white/60" />
                         Fechar
                       </button>
                     </div>
