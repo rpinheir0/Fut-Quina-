@@ -6717,88 +6717,82 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
             onClick={() => setShowInsufficientPlayersModal(false)}
           >
             <motion.div
-              initial={{ scale: 0.9, y: 30, opacity: 0 }}
+              initial={{ scale: 0.9, y: 20, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.9, y: 30, opacity: 0 }}
-              className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-2xl bg-zinc-50 border border-zinc-200"
+              exit={{ scale: 0.9, y: 20, opacity: 0 }}
+              className="w-full max-w-[280px] p-6 rounded-[24px] bg-[#0b0e17]/95 border border-white/10 text-white backdrop-blur-xl shadow-2xl relative flex flex-col items-center text-center space-y-4"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Header */}
-              <div className="bg-[#dce3ee] p-8 text-center relative overflow-hidden">
-                {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-10 -mt-10 blur-2xl" />
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-black/5 rounded-full -ml-10 -mb-10 blur-xl" />
+              <div className="w-14 h-14 rounded-full bg-amber-500/10 flex items-center justify-center border border-amber-500/20 shadow-sm relative overflow-hidden shrink-0">
+                <div className="absolute inset-0 bg-amber-500/10 rounded-full blur-xl" />
+                <span className="text-amber-500 relative z-10">
+                  <PiWarningCircleBold size={28} />
+                </span>
+              </div>
 
-                <div className="w-16 h-16 mx-auto rounded-full bg-white flex items-center justify-center border-4 border-black/5 shadow-xl relative z-10 mb-4">
-                  <span className="text-amber-500">
-                    <PiWarningCircleBold size={32} />
-                  </span>
-                </div>
-
-                <h3 className="text-xl font-black uppercase tracking-tighter text-black leading-none mb-1">
+              <div className="space-y-1">
+                <h3 className="text-lg font-black uppercase tracking-tight text-white leading-none">
                   {scheduledMatches.length === 0
                     ? "Crie uma Pelada"
                     : "Ops! Quase lá..."}
                 </h3>
                 {scheduledMatches.length > 0 && (
-                  <p className="text-[10px] text-black/60 font-black uppercase tracking-[0.2em]">
+                  <p className="text-[9px] font-medium leading-relaxed text-white/50 uppercase tracking-widest mt-1">
                     JOGADORES INSUFICIENTES
                   </p>
                 )}
               </div>
 
-              <div className="p-6 space-y-4">
-                <p className="text-xs font-bold text-zinc-600 text-center leading-relaxed">
-                  {scheduledMatches.length === 0
-                    ? "Você precisa criar uma pelada no Painel de Controle para continuar."
-                    : "Jogadores insuficientes para formar 2 times. Crie mais jogadores em Cadastrar Jogadores ou altere a quantidade de jogadores por time."}
-                </p>
+              <p className="text-[10px] font-bold text-white/60 text-center leading-relaxed px-2">
+                {scheduledMatches.length === 0
+                  ? "Você precisa criar uma pelada no Painel de Controle para continuar."
+                  : "Jogadores insuficientes para formar 2 times. Crie mais jogadores ou altere a quantidade de jogadores por time."}
+              </p>
 
-                <div className="space-y-2">
-                  <button
-                    onClick={() => {
-                      if (scheduledMatches.length === 0) {
-                        setShowInsufficientPlayersModal(false);
-                        setCurrentScreen("dashboard");
-                        setShowScheduleModal(true);
-                      } else {
-                        setShowInsufficientPlayersModal(false);
-                        setCurrentScreen("players");
-                        setShowAddPlayerSection(true);
-                      }
-                    }}
-                    className="w-full py-4 bg-zinc-900 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg hover:bg-black transition-all active:scale-95 flex items-center justify-center gap-2"
-                  >
-                    {scheduledMatches.length === 0 ? (
-                      <Plus size={14} />
-                    ) : (
-                      <User size={14} />
-                    )}
-                    {scheduledMatches.length === 0
-                      ? "Criar Pelada"
-                      : "Cadastrar Jogadores"}
-                  </button>
-
-                  <button
-                    onClick={() => {
+              <div className="w-full space-y-2 pt-2">
+                <button
+                  onClick={() => {
+                    if (scheduledMatches.length === 0) {
                       setShowInsufficientPlayersModal(false);
-                      if (scheduledMatches.length !== 0) {
-                        setCurrentScreen("teams");
-                        setTeamsTab("configuracao");
-                        setIsFlashingConfig(true);
-                      }
-                    }}
-                    className={`w-full py-4 bg-white text-zinc-900 border border-zinc-200 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-zinc-50 transition-all active:scale-95 shadow-sm ${scheduledMatches.length > 0 && players.length === 0 ? "hidden" : "block"}`}
-                  >
-                    {scheduledMatches.length === 0
-                      ? "OK, ENTENDIDO"
-                      : "ALTERAR CONFIGURAÇÃO"}
-                  </button>
-                </div>
+                      setCurrentScreen("dashboard");
+                      setShowScheduleModal(true);
+                    } else {
+                      setShowInsufficientPlayersModal(false);
+                      setCurrentScreen("players");
+                      setShowAddPlayerSection(true);
+                    }
+                  }}
+                  className="w-full h-10 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] rounded-xl font-black uppercase tracking-widest text-[9px] shadow-lg shadow-[#34d399]/20 transition-all active:scale-95 flex items-center justify-center gap-1.5"
+                >
+                  {scheduledMatches.length === 0 ? (
+                    <Plus size={12} />
+                  ) : (
+                    <User size={12} />
+                  )}
+                  {scheduledMatches.length === 0
+                    ? "Criar Pelada"
+                    : "Cadastrar Jogadores"}
+                </button>
+
+                <button
+                  onClick={() => {
+                    setShowInsufficientPlayersModal(false);
+                    if (scheduledMatches.length !== 0) {
+                      setCurrentScreen("teams");
+                      setTeamsTab("configuracao");
+                      setIsFlashingConfig(true);
+                    }
+                  }}
+                  className={`w-full h-10 bg-white/5 text-white/70 border border-white/10 rounded-xl font-black uppercase tracking-widest text-[9px] hover:bg-white/10 hover:text-white transition-all active:scale-95 shadow-sm ${scheduledMatches.length > 0 && players.length === 0 ? "hidden" : "block"}`}
+                >
+                  {scheduledMatches.length === 0
+                    ? "OK, ENTENDIDO"
+                    : "ALTERAR CONFIGURAÇÃO"}
+                </button>
               </div>
             </motion.div>
           </motion.div>
