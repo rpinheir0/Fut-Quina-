@@ -6602,8 +6602,8 @@ function GroupApp({
                   <X size={14} />
                 </button>
 
-                <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 shadow-lg text-[#34d399] flex items-center justify-center mx-auto mb-2 relative z-10">
-                  <ClipboardPaste size={24} />
+                <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 shadow-lg flex items-center justify-center mx-auto mb-2 relative z-10">
+                  <img src="/despesas%20detalhadas.png" referrerPolicy="no-referrer" className="w-8 h-8 object-contain" alt="Despesas" />
                 </div>
 
                 <h3 className="text-lg font-black uppercase tracking-tight text-white leading-none relative z-10">
@@ -7431,7 +7431,7 @@ function GroupApp({
                             boxShadow: ["0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)", "0px 20px 25px -5px rgba(52, 211, 153, 0.4), 0px 10px 10px -5px rgba(52, 211, 153, 0.2)", "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"]
                           } : {}}
                           transition={shouldPulseConfig ? { repeat: Infinity, duration: 1.5 } : {}}
-                          className="flex-1 sm:flex-none px-4 py-3 sm:py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                          className="flex-1 sm:flex-none px-4 h-9 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg shadow-[#34d399]/10 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                         >
                           CONFIGURAR PARTIDA
                         </motion.button>
@@ -7499,19 +7499,19 @@ function GroupApp({
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
                               transition={{ delay: 0.3 }}
-                              className="bg-gradient-to-br from-[#dce3ee] to-[#ced7e6] border border-black/5 rounded-lg h-[92px] flex items-center px-6 gap-5 relative overflow-hidden mb-2 shadow-sm"
+                              className="bg-white/5 border border-white/10 rounded-xl h-16 flex items-center px-4 gap-4 relative overflow-hidden mb-2 shadow-sm"
                             >
-                              <div className="w-12 h-12 rounded-full bg-white/50 border border-black/5 flex items-center justify-center text-zinc-400 shrink-0 shadow-sm">
-                                <GiSoccerField size={24} />
+                              <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 shrink-0 shadow-sm">
+                                <GiSoccerField size={16} />
                               </div>
-                              <div className="flex-1 space-y-3">
-                                <div className="h-3 w-32 bg-white/60 rounded-full" />
-                                <div className="h-2.5 w-20 bg-white/40 rounded-full" />
+                              <div className="flex-1 space-y-1.5">
+                                <div className="h-2 w-24 bg-white/20 rounded-full" />
+                                <div className="h-2 w-16 bg-white/10 rounded-full" />
                               </div>
                               <motion.div
                                 animate={{ x: ["-100%", "200%"] }}
                                 transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/60 to-transparent"
+                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"
                               />
                             </motion.div>
                           )}
@@ -7524,13 +7524,13 @@ function GroupApp({
                                 opacity: { duration: 0.4 },
                                 scale: { duration: 2, repeat: Infinity, ease: "easeInOut" }
                               }}
-                              className={`bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-100 rounded-2xl mx-4 p-4 flex items-center gap-4 shadow-sm border border-black/5`}
+                              className="bg-white/5 border border-white/10 rounded-xl mx-4 p-3 flex items-center gap-3 shadow-sm"
                             >
-                              <div className="w-10 h-10 rounded-full text-[#5eba25] flex items-center justify-center shrink-0">
-                                <AlertCircle size={24} />
+                              <div className="w-8 h-8 rounded-full text-[#34d399] bg-[#34d399]/10 border border-[#34d399]/20 flex items-center justify-center shrink-0">
+                                <AlertCircle size={16} />
                               </div>
                               <div className="flex-1 flex flex-col">
-                                <p className="text-[12px] font-medium text-zinc-600 leading-tight">
+                                <p className="text-[10px] font-bold text-white/70 leading-tight uppercase tracking-wider">
                                   Você precisa criar uma pelada no botão acima para continuar.
                                 </p>
                               </div>
@@ -8153,8 +8153,8 @@ function GroupApp({
 
                       <div className="space-y-6">
                         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-blue-200/60">
+                          <div className="space-y-1">
+                            <label className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 block text-center mb-1.5">
                               Tempo (Minutos)
                             </label>
                             <input
@@ -8162,11 +8162,11 @@ function GroupApp({
                               defaultValue={match.config.duration}
                               min={1}
                               id="tab-match-duration"
-                              className="w-full p-4 rounded-xl outline-none font-bold bg-gradient-to-br from-zinc-200 to-zinc-300 text-black border border-black/10 focus:border-[#34d399]/50 transition-all text-sm shadow-sm"
+                              className="w-full h-10 px-3 rounded-xl outline-none font-bold bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-[#34d399] focus:bg-white/10 transition-all text-center text-xs [color-scheme:dark]"
                             />
                           </div>
-                          <div className="space-y-2">
-                            <label className="text-[10px] font-black uppercase tracking-widest text-blue-200/60">
+                          <div className="space-y-1">
+                            <label className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 block text-center mb-1.5">
                               Limite de Gols
                             </label>
                             <input
@@ -8174,13 +8174,13 @@ function GroupApp({
                               defaultValue={match.config.goalLimit}
                               min={1}
                               id="tab-match-goals"
-                              className="w-full p-4 rounded-xl outline-none font-bold bg-gradient-to-br from-zinc-200 to-zinc-300 text-black border border-black/10 focus:border-[#34d399]/50 transition-all text-sm shadow-sm"
+                              className="w-full h-10 px-3 rounded-xl outline-none font-bold bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-[#34d399] focus:bg-white/10 transition-all text-center text-xs [color-scheme:dark]"
                             />
                           </div>
                           <div
-                            className={`space-y-2 transition-all duration-500 rounded-xl p-2 ${isFlashingConfig ? "animate-flash-highlight" : ""}`}
+                            className={`space-y-1 transition-all duration-500 rounded-xl ${isFlashingConfig ? "animate-flash-highlight" : ""}`}
                           >
-                            <label className="text-[10px] font-black uppercase tracking-widest text-blue-200/60">
+                            <label className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 block text-center mb-1.5">
                               Jogadores por Time
                             </label>
                             <input
@@ -8188,7 +8188,7 @@ function GroupApp({
                               defaultValue={match.config.playersPerTeam}
                               min={1}
                               id="tab-match-players"
-                              className="w-full p-4 rounded-xl outline-none font-bold bg-gradient-to-br from-zinc-200 to-zinc-300 text-black border border-black/10 focus:border-[#34d399]/50 transition-all text-sm shadow-sm"
+                              className="w-full h-10 px-3 rounded-xl outline-none font-bold bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-[#34d399] focus:bg-white/10 transition-all text-center text-xs [color-scheme:dark]"
                             />
                           </div>
                         </div>
@@ -8197,14 +8197,14 @@ function GroupApp({
                           <div className="flex items-start justify-between">
                             <div className="flex flex-col">
                               <div className="flex items-center gap-1.5 h-6">
-                                <span className="text-blue-400">
+                                <span className="text-[#34d399]">
                                   <Shirt size={14} />
                                 </span>
                                 <span className="text-[11px] font-black uppercase tracking-widest text-white">
-                                  Fixar cores.
+                                  Fixar cores
                                 </span>
                               </div>
-                              <p className="text-[11px] text-blue-200/50 font-bold mt-0.5">
+                              <p className="text-[10px] text-white/50 font-bold mt-0.5">
                                 Defina as cores permanentes para os times selecionados.
                               </p>
                             </div>
@@ -8215,18 +8215,18 @@ function GroupApp({
                                   enabled: !prev.enabled,
                                 }))
                               }
-                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 ${fixedColors.enabled ? "bg-blue-500" : "bg-white/10"}`}
+                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 cursor-pointer ${fixedColors.enabled ? "bg-[#34d399]" : "bg-white/10"}`}
                             >
                               <div
-                                className={`w-4 h-4 bg-white rounded-full transition-transform ${fixedColors.enabled ? "translate-x-6" : "translate-x-0"} shadow-sm`}
+                                className={`w-4 h-4 rounded-full transition-transform ${fixedColors.enabled ? "translate-x-6 bg-[#1e3d2f]" : "translate-x-0 bg-white"} shadow-sm`}
                               />
                             </button>
                           </div>
 
                           {fixedColors.enabled && (
                             <div className="grid grid-cols-2 gap-4 pt-2 animate-in fade-in slide-in-from-top-1 duration-300">
-                              <div className="space-y-2">
-                                <label className="text-[9px] font-black uppercase tracking-widest text-blue-200/50">
+                              <div className="space-y-1">
+                                <label className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 block text-center mb-1.5">
                                   Cor Time A
                                 </label>
                                 <button
@@ -8237,24 +8237,24 @@ function GroupApp({
                                         fixedColors.teamA || SHIRT_COLORS[8],
                                     })
                                   }
-                                  className="w-full h-12 rounded-full flex items-center justify-between px-4 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all"
+                                  className="w-full h-10 rounded-xl flex items-center justify-between px-3 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2">
                                     {(() => {
                                       const color = fixedColors.teamA || SHIRT_COLORS[8];
                                       const idx = SHIRT_COLORS.indexOf(color);
                                       const ShirtIcon = idx !== -1 ? TEAM_ICONS[idx] : TEAM_ICONS[8];
-                                      return <ShirtIcon size={28} className="brightness-110 drop-shadow-md inline-block" />;
+                                      return <ShirtIcon size={24} className="brightness-110 drop-shadow-md inline-block" />;
                                     })()}
                                   </div>
                                   <Palette
                                     size={14}
-                                    className="text-blue-400"
+                                    className="text-[#34d399]"
                                   />
                                 </button>
                               </div>
-                              <div className="space-y-2">
-                                <label className="text-[9px] font-black uppercase tracking-widest text-blue-200/50">
+                              <div className="space-y-1">
+                                <label className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 block text-center mb-1.5">
                                   Cor Time B
                                 </label>
                                 <button
@@ -8265,19 +8265,19 @@ function GroupApp({
                                         fixedColors.teamB || SHIRT_COLORS[7],
                                     })
                                   }
-                                  className="w-full h-12 rounded-full flex items-center justify-between px-4 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all"
+                                  className="w-full h-10 rounded-xl flex items-center justify-between px-3 bg-white/5 border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all cursor-pointer"
                                 >
                                   <div className="flex items-center gap-2">
                                     {(() => {
                                       const color = fixedColors.teamB || SHIRT_COLORS[7];
                                       const idx = SHIRT_COLORS.indexOf(color);
                                       const ShirtIcon = idx !== -1 ? TEAM_ICONS[idx] : TEAM_ICONS[7];
-                                      return <ShirtIcon size={28} className="brightness-110 drop-shadow-md inline-block" />;
+                                      return <ShirtIcon size={24} className="brightness-110 drop-shadow-md inline-block" />;
                                     })()}
                                   </div>
                                   <Palette
                                     size={14}
-                                    className="text-blue-400"
+                                    className="text-[#34d399]"
                                   />
                                 </button>
                               </div>
@@ -8289,16 +8289,15 @@ function GroupApp({
                           <div className="flex items-start justify-between">
                             <div className="flex flex-col">
                               <div className="flex items-center gap-1.5 h-6">
-                                <span className="flex items-center justify-center border border-white/30 rounded-full w-5 h-5 text-[10px] font-black text-blue-400">
+                                <span className="flex items-center justify-center border border-white/20 rounded-full w-5 h-5 text-[10px] font-black text-[#34d399]">
                                   G
                                 </span>
                                 <span className="text-[11px] font-black uppercase tracking-widest text-white">
-                                  Goleiro fixo.
+                                  Goleiro fixo
                                 </span>
                               </div>
-                              <p className="text-[11px] text-blue-200/50 font-bold mt-0.5">
-                                Ativa a opção de definir goleiros nas ações do
-                                jogador
+                              <p className="text-[10px] text-white/50 font-bold mt-0.5">
+                                Ativa a opção de definir goleiros nas ações do jogador.
                               </p>
                             </div>
                             <button
@@ -8309,10 +8308,10 @@ function GroupApp({
                                     !prev.allowFixedGoalkeeper,
                                 }))
                               }
-                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 ${orgProSettings.allowFixedGoalkeeper !== false ? "bg-blue-500" : "bg-white/10"}`}
+                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 cursor-pointer ${orgProSettings.allowFixedGoalkeeper !== false ? "bg-[#34d399]" : "bg-white/10"}`}
                             >
                               <div
-                                className={`w-4 h-4 bg-white rounded-full transition-transform ${orgProSettings.allowFixedGoalkeeper !== false ? "translate-x-6" : "translate-x-0"} shadow-sm`}
+                                className={`w-4 h-4 rounded-full transition-transform ${orgProSettings.allowFixedGoalkeeper !== false ? "translate-x-6 bg-[#1e3d2f]" : "translate-x-0 bg-white"} shadow-sm`}
                               />
                             </button>
                           </div>
@@ -8508,7 +8507,7 @@ function GroupApp({
                             // Sync session players without resetting isAvailable
                             setSessionPlayerIds(players.map((p) => p.id));
                           }}
-                          className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95"
+                          className="w-full h-10 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-[#34d399]/10 transition-all active:scale-95 cursor-pointer flex items-center justify-center"
                         >
                           Aplicar Configurações
                         </button>
@@ -11782,8 +11781,8 @@ function GroupApp({
                                   }}
                                   className="flex flex-col items-center gap-1.5 group cursor-pointer"
                                 >
-                                  <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5 text-[#34d399] flex items-center justify-center shadow-lg shadow-black/20 group-hover:border-[#34d399]/50 group-hover:bg-[#34d399]/10 transition-all active:scale-95">
-                                    <DollarSign size={18} />
+                                  <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center shadow-lg shadow-black/20 group-hover:border-[#34d399]/50 group-hover:bg-[#34d399]/10 transition-all active:scale-95">
+                                    <img src="/arrecadacao.png" referrerPolicy="no-referrer" className="w-6 h-6 object-contain" alt="Arrecadação" />
                                   </div>
                                   <span className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 group-hover:text-[#34d399] transition-colors">
                                     Arrecadação
@@ -11805,8 +11804,8 @@ function GroupApp({
                                   }}
                                   className="flex flex-col items-center gap-1.5 group cursor-pointer"
                                 >
-                                  <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5 text-red-400 flex items-center justify-center shadow-lg shadow-black/20 group-hover:border-red-400/50 group-hover:bg-red-400/10 transition-all active:scale-95">
-                                    <ClipboardPaste size={18} />
+                                  <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center shadow-lg shadow-black/20 group-hover:border-red-400/50 group-hover:bg-red-400/10 transition-all active:scale-95">
+                                    <img src="/despesas%20detalhadas.png" referrerPolicy="no-referrer" className="w-6 h-6 object-contain" alt="Despesas Det." />
                                   </div>
                                   <span className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 group-hover:text-red-400 transition-colors">
                                     Despesas Det.
@@ -11820,8 +11819,8 @@ function GroupApp({
                                   }}
                                   className="flex flex-col items-center gap-1.5 group cursor-pointer"
                                 >
-                                  <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5 text-[#34d399] flex items-center justify-center shadow-lg shadow-black/20 group-hover:border-[#34d399]/50 group-hover:bg-[#34d399]/10 transition-all active:scale-95">
-                                    <Calendar size={18} />
+                                  <div className="w-12 h-12 rounded-full border border-white/10 bg-white/5 flex items-center justify-center shadow-lg shadow-black/20 group-hover:border-[#34d399]/50 group-hover:bg-[#34d399]/10 transition-all active:scale-95">
+                                    <img src="/mensalidade.png" referrerPolicy="no-referrer" className="w-6 h-6 object-contain" alt="Mensalidade" />
                                   </div>
                                   <span className="text-[8px] font-black uppercase tracking-[0.15em] text-white/50 group-hover:text-[#34d399] transition-colors">
                                     Mensalidade
@@ -12052,7 +12051,7 @@ function GroupApp({
                                     "DESPESAS DETALHADAS"
                                   ) : (
                                     <>
-                                      <ClipboardPaste size={14} className="text-[#34d399]" /> Despesas Detalhadas
+                                      <img src="/despesas%20detalhadas.png" referrerPolicy="no-referrer" className="w-4 h-4 object-contain inline-block mr-1.5 shrink-0 align-middle" alt="" /> Despesas Detalhadas
                                     </>
                                   )}
                                 </h3>
