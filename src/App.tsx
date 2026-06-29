@@ -7261,17 +7261,24 @@ function GroupApp({
                   animate={{ x: 0 }}
                   exit={{ x: "100%" }}
                   transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                  className="w-full max-w-[320px] bg-[#F8F9FB] h-full shadow-2xl flex flex-col overflow-hidden"
+                  className="w-full max-w-[320px] bg-[#0b0e17]/95 border-l border-white/10 backdrop-blur-xl h-full shadow-2xl flex flex-col overflow-hidden text-white"
                   onClick={(e) => e.stopPropagation()}
                 >
-                  {/* Top Spacing instead of Header */}
-                  <div className="h-4" />
+                  {/* Header */}
+                  <div className="px-6 pt-6 pb-4 border-b border-white/10 flex items-center justify-end">
+                    <button
+                      onClick={() => setShowGlobalSettings(false)}
+                      className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 active:scale-90 transition-all cursor-pointer"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
 
-                  {/* Scrollable Content (Card Groups) */}
+                  {/* Scrollable Content */}
                   <div className="flex-1 overflow-y-auto p-4 space-y-4 custom-scrollbar">
                     
                     {/* General Tools Card */}
-                    <div className="bg-white rounded p-2 shadow-sm border border-zinc-100/50">
+                    <div className="bg-white/5 rounded-2xl p-1.5 border border-white/10 backdrop-blur-md overflow-hidden">
                       {((showAddPlayerSection && currentScreen === "players") ||
                         currentScreen === "teams" ||
                         currentScreen === "ranking" ||
@@ -7285,15 +7292,18 @@ function GroupApp({
                             setTeamsTab("configuracao");
                             setShowGlobalSettings(false);
                           }}
-                          className="w-full flex items-center gap-4 p-4 hover:bg-zinc-50 rounded-none transition-all group border-b border-zinc-50"
+                          className="w-full flex items-center gap-4 p-4 hover:bg-white/10 rounded-xl transition-all group cursor-pointer"
                         >
-                          <div className="flex items-center gap-4 text-left">
-                            <div className="text-zinc-800 group-hover:scale-110 transition-transform">
-                              <LayoutPanelLeft size={20} />
+                          <div className="flex items-center gap-4 text-left w-full">
+                            <LayoutPanelLeft size={20} className="text-[#34d399] group-hover:scale-110 transition-transform shrink-0" />
+                            <div className="flex flex-col">
+                              <span className="text-[14px] font-bold text-white tracking-wide">
+                                Painel de controle
+                              </span>
+                              <span className="text-[10px] text-white/40 font-medium">
+                                Voltar à tela principal
+                              </span>
                             </div>
-                            <span className="text-[14px] text-zinc-800">
-                              Painel de controle
-                            </span>
                           </div>
                         </button>
                       )}
@@ -7304,37 +7314,50 @@ function GroupApp({
                           setShowEndPeladaConfirm(true);
                           setShowGlobalSettings(false);
                         }}
-                        className="w-full flex items-center justify-between p-4 hover:bg-emerald-50 rounded-none transition-all group border-t border-zinc-50"
+                        className="w-full flex items-center justify-between p-4 hover:bg-red-500/10 rounded-xl transition-all group cursor-pointer"
                       >
-                        <div className="flex items-center gap-4 text-left">
-                          <div className="text-zinc-800 group-hover:scale-110 transition-transform">
-                            <IoIosSave size={20} />
+                        <div className="flex items-center gap-4 text-left w-full">
+                          <IoIosSave size={20} className="text-red-400 group-hover:scale-110 transition-transform shrink-0" />
+                          <div className="flex flex-col">
+                            <span className="text-[14px] font-bold text-white tracking-wide">
+                              Fim da pelada
+                            </span>
+                            <span className="text-[10px] text-white/40 font-medium">
+                              Salvar e fechar pelada
+                            </span>
                           </div>
-                          <span className="text-[14px] text-zinc-800">Fim da pelada</span>
                         </div>
                       </button>
 
 
                       <button
-                        onClick={() => setShowSetupGuide(true)}
-                        className="w-full flex items-center justify-between p-4 hover:bg-zinc-50 rounded-none transition-all group border-t border-zinc-50"
+                        onClick={() => {
+                          setShowSetupGuide(true);
+                          setShowGlobalSettings(false);
+                        }}
+                        className="w-full flex items-center justify-between p-4 hover:bg-white/10 rounded-xl transition-all group cursor-pointer"
                       >
-                        <div className="flex items-center gap-4 text-left">
-                          <div className="text-zinc-800 group-hover:scale-110 transition-transform">
-                            <TiMap size={20} />
+                        <div className="flex items-center gap-4 text-left w-full">
+                          <TiMap size={20} className="text-blue-400 group-hover:scale-110 transition-transform shrink-0" />
+                          <div className="flex-1 flex flex-col">
+                            <span className="text-[14px] font-bold text-white tracking-wide">
+                              Guia Inicial
+                            </span>
+                            <span className="text-[10px] text-white/40 font-medium">
+                              Como usar o aplicativo
+                            </span>
                           </div>
-                          <span className="text-[14px] text-zinc-800">Guia Inicial</span>
+                          <ChevronRight size={14} className="text-white/30 group-hover:text-white group-hover:translate-x-0.5 transition-all" />
                         </div>
-                        <ChevronRight size={14} className="text-zinc-300" />
                       </button>
                     </div>
                   </div>
 
                   {/* Close Button Footer */}
-                  <div className="p-6 bg-white border-t border-zinc-100">
+                  <div className="p-6 bg-white/5 border-t border-white/10 backdrop-blur-md">
                     <button
                       onClick={() => setShowGlobalSettings(false)}
-                      className="w-full py-4 bg-zinc-900 text-white rounded font-bold text-[13px] uppercase tracking-widest active:scale-[0.98] transition-all shadow-lg shadow-zinc-200 hover:bg-black"
+                      className="w-full py-3.5 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white rounded-xl font-bold text-[11px] uppercase tracking-widest active:scale-95 transition-all shadow-md border border-white/10 cursor-pointer text-center hover:from-zinc-700 hover:to-zinc-800"
                     >
                       Fechar Menu
                     </button>
@@ -8953,7 +8976,7 @@ function GroupApp({
                             <>
                               {lastMatchResult ? (
                                 <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto mb-2 space-y-4 bg-black/5 p-6 rounded-xl border border-black/10 shadow-sm backdrop-blur-sm">
-                                  <p className="text-[10px] font-black text-black/50 uppercase tracking-[0.2em]">
+                                  <p className="text-[10px] font-black text-white/50 uppercase tracking-[0.2em]">
                                     Última Partida
                                   </p>
                                   <div className="flex items-center justify-between gap-4 px-2 py-2 w-full">
@@ -8979,12 +9002,12 @@ function GroupApp({
                                           return <IconA size={24} />;
                                         })()}
                                       </div>
-                                      <div className="text-4xl font-black text-black tabular-nums tracking-tighter leading-none mt-2">
+                                      <div className="text-4xl font-black text-white tabular-nums tracking-tighter leading-none mt-2">
                                         {lastMatchResult.scoreA}
                                       </div>
                                     </div>
 
-                                    <div className="text-sm font-black text-black/40 uppercase tracking-widest">
+                                    <div className="text-sm font-black text-white/40 uppercase tracking-widest">
                                       vs
                                     </div>
 
@@ -9010,7 +9033,7 @@ function GroupApp({
                                           return <IconB size={24} />;
                                         })()}
                                       </div>
-                                      <div className="text-4xl font-black text-black tabular-nums tracking-tighter leading-none mt-2">
+                                      <div className="text-4xl font-black text-white tabular-nums tracking-tighter leading-none mt-2">
                                         {lastMatchResult.scoreB}
                                       </div>
                                     </div>
