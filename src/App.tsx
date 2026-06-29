@@ -7431,7 +7431,7 @@ function GroupApp({
                             boxShadow: ["0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)", "0px 20px 25px -5px rgba(52, 211, 153, 0.4), 0px 10px 10px -5px rgba(52, 211, 153, 0.2)", "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"]
                           } : {}}
                           transition={shouldPulseConfig ? { repeat: Infinity, duration: 1.5 } : {}}
-                          className="flex-1 sm:flex-none px-4 h-9 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] text-[10px] font-black uppercase tracking-widest rounded-xl shadow-lg shadow-[#34d399]/10 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
+                          className="flex-1 sm:flex-none px-4 h-9 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                         >
                           CONFIGURAR PARTIDA
                         </motion.button>
@@ -8507,7 +8507,7 @@ function GroupApp({
                             // Sync session players without resetting isAvailable
                             setSessionPlayerIds(players.map((p) => p.id));
                           }}
-                          className="w-full h-10 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-[#34d399]/10 transition-all active:scale-95 cursor-pointer flex items-center justify-center"
+                          className="w-full h-10 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 cursor-pointer flex items-center justify-center"
                         >
                           Aplicar Configurações
                         </button>
