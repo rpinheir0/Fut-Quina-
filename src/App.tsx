@@ -7362,25 +7362,23 @@ function GroupApp({
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.1 }}
                         onClick={() => setShowScheduleModal(true)}
-                        className="cursor-pointer relative overflow-hidden bg-gradient-to-r from-[#1b4d07] via-[#2d6e12] to-[#143b05] rounded-full p-2.5 shadow-xl hover:shadow-2xl transition-all hover:scale-[1.01] active:scale-[0.99]"
+                        className="cursor-pointer relative overflow-hidden bg-gradient-to-r from-[#205b10] to-[#205b10] rounded-full p-[6px] shadow-lg hover:shadow-xl transition-all hover:scale-[1.01] active:scale-[0.99]"
                       >
                         {/* Background pattern */}
-                        <div className="absolute top-0 right-0 h-full w-2/3 opacity-20 mix-blend-overlay flex justify-end items-center px-10">
-                          <div className="absolute -right-10 -top-10 text-white">
-                            <GiSoccerBall size={200} />
+                        <div className="absolute top-0 right-0 h-full w-2/3 opacity-15 mix-blend-overlay flex justify-end items-center pointer-events-none">
+                          <div className="absolute -right-8 top-1/2 -translate-y-1/2 text-black">
+                            <GiSoccerBall size={180} />
                           </div>
                         </div>
 
-                        <div className="relative z-10 flex items-center justify-between">
+                        <div className="relative z-10 flex items-center">
                           <div className="flex items-center gap-4">
-                            <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-[#0a180f] flex items-center justify-center shrink-0 shadow-lg">
-                              <Plus size={20} className="text-white" />
+                            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#111A13] flex items-center justify-center shrink-0 shadow-md">
+                              <Plus size={24} className="text-white" />
                             </div>
-                            <div className="flex flex-col text-black">
-                              <h3 className="text-base sm:text-lg font-black tracking-tighter uppercase text-white">
-                                CRIE SUA PELADA
-                              </h3>
-                            </div>
+                            <h3 className="text-[17px] sm:text-lg font-black tracking-tight uppercase text-white m-0 leading-none pb-0.5">
+                              CRIE SUA PELADA
+                            </h3>
                           </div>
                         </div>
                       </motion.div>
