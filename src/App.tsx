@@ -14466,36 +14466,47 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 backdrop-blur-md z-[200] flex items-center justify-center p-6"
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[200] flex items-center justify-center p-4"
           >
             <motion.div
-              initial={{ scale: 0.9, y: 40 }}
-              animate={{ scale: 1, y: 0 }}
-              className="w-full max-w-[300px] rounded-[40px] shadow-2xl border bg-zinc-50 border-zinc-200 overflow-hidden"
+              initial={{ scale: 0.9, y: 30, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 30, opacity: 0 }}
+              className="w-full max-w-[280px] rounded-[24px] overflow-hidden shadow-2xl bg-[#0b0e17]/95 border border-white/10 text-white backdrop-blur-xl relative flex flex-col"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="bg-brand-primary p-10 text-center relative overflow-hidden">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/20 rounded-full -mr-12 -mt-12 blur-2xl" />
-                <div className="flex mx-auto items-center justify-center mb-4 text-black">
-                  <IoFootballOutline size={32} />
+              {/* Header */}
+              <div className="bg-white/5 p-6 text-center relative overflow-hidden border-b border-white/5 flex flex-col items-center">
+                <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
+                <div className="absolute bottom-0 left-0 w-16 h-16 bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
+
+                <button
+                  onClick={() => setShowStartMatchConfirm(false)}
+                  className="absolute top-4 right-4 p-1.5 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full text-white/60 hover:text-white transition-all cursor-pointer"
+                >
+                  <X size={14} />
+                </button>
+
+                <div className="w-14 h-14 rounded-full bg-white/5 border border-white/10 shadow-lg text-[#34d399] flex items-center justify-center mx-auto mb-2 relative z-10">
+                  <IoFootballOutline size={24} />
                 </div>
-                <h3 className="text-xl font-black uppercase tracking-tight text-black">
+                <h3 className="text-lg font-black uppercase tracking-tight text-white leading-none relative z-10">
                   Partida em Andamento
                 </h3>
-                <p className="text-[10px] text-black/40 font-black uppercase tracking-[0.2em] mt-1">
+                <p className="text-[8px] text-white/50 font-black mt-1.5 uppercase tracking-[0.2em] relative z-10">
                   O que deseja fazer?
                 </p>
               </div>
 
-              <div className="p-8 space-y-3">
+              <div className="p-4 space-y-3">
                 <button
                   onClick={() => {
                     setShowStartMatchConfirm(false);
                     setTeamsTab("historico");
                   }}
-                  className="w-full py-4 px-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-3 hover:opacity-90 transition-all active:scale-95 shadow-lg"
+                  className="w-full h-10 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-[#34d399]/10 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
                 >
-                  <PiPlay size={20} />
+                  <PiPlay size={14} />
                   Continuar Partida
                 </button>
 
@@ -14513,17 +14524,17 @@ function GroupApp({
                       startNextMatch(match.teamAIndex, match.teamBIndex);
                     }
                   }}
-                  className="w-full py-4 px-4 bg-white text-zinc-800 rounded-2xl font-black uppercase text-xs flex items-center justify-center gap-3 hover:bg-zinc-50 transition-all border border-zinc-200"
+                  className="w-full h-10 rounded-xl font-bold uppercase tracking-widest text-[9px] transition-all bg-white/5 border border-white/10 text-white hover:bg-white/10 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
                 >
-                  <span className="text-brand-primary">
-                    <PiArrowClockwiseBold size={20} />
+                  <span className="text-[#34d399] flex items-center justify-center">
+                    <PiArrowClockwiseBold size={14} />
                   </span>
                   Nova Partida
                 </button>
 
                 <button
                   onClick={() => setShowStartMatchConfirm(false)}
-                  className="w-full py-2 text-black text-[10px] font-black uppercase tracking-widest hover:text-black/80 transition-colors"
+                  className="w-full h-8 text-white/60 text-[9px] font-black uppercase tracking-widest hover:text-white transition-colors"
                 >
                   Cancelar
                 </button>
