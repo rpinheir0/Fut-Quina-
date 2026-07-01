@@ -1949,24 +1949,24 @@ const safeLocalStorage = {
   getItem: (key: string) => {
     try {
       return localStorage.getItem(key);
-    } catch (e) {
+} catch (e) {
       return null;
     }
   },
   setItem: (key: string, value: string) => {
     try {
       localStorage.setItem(key, value);
-    } catch (e) {}
+} catch (e) {}
   },
   removeItem: (key) => {
     try {
       localStorage.removeItem(key);
-    } catch (e) {}
+} catch (e) {}
   },
   clear: () => {
     try {
       localStorage.clear();
-    } catch (e) {}
+} catch (e) {}
   },
 };
 
@@ -2061,7 +2061,7 @@ const resolveMultipleGoalkeepers = (
             receiverFound = true;
             changed = true;
             break;
-          } else if (
+    } else if (
             playersPerTeam !== undefined &&
             allTeamsNow[j].playerIds.length < playersPerTeam
           ) {
@@ -2474,7 +2474,7 @@ function GroupApp({
         try {
           const parsed = JSON.parse(saved);
           setter(parsed);
-        } catch (e) {
+  } catch (e) {
           setter(defaultVal);
         }
       } else {
@@ -2556,7 +2556,7 @@ function GroupApp({
           return [...new Set(parsed)].sort((a, b) => a - b);
         }
         return [2026];
-      } catch (e) {
+} catch (e) {
         return [2026];
       }
     }
@@ -2613,7 +2613,7 @@ function GroupApp({
     const saved = safeLocalStorage.getItem(`futquina_expenses_${groupId}`);
     try {
       return saved ? JSON.parse(saved) || [] : [];
-    } catch (e) {
+} catch (e) {
       return [];
     }
   });
@@ -2644,12 +2644,12 @@ function GroupApp({
           if (!seenIds.has(id)) {
             uniquePlayers.push({ ...p, id });
             seenIds.add(id);
-          } else {
+    } else {
             uniquePlayers.push({ ...p, id: generateId() });
           }
         }
         return uniquePlayers;
-      } catch (e) {
+} catch (e) {
         console.error("Error parsing players from localStorage", e);
       }
     }
@@ -2676,7 +2676,7 @@ function GroupApp({
             return uniqueMatches;
           }
           return [];
-        } catch (e) {
+  } catch (e) {
           return [];
         }
       }
@@ -2779,7 +2779,7 @@ function GroupApp({
           ),
         );
         setEditingMatchId(null);
-      } else {
+} else {
         const newMatch: ScheduledMatch = {
           id: generateId(),
           name: newMatchName.trim(),
@@ -2816,7 +2816,7 @@ function GroupApp({
       try {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed)) return parsed;
-      } catch (e) {
+} catch (e) {
         console.error("Error parsing session player ids", e);
       }
     }
@@ -2883,7 +2883,7 @@ function GroupApp({
               id: p.id || key,
             });
             seenKeys.add(key);
-          } else {
+    } else {
             // Merge months if duplicate
             const existing = uniquePayments.find(
               (up) => up.playerId === p.playerId && up.year === p.year,
@@ -2894,7 +2894,7 @@ function GroupApp({
           }
         }
         return uniquePayments;
-      } catch (e) {
+} catch (e) {
         console.error("Error parsing payments from localStorage", e);
       }
     }
@@ -2945,7 +2945,7 @@ function GroupApp({
           });
         }
         return uniqueTeams;
-      } catch (e) {
+} catch (e) {
         console.error("Error parsing teams from localStorage", e);
       }
     }
@@ -3006,7 +3006,7 @@ function GroupApp({
           ...parsed,
           events: uniqueEvents,
         };
-      } catch (e) {
+} catch (e) {
         console.error("Error parsing match from localStorage", e);
       }
     }
@@ -3040,7 +3040,7 @@ function GroupApp({
           seenHistoryIds.add(hId);
         }
         return uniqueHistory;
-      } catch (e) {
+} catch (e) {
         console.error("Error parsing match history from localStorage", e);
       }
     }
@@ -3101,7 +3101,7 @@ function GroupApp({
         ),
       }));
       setToast({ message: "⚽️ GOL! Assistência registrada", type: "success" });
-    } else {
+} else {
       setToast({ message: "⚽️ GOL! Placar atualizado", type: "info" });
     }
 
@@ -3343,7 +3343,7 @@ function GroupApp({
         const teamWithSpace = targetAssignment.find(t => t.length < limit);
         if (teamWithSpace) {
           teamWithSpace.push(allLine[linePtr]);
-        } else {
+  } else {
           break; // No more space anywhere
         }
         linePtr++;
@@ -3352,7 +3352,7 @@ function GroupApp({
         const teamWithSpace = targetAssignment.find(t => t.length < limit);
         if (teamWithSpace) {
           teamWithSpace.push(allGks[gkPtr]);
-        } else {
+  } else {
           break; // No more space anywhere
         }
         gkPtr++;
@@ -3449,7 +3449,7 @@ function GroupApp({
       timer = setTimeout(() => {
         setShrinkEditButton(true);
       }, 7000);
-    } else {
+} else {
       setShrinkEditButton(false);
     }
     return () => clearTimeout(timer);
@@ -3679,7 +3679,7 @@ function GroupApp({
         if (isLeftSwipe && curTabIdx < tabs.length - 1) {
           navigateTeamsTab(tabs[curTabIdx + 1] as any);
           handledTabSwipe = true;
-        } else if (isRightSwipe && curTabIdx > 0) {
+  } else if (isRightSwipe && curTabIdx > 0) {
           navigateTeamsTab(tabs[curTabIdx - 1] as any);
           handledTabSwipe = true;
         }
@@ -3690,7 +3690,7 @@ function GroupApp({
           if (isLeftSwipe && curTabIdx < tabs.length - 1) {
             setFinanceSubScreen(tabs[curTabIdx + 1] as any);
             handledTabSwipe = true;
-          } else if (isRightSwipe && curTabIdx > 0) {
+    } else if (isRightSwipe && curTabIdx > 0) {
             setFinanceSubScreen(tabs[curTabIdx - 1] as any);
             handledTabSwipe = true;
           }
@@ -3702,7 +3702,7 @@ function GroupApp({
           if (isLeftSwipe && curTabIdx < tabs.length - 1) {
             setRankingTab(tabs[curTabIdx + 1] as any);
             handledTabSwipe = true;
-          } else if (isRightSwipe && curTabIdx > 0) {
+    } else if (isRightSwipe && curTabIdx > 0) {
             setRankingTab(tabs[curTabIdx - 1] as any);
             handledTabSwipe = true;
           }
@@ -3717,7 +3717,7 @@ function GroupApp({
         if (isLeftSwipe && currentIndex < screens.length - 1) {
           setSwipeDirection(1);
           setCurrentScreen(screens[currentIndex + 1]);
-        } else if (isRightSwipe && currentIndex > 0) {
+  } else if (isRightSwipe && currentIndex > 0) {
           setSwipeDirection(-1);
           setCurrentScreen(screens[currentIndex - 1]);
         }
@@ -3860,7 +3860,7 @@ function GroupApp({
       setShowGlobalSettings(false);
       setCurrentScreen("players");
       setTimeout(() => setToast(null), 3000);
-    } catch (e) {
+} catch (e) {
       console.error("Error resetting app:", e);
       setToast({ message: "Erro ao zerar aplicativo", type: "warning" });
       setTimeout(() => setToast(null), 3000);
@@ -4021,7 +4021,7 @@ function GroupApp({
         }
       } catch (err) {
         console.error("Error loading data from Supabase", err);
-      } finally {
+} finally {
         setIsDataLoaded(true);
       }
     }
@@ -4364,7 +4364,7 @@ function GroupApp({
     setIsPrintMode(false);
     if (currentScreen === "finance") {
       setFinanceSubScreen("balanco");
-    } else {
+} else {
       setFinanceSubScreen("menu");
     }
     if (currentScreen === "ranking") {
@@ -4712,7 +4712,7 @@ function GroupApp({
         type: "info",
       });
       setShowQuickAddPlayerModal(teams.length);
-    } else {
+} else {
       setTeams((prev) =>
         prev.map((t, idx) =>
           idx === teamIndex
@@ -4788,7 +4788,7 @@ function GroupApp({
         type: "info",
       });
       setShowQuickAddPlayerModal(teams.length);
-    } else {
+} else {
       setTeams((prev) =>
         prev.map((t, idx) =>
           idx === teamIndex
@@ -5004,7 +5004,7 @@ function GroupApp({
         let lastTeam = currentTeams[currentTeams.length - 1];
         if (lastTeam && lastTeam.playerIds.length < limit) {
           lastTeam.playerIds.push(player.id);
-        } else {
+  } else {
           const nextLetter = String.fromCharCode(65 + currentTeams.length);
           const iconIdx = getNextTeamIconIdx(currentTeams);
           const color = getNextTeamColor(currentTeams);
@@ -5454,7 +5454,7 @@ function GroupApp({
                     (id) => (id === gkToMove ? lineToSwap : id),
                   );
                   break;
-                } else if (
+          } else if (
                   match?.config?.playersPerTeam !== undefined &&
                   allTeamsNow[activeIdx].playerIds.length <
                     match.config.playersPerTeam
@@ -5512,7 +5512,7 @@ function GroupApp({
           teamBIndex: nextTeamIndex,
         };
       });
-    } else {
+} else {
       // Draw case, neither leaves automatically, but we still need to set their status
       setTeams((prevTeams) => {
         let newTeams = [...prevTeams];
@@ -5537,9 +5537,9 @@ function GroupApp({
     if (teamA && teamB) {
       if (tieBreakerWinnerIndex !== undefined) {
         winners.push(teams[tieBreakerWinnerIndex].id);
-      } else if (scoreA > scoreB) {
+} else if (scoreA > scoreB) {
         winners.push(teamA.id);
-      } else if (scoreB > scoreA) {
+} else if (scoreB > scoreA) {
         winners.push(teamB.id);
       }
       setFlashingTeamIds(winners);
@@ -5554,7 +5554,7 @@ function GroupApp({
       const teamsList = document.getElementById("teams-list-section");
       if (teamsList) {
         teamsList.scrollIntoView({ behavior: "smooth", block: "start" });
-      } else if (mainRef.current) {
+} else if (mainRef.current) {
         mainRef.current.scrollTo({
           top: mainRef.current.scrollHeight,
           behavior: "smooth",
@@ -5826,7 +5826,7 @@ function GroupApp({
       if (firstToQueue === "A") {
         newTeams.push(tA);
         newTeams.push(tB);
-      } else {
+} else {
         newTeams.push(tB);
         newTeams.push(tA);
       }
@@ -5878,7 +5878,7 @@ function GroupApp({
           monthlyFee: amount,
         };
         return newPayments;
-      } else {
+} else {
         const newRecord: PaymentRecord = {
           id: `${playerId}-${selectedYear}`,
           playerId,
@@ -5958,7 +5958,7 @@ function GroupApp({
 
       if (existingPaymentIdx >= 0) {
         newPayments[existingPaymentIdx] = paymentRecord;
-      } else {
+} else {
         newPayments.push(paymentRecord);
       }
     });
@@ -6180,7 +6180,7 @@ function GroupApp({
     if (orgParam) {
       try {
         orgData = JSON.parse(atob(orgParam));
-      } catch (e) {
+} catch (e) {
         // ignore
       }
     }
@@ -6611,7 +6611,7 @@ function GroupApp({
                     const swipeThreshold = 50;
                     if (offset.x < -swipeThreshold && arrivalCardIndex === 0) {
                       setArrivalCardIndex(1);
-                    } else if (offset.x > swipeThreshold && arrivalCardIndex === 1) {
+              } else if (offset.x > swipeThreshold && arrivalCardIndex === 1) {
                       setArrivalCardIndex(0);
                     }
                   }}
@@ -6760,7 +6760,7 @@ function GroupApp({
                       setShowInsufficientPlayersModal(false);
                       setCurrentScreen("dashboard");
                       setShowScheduleModal(true);
-                    } else {
+              } else {
                       setShowInsufficientPlayersModal(false);
                       setCurrentScreen("players");
                       setShowAddPlayerSection(true);
@@ -7334,7 +7334,7 @@ function GroupApp({
                           animate={shouldPulseConfig ? { 
                             scale: [1, 1.05, 1],
                             boxShadow: ["0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)", "0px 20px 25px -5px rgba(52, 211, 153, 0.4), 0px 10px 10px -5px rgba(52, 211, 153, 0.2)", "0px 10px 15px -3px rgba(0, 0, 0, 0.1), 0px 4px 6px -2px rgba(0, 0, 0, 0.05)"]
-                          } : {}}
+                          }                     : {}}
                           transition={shouldPulseConfig ? { repeat: Infinity, duration: 1.5 } : {}}
                           className="flex-1 sm:flex-none px-4 h-9 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white text-[10px] font-black uppercase tracking-widest rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2 cursor-pointer"
                         >
@@ -7519,7 +7519,7 @@ function GroupApp({
                                              <img src={matchSpecificPlayers[0].photo} className="w-full h-full object-cover rounded-full" referrerPolicy="no-referrer" />
                                            ) : (
                                              <span className="text-white/60"><GiSoccerBall size={14} /></span>
-                                           )}
+                                                  )}
                                         </button>
                                         <TypewriterText 
                                           key={match.id}
@@ -7662,7 +7662,7 @@ function GroupApp({
                                            const date = new Date(match.date); 
                                            setNewMatchDay(days[date.getDay()]); 
                                            setShowScheduleModal(true); 
-                                         }}
+                                  }}
                                          className="w-7 h-7 rounded-full bg-white/5 text-white/70 flex items-center justify-center hover:bg-white/10 transition-colors"
                                        >
                                          <Pencil size={12} />
@@ -8345,7 +8345,7 @@ function GroupApp({
                                 events: [],
                               }));
                               setTeamsTab("chegada");
-                            } else {
+                      } else {
                               if (players.length < playersCount * 2) {
                                 setShowInsufficientPlayersModal(true);
                                 return;
@@ -8360,7 +8360,7 @@ function GroupApp({
                                   prev.isPaused
                                 ) {
                                   newTimeRemaining = duration * 60;
-                                } else if (duration !== prev.config.duration) {
+                          } else if (duration !== prev.config.duration) {
                                   newTimeRemaining =
                                     prev.timeRemaining +
                                     (duration - prev.config.duration) * 60;
@@ -8438,7 +8438,7 @@ function GroupApp({
                                     "Configurações aplicadas e times formados!",
                                   type: "success",
                                 });
-                              } else {
+                        } else {
                                 setTeamsTab("chegada");
                                 setShowArrivalStepGuide(true);
                               setArrivalCardIndex(0);
@@ -8557,7 +8557,7 @@ function GroupApp({
                                     if (teams.some((t) => t.playerIds.length > 0)) {
                                       if (match.isActive) {
                                         setTeamsTab("historico");
-                                      } else {
+                                } else {
                                         // Ensure first two teams are selected if not already
                                         if (
                                           teams.length >= 2 &&
@@ -8721,7 +8721,7 @@ function GroupApp({
                                 if (players.length < 2) {
                                   setCurrentScreen("players");
                                   setPlayersTab("jogadores");
-                                } else {
+                          } else {
                                   setCurrentScreen("teams");
                                   setTeamsTab("configuracao");
                                 }
@@ -8798,7 +8798,7 @@ function GroupApp({
                                     }
                                     return newTeams;
                                   });
-                                } else {
+                          } else {
                                   setTeams((prevTeams) => {
                                     // 1. Get all players currently in teams
                                     const allPlayerIds = prevTeams.flatMap(
@@ -8934,7 +8934,7 @@ function GroupApp({
                                   if (players.length < 2) {
                                     setCurrentScreen("players");
                                     setPlayersTab("jogadores");
-                                  } else {
+                            } else {
                                     setTeamsTab("configuracao");
                                     if (!firstSetupDone) {
                                       setIsInitialSetupFlow(true);
@@ -9233,7 +9233,7 @@ function GroupApp({
                                         const nextIsPaused = !prev.isPaused;
                                         if (nextIsPaused) {
                                           sounds.playPause();
-                                        } else {
+                                  } else {
                                           sounds.playStartMatch();
                                         }
                                         return {
@@ -9461,7 +9461,7 @@ function GroupApp({
                                                   if (id === pBId) return pAId;
                                                   return id;
                                                 });
-                                            } else {
+                                      } else {
                                               newTeams[swapTeamIdx].playerIds =
                                                 newTeams[
                                                   swapTeamIdx
@@ -9660,7 +9660,7 @@ function GroupApp({
                                           message: `Apenas ${availableSlots} jogador(es) movido(s). Selecione outro time para o(s) restante(s).`,
                                           type: "info",
                                         });
-                                      } else {
+                                } else {
                                         setMovingPlayers(null);
                                         setIsSelectingDestination(false);
                                         setToast({
@@ -9751,7 +9751,7 @@ function GroupApp({
                                                   if (id === pBId) return pAId;
                                                   return id;
                                                 });
-                                            } else {
+                                      } else {
                                               newTeams[swapTeamIdx].playerIds =
                                                 newTeams[
                                                   swapTeamIdx
@@ -9949,7 +9949,7 @@ function GroupApp({
                                           message: `Apenas ${availableSlots} jogador(es) movido(s). Selecione outro time para o(s) restante(s).`,
                                           type: "info",
                                         });
-                                      } else {
+                                } else {
                                         setMovingPlayers(null);
                                         setIsSelectingDestination(false);
                                         setToast({
@@ -9982,7 +9982,7 @@ function GroupApp({
                                   setAutoCompleteTeams(newState);
                                   if (newState) {
                                     setShowAutoCompleteModal(true);
-                                  } else {
+                            } else {
                                     setToast({
                                       message: "Subida automática desativada",
                                       type: "info",
@@ -10114,10 +10114,10 @@ function GroupApp({
                                     ).length > 0
                                   ) {
                                     setTeamsTab("chegada");
-                                  } else if (players.length < 2) {
+                            } else if (players.length < 2) {
                                     setCurrentScreen("players");
                                     setPlayersTab("jogadores");
-                                  } else {
+                            } else {
                                     setTeamsTab("configuracao");
                                     if (!firstSetupDone) {
                                       setIsInitialSetupFlow(true);
@@ -10285,7 +10285,7 @@ function GroupApp({
                                           message: `Apenas ${availableSlots} jogador(es) movido(s). Selecione outro time para o(s) restante(s).`,
                                           type: "info",
                                         });
-                                      } else {
+                                } else {
                                         setMovingPlayers(null);
                                         setIsSelectingDestination(false);
                                         setToast({
@@ -10305,14 +10305,12 @@ function GroupApp({
                                     isCurrent
                                       ? "shadow-2xl z-10 border-[#53B986] bg-white/5 backdrop-blur-md ring-4 ring-[#53B986]/10"
                                       : "shadow-sm opacity-60 border-white/10 bg-white/5 backdrop-blur-md"
-                                  } ${isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam) ? "animate-pulse bg-brand-primary/10 !border-[#53B986]" : ""}`}
+                                  } ${
+                                    isFlashing || (movingPlayers && isSelectingDestination && t.playerIds.length < match.config.playersPerTeam)
+                                      ? "animate-pulse bg-brand-primary/10 !border-[#53B986]"
+                                      : ""
+                                  }`}
                                   style={{
-                                    borderColor:
-                                      movingPlayers?.teamId === t.id ||
-                                      (swappingPlayerId &&
-                                        t.playerIds.includes(swappingPlayerId))
-                                        ? "#53B986"
-                                        : undefined,
                                   }}
                                 >
                                   {/* Team Color Top Bar */}
@@ -10393,7 +10391,7 @@ function GroupApp({
                                                 prevMatch.teamAIndex === tIdx
                                               ) {
                                                 newTeamAIndex = -1;
-                                              } else if (
+                                        } else if (
                                                 prevMatch.teamAIndex > tIdx
                                               ) {
                                                 newTeamAIndex--;
@@ -10403,7 +10401,7 @@ function GroupApp({
                                                 prevMatch.teamBIndex === tIdx
                                               ) {
                                                 newTeamBIndex = -1;
-                                              } else if (
+                                        } else if (
                                                 prevMatch.teamBIndex > tIdx
                                               ) {
                                                 newTeamBIndex--;
@@ -10417,7 +10415,7 @@ function GroupApp({
                                             });
                                             return newTeams;
                                           });
-                                        } else {
+                                  } else {
                                           // Deselect normally
                                           if (match.teamAIndex === tIdx)
                                             setMatch((prev) => ({
@@ -10458,7 +10456,7 @@ function GroupApp({
                                             ...prev,
                                             teamBIndex: tIdx,
                                           }));
-                                        } else {
+                                  } else {
                                           // Both selected, prioritize keeping the winner and removing the loser
                                           const isTeamALoser =
                                             lastMatchResult &&
@@ -10474,7 +10472,7 @@ function GroupApp({
                                           if (isTeamBLoser) {
                                             teamToReplaceIndex =
                                               match.teamBIndex;
-                                          } else if (isTeamALoser) {
+                                    } else if (isTeamALoser) {
                                             teamToReplaceIndex =
                                               match.teamAIndex;
                                           }
@@ -10862,7 +10860,7 @@ function GroupApp({
                                                                 return id;
                                                               },
                                                             );
-                                                        } else {
+                                                  } else {
                                                           newTeams[
                                                             swapTeamIdx
                                                           ].playerIds =
@@ -10895,7 +10893,7 @@ function GroupApp({
                                                         "Jogadores trocados com sucesso!",
                                                       type: "success",
                                                     });
-                                                  } else if (
+                                            } else if (
                                                     fillingVacancyForTeam !==
                                                     null
                                                   ) {
@@ -10937,7 +10935,7 @@ function GroupApp({
                                                           "✅ Jogador substituído! A partida pode continuar.",
                                                         type: "success",
                                                       });
-                                                    } else {
+                                              } else {
                                                       setToast({
                                                         message:
                                                           "Jogador movido com sucesso!",
@@ -10995,7 +10993,7 @@ function GroupApp({
                                                         message: `Jogador movido para o ${teams[incompleteSelectedTeamIdx].name}`,
                                                         type: "success",
                                                       });
-                                                    } else {
+                                              } else {
                                                       setShowQueuePlayerModal({
                                                         teamIndex: tIdx,
                                                         playerId: pid,
@@ -11316,7 +11314,7 @@ function GroupApp({
                                                   if (id === pBId) return pAId;
                                                   return id;
                                                 });
-                                            } else {
+                                      } else {
                                               newTeams[teamAIdx].playerIds =
                                                 newTeams[
                                                   teamAIdx
@@ -11339,13 +11337,13 @@ function GroupApp({
                                             "Jogadores trocados com sucesso!",
                                           type: "success",
                                         });
-                                      } else if (swappingPlayerId === pid) {
+                                } else if (swappingPlayerId === pid) {
                                         setSwappingPlayerId(null);
                                         setToast({
                                           message: "Seleção cancelada.",
                                           type: "info",
                                         });
-                                      } else {
+                                } else {
                                         setShowPlayerActionsModal({
                                           teamIndex: tIndex,
                                           playerId: pid,
@@ -13001,7 +12999,7 @@ function GroupApp({
                                   if (id === playerBId) return playerAId;
                                   return id;
                                 });
-                              } else {
+                        } else {
                                 newTeams[teamAIdx].playerIds = newTeams[
                                   teamAIdx
                                 ].playerIds.map((id) =>
@@ -13196,7 +13194,7 @@ function GroupApp({
                                 "Selecione o jogador que entrará no lugar.",
                               type: "info",
                             });
-                          } else {
+                    } else {
                             setToast({
                               message: "Jogador movido para ausentes.",
                               type: "info",
@@ -13738,19 +13736,19 @@ function GroupApp({
                           onClick={() => {
                             if (match.teamAIndex === idx) {
                               setMatch((prev) => ({ ...prev, teamAIndex: -1 }));
-                            } else if (match.teamBIndex === idx) {
+                      } else if (match.teamBIndex === idx) {
                               setMatch((prev) => ({ ...prev, teamBIndex: -1 }));
-                            } else if (match.teamAIndex === -1) {
+                      } else if (match.teamAIndex === -1) {
                               setMatch((prev) => ({
                                 ...prev,
                                 teamAIndex: idx,
                               }));
-                            } else if (match.teamBIndex === -1) {
+                      } else if (match.teamBIndex === -1) {
                               setMatch((prev) => ({
                                 ...prev,
                                 teamBIndex: idx,
                               }));
-                            } else {
+                      } else {
                               setMatch((prev) => ({
                                 ...prev,
                                 teamBIndex: idx,
@@ -14030,7 +14028,7 @@ function GroupApp({
                                                         return playerAId;
                                                       return id;
                                                     });
-                                                  } else {
+                                            } else {
                                                     newTeams[
                                                       teamAIdx
                                                     ].playerIds = newTeams[
@@ -14661,7 +14659,7 @@ function GroupApp({
                                 type: "warning",
                               });
                               setTimeout(() => setToast(null), 7000);
-                            } else {
+                      } else {
                               const newTeams = [...teams];
                               newTeams[teamIdx].playerIds.push(player.id);
                               setTeams(newTeams);
@@ -14814,7 +14812,7 @@ function GroupApp({
                       ) {
                         duplicatePlayerName.callback(newName);
                         setDuplicatePlayerName(null);
-                      } else {
+                } else {
                         setToast({
                           message: "Por favor, escolha um nome diferente.",
                           type: "warning",
@@ -14843,7 +14841,7 @@ function GroupApp({
                       ) {
                         duplicatePlayerName.callback(newName);
                         setDuplicatePlayerName(null);
-                      } else {
+                } else {
                         setToast({
                           message: "Por favor, escolha um nome diferente.",
                           type: "warning",
@@ -15204,7 +15202,7 @@ function GroupApp({
               setTeams((prev) =>
                 prev.map((t, i) => (i === idx ? { ...t, color, iconIdx } : t)),
               );
-            } else {
+      } else {
               setTeams((prev) => {
                 const newTeams = [...prev];
                 if (newTeams[idx]) {
@@ -16030,7 +16028,6 @@ function AuthScreen() {
 
 // --- Main App Component ---
 export default function App() {
-  const [isInitializing, setIsInitializing] = useState(true);
 
   // Directly enter the control panel (no "Nova Partida" page)
   const [currentGroupId] = useState<string>(() => {
@@ -16042,7 +16039,7 @@ export default function App() {
       try {
         const parsed = JSON.parse(savedGroups);
         if (parsed && parsed.length > 0) return parsed[0].id;
-      } catch (e) {}
+} catch (e) {}
     }
     return "main"; // default main group ID
   });
@@ -16054,9 +16051,6 @@ export default function App() {
     );
   }, [currentGroupId]);
 
-  if (isInitializing) {
-    return <SplashScreen onComplete={() => setIsInitializing(false)} />;
-  }
 
   return (
     <GroupApp

@@ -279,7 +279,7 @@
   }
 
   body {
-    @apply bg-brand-dark text-brand-text-primary antialiased selection:bg-brand-dark selection:text-brand-primary;
+    @apply bg-[#0b0e17] text-white antialiased;
     font-size: 1rem;
   }
 

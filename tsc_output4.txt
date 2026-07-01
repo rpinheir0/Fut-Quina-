@@ -1,0 +1,123 @@
+src/App.tsx(5086,13): error TS1005: ',' expected.
+src/App.tsx(5086,18): error TS1389: 'if' is not allowed as a variable declaration name.
+src/App.tsx(5089,13): error TS1128: Declaration or statement expected.
+src/App.tsx(5097,3): error TS1128: Declaration or statement expected.
+src/App.tsx(5697,15): error TS1005: ',' expected.
+src/App.tsx(5697,20): error TS1135: Argument expression expected.
+src/App.tsx(5706,6): error TS1005: ',' expected.
+src/App.tsx(5707,3): error TS1128: Declaration or statement expected.
+src/App.tsx(5747,7): error TS1005: ',' expected.
+src/App.tsx(5747,12): error TS1389: 'if' is not allowed as a variable declaration name.
+src/App.tsx(5752,5): error TS1128: Declaration or statement expected.
+src/App.tsx(5756,3): error TS1128: Declaration or statement expected.
+src/App.tsx(7285,10): error TS17008: JSX element 'main' has no corresponding closing tag.
+src/App.tsx(7337,21): error TS1005: ',' expected.
+src/App.tsx(7522,51): error TS1005: ')' expected.
+src/App.tsx(7522,53): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(7666,42): error TS1005: '}' expected.
+src/App.tsx(10204,31): error TS1005: ',' expected.
+src/App.tsx(10304,29): error TS1005: '}' expected.
+src/App.tsx(10305,37): error TS1005: '...' expected.
+src/App.tsx(10308,29): error TS1005: '}' expected.
+src/App.tsx(10308,31): error TS1005: '...' expected.
+src/App.tsx(10308,200): error TS1003: Identifier expected.
+src/App.tsx(10308,201): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(10317,33): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/App.tsx(10427,51): error TS1128: Declaration or statement expected.
+src/App.tsx(10435,41): error TS1005: '...' expected.
+src/App.tsx(10435,44): error TS1003: Identifier expected.
+src/App.tsx(10439,46): error TS1005: '}' expected.
+src/App.tsx(10440,41): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(10441,43): error TS1109: Expression expected.
+src/App.tsx(10446,72): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/App.tsx(10454,47): error TS1005: '}' expected.
+src/App.tsx(10456,43): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(10457,60): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/App.tsx(10459,55): error TS1005: '}' expected.
+src/App.tsx(10460,43): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(10461,41): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(10463,43): error TS1109: Expression expected.
+src/App.tsx(10476,63): error TS1005: '}' expected.
+src/App.tsx(10477,43): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(10479,63): error TS1005: '}' expected.
+src/App.tsx(10480,43): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(10482,65): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/App.tsx(10483,45): error TS1109: Expression expected.
+src/App.tsx(10490,57): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/App.tsx(10511,57): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/App.tsx(10516,57): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/App.tsx(10520,62): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/App.tsx(10522,57): error TS1005: '}' expected.
+src/App.tsx(10540,45): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(10543,43): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(10544,41): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(10545,39): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(10562,44): error TS1005: '}' expected.
+src/App.tsx(10563,39): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(10564,37): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(10564,38): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(10565,35): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/App.tsx(10582,35): error TS1005: ')' expected.
+src/App.tsx(11140,35): error TS17002: Expected corresponding JSX closing tag for 'div'.
+src/App.tsx(11142,29): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(11142,31): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(11144,26): error TS1005: ':' expected.
+src/App.tsx(11146,23): error TS17002: Expected corresponding JSX closing tag for 'motion.div'.
+src/App.tsx(11147,21): error TS1005: '}' expected.
+src/App.tsx(11160,21): error TS1005: '}' expected.
+src/App.tsx(11160,23): error TS1005: '...' expected.
+src/App.tsx(11160,80): error TS1003: Identifier expected.
+src/App.tsx(11180,43): error TS1005: ',' expected.
+src/App.tsx(11180,47): error TS1005: ',' expected.
+src/App.tsx(11180,51): error TS1005: ',' expected.
+src/App.tsx(11180,64): error TS1005: ',' expected.
+src/App.tsx(11180,71): error TS1005: ',' expected.
+src/App.tsx(11180,76): error TS1005: ',' expected.
+src/App.tsx(11180,89): error TS1005: ',' expected.
+src/App.tsx(11180,104): error TS1005: ',' expected.
+src/App.tsx(11180,119): error TS1005: ',' expected.
+src/App.tsx(11180,132): error TS1005: ',' expected.
+src/App.tsx(11180,133): error TS1005: ',' expected.
+src/App.tsx(11181,38): error TS1005: ',' expected.
+src/App.tsx(11197,43): error TS1005: ',' expected.
+src/App.tsx(11197,51): error TS1351: An identifier or keyword cannot immediately follow a numeric literal.
+src/App.tsx(11197,55): error TS1005: ',' expected.
+src/App.tsx(11197,66): error TS1005: ',' expected.
+src/App.tsx(11197,76): error TS1005: ',' expected.
+src/App.tsx(11197,90): error TS1124: Digit expected.
+src/App.tsx(11197,93): error TS1005: ',' expected.
+src/App.tsx(11197,98): error TS1005: ',' expected.
+src/App.tsx(11197,99): error TS1005: ',' expected.
+src/App.tsx(11198,38): error TS1005: ',' expected.
+src/App.tsx(11229,43): error TS1005: ',' expected.
+src/App.tsx(11229,58): error TS1005: ',' expected.
+src/App.tsx(11229,69): error TS1005: ',' expected.
+src/App.tsx(11229,77): error TS1005: ',' expected.
+src/App.tsx(11229,87): error TS1005: ',' expected.
+src/App.tsx(11229,102): error TS1005: ',' expected.
+src/App.tsx(11229,115): error TS1005: ',' expected.
+src/App.tsx(11229,122): error TS1005: ',' expected.
+src/App.tsx(11229,133): error TS1005: ',' expected.
+src/App.tsx(11234,33): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(11235,30): error TS1382: Unexpected token. Did you mean `{'>'}` or `&gt;`?
+src/App.tsx(11471,27): error TS17002: Expected corresponding JSX closing tag for 'AnimatePresence'.
+src/App.tsx(11472,25): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(11482,20): error TS1381: Unexpected token. Did you mean `{'}'}` or `&rbrace;`?
+src/App.tsx(11484,15): error TS1005: ')' expected.
+src/App.tsx(11485,13): error TS1109: Expression expected.
+src/App.tsx(11485,14): error TS1128: Declaration or statement expected.
+src/App.tsx(12649,11): error TS1128: Declaration or statement expected.
+src/App.tsx(12650,31): error TS1005: ',' expected.
+src/App.tsx(12812,12): error TS1128: Declaration or statement expected.
+src/App.tsx(12856,9): error TS1128: Declaration or statement expected.
+src/App.tsx(12857,7): error TS1109: Expression expected.
+src/App.tsx(15139,9): error TS2657: JSX expressions must have one parent element.
+src/App.tsx(15240,9): error TS2657: JSX expressions must have one parent element.
+src/App.tsx(15641,7): error TS1128: Declaration or statement expected.
+src/App.tsx(15643,22): error TS1005: ',' expected.
+src/App.tsx(15692,8): error TS1128: Declaration or statement expected.
+src/App.tsx(15921,5): error TS1128: Declaration or statement expected.
+src/App.tsx(15922,3): error TS1109: Expression expected.
+src/App.tsx(15923,1): error TS1128: Declaration or statement expected.
+src/App.tsx(16057,13): error TS1128: Declaration or statement expected.
+src/App.tsx(16065,1): error TS1128: Declaration or statement expected.
