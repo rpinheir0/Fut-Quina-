@@ -7398,25 +7398,32 @@ function GroupApp({
 
                         <div className="space-y-4">
                           {scheduledMatches.length === 0 && (
-                            <motion.div
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: 0.3 }}
-                              className="bg-white/5 border border-white/10 rounded-xl h-16 flex items-center px-4 gap-4 relative overflow-hidden mb-2 shadow-sm"
-                            >
-                              <div className="w-8 h-8 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white/40 shrink-0 shadow-sm">
-                                <GiSoccerField size={16} />
+                            <div className="relative w-full max-w-sm mx-auto h-[350px]">
+                              <div className="absolute inset-0 rounded-2xl flex flex-col p-4 bg-[#111625]/90 border border-white/10 backdrop-blur-xl overflow-hidden animate-pulse">
+                                <div className="flex justify-between items-center mb-2.5 w-full">
+                                  <div className="flex items-center gap-2">
+                                    <div className="w-7 h-7 rounded-full bg-white/10" />
+                                    <div className="w-24 h-3 bg-white/10 rounded-full" />
+                                  </div>
+                                  <div className="w-7 h-7 rounded-full bg-white/10" />
+                                </div>
+                                <div className="text-center mb-2.5 flex flex-col items-center mt-4">
+                                  <div className="w-20 h-2 bg-white/10 rounded-full mb-4" />
+                                  <div className="w-32 h-6 bg-white/10 rounded-full mb-3" />
+                                  <div className="w-24 h-3 bg-white/10 rounded-full" />
+                                </div>
+                                <div className="flex justify-center -space-x-1.5 mb-4 mt-6 w-full">
+                                  {Array.from({ length: 5 }).map((_, i) => (
+                                    <div key={i} className="w-8 h-8 rounded-full bg-white/10 border border-[#111625]" />
+                                  ))}
+                                </div>
+                                <div className="bg-white/5 rounded-xl p-2.5 border border-white/10 mt-auto mb-2.5 h-[65px]" />
+                                <div className="flex gap-1.5 w-full">
+                                  <div className="w-8 h-8 rounded-full bg-white/10" />
+                                  <div className="flex-1 h-8 rounded-xl bg-white/10" />
+                                </div>
                               </div>
-                              <div className="flex-1 space-y-1.5">
-                                <div className="h-2 w-24 bg-white/20 rounded-full" />
-                                <div className="h-2 w-16 bg-white/10 rounded-full" />
-                              </div>
-                              <motion.div
-                                animate={{ x: ["-100%", "200%"] }}
-                                transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-                                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent"
-                              />
-                            </motion.div>
+                            </div>
                           )}
 
                           {scheduledMatches.length === 0 && (
@@ -7441,7 +7448,7 @@ function GroupApp({
                           )}
 
                           {scheduledMatches.length > 0 && (
-                            <div className="relative w-full max-w-sm mx-auto h-[330px]">
+                            <div className="relative w-full max-w-sm mx-auto h-[350px]">
                               <AnimatePresence mode="popLayout" initial={false}>
                                 {scheduledMatches.slice(0, 2).map((match, idx) => {
                                 const isTop = idx === 0;
