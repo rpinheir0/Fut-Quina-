@@ -7852,11 +7852,32 @@ function GroupApp({
                         </div>
 
                         <section className="w-full relative pt-6 border-t border-white/10">
-                          {visiblePlayers.length === 0 ? (
+                          {!isDataLoaded || players.length === 0 ? (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                              {Array.from({ length: 10 }).map((_, idx) => (
+                                <div key={`skeleton-${idx}`} className="flex items-center justify-between p-2 px-3 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-sm animate-pulse">
+                                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                                    <div className="w-8 h-8 sm:w-8 sm:h-8 rounded-full bg-white/10 shrink-0" />
+                                    <div className="flex flex-col gap-1.5 flex-1">
+                                      <div className="h-3 bg-white/10 rounded-full w-24" />
+                                      <div className="flex gap-0.5">
+                                        {[1, 2, 3, 4, 5].map((star) => (
+                                          <Star key={`skel-star-${idx}-${star}`} size={8} className="text-white/10" />
+                                        ))}
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <div className="flex items-center gap-3">
+                                    <ChevronRight size={14} className="text-white/10" />
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          ) : visiblePlayers.length === 0 ? (
                             <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
                               <div className="flex flex-col items-center gap-4 opacity-50 text-blue-200 text-xs">
                                 <span className="font-bold uppercase tracking-widest text-[11px]">
-                                  Nenhum jogador adicionado ainda.
+                                  Nenhum jogador encontrado.
                                 </span>
                               </div>
                             </div>
