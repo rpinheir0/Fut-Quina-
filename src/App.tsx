@@ -7861,7 +7861,7 @@ function GroupApp({
                         <section className="w-full relative pt-6 border-t border-white/10">
                           {!isDataLoaded || players.length === 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                              {Array.from({ length: 10 }).map((_, idx) => (
+                              {Array.from({ length: 5 }).map((_, idx) => (
                                 <div key={`skeleton-${idx}`} className="flex items-center justify-between p-2 px-3 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-sm animate-pulse">
                                   <div className="flex items-center gap-3 flex-1 min-w-0">
                                     <div className="w-8 h-8 sm:w-8 sm:h-8 rounded-full bg-white/10 shrink-0" />
