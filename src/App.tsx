@@ -8673,7 +8673,35 @@ function GroupApp({
                           </div>
                         )}
 
-                      {players.filter((p) => sessionPlayerIds.includes(p.id))
+                      {!isDataLoaded || players.length === 0 ? (
+                        <div className="w-full flex flex-col gap-8 pb-8">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
+                            {Array.from({ length: 5 }).map((_, idx) => (
+                              <div key={`skel-arrival-${idx}`} className="h-16 flex items-center justify-between p-3 rounded-2xl border border-white/10 bg-white/5 backdrop-blur-md shadow-sm relative overflow-hidden animate-pulse">
+                                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent skew-x-[-25deg]" />
+                                <div className="flex items-center gap-3 w-full">
+                                  <div className="w-10 h-10 rounded-full bg-white/10 shrink-0" />
+                                  <div className="flex-1 flex flex-col gap-1.5">
+                                    <div className="w-24 h-3 bg-white/10 rounded-full" />
+                                    <div className="w-16 h-2 bg-white/5 rounded-full" />
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          <div className="flex justify-center">
+                            <button
+                              onClick={() => {
+                                setCurrentScreen("players");
+                                setPlayersTab("jogadores");
+                              }}
+                              className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 cursor-pointer"
+                            >
+                              CRIAR JOGADORES
+                            </button>
+                          </div>
+                        </div>
+                      ) : players.filter((p) => sessionPlayerIds.includes(p.id))
                         .length === 0 ? (
                         <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
                           <div className="flex flex-col items-center gap-4 opacity-20 text-white text-xs">
@@ -8877,10 +8905,22 @@ function GroupApp({
                         <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
                           {players.filter((p) => p.isAvailable).length === 0 ? (
                             <>
-                              <div className="flex flex-col items-center gap-4 opacity-20 text-white text-xs">
-                                <span className="font-bold uppercase tracking-widest text-[11px]">
-                                  Nenhum jogador para iniciar o confronto
-                                </span>
+                              <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto mb-2 space-y-4 bg-black/5 p-6 rounded-xl border border-black/10 shadow-sm backdrop-blur-sm animate-pulse mt-4">
+                                <div className="w-24 h-2 bg-white/10 rounded-full mb-2" />
+                                <div className="flex items-center justify-between gap-4 px-2 py-2 w-full">
+                                  <div className="flex-1 flex flex-col items-center text-center space-y-1">
+                                    <div className="w-10 h-10 rounded-full bg-white/10 shrink-0" />
+                                    <div className="w-12 h-10 bg-white/10 rounded-md mt-2" />
+                                  </div>
+                                  <div className="text-sm font-black text-white/20 uppercase tracking-widest">
+                                    vs
+                                  </div>
+                                  <div className="flex-1 flex flex-col items-center text-center space-y-1">
+                                    <div className="w-10 h-10 rounded-full bg-white/10 shrink-0" />
+                                    <div className="w-12 h-10 bg-white/10 rounded-md mt-2" />
+                                  </div>
+                                </div>
+                                <div className="w-full h-12 bg-white/5 rounded-lg border border-white/5 mt-4" />
                               </div>
                               <button
                                 onClick={() => {
@@ -10041,40 +10081,53 @@ function GroupApp({
 
                       <div className="space-y-4">
                         {teams.length < 2 ? (
-                          <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
-                            <div className="flex flex-col items-center gap-4 opacity-20 text-white text-xs">
-                              <span className="font-bold uppercase tracking-widest text-[11px]">
-                                Crie mais times para ver a fila
-                              </span>
+                          <div className="w-full flex flex-col gap-8 pb-8 pt-4">
+                            <div className="space-y-4">
+                              {Array.from({ length: 2 }).map((_, idx) => (
+                                <div key={`skel-team-${idx}`} className="p-4 rounded-2xl border transition-all relative min-h-[110px] flex flex-col justify-center overflow-hidden shadow-sm opacity-60 border-white/10 bg-white/5 backdrop-blur-md animate-pulse">
+                                  <div className="absolute top-0 left-0 right-0 h-1 bg-white/10" />
+                                  <div className="absolute top-2 left-2 w-8 h-8 rounded-full bg-white/10" />
+                                  <div className="ml-10 flex flex-col gap-2">
+                                    <div className="flex gap-2">
+                                      {Array.from({ length: 5 }).map((_, pIdx) => (
+                                        <div key={`skel-player-${idx}-${pIdx}`} className="w-8 h-8 rounded-full bg-white/10" />
+                                      ))}
+                                    </div>
+                                    <div className="w-32 h-3 bg-white/10 rounded-full mt-2" />
+                                  </div>
+                                </div>
+                              ))}
                             </div>
-                            <button
-                              onClick={() => {
-                                if (
-                                  players.filter((p) =>
-                                    sessionPlayerIds.includes(p.id),
-                                  ).length > 0
-                                ) {
-                                  setTeamsTab("chegada");
-                                } else if (players.length < 2) {
-                                  setCurrentScreen("players");
-                                  setPlayersTab("jogadores");
-                                } else {
-                                  setTeamsTab("configuracao");
-                                  if (!firstSetupDone) {
-                                    setIsInitialSetupFlow(true);
+                            <div className="flex justify-center">
+                              <button
+                                onClick={() => {
+                                  if (
+                                    players.filter((p) =>
+                                      sessionPlayerIds.includes(p.id),
+                                    ).length > 0
+                                  ) {
+                                    setTeamsTab("chegada");
+                                  } else if (players.length < 2) {
+                                    setCurrentScreen("players");
+                                    setPlayersTab("jogadores");
+                                  } else {
+                                    setTeamsTab("configuracao");
+                                    if (!firstSetupDone) {
+                                      setIsInitialSetupFlow(true);
+                                    }
                                   }
-                                }
-                              }}
-                              className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 cursor-pointer"
-                            >
-                              {players.filter((p) =>
-                                sessionPlayerIds.includes(p.id),
-                              ).length > 0
-                                ? "CONFIRMAR CHEGADA"
-                                : players.length < 2
-                                  ? "CRIAR JOGADORES"
-                                  : "CONFIGURAR PARTIDA"}
-                            </button>
+                                }}
+                                className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 cursor-pointer"
+                              >
+                                {players.filter((p) =>
+                                  sessionPlayerIds.includes(p.id),
+                                ).length > 0
+                                  ? "CONFIRMAR CHEGADA"
+                                  : players.length < 2
+                                    ? "CRIAR JOGADORES"
+                                    : "CONFIGURAR PARTIDA"}
+                              </button>
+                            </div>
                           </div>
                         ) : (
                           <div className="space-y-4">
@@ -11526,23 +11579,29 @@ function GroupApp({
                           </div>
                         </motion.div>
                       ))}
-                      {sortedRankingPlayers.length === 0 && (
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          className="flex items-center py-3 px-3 rounded-2xl bg-white/5 border border-white/10 animate-pulse w-full mt-2"
-                        >
-                          <div className="w-8 text-sm font-black text-white/20 text-center shrink-0">
-                            -
+                      {!isDataLoaded || players.length === 0 ? (
+                        Array.from({ length: 5 }).map((_, idx) => (
+                          <div
+                            key={`skel-ranking-${idx}`}
+                            className="flex items-center py-3 px-3 rounded-2xl bg-white/5 border border-white/10 animate-pulse w-full mt-2"
+                          >
+                            <div className="w-8 text-sm font-black text-white/20 text-center shrink-0">
+                              -
+                            </div>
+                            <div className="w-10 h-10 rounded-full bg-white/10 shrink-0 border border-white/10 mr-4 shadow-sm ml-2">
+                            </div>
+                            <div className="flex flex-col gap-2 flex-1">
+                              <div className="h-3 bg-white/10 rounded-2xl w-3/5 shadow-sm"></div>
+                              <div className="h-2 bg-white/10 rounded-2xl w-1/4 shadow-sm"></div>
+                            </div>
                           </div>
-                          <div className="w-10 h-10 rounded-full bg-white/10 shrink-0 border border-white/10 flex items-center justify-center mr-4 shadow-sm ml-2">
-                            <GiLaurelCrown size={20} color="rgba(255,255,255,0.2)" />
+                        ))
+                      ) : (
+                        sortedRankingPlayers.length === 0 && (
+                          <div className="text-center text-white/50 text-xs py-8">
+                            Nenhum jogador encontrado.
                           </div>
-                          <div className="flex flex-col gap-2 flex-1">
-                            <div className="h-3 bg-white/10 rounded-2xl w-3/5 shadow-sm"></div>
-                            <div className="h-2 bg-white/10 rounded-2xl w-1/4 shadow-sm"></div>
-                          </div>
-                        </motion.div>
+                        )
                       )}
                     </div>
                   </motion.div>
