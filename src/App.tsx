@@ -2246,7 +2246,7 @@ const FutQuinaLogo = ({
         />
       </div>
       <span
-        className={`${size === "sm" ? "text-sm" : size === "md" ? "text-xl" : "text-3xl"} uppercase tracking-tighter font-staatliches leading-none bg-gradient-to-br from-zinc-400 to-zinc-200 bg-[#dce3ee] dark:bg-[#dce3ee]lip-text text-transparent py-1`}
+        className={`${size === "sm" ? "text-sm" : size === "md" ? "text-xl" : "text-3xl"} uppercase tracking-tighter font-staatliches leading-none bg-gradient-to-br from-zinc-400 to-zinc-200 bg-clip-text text-transparent py-1`}
       >
         FutQuina
       </span>
