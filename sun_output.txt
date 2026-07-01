@@ -1,0 +1,18 @@
+  Square,
+  CheckCircle2,
+  Sun,
+  SunMedium,
+  Moon,
+  ChevronRight,
+  ChevronDown,
+  ChevronUp,
+  Shield,
+--
+                        className={`w-8 h-8 rounded-full border border-white/10 flex items-center justify-center transition-all cursor-pointer ${theme === "light" ? "bg-white text-black" : "bg-white/5 text-white/60 hover:text-white hover:bg-white/10"}`}
+                      >
+                        <Sun size={14} />
+                      </button>
+                      <button
+                        onClick={() => setTheme("dark")}
+                        className={`w-8 h-8 rounded-full border border-white/10 flex items-center justify-center transition-all cursor-pointer ${theme === "dark" ? "bg-white text-black" : "bg-white/5 text-white/60 hover:text-white hover:bg-white/10"}`}
+                      >

@@ -1,0 +1,209 @@
+578:          className={`${textSizes[size]} font-black text-black/90`}
+622:        className={`${size === "xs" ? "text-sm" : size === "small" ? "text-lg" : "text-2xl"} font-black text-black/60 mx-1`}
+743:          className="w-full py-4 bg-brand-gradient text-black font-black uppercase tracking-widest text-xs rounded-xl shadow-xl active:scale-95 transition-all"
+792:            <span className="text-black">
+796:          <h3 className="text-xl font-black uppercase tracking-tighter text-black leading-tight">
+799:          <p className="text-[10px] text-black/60 font-medium mt-1 uppercase tracking-[0.2em] max-w-[200px] mx-auto leading-relaxed">
+1052:              <span className="text-black/70 dark:text-white/60 text-xs font-medium ml-5 mt-[-4px]">
+1060:              className="absolute right-6 top-10 w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-black/70 dark:text-white/60 hover:text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10 transition-all active:scale-90"
+1110:                      <span className="text-[10px] text-black/60 dark:text-white/50 font-medium tracking-tight mt-0.5">
+1132:                    <span className="text-[10px] text-black/60 dark:text-white/50 font-medium tracking-tight mt-0.5">
+1153:                    <span className="text-[10px] text-black/60 dark:text-white/50 font-medium tracking-tight mt-0.5">
+1166:                    className="w-full p-4 mt-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-black/80 dark:text-white/80 font-bold uppercase tracking-widest text-[10px] transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 flex items-center justify-center gap-3 group shadow-sm"
+1182:                <p className="text-xs text-black/70 dark:text-white/60 font-bold uppercase tracking-widest mt-1">
+1209:                          className="text-[8px] text-black/60 dark:text-white/50 font-semibold tracking-tight"
+1240:                          className="text-[8px] text-black/60 dark:text-white/50 font-semibold tracking-tight"
+1313:                            <span className="text-[7px] text-black/50 dark:text-white/40 font-bold uppercase tracking-widest mt-0.5">
+1353:                            <span className="text-[7px] text-black/50 dark:text-white/40 font-bold uppercase tracking-widest mt-0.5">
+1460:                      <div className="text-[8px] font-bold text-black/70 dark:text-white/60 uppercase tracking-widest">
+1480:                                className="text-[6px] font-semibold text-black/60 dark:text-white/50 uppercase"
+1502:                      <div className="text-[8px] font-bold text-black/70 dark:text-white/60 uppercase tracking-widest">
+1522:                                className="text-[6px] font-semibold text-black/60 dark:text-white/50 uppercase"
+1581:                              className="text-[8px] font-bold text-black/80 dark:text-white/80 uppercase tracking-widest"
+1746:            className="absolute top-4 right-4 p-1.5 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 border border-black/10 dark:border-white/10 rounded-full text-black/70 dark:text-white/60 hover:text-zinc-900 dark:text-white transition-all cursor-pointer"
+1761:                <div className="flex flex-col items-center justify-center text-black/50 dark:text-white/40">
+1793:                className="w-full bg-transparent text-xl font-black uppercase tracking-tight text-zinc-900 dark:text-white leading-none text-center outline-none border-b border-transparent focus:border-black/20 dark:border-white/20 transition-all placeholder:text-black/50 dark:text-white/40 py-1"
+1821:              <div className="text-[8px] font-bold uppercase tracking-widest text-black/60 dark:text-white/50">
+1829:              <div className="text-[8px] font-bold uppercase tracking-widest text-black/60 dark:text-white/50">
+2188:          <span className="text-[10px] text-black/60 dark:text-white/50 tracking-[0.2em] mt-1 uppercase font-bold">
+2365:        className="w-24 h-24 rounded-[32px] bg-brand-primary flex items-center justify-center mb-8 shadow-lg shadow-brand-primary/20 text-black"
+6157:            isActive ? "text-zinc-900 dark:text-white" : "text-black/70 dark:text-white/60 hover:text-zinc-900 dark:text-white"
+6241:              <label className="text-[10px] font-black uppercase tracking-widest text-black/60 dark:text-white/50">
+6274:                  className="w-8 h-8 flex items-center justify-center bg-black/10 dark:bg-white/10 rounded-full hover:bg-white/50 dark:bg-black/20 dark:bg-white/20 transition-all text-black/70 dark:text-white/60"
+6279:                  <label className="text-[9px] font-black uppercase tracking-widest text-black/60 dark:text-white/50 block">
+6367:                          className="w-full bg-[#E3D39E] text-black font-black uppercase tracking-widest py-4 rounded-xl shadow-lg hover:bg-white active:scale-95 transition-all text-xs"
+6381:                          <p className="text-[10px] text-black/60 dark:text-white/50 uppercase tracking-widest font-bold">
+6434:      className={`h-[100dvh] ${isPrintMode ? "bg-white text-black" : "bg-[#f8fafc] dark:bg-[#020510] text-zinc-900 dark:text-zinc-100"} font-sans overflow-hidden flex flex-col transition-colors duration-500 relative ${theme === "dark" ? "dark" : ""}`}
+6464:                <p className="text-[10px] font-bold text-black/60 dark:text-white/50 uppercase tracking-widest mt-1">
+6497:                  className="absolute top-4 right-4 p-1.5 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 border border-black/10 dark:border-white/10 rounded-full text-black/70 dark:text-white/60 hover:text-zinc-900 dark:text-white transition-all cursor-pointer"
+6509:                <p className="text-[8px] text-black/60 dark:text-white/50 font-black mt-1.5 uppercase tracking-[0.2em] relative z-10">
+6516:                  <label className="text-[8px] font-black uppercase tracking-[0.15em] text-black/60 dark:text-white/50 mb-1 block">
+6533:                  <label className="text-[8px] font-black uppercase tracking-[0.15em] text-black/60 dark:text-white/50 mb-1 block">
+6642:                          <p className="text-[11px] font-medium text-black/70 dark:text-white/70 leading-relaxed pt-0.5">
+6683:                          <p className="text-[11px] font-medium text-black/70 dark:text-white/70 leading-relaxed pt-0.5">
+6744:                  <p className="text-[9px] font-medium leading-relaxed text-black/60 dark:text-white/50 uppercase tracking-widest mt-1">
+6750:              <p className="text-[10px] font-bold text-black/70 dark:text-white/60 text-center leading-relaxed px-2">
+6790:                  className={`w-full h-10 bg-black/5 dark:bg-white/5 text-black/70 dark:text-white/70 border border-black/10 dark:border-white/10 rounded-xl font-black uppercase tracking-widest text-[9px] hover:bg-black/10 dark:bg-white/10 hover:text-zinc-900 dark:text-white transition-all active:scale-95 shadow-sm ${scheduledMatches.length > 0 && players.length === 0 ? "hidden" : "block"}`}
+6852:                <Users size={40} className="text-black" />
+6866:                      ? "bg-zinc-200 text-black hover:bg-zinc-300"
+6877:                  className="flex-1 py-4 bg-brand-gradient text-black font-black uppercase tracking-widest text-xs rounded-md shadow shadow-black/20 hover:opacity-90 transition-all active:scale-95"
+6904:                    : "bg-black/5 dark:bg-white/5 text-black/80 dark:text-white/80 border border-black/10 dark:border-white/10"
+6915:                <p className="text-[11px] font-medium text-black/70 dark:text-white/60 leading-tight">
+7171:                        className={`w-8 h-8 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center transition-all cursor-pointer ${theme === "light" ? "bg-white text-black" : "bg-black/5 dark:bg-white/5 text-black/70 dark:text-white/60 hover:text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10"}`}
+7177:                        className={`w-8 h-8 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center transition-all cursor-pointer ${theme === "dark" ? "bg-white text-black" : "bg-black/5 dark:bg-white/5 text-black/70 dark:text-white/60 hover:text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10"}`}
+7184:                      className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-black/70 dark:text-white/60 hover:text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10 active:scale-90 transition-all cursor-pointer"
+7216:                              <span className="text-[10px] text-black/50 dark:text-white/40 font-medium">
+7238:                            <span className="text-[10px] text-black/50 dark:text-white/40 font-medium">
+7259:                            <span className="text-[10px] text-black/50 dark:text-white/40 font-medium">
+7291:          className={`flex-1 overflow-y-auto flex flex-col ${currentScreen === "players" ? "pb-32" : "pb-12"} touch-pan-y ${isPrintMode ? "p-0 pb-0 bg-white text-black" : "bg-transparent relative z-10"}`}
+7369:                          <div className="absolute -right-8 top-1/2 -translate-y-1/2 text-black">
+7443:                                <p className="text-[10px] font-bold text-black/70 dark:text-white/70 leading-tight uppercase tracking-wider">
+7521:                                             <span className="text-black/70 dark:text-white/60"><GiSoccerBall size={14} /></span>
+7535:                                        className="w-7 h-7 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-black/60 dark:text-white/50 hover:bg-black/10 dark:bg-white/10 transition-all border border-black/10 dark:border-white/10"
+7542:                                        <p className="text-black/50 dark:text-white/40 text-[8px] font-bold tracking-[0.2em] uppercase mb-0.5">PRÓXIMA PELADA</p>
+7544:                                        <p className="text-black/70 dark:text-white/70 text-xs mt-0.5 font-medium tracking-wide">{weekday.split('-')[0]} as {match.time}</p>
+7558:                                        <div className="flex justify-between items-center mb-1.5 relative z-10"><span className="text-black/50 dark:text-white/40 text-[9px] font-bold tracking-wide">STATUS DA PELADA</span></div>
+7563:                                                <p className="text-black/50 dark:text-white/40 text-[9px] mt-0.5">{totalAvailablePlayers} na lista</p>
+7573:                                        <button onClick={(e) => { e.stopPropagation(); setMatchToDelete(match); }} className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 hover:bg-red-500/20 border border-black/10 dark:border-white/10 backdrop-blur-sm flex items-center justify-center text-black/70 dark:text-white/70 transition-colors cursor-pointer shadow-sm"><Trash2 size={14} /></button>
+7575:                                          <button onClick={(e) => { e.stopPropagation(); handleSwapMatches(); }} className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 border border-black/10 dark:border-white/10 backdrop-blur-sm flex items-center justify-center text-black/70 dark:text-white/70 transition-colors cursor-pointer shadow-sm"><ArrowLeftRight size={14} /></button>
+7634:                                        className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center text-black/70 dark:text-white/60 border border-black/10 dark:border-white/10 overflow-hidden cursor-pointer hover:opacity-80 transition-opacity"
+7648:                                        <p className="text-[9px] font-medium text-black/60 dark:text-white/50 uppercase tracking-tight mt-0.5">
+7666:                                         className="w-7 h-7 rounded-full bg-black/5 dark:bg-white/5 text-black/70 dark:text-white/70 flex items-center justify-center hover:bg-black/10 dark:bg-white/10 transition-colors"
+7676:                                       <ChevronRight size={14} className="text-black/50 dark:text-white/40" />
+7905:                                    <div className="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 bg-black/10 dark:bg-white/10 text-black/60 dark:text-white/50 border border-black/5 dark:border-white/5 overflow-hidden">
+8003:                                  className="w-full px-8 py-4 bg-black/5 dark:bg-white/5 text-black/60 dark:text-white/50 rounded-2xl font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all border border-black/10 dark:border-white/10"
+8031:                        <div className="text-black/30">
+8082:                              <p className="text-black/40 text-[8px] font-bold tracking-[0.3em] uppercase">{item.subtitle}</p>
+8086:                               <ChevronRight size={24} className="text-black/20" />
+8103:                            <label className="text-[8px] font-black uppercase tracking-[0.15em] text-black/60 dark:text-white/50 block text-center mb-1.5">
+8115:                            <label className="text-[8px] font-black uppercase tracking-[0.15em] text-black/60 dark:text-white/50 block text-center mb-1.5">
+8129:                            <label className="text-[8px] font-black uppercase tracking-[0.15em] text-black/60 dark:text-white/50 block text-center mb-1.5">
+8153:                              <p className="text-[10px] text-black/60 dark:text-white/50 font-bold mt-0.5">
+8175:                                <label className="text-[8px] font-black uppercase tracking-[0.15em] text-black/60 dark:text-white/50 block text-center mb-1.5">
+8203:                                <label className="text-[8px] font-black uppercase tracking-[0.15em] text-black/60 dark:text-white/50 block text-center mb-1.5">
+8245:                              <p className="text-[10px] text-black/60 dark:text-white/50 font-bold mt-0.5">
+8845:                                  : "bg-black/5 dark:bg-white/5 border-black/5 dark:border-white/5 text-black/50 dark:text-white/40 opacity-60 hover:bg-black/10 dark:bg-white/10"
+8875:                                        ? "text-black/80 dark:text-white/80"
+8876:                                        : "text-black/50 dark:text-white/40") +
+8886:                                  className={`text-xs font-normal tracking-tight capitalize leading-none ${p.isAvailable ? "text-zinc-900 dark:text-white" : "text-black/60 dark:text-white/50"}`}
+8972:                                  <p className="text-[10px] font-black text-black/60 dark:text-white/50 uppercase tracking-[0.2em]">
+9003:                                    <div className="text-sm font-black text-black/50 dark:text-white/40 uppercase tracking-widest">
+9087:                                                  <span className="text-black flex items-center shrink-0">
+9093:                                                <span className="text-xs font-normal tracking-tight capitalize truncate text-black/90 leading-none">
+9102:                                                        className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10"}`}
+9246:                                    className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all shadow-md ${match.isPaused ? "bg-[#34d399] text-[#1E3D2F] hover:opacity-90" : "bg-black/10 dark:bg-white/10 text-black/60 dark:text-white/50 hover:bg-white/50 dark:bg-black/20 dark:bg-white/20"} disabled:opacity-20 disabled:cursor-not-allowed border border-black/5 dark:border-white/5`}
+9504:                                        <div className="flex items-center justify-center rounded-full w-4 h-4 text-[9px] font-black leading-none text-black/70 dark:text-white/70">
+9514:                                        <span className="text-black/50 dark:text-white/40 flex items-center shrink-0">
+9535:                                        <div className="flex items-center gap-0.5 text-[10px] font-bold text-black/60 dark:text-white/50">
+9541:                                        <div className="flex items-center gap-0.5 text-[10px] font-bold text-black/60 dark:text-white/50">
+9794:                                        <div className="flex items-center justify-center rounded-full w-4 h-4 text-[9px] font-black leading-none text-black/70 dark:text-white/70">
+9804:                                        <span className="text-black/50 dark:text-white/40 flex items-center shrink-0">
+9846:                                        <div className="flex items-center gap-0.5 text-[10px] font-bold text-black/60 dark:text-white/50">
+9851:                                        <div className="flex items-center gap-0.5 text-[10px] font-bold text-black/60 dark:text-white/50">
+10172:                                  <p className="text-[10px] text-black/80 dark:text-white/80 font-bold uppercase leading-relaxed tracking-wider">
+10326:                                        <div className="px-2 py-0.5 rounded-full bg-[#39FF14] text-black text-[8px] font-black uppercase tracking-widest shadow-sm flex items-center gap-1">
+10334:                                        <div className="px-2 py-0.5 rounded-full bg-zinc-500 text-black text-[8px] font-black uppercase tracking-widest shadow-sm">
+10338:                                        <div className="px-2 py-0.5 rounded-full bg-red-500 text-black text-[8px] font-black uppercase tracking-widest shadow-sm">
+10342:                                        <div className="px-2 py-0.5 rounded-full bg-sky-500 text-black text-[8px] font-black uppercase tracking-widest shadow-sm animate-bounce">
+10589:                                            className="text-black/80 dark:text-white/80"
+10596:                                        <p className="text-[8px] font-bold uppercase tracking-widest text-black/70 dark:text-white/70 leading-tight text-center mt-1">
+10612:                                          <span className="text-[10px] font-bold text-black/50 dark:text-white/40 uppercase tracking-widest">
+10625:                                            className="text-black/50 dark:text-white/40 hover:text-amber-400 cursor-pointer transition-all active:scale-90 hover:bg-black/5 dark:bg-white/5 p-1 rounded-full flex items-center justify-center pointer-events-auto"
+11066:                                                      className={`flex items-center justify-center shrink-0 rounded-full w-4 h-4 text-[9px] font-black leading-none ${isCurrent ? "text-zinc-900 dark:text-white" : "text-black/50 dark:text-white/40"}`}
+11078:                                                      className={`flex items-center shrink-0 ${isCurrent ? "text-black/70 dark:text-white/60" : "text-black/50 dark:text-white/40"}`}
+11198:                                  ? "text-black/60"
+11230:                                  ? "text-black"
+11402:                                        <div className="px-2 py-1 text-black bg-[#53B986]/20 border border-[#53B986]/50 rounded-sm text-[8px] font-black uppercase">
+11408:                                          <div className="px-2 py-1 bg-[#53B986] text-black rounded-sm text-[8px] font-black uppercase">
+11461:                                    ? "bg-transparent text-black hover:bg-white/50 dark:bg-black/20"
+11475:                        <div className="w-12 h-12 rounded-full bg-zinc-200 flex items-center justify-center group-hover:bg-brand-primary group-hover:text-black transition-all">
+11549:                                <span className="text-black/50 dark:text-white/40 flex items-center shrink-0">
+11606:                          <div className="text-center text-black/60 dark:text-white/50 text-xs py-8">
+11616:                    className="p-8 bg-[#dce3ee] min-h-screen text-black space-y-8"
+11620:                        <Trophy size={16} className="text-black" />
+11632:                        className="print:hidden px-3 py-1.5 bg-brand-primary text-black rounded-sm text-[9px] font-bold uppercase hover:opacity-80 transition-colors"
+11645:                            <tr className="bg-brand-primary text-black">
+11709:                className={`space-y-4 ${isPrintMode ? "space-y-0 bg-white text-black min-h-screen" : ""}`}
+11731:                        className={`space-y-4 ${isPrintMode ? "bg-white min-h-screen text-black p-4 pb-12 font-mono" : "font-mono"}`}
+11745:                            <h2 className="text-2xl font-black uppercase mb-1 text-black">
+11750:                            <p className="text-[10px] font-bold uppercase opacity-60 text-black">
+11793:                                  <span className="text-[8px] font-black uppercase tracking-[0.15em] text-black/60 dark:text-white/50 group-hover:text-[#34d399] transition-colors">
+11816:                                  <span className="text-[8px] font-black uppercase tracking-[0.15em] text-black/60 dark:text-white/50 group-hover:text-red-400 transition-colors">
+11831:                                  <span className="text-[8px] font-black uppercase tracking-[0.15em] text-black/60 dark:text-white/50 group-hover:text-[#34d399] transition-colors">
+11848:                                    className={`text-[9px] font-black uppercase tracking-widest ${isPrintMode ? "text-zinc-600" : "text-black/60 dark:text-white/50"}`}
+11866:                                      className="text-black/50 dark:text-white/40 hover:text-[#34d399] transition-colors"
+11876:                                      ? "text-black"
+11905:                                    ? "bg-white border-zinc-300 border rounded-none text-black"
+11926:                                        className={`text-xs font-bold ${isPrintMode ? "opacity-60" : "text-black/70 dark:text-white/60"}`}
+11960:                                          isPrintMode ? "text-black" : "text-zinc-900 dark:text-white"
+11974:                                          className="text-[8px] font-black uppercase tracking-widest text-black/50 dark:text-white/40 flex items-center gap-1 hover:text-zinc-900 dark:text-white w-fit mt-1.5 transition-colors"
+12012:                                    isPrintMode ? "text-black" : "text-zinc-900 dark:text-white"
+12026:                                  <div className="flex justify-between text-[7px] font-bold uppercase tracking-wider opacity-60 text-black/60 dark:text-white/50">
+12061:                                    isPrintMode ? "text-zinc-800" : "text-black/70 dark:text-white/70"
+12116:                                            isPrintMode ? "text-zinc-500 dark:text-zinc-500" : "text-black/50 dark:text-white/40"
+12370:                            className="text-black/70 dark:text-white/60 hover:text-zinc-900 dark:text-white p-1.5 hover:bg-black/10 dark:bg-white/10 rounded-full border border-black/10 dark:border-white/10 transition-colors cursor-pointer"
+12382:                            <span className="text-[8px] font-black text-black/60 dark:text-white/50 uppercase tracking-[0.15em]">
+12420:                              className="p-1 bg-black/5 dark:bg-white/5 text-black/80 dark:text-white/80 border border-black/10 dark:border-white/10 rounded hover:bg-black/10 dark:bg-white/10 transition-all cursor-pointer active:scale-95"
+12428:                              className="p-1 bg-black/5 dark:bg-white/5 text-black/80 dark:text-white/80 border border-black/10 dark:border-white/10 rounded hover:bg-black/10 dark:bg-white/10 transition-all cursor-pointer active:scale-95"
+12437:                            <span className="text-[8px] font-black text-black/60 dark:text-white/50 uppercase tracking-[0.15em]">
+12515:                              className={`${isPrintMode ? "bg-zinc-50 text-zinc-700" : "bg-black/5 dark:bg-white/5 text-black/80 dark:text-white/80"} font-bold uppercase tracking-tighter`}
+12534:                            className={`${isPrintMode ? "bg-white text-black" : "text-zinc-900 dark:text-white bg-transparent"}`}
+12595:                                            className={`w-full py-1 text-[8px] tracking-tight rounded transition-all cursor-pointer ${isPaid ? "bg-[#34d399] text-[#1e3d2f] font-black hover:opacity-90" : "bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 text-black/50 dark:text-white/40 font-bold"}`}
+12617:                                  className={`p-4 text-center italic normal-case ${isPrintMode ? "text-zinc-600 dark:text-zinc-400" : "text-black/50 dark:text-white/40 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10"}`}
+12636:                        <p className="text-[9px] text-black/70 dark:text-white/60 leading-relaxed">
+12837:                      className="px-6 py-2 bg-brand-primary text-black rounded-full font-black uppercase text-xs flex items-center justify-center gap-2 hover:opacity-90 transition-all active:scale-95 shadow shadow-brand-primary/20"
+12895:                    <span className="text-black/50 dark:text-white/40 flex items-center shrink-0">
+12917:                <p className="text-[8px] text-black/60 dark:text-white/50 font-black mt-1.5 uppercase tracking-[0.2em]">
+13021:                        className="w-full h-9 bg-amber-500 hover:bg-amber-600 text-black rounded-xl font-black uppercase text-[10px] tracking-wider flex items-center justify-between px-4 transition-all active:scale-95 shadow-md shadow-amber-500/20 group font-roboto-flex cursor-pointer"
+13086:                            className={`${players.find((p) => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? "text-sky-400 border-sky-400/40" : "text-black/50 dark:text-white/40 border-black/20 dark:border-white/20"} flex items-center border rounded-full w-4 h-4 justify-center text-[9px] font-black leading-none`}
+13117:                          className="text-black/70 dark:text-white/60 group-hover:text-zinc-900 dark:text-white transition-colors"
+13144:                          className="text-black/70 dark:text-white/60 group-hover:text-zinc-900 dark:text-white transition-colors"
+13234:                      <X size={14} className="text-black/70 dark:text-white/60" />
+13279:                    <span className="text-black/50 dark:text-white/40 flex items-center shrink-0">
+13291:                <p className="text-[8px] text-black/60 dark:text-white/50 font-black mt-1.5 uppercase tracking-[0.2em]">
+13348:                              className={`${players.find((p) => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? "text-sky-400 border-sky-400/40" : "text-black/50 dark:text-white/40 border-black/20 dark:border-white/20"} flex items-center border rounded-full w-4 h-4 justify-center text-[9px] font-black leading-none`}
+13373:                          className="text-black/70 dark:text-white/60 group-hover:text-zinc-900 dark:text-white transition-colors"
+13396:                          className="text-black/70 dark:text-white/60 group-hover:text-zinc-900 dark:text-white transition-colors"
+13443:                        <X size={14} className="text-black/70 dark:text-white/60" />
+13492:                              className="w-full text-left px-5 py-4 text-xs font-black text-zinc-900 bg-zinc-50 hover:bg-brand-primary hover:text-black rounded-2xl transition-all border border-zinc-100 flex items-center justify-between group"
+13539:                  <span className="text-black/80 dark:text-white/80 relative z-10"><IoIosFootball size={24} /></span>
+13546:                  <p className="text-[9px] font-medium leading-relaxed text-black/60 dark:text-white/50 uppercase tracking-widest">
+13570:                    <span className="text-[9px] font-black uppercase tracking-widest text-black/70 dark:text-white/60 group-hover:text-zinc-900 dark:text-white">
+13627:                            <div className="text-[10px] font-black uppercase truncate text-black/80 dark:text-white/80 group-hover:text-zinc-900 dark:text-white">
+13631:                          <div className="w-6 h-6 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-black/50 dark:text-white/40 group-hover:text-zinc-900 dark:text-white transition-all shrink-0">
+13641:                  className="w-full py-3 mt-1 text-[9px] font-black uppercase tracking-widest transition-all bg-black/5 dark:bg-white/5 hover:bg-red-500/20 rounded-xl text-black/60 dark:text-white/50 hover:text-red-400 border border-black/5 dark:border-white/5 hover:border-red-500/30 text-center shadow-sm shrink-0"
+13761:                              : "bg-white dark:bg-[#0D0D0D] border border-black/5 dark:border-white/5 text-black/70 dark:text-white/60"
+14196:                className="w-full py-4 mt-6 bg-brand-gradient text-black rounded-lg font-black uppercase tracking-tighter shadow-xl  glass-3d"
+14314:                className="w-full py-4 bg-brand-gradient text-black rounded-md font-black uppercase tracking-tighter shadow-xl  glass-3d"
+14394:                  className="w-full py-4 bg-brand-gradient text-black rounded-md font-bold shadow-xl  flex items-center justify-center gap-2 glass-3d"
+14483:                  className="absolute top-4 right-4 p-1.5 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 border border-black/10 dark:border-white/10 rounded-full text-black/70 dark:text-white/60 hover:text-zinc-900 dark:text-white transition-all cursor-pointer"
+14494:                <p className="text-[8px] text-black/60 dark:text-white/50 font-black mt-1.5 uppercase tracking-[0.2em] relative z-10">
+14535:                  className="w-full h-8 text-black/70 dark:text-white/60 text-[9px] font-black uppercase tracking-widest hover:text-zinc-900 dark:text-white transition-colors"
+14588:                  className="flex-1 py-4 bg-brand-gradient text-black rounded-lg font-bold shadow-xl  glass-3d"
+14791:                <strong className="text-black">
+14851:                    className="flex-1 py-3 bg-brand-gradient text-black rounded-xl font-black uppercase tracking-widest text-xs hover:opacity-90 transition-all shadow-lg shadow-brand-primary/20"
+14965:                    className="w-full py-4 bg-brand-gradient text-black rounded-lg font-black uppercase tracking-tighter shadow-xl  glass-3d"
+15009:                  className="flex-1 py-4 bg-brand-gradient text-black rounded-md font-black uppercase tracking-tighter shadow-xl  hover:opacity-90 transition-all"
+15336:                    : "text-black/60 dark:text-white/50 hover:text-black/80 dark:text-white/80 hover:bg-black/5 dark:bg-white/5"
+15379:                    : "text-black/60 dark:text-white/50 hover:text-black/80 dark:text-white/80 hover:bg-black/5 dark:bg-white/5"
+15419:                    : "text-black/60 dark:text-white/50 hover:text-black/80 dark:text-white/80 hover:bg-black/5 dark:bg-white/5"
+15460:                    : "text-black/60 dark:text-white/50 hover:text-black/80 dark:text-white/80 hover:bg-black/5 dark:bg-white/5"
+15508:                <h2 className="text-sm font-normal text-center mb-2 uppercase tracking-widest text-black">
+15511:                <p className="text-center text-black/60 mb-8 text-[11px] leading-relaxed">
+15592:                  <p className="text-[9px] font-medium leading-relaxed text-black/60 dark:text-white/50 max-w-[180px] mx-auto">
+15602:                    <p className="text-[9px] font-medium text-black/70 dark:text-white/60 leading-tight">
+15611:                    <p className="text-[9px] font-medium text-black/70 dark:text-white/60 leading-tight">
+15620:                    <p className="text-[9px] font-medium text-black/70 dark:text-white/60 leading-tight">
+15660:              <p className="text-[10px] font-bold text-black/70 dark:text-white/60 leading-relaxed px-2 mt-2">
+15668:                className="w-full h-10 rounded-xl font-black uppercase tracking-widest text-[9px] transition-all bg-black/5 dark:bg-white/5 text-black/70 dark:text-white/70 hover:bg-black/10 dark:bg-white/10 hover:text-zinc-900 dark:text-white active:scale-95 border border-black/10 dark:border-white/10"
+15715:                className="absolute top-4 right-4 p-1.5 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 border border-black/10 dark:border-white/10 rounded-full text-black/70 dark:text-white/60 hover:text-zinc-900 dark:text-white transition-all cursor-pointer"
+15726:              <p className="text-[8px] text-black/60 dark:text-white/50 font-black mt-1.5 uppercase tracking-[0.2em] relative z-10">
+15747:                      <Camera size={16} className="text-black/50 dark:text-white/40 group-hover:text-[#34d399]" />
+15758:                <p className="text-[8px] font-black text-black/60 dark:text-white/50 uppercase tracking-widest">
+15784:                  <label className="text-[8px] font-black text-black/60 dark:text-white/50 uppercase tracking-[0.15em] block text-center">
+15808:                  <label className="text-[8px] font-black text-black/60 dark:text-white/50 uppercase tracking-[0.15em] block text-center">
+15867:                className="absolute top-4 right-4 p-1.5 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 border border-black/10 dark:border-white/10 rounded-full text-black/70 dark:text-white/60 hover:text-zinc-900 dark:text-white transition-all cursor-pointer"
+15881:              <p className="text-xs font-medium text-black/70 dark:text-white/70 text-center leading-normal">
+15969:              className={`flex-1 py-2.5 text-[11px] font-black uppercase tracking-widest rounded-xl transition-all ${!isSignUp ? "bg-white shadow-sm text-black" : "text-zinc-500 dark:text-zinc-500 hover:text-black"}`}
+15976:              className={`flex-1 py-2.5 text-[11px] font-black uppercase tracking-widest rounded-xl transition-all ${isSignUp ? "bg-white shadow-sm text-black" : "text-zinc-500 dark:text-zinc-500 hover:text-black"}`}
+16019:            className="w-full py-4 mt-2 rounded-xl bg-brand-gradient text-black font-black uppercase tracking-widest text-xs hover:opacity-90 transition-opacity disabled:opacity-50"
