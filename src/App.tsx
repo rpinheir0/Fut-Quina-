@@ -2169,7 +2169,7 @@ const SplashScreen = ({ onComplete }: { onComplete: () => void }) => {
         className="flex flex-col items-center gap-4"
       >
         <motion.img
-          src="/logo-1.png"
+          src="/icone%20logo.png"
           alt="FutQuina Logo"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -2238,7 +2238,7 @@ const FutQuinaLogo = ({
     >
       <div className="relative shrink-0 flex items-center justify-center">
         <img
-          src="/logo-1.png"
+          src="/icone%20logo.png"
           alt="FutQuina Logo"
           width={iconSizes[size]}
           height={iconSizes[size]}
@@ -4632,7 +4632,6 @@ function GroupApp({
     setTimeout(() => {
       const lines = text.split("\n");
       const newPlayers: Player[] = [];
-      const existingPlayersToUpdate = new Set<string>();
 
       // Patterns to ignore: dates (DD/MM, DD-MM), times (HH:MM), common titles/descriptions
       const ignorePatterns = [
@@ -4642,8 +4641,9 @@ function GroupApp({
         /^\s*$/, // Empty lines
       ];
 
-      const existingNamesMap = new Map<string, string>(players.map((p) => [p.name.toLowerCase(), p.id]));
-      const newNamesAdded = new Set<string>();
+      const existingNames = new Set(players.map((p) => p.name.toLowerCase()));
+
+      const isAnyAvailable = players.some((p) => p.isAvailable);
 
       lines.forEach((line, i) => {
         // Remove common prefixes: "1.", "1-", "-", "*", "•" but keep numbers that are part of the name
@@ -4654,42 +4654,29 @@ function GroupApp({
         const shouldIgnore = ignorePatterns.some((pattern) => pattern.test(name));
 
         if (name && name.length > 1 && !shouldIgnore) {
-          const lowerName = name.toLowerCase();
-          
-          if (existingNamesMap.has(lowerName)) {
-            existingPlayersToUpdate.add(existingNamesMap.get(lowerName)!);
-          } else if (!newNamesAdded.has(lowerName)) {
-            newNamesAdded.add(lowerName);
-            newPlayers.push({
-              id: generateId(),
-              name,
-              goals: 0,
-              assists: 0,
-              isAvailable: true,
-              arrivedAt: Date.now() + i,
-              stars: 3,
-            });
-          }
+          if (existingNames.has(name.toLowerCase())) return;
+          existingNames.add(name.toLowerCase());
+
+          newPlayers.push({
+            id: generateId(),
+            name,
+            goals: 0,
+            assists: 0,
+            isAvailable: isAnyAvailable,
+            arrivedAt: isAnyAvailable ? Date.now() + i : undefined,
+            stars: 3,
+          });
         }
       });
 
-      if (newPlayers.length > 0 || existingPlayersToUpdate.size > 0) {
-        setPlayers((prev) => {
-          const updatedPlayers = prev.map(p => {
-            if (existingPlayersToUpdate.has(p.id)) {
-              return { ...p, isAvailable: true, arrivedAt: p.arrivedAt || Date.now() };
-            }
-            return p;
-          });
-          return [...updatedPlayers, ...newPlayers];
-        });
-        
-        setSessionPlayerIds((prev) => {
-          const newSessionIds = new Set(prev);
-          existingPlayersToUpdate.forEach(id => newSessionIds.add(id));
-          newPlayers.forEach(p => newSessionIds.add(p.id));
-          return Array.from(newSessionIds);
-        });
+      if (newPlayers.length > 0) {
+        setPlayers((prev) => [...prev, ...newPlayers]);
+        if (isAnyAvailable) {
+          setSessionPlayerIds((prev) => [
+            ...prev,
+            ...newPlayers.map((p) => p.id),
+          ]);
+        }
       }
       setIsAiProcessing(false);
     }, 1500);
@@ -7872,7 +7859,7 @@ function GroupApp({
                         </div>
 
                         <section className="w-full relative pt-6 border-t border-black/10 dark:border-white/10">
-                          {(!isDataLoaded || players.length === 0) ? (
+                          {!isDataLoaded || players.length === 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                               {Array.from({ length: 5 }).map((_, idx) => (
                                 <div key={`skeleton-${idx}`} className="flex items-center justify-between p-2 px-3 rounded-2xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 backdrop-blur-md shadow-sm animate-pulse">
@@ -8693,7 +8680,7 @@ function GroupApp({
                           </div>
                         )}
 
-                      {(!isDataLoaded || players.length === 0) ? (
+                      {!isDataLoaded || players.length === 0 ? (
                         <div className="w-full flex flex-col gap-8 pb-8">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
                             {Array.from({ length: 5 }).map((_, idx) => (
@@ -11597,7 +11584,7 @@ function GroupApp({
                           </div>
                         </motion.div>
                       ))}
-                      {(!isDataLoaded || players.length === 0) ? (
+                      {!isDataLoaded || players.length === 0 ? (
                         Array.from({ length: 5 }).map((_, idx) => (
                           <div
                             key={`skel-ranking-${idx}`}
