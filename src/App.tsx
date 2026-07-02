@@ -677,7 +677,7 @@ const ColorPickerModal = ({
         <div className="flex items-center justify-between mb-6">
           <div className="flex flex-col">
             <h3 className="text-xl font-black uppercase tracking-tighter text-zinc-900">
-              COR DO ESCUDO
+              COR DA CAMISA
             </h3>
             <span className="text-[10px] font-bold text-zinc-500 dark:text-zinc-500 uppercase tracking-widest">
               {teamName}
@@ -8461,22 +8461,6 @@ function GroupApp({
                     </div>
                   ) : teamsTab === "chegada" ? (
                     <div className="space-y-6 pb-24">
-                      {sessionPlayerIds.length === 0 && (
-                        <div className="flex flex-col gap-2 w-full">
-                          <h3 className="text-sm font-black uppercase tracking-widest text-zinc-900 dark:text-white mb-2">
-                            ORDEM DE CHEGADA
-                          </h3>
-                          {[...Array(5)].map((_, i) => (
-                            <div key={i} className="flex items-center gap-3 p-3 rounded-2xl border transition-all relative overflow-hidden bg-black/5 dark:bg-white/5 border-black/5 dark:border-white/5 opacity-60 animate-pulse">
-                              <div className="w-10 h-10 rounded-full bg-black/10 dark:bg-white/10 shrink-0" />
-                              <div className="flex-1 text-left flex flex-col gap-1.5 justify-center">
-                                <div className="h-3 bg-black/10 dark:bg-white/10 rounded-sm w-32" />
-                                <div className="h-2 bg-black/10 dark:bg-white/10 rounded-sm w-16" />
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      )}
                       {firstSetupDone &&
                         players.filter((p) => sessionPlayerIds.includes(p.id))
                           .length > 0 && (
@@ -8696,7 +8680,7 @@ function GroupApp({
                           </div>
                         )}
 
-                      {players.length === 0 ? (
+                      {players.length === 0 || sessionPlayerIds.length === 0 ? (
                         <div className="w-full flex flex-col gap-8 pb-8">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
                             {Array.from({ length: 5 }).map((_, idx) => (
@@ -8715,29 +8699,10 @@ function GroupApp({
                           <div className="flex justify-center">
                             <button
                               onClick={() => {
-                                setCurrentScreen("players");
-                                setPlayersTab("jogadores");
-                              }}
-                              className="px-6 py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 cursor-pointer"
-                            >
-                              CRIAR JOGADORES
-                            </button>
-                          </div>
-                        </div>
-                      ) : players.filter((p) => sessionPlayerIds.includes(p.id))
-                        .length === 0 ? (
-                        <div className="min-h-[450px] flex flex-col items-center justify-center gap-8 w-full">
-                          <div className="flex flex-col items-center gap-4 opacity-20 text-zinc-900 dark:text-white text-xs">
-                            <span className="font-bold uppercase tracking-widest text-[11px]">
-                              Nenhum jogador na sessão
-                            </span>
-                          </div>
-                            <button
-                              onClick={() => {
                                 if (players.length < 2) {
                                   setCurrentScreen("players");
                                   setPlayersTab("jogadores");
-                          } else {
+                                } else {
                                   setCurrentScreen("teams");
                                   setTeamsTab("configuracao");
                                 }
@@ -8748,6 +8713,7 @@ function GroupApp({
                                 ? "CRIAR JOGADORES"
                                 : "CONFIGURAR PARTIDA"}
                             </button>
+                          </div>
                         </div>
                       ) : (
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
