@@ -4632,6 +4632,7 @@ function GroupApp({
     setTimeout(() => {
       const lines = text.split("\n");
       const newPlayers: Player[] = [];
+      const existingPlayersToUpdate = new Set<string>();
 
       // Patterns to ignore: dates (DD/MM, DD-MM), times (HH:MM), common titles/descriptions
       const ignorePatterns = [
@@ -4641,9 +4642,8 @@ function GroupApp({
         /^\s*$/, // Empty lines
       ];
 
-      const existingNames = new Set(players.map((p) => p.name.toLowerCase()));
-
-      const isAnyAvailable = players.some((p) => p.isAvailable);
+      const existingNamesMap = new Map(players.map((p) => [p.name.toLowerCase(), p.id]));
+      const newNamesAdded = new Set<string>();
 
       lines.forEach((line, i) => {
         // Remove common prefixes: "1.", "1-", "-", "*", "•" but keep numbers that are part of the name
@@ -4654,29 +4654,42 @@ function GroupApp({
         const shouldIgnore = ignorePatterns.some((pattern) => pattern.test(name));
 
         if (name && name.length > 1 && !shouldIgnore) {
-          if (existingNames.has(name.toLowerCase())) return;
-          existingNames.add(name.toLowerCase());
-
-          newPlayers.push({
-            id: generateId(),
-            name,
-            goals: 0,
-            assists: 0,
-            isAvailable: isAnyAvailable,
-            arrivedAt: isAnyAvailable ? Date.now() + i : undefined,
-            stars: 3,
-          });
+          const lowerName = name.toLowerCase();
+          
+          if (existingNamesMap.has(lowerName)) {
+            existingPlayersToUpdate.add(existingNamesMap.get(lowerName)!);
+          } else if (!newNamesAdded.has(lowerName)) {
+            newNamesAdded.add(lowerName);
+            newPlayers.push({
+              id: generateId(),
+              name,
+              goals: 0,
+              assists: 0,
+              isAvailable: true,
+              arrivedAt: Date.now() + i,
+              stars: 3,
+            });
+          }
         }
       });
 
-      if (newPlayers.length > 0) {
-        setPlayers((prev) => [...prev, ...newPlayers]);
-        if (isAnyAvailable) {
-          setSessionPlayerIds((prev) => [
-            ...prev,
-            ...newPlayers.map((p) => p.id),
-          ]);
-        }
+      if (newPlayers.length > 0 || existingPlayersToUpdate.size > 0) {
+        setPlayers((prev) => {
+          const updatedPlayers = prev.map(p => {
+            if (existingPlayersToUpdate.has(p.id)) {
+              return { ...p, isAvailable: true, arrivedAt: p.arrivedAt || Date.now() };
+            }
+            return p;
+          });
+          return [...updatedPlayers, ...newPlayers];
+        });
+        
+        setSessionPlayerIds((prev) => {
+          const newSessionIds = new Set(prev);
+          existingPlayersToUpdate.forEach(id => newSessionIds.add(id));
+          newPlayers.forEach(p => newSessionIds.add(p.id));
+          return Array.from(newSessionIds);
+        });
       }
       setIsAiProcessing(false);
     }, 1500);
