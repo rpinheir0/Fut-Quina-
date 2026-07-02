@@ -7859,7 +7859,7 @@ function GroupApp({
                         </div>
 
                         <section className="w-full relative pt-6 border-t border-black/10 dark:border-white/10">
-                          {!isDataLoaded || players.length === 0 ? (
+                          {players.length === 0 ? (
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
                               {Array.from({ length: 5 }).map((_, idx) => (
                                 <div key={`skeleton-${idx}`} className="flex items-center justify-between p-2 px-3 rounded-2xl border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 backdrop-blur-md shadow-sm animate-pulse">
@@ -8461,7 +8461,7 @@ function GroupApp({
                     </div>
                   ) : teamsTab === "chegada" ? (
                     <div className="space-y-6 pb-24">
-                      {!firstSetupDone && (
+                      {sessionPlayerIds.length === 0 && (
                         <div className="flex flex-col gap-2 w-full">
                           <h3 className="text-sm font-black uppercase tracking-widest text-zinc-900 dark:text-white mb-2">
                             ORDEM DE CHEGADA
@@ -8696,7 +8696,7 @@ function GroupApp({
                           </div>
                         )}
 
-                      {!isDataLoaded || players.length === 0 ? (
+                      {players.length === 0 ? (
                         <div className="w-full flex flex-col gap-8 pb-8">
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
                             {Array.from({ length: 5 }).map((_, idx) => (
@@ -11600,7 +11600,7 @@ function GroupApp({
                           </div>
                         </motion.div>
                       ))}
-                      {!isDataLoaded || players.length === 0 ? (
+                      {players.length === 0 ? (
                         Array.from({ length: 5 }).map((_, idx) => (
                           <div
                             key={`skel-ranking-${idx}`}
