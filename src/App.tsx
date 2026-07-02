@@ -8461,6 +8461,22 @@ function GroupApp({
                     </div>
                   ) : teamsTab === "chegada" ? (
                     <div className="space-y-6 pb-24">
+                      {!firstSetupDone && (
+                        <div className="flex flex-col gap-2 w-full">
+                          <h3 className="text-sm font-black uppercase tracking-widest text-zinc-900 dark:text-white mb-2">
+                            ORDEM DE CHEGADA
+                          </h3>
+                          {[...Array(5)].map((_, i) => (
+                            <div key={i} className="flex items-center gap-3 p-3 rounded-2xl border transition-all relative overflow-hidden bg-black/5 dark:bg-white/5 border-black/5 dark:border-white/5 opacity-60 animate-pulse">
+                              <div className="w-10 h-10 rounded-full bg-black/10 dark:bg-white/10 shrink-0" />
+                              <div className="flex-1 text-left flex flex-col gap-1.5 justify-center">
+                                <div className="h-3 bg-black/10 dark:bg-white/10 rounded-sm w-32" />
+                                <div className="h-2 bg-black/10 dark:bg-white/10 rounded-sm w-16" />
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
                       {firstSetupDone &&
                         players.filter((p) => sessionPlayerIds.includes(p.id))
                           .length > 0 && (
