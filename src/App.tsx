@@ -11751,80 +11751,21 @@ function GroupApp({
                           {/* Summary Cards */}
                           {!isPrintPaymentsOnly && (
                             <>
-                              {/* Quick Navigation / Action Row */}
-                              <div className="flex items-center justify-center gap-6 py-3 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl shadow-sm mb-2">
-                                {/* Arrecadação Shortcut */}
-                                <button
-                                  onClick={() => {
-                                    if (players.length === 0) {
-                                      setToast({
-                                        message: "Adicione jogadores para ajustar arrecadação",
-                                        type: "info",
-                                      });
-                                      setTimeout(() => setToast(null), 3000);
-                                      return;
-                                    }
-                                    setTotalInput(manualAdjustment.toString());
-                                    setIsEditingTotal(true);
-                                  }}
-                                  className="flex flex-col items-center gap-1.5 group cursor-pointer"
-                                >
-                                  <div className="w-12 h-12 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 flex items-center justify-center shadow-lg shadow-black/20 group-hover:border-[#34d399]/50 group-hover:bg-[#34d399]/10 transition-all active:scale-95">
-                                    <FcMoneyTransfer size={24} />
-                                  </div>
-                                  <span className="text-[8px] font-black uppercase tracking-[0.15em] text-black/60 dark:text-white/50 group-hover:text-[#34d399] transition-colors">
-                                    Arrecadação
-                                  </span>
-                                </button>
-
-                                {/* Despesas Detalhadas Shortcut */}
-                                <button
-                                  onClick={() => {
-                                    if (players.length === 0) {
-                                      setToast({
-                                        message: "Adicione jogadores para detalhar despesas",
-                                        type: "info",
-                                      });
-                                      setTimeout(() => setToast(null), 3000);
-                                      return;
-                                    }
-                                    setShowExpenseModal(true);
-                                  }}
-                                  className="flex flex-col items-center gap-1.5 group cursor-pointer"
-                                >
-                                  <div className="w-12 h-12 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 flex items-center justify-center shadow-lg shadow-black/20 group-hover:border-red-400/50 group-hover:bg-red-400/10 transition-all active:scale-95">
-                                    <FcRules size={24} />
-                                  </div>
-                                  <span className="text-[8px] font-black uppercase tracking-[0.15em] text-black/60 dark:text-white/50 group-hover:text-red-400 transition-colors">
-                                    Despesas Det.
-                                  </span>
-                                </button>
-
-                                {/* Mensalidade Shortcut */}
-                                <button
-                                  onClick={() => {
-                                    setFinanceSubScreen("mensalidade");
-                                  }}
-                                  className="flex flex-col items-center gap-1.5 group cursor-pointer"
-                                >
-                                  <div className="w-12 h-12 rounded-full border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 flex items-center justify-center shadow-lg shadow-black/20 group-hover:border-[#34d399]/50 group-hover:bg-[#34d399]/10 transition-all active:scale-95">
-                                    <FcGrid size={24} />
-                                  </div>
-                                  <span className="text-[8px] font-black uppercase tracking-[0.15em] text-black/60 dark:text-white/50 group-hover:text-[#34d399] transition-colors">
-                                    Mensalidade
-                                  </span>
-                                </button>
-                              </div>
-
                               <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
                               {/* Saldo Líquido Card */}
                               <div
-                                className={`p-4 transition-all col-span-2 lg:col-span-1 order-1 lg:order-none ${
+                                className={`p-4 transition-all col-span-2 lg:col-span-1 order-1 lg:order-none overflow-hidden relative ${
                                   isPrintMode
                                     ? "bg-white border-zinc-300 border rounded-none"
-                                    : "bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl shadow-sm"
+                                    : "bg-[#e2e8f0] dark:bg-[#111625]/90 border border-black/10 dark:border-white/10 rounded-2xl shadow-md backdrop-blur-xl"
                                 }`}
                               >
+                                {!isPrintMode && (
+                                  <>
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#dce3ee] dark:bg-blue-500/10 rounded-full blur-[40px] pointer-events-none" />
+                                    <div className="absolute bottom-0 left-0 w-32 h-32 bg-indigo-500/10 rounded-full blur-[40px] pointer-events-none" />
+                                  </>
+                                )}
                                 <div className="flex justify-between items-center mb-1">
                                   <p
                                     className={`text-[9px] font-black uppercase tracking-widest ${isPrintMode ? "text-zinc-600" : "text-black/60 dark:text-white/50"}`}
@@ -11882,22 +11823,50 @@ function GroupApp({
                                     setIsEditingTotal(true);
                                   }
                                 }}
-                                className={`p-4 transition-all order-2 lg:order-none ${
+                                className={`p-4 transition-all order-2 lg:order-none overflow-hidden relative ${
                                   isPrintMode
                                     ? "bg-white border-zinc-300 border rounded-none text-black"
-                                    : "bg-[#34d399]/5 border border-[#34d399]/20 rounded-2xl cursor-pointer hover:bg-[#34d399]/10 overflow-hidden relative shadow-sm"
+                                    : "bg-[#e2e8f0] dark:bg-[#111625]/90 border border-[#34d399]/20 rounded-2xl cursor-pointer hover:bg-[#34d399]/5 shadow-md backdrop-blur-xl"
                                 }`}
                               >
                                 {!isPrintMode && (
-                                  <div className="absolute inset-0 bg-gradient-to-br from-[#34d399]/5 to-transparent pointer-events-none" />
+                                  <>
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#dce3ee] dark:bg-[#34d399]/10 rounded-full blur-[40px] pointer-events-none" />
+                                    <div className="absolute bottom-0 left-0 w-32 h-32 bg-[#34d399]/5 rounded-full blur-[40px] pointer-events-none" />
+                                    <div className="absolute inset-0 bg-gradient-to-br from-[#34d399]/5 to-transparent pointer-events-none" />
+                                  </>
                                 )}
-                                <p
-                                  className={`text-[9px] font-black uppercase tracking-widest mb-1 relative z-10 ${
-                                    isPrintMode ? "text-zinc-600" : "text-[#34d399]/80"
-                                  }`}
-                                >
-                                  Arrecadação
-                                </p>
+                                <div className="flex justify-between items-center mb-1 relative z-10">
+                                  <p
+                                    className={`text-[9px] font-black uppercase tracking-widest ${
+                                      isPrintMode ? "text-zinc-600" : "text-[#34d399]/80"
+                                    }`}
+                                  >
+                                    Arrecadação
+                                  </p>
+                                  {!isPrintMode && (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (!isEditingTotal) {
+                                          if (players.length === 0) {
+                                            setToast({
+                                              message: "Adicione jogadores para ajustar arrecadação",
+                                              type: "info",
+                                            });
+                                            setTimeout(() => setToast(null), 3000);
+                                            return;
+                                          }
+                                          setTotalInput(manualAdjustment.toString());
+                                          setIsEditingTotal(true);
+                                        }
+                                      }}
+                                      className="p-1.5 bg-[#34d399] text-[#1E3D2F] rounded-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer shadow-md shadow-[#34d399]/20"
+                                    >
+                                      <Plus size={14} />
+                                    </button>
+                                  )}
+                                </div>
                                 <div className="flex items-baseline gap-2 relative z-10">
                                   {isEditingTotal ? (
                                     <div
@@ -11976,19 +11945,46 @@ function GroupApp({
                                   }
                                   !isPrintMode && setShowExpenseModal(true);
                                 }}
-                                className={`p-4 transition-all order-3 lg:order-none ${
+                                className={`p-4 transition-all order-3 lg:order-none overflow-hidden relative ${
                                   isPrintMode
                                     ? "bg-white border-zinc-300 border rounded-none"
-                                    : "bg-red-500/5 border border-red-500/20 rounded-2xl cursor-pointer hover:bg-red-500/10 shadow-sm relative overflow-hidden"
+                                    : "bg-[#e2e8f0] dark:bg-[#111625]/90 border border-red-500/20 rounded-2xl cursor-pointer hover:bg-red-500/5 shadow-md backdrop-blur-xl"
                                 }`}
                               >
-                                <p
-                                  className={`text-[9px] font-black uppercase tracking-widest mb-1 ${
-                                    isPrintMode ? "text-zinc-600" : "text-red-400"
-                                  }`}
-                                >
-                                  Despesas
-                                </p>
+                                {!isPrintMode && (
+                                  <>
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#dce3ee] dark:bg-red-500/10 rounded-full blur-[40px] pointer-events-none" />
+                                    <div className="absolute bottom-0 left-0 w-32 h-32 bg-red-500/5 rounded-full blur-[40px] pointer-events-none" />
+                                  </>
+                                )}
+                                <div className="flex justify-between items-center mb-1 relative z-10">
+                                  <p
+                                    className={`text-[9px] font-black uppercase tracking-widest ${
+                                      isPrintMode ? "text-zinc-600" : "text-red-400"
+                                    }`}
+                                  >
+                                    Despesas
+                                  </p>
+                                  {!isPrintMode && (
+                                    <button
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        if (players.length === 0) {
+                                          setToast({
+                                            message: "Adicione jogadores para detalhar despesas",
+                                            type: "info"
+                                          });
+                                          setTimeout(() => setToast(null), 3000);
+                                          return;
+                                        }
+                                        setShowExpenseModal(true);
+                                      }}
+                                      className="p-1.5 bg-[#34d399] text-[#1E3D2F] rounded-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer shadow-md shadow-[#34d399]/20"
+                                    >
+                                      <Plus size={14} />
+                                    </button>
+                                  )}
+                                </div>
                                 <p
                                   className={`text-lg sm:text-xl font-black mb-2 ${
                                     isPrintMode ? "text-black" : "text-zinc-900 dark:text-white"
@@ -12047,7 +12043,7 @@ function GroupApp({
                                     "DESPESAS DETALHADAS"
                                   ) : (
                                     <>
-                                      <img src="/despesas%20detalhadas.png" referrerPolicy="no-referrer" className="w-4 h-4 object-contain inline-block mr-1.5 shrink-0 align-middle" alt="" /> Despesas Detalhadas
+                                      Despesas Detalhadas
                                     </>
                                   )}
                                 </h3>
@@ -12130,9 +12126,83 @@ function GroupApp({
                                   ))
                                 )}
                               </div>
+                            </div>                          )}
+                          {!isPrintPaymentsOnly && (
+                            <div className="w-full mt-4 mb-4">
+                              <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-900 dark:text-white mb-2 ml-1">
+                                Resumo Mensal ({selectedYear})
+                              </h3>
+                              <div className="h-64 w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-4">
+                                <ResponsiveContainer width="100%" height="100%">
+                                  <BarChart
+                                    data={MONTHS.map((month) => {
+                                      const rev = (payments || []).reduce(
+                                        (acc, p) =>
+                                          p.year === selectedYear
+                                            ? acc + (p.months[month] || 0)
+                                            : acc,
+                                        0
+                                      );
+                                      const exp = (expenses || [])
+                                        .filter((e) => {
+                                          const d = new Date(e.date);
+                                          return (
+                                            d.getFullYear() === selectedYear &&
+                                            d.getMonth() === MONTHS.indexOf(month)
+                                          );
+                                        })
+                                        .reduce((acc, e) => acc + (e.amount || 0), 0);
+                                      return { name: month, Receitas: rev, Despesas: exp };
+                                    })}
+                                    margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+                                  >
+                                    <CartesianGrid
+                                      strokeDasharray="3 3"
+                                      stroke="#888888"
+                                      opacity={0.2}
+                                      vertical={false}
+                                    />
+                                    <XAxis
+                                      dataKey="name"
+                                      axisLine={false}
+                                      tickLine={false}
+                                      tick={{ fontSize: 10, fill: "#888" }}
+                                    />
+                                    <YAxis
+                                      axisLine={false}
+                                      tickLine={false}
+                                      tick={{ fontSize: 10, fill: "#888" }}
+                                      tickFormatter={(val) => `R${val}`}
+                                    />
+                                    <Tooltip
+                                      contentStyle={{
+                                        backgroundColor: "#18181b",
+                                        border: "1px solid rgba(255,255,255,0.1)",
+                                        borderRadius: "8px",
+                                        fontSize: "12px",
+                                        color: "#fff",
+                                      }}
+                                      itemStyle={{ color: "#fff" }}
+                                      formatter={(value) => [`R$ ${value}`, undefined]}
+                                    />
+                                    <Legend wrapperStyle={{ fontSize: "10px" }} />
+                                    <Bar
+                                      dataKey="Receitas"
+                                      fill="#34d399"
+                                      radius={[4, 4, 0, 0]}
+                                      name="Receitas"
+                                    />
+                                    <Bar
+                                      dataKey="Despesas"
+                                      fill="#f87171"
+                                      radius={[4, 4, 0, 0]}
+                                      name="Despesas"
+                                    />
+                                  </BarChart>
+                                </ResponsiveContainer>
+                              </div>
                             </div>
                           )}
-
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {/* Em Dia */}
                             <div
