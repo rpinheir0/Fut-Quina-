@@ -1,22 +1,47 @@
 const fs = require('fs');
 let content = fs.readFileSync('src/App.tsx', 'utf8');
 
-// Replace text-white/XX with text-black/XX dark:text-white/XX, ignoring if preceded by dark: or hover: (wait, hover:text-white/XX -> hover:text-black/XX dark:hover:text-white/XX)
-content = content.replace(/(?<![a-zA-Z:-])text-white\/([0-9]+)/g, 'text-black/$1 dark:text-white/$1');
-content = content.replace(/(?<![a-zA-Z:-])hover:text-white\/([0-9]+)/g, 'hover:text-black/$1 dark:hover:text-white/$1');
+// Shirt icon
+const shirtTarget = `<span className="text-[#34d399]">
+                                  <Shirt size={14} />
+                                </span>`;
+const shirtReplacement = `<span className="text-[#59b823]">
+                                  <Shirt size={14} />
+                                </span>`;
+content = content.replace(shirtTarget, shirtReplacement);
 
-// Replace bg-white/XX with bg-black/XX dark:bg-white/XX, ignoring if preceded by dark: or hover:
-content = content.replace(/(?<![a-zA-Z:-])bg-white\/([0-9]+)/g, 'bg-black/$1 dark:bg-white/$1');
-content = content.replace(/(?<![a-zA-Z:-])hover:bg-white\/([0-9]+)/g, 'hover:bg-black/$1 dark:hover:bg-white/$1');
+// Fixar cores toggle
+const toggleTarget = `className={\`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 cursor-pointer \${fixedColors.enabled ? "bg-[#34d399]" : "bg-black/10 dark:bg-white/10"}\`}`;
+const toggleReplacement = `className={\`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 cursor-pointer \${fixedColors.enabled ? "bg-[#59b823]" : "bg-black/10 dark:bg-white/10"}\`}`;
+content = content.replace(toggleTarget, toggleReplacement);
 
-// Replace bg-[#0b0e17] with bg-white dark:bg-[#0b0e17]
-// Wait, we should check if they are already dark:bg-[#0b0e17]. If not, change them.
-content = content.replace(/(?<![a-zA-Z:-])bg-\[#0b0e17\](\/[0-9]+)?/g, 'bg-white dark:bg-[#0b0e17]$1');
+// Palette A
+const paletteATarget = `<Palette
+                                    size={14}
+                                    className="text-[#34d399]"
+                                  />`;
+const paletteAReplacement = `<Palette
+                                    size={14}
+                                    className="text-[#59b823]"
+                                  />`;
+content = content.replace(paletteATarget, paletteAReplacement);
 
-// Replace bg-[#111625] with bg-[#e2e8f0] dark:bg-[#111625] if not preceded by dark:
-content = content.replace(/(?<![a-zA-Z:-])bg-\[#111625\](\/[0-9]+)?/g, 'bg-[#e2e8f0] dark:bg-[#111625]$1');
+// Palette B (there might be two of them, let's just replace all occurrences of Palette with text-[#34d399])
+content = content.split('<Palette\n                                    size={14}\n                                    className="text-[#34d399]"\n                                  />').join('<Palette\n                                    size={14}\n                                    className="text-[#59b823]"\n                                  />');
 
-// Replace bg-[#0b1329] with bg-white dark:bg-[#0b1329]
-content = content.replace(/(?<![a-zA-Z:-])bg-\[#0b1329\](\/[0-9]+)?/g, 'bg-white dark:bg-[#0b1329]$1');
+// Goleiro fixo icon
+const gTarget = `<span className="flex items-center justify-center border border-black/20 dark:border-white/20 rounded-full w-5 h-5 text-[10px] font-black text-[#34d399]">
+                                  G
+                                </span>`;
+const gReplacement = `<span className="flex items-center justify-center border border-[#59b823]/50 rounded-full w-5 h-5 text-[10px] font-black text-transparent bg-clip-text bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e]">
+                                  G
+                                </span>`;
+content = content.replace(gTarget, gReplacement);
+
+// Goleiro fixo toggle
+const gToggleTarget = `className={\`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 cursor-pointer \${fixedGoalkeeper ? "bg-[#34d399]" : "bg-black/10 dark:bg-white/10"}\`}`;
+const gToggleReplacement = `className={\`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 cursor-pointer \${fixedGoalkeeper ? "bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e]" : "bg-black/10 dark:bg-white/10"}\`}`;
+content = content.replace(gToggleTarget, gToggleReplacement);
 
 fs.writeFileSync('src/App.tsx', content);
+console.log("Done");

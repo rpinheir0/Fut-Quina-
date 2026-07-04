@@ -1835,7 +1835,7 @@ const PlayerManagementModalComponent = ({
           <div className="flex flex-col gap-2 pt-1">
             <button
               onClick={onClose}
-              className="w-full py-2.5 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] shadow-lg shadow-[#34d399]/20 rounded-xl font-black uppercase tracking-widest text-[10px] transition-all active:scale-95 text-center cursor-pointer"
+              className="w-full py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white rounded-2xl shadow-lg font-black uppercase tracking-widest text-[10px] transition-all active:scale-95 hover:opacity-90 cursor-pointer"
             >
               Confirmar
             </button>
@@ -6513,7 +6513,7 @@ function GroupApp({
                   <img src="/despesas%20detalhadas.png" referrerPolicy="no-referrer" className="w-8 h-8 object-contain" alt="Despesas" />
                 </div>
 
-                <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 dark:text-white leading-none relative z-10">
+                <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 dark:text-white leading-none relative z-10 mt-4">
                   Nova Despesa
                 </h3>
                 <p className="text-[8px] text-black/60 dark:text-white/50 font-black mt-1.5 uppercase tracking-[0.2em] relative z-10">
@@ -6536,7 +6536,7 @@ function GroupApp({
                       }))
                     }
                     placeholder="Aluguel da quadra"
-                    className="w-full h-10 px-3 rounded-xl outline-none bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white placeholder:text-white/30 focus:border-[#34d399] focus:bg-black/10 dark:bg-white/10 transition-all text-xs"
+                    className="w-full h-10 px-3 rounded-xl outline-none bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white placeholder:text-zinc-500 focus:border-[#34d399] focus:bg-black/10 dark:bg-white/10 transition-all text-xs"
                   />
                 </div>
                 <div>
@@ -7036,6 +7036,12 @@ function GroupApp({
 
             {/* Header Actions */}
             <div className="flex items-center gap-2 relative z-10">
+              <button
+                onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                className="w-8 h-8 rounded-full border border-white/10 flex items-center justify-center transition-all cursor-pointer bg-white/5 text-white/70 hover:text-white hover:bg-white/10 shadow-sm"
+              >
+                {theme === "light" ? <Moon size={14} /> : <Sun size={14} />}
+              </button>
               {!(currentScreen === "players" && !showAddPlayerSection) && (
                 <button 
                   onClick={() => setShowGlobalSettings(true)}
@@ -7549,7 +7555,7 @@ function GroupApp({
                                     <div className="flex justify-center -space-x-1.5 mb-2.5 relative z-10 w-full px-4 overflow-hidden py-0.5">
                                         {matchSpecificPlayers.slice(0, 5).map((player: any, pIdx: number) => (
                                             <div key={`avatar-${pIdx}`} className="w-8 h-8 rounded-full border border-black/10 dark:border-white/10 bg-zinc-800 overflow-hidden shadow-md shrink-0">
-                                                {player.photo ? <img src={player.photo} className="w-full h-full object-cover"/> : <div className="w-full h-full flex items-center justify-center text-zinc-900 dark:text-white text-[9px] bg-gradient-to-br from-indigo-400 to-purple-500 font-bold uppercase">{player.name[0]}</div>}
+                                                {player.photo ? <img src={player.photo} className="w-full h-full object-cover"/> : <div className="w-full h-full flex items-center justify-center text-zinc-900 dark:text-white text-[9px] bg-gradient-to-br from-[#59b823] to-[#25660e] font-bold uppercase">{player.name[0]}</div>}
                                             </div>
                                         ))}
                                         {matchSpecificPlayers.length > 5 && <div className="w-8 h-8 rounded-full border border-black/10 dark:border-white/10 bg-black/10 dark:bg-white/10 backdrop-blur-md flex items-center justify-center text-zinc-900 dark:text-white font-bold text-[10px] shadow-md shrink-0">+{matchSpecificPlayers.length - 5}</div>}
@@ -7565,7 +7571,7 @@ function GroupApp({
                                                 <p className="text-black/50 dark:text-white/40 text-[9px] mt-0.5">{totalAvailablePlayers} na lista</p>
                                             </div>
                                             <div className="ml-auto text-zinc-900 dark:text-white text-base font-black tracking-tighter flex items-center">
-                                                <span className={`inline-flex mr-1.5 opacity-20 ${totalAvailablePlayers > 0 ? 'text-[#34d399] opacity-100' : ''}`}><GiSoccerBall size={12} /></span>
+                                                
                                                 {totalAvailablePlayers}
                                             </div>
                                         </div>
@@ -8145,7 +8151,7 @@ function GroupApp({
                           <div className="flex items-start justify-between">
                             <div className="flex flex-col">
                               <div className="flex items-center gap-1.5 h-6">
-                                <span className="text-[#34d399]">
+                                <span className="text-[#59b823]">
                                   <Shirt size={14} />
                                 </span>
                                 <span className="text-[11px] font-black uppercase tracking-widest text-zinc-900 dark:text-white">
@@ -8163,7 +8169,7 @@ function GroupApp({
                                   enabled: !prev.enabled,
                                 }))
                               }
-                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 cursor-pointer ${fixedColors.enabled ? "bg-[#34d399]" : "bg-black/10 dark:bg-white/10"}`}
+                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 cursor-pointer ${fixedColors.enabled ? "bg-[#59b823]" : "bg-black/10 dark:bg-white/10"}`}
                             >
                               <div
                                 className={`w-4 h-4 rounded-full transition-transform ${fixedColors.enabled ? "translate-x-6 bg-[#1e3d2f]" : "translate-x-0 bg-white"} shadow-sm`}
@@ -8197,7 +8203,7 @@ function GroupApp({
                                   </div>
                                   <Palette
                                     size={14}
-                                    className="text-[#34d399]"
+                                    className="text-[#59b823]"
                                   />
                                 </button>
                               </div>
@@ -8225,7 +8231,7 @@ function GroupApp({
                                   </div>
                                   <Palette
                                     size={14}
-                                    className="text-[#34d399]"
+                                    className="text-[#59b823]"
                                   />
                                 </button>
                               </div>
@@ -8237,7 +8243,7 @@ function GroupApp({
                           <div className="flex items-start justify-between">
                             <div className="flex flex-col">
                               <div className="flex items-center gap-1.5 h-6">
-                                <span className="flex items-center justify-center border border-black/20 dark:border-white/20 rounded-full w-5 h-5 text-[10px] font-black text-[#34d399]">
+                                <span className="flex items-center justify-center border border-[#59b823]/50 rounded-full w-5 h-5 text-[10px] font-black text-transparent bg-clip-text bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e]">
                                   G
                                 </span>
                                 <span className="text-[11px] font-black uppercase tracking-widest text-zinc-900 dark:text-white">
@@ -8256,7 +8262,7 @@ function GroupApp({
                                     !prev.allowFixedGoalkeeper,
                                 }))
                               }
-                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 cursor-pointer ${orgProSettings.allowFixedGoalkeeper !== false ? "bg-[#34d399]" : "bg-black/10 dark:bg-white/10"}`}
+                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 cursor-pointer ${orgProSettings.allowFixedGoalkeeper !== false ? "bg-[#59b823]" : "bg-black/10 dark:bg-white/10"}`}
                             >
                               <div
                                 className={`w-4 h-4 rounded-full transition-transform ${orgProSettings.allowFixedGoalkeeper !== false ? "translate-x-6 bg-[#1e3d2f]" : "translate-x-0 bg-white"} shadow-sm`}
@@ -10059,10 +10065,10 @@ function GroupApp({
                               }
                               className="px-3 py-2 rounded-xl transition-all active:scale-95 hover:bg-black/5 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
                             >
-                              <span className="text-zinc-800">
+                              <span className="text-[#59b823]">
                                 <IoFootballOutline size={16} />
                               </span>
-                              <span className="text-[8px] font-black uppercase tracking-tight text-zinc-800">
+                              <span className="text-[8px] font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e]">
                                 Iniciar
                               </span>
                             </button>
@@ -12932,7 +12938,7 @@ function GroupApp({
                       >
                         <div className="flex items-center gap-2">
                           <span
-                            className={`${players.find((p) => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? "text-sky-400 border-sky-400/40" : "text-black/50 dark:text-white/40 border-black/20 dark:border-white/20"} flex items-center border rounded-full w-4 h-4 justify-center text-[9px] font-black leading-none`}
+                            className={`${players.find((p) => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? "text-sky-400 border-sky-400/40" : "text-transparent bg-clip-text bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] border-[#59b823]/50"} flex items-center border rounded-full w-4 h-4 justify-center text-[9px] font-black leading-none`}
                           >
                             G
                           </span>
@@ -13194,7 +13200,7 @@ function GroupApp({
                             className={`col-span-2 py-2.5 rounded-xl font-bold text-[9px] uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 border group cursor-pointer ${players.find((p) => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? "bg-sky-500/10 border-sky-500/20 text-sky-400 hover:bg-sky-500/20" : "bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10"}`}
                           >
                             <span
-                              className={`${players.find((p) => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? "text-sky-400 border-sky-400/40" : "text-black/50 dark:text-white/40 border-black/20 dark:border-white/20"} flex items-center border rounded-full w-4 h-4 justify-center text-[9px] font-black leading-none`}
+                              className={`${players.find((p) => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? "text-sky-400 border-sky-400/40" : "text-transparent bg-clip-text bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] border-[#59b823]/50"} flex items-center border rounded-full w-4 h-4 justify-center text-[9px] font-black leading-none`}
                             >
                               G
                             </span>
@@ -14334,10 +14340,7 @@ function GroupApp({
                   <X size={14} />
                 </button>
 
-                <div className="w-14 h-14 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shadow-lg text-[#34d399] flex items-center justify-center mx-auto mb-2 relative z-10">
-                  <IoFootballOutline size={24} />
-                </div>
-                <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 dark:text-white leading-none relative z-10">
+                <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 dark:text-white leading-none relative z-10 mt-4">
                   Partida em Andamento
                 </h3>
                 <p className="text-[8px] text-black/60 dark:text-white/50 font-black mt-1.5 uppercase tracking-[0.2em] relative z-10">
@@ -14351,7 +14354,7 @@ function GroupApp({
                     setShowStartMatchConfirm(false);
                     setTeamsTab("historico");
                   }}
-                  className="w-full h-10 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-[#34d399]/10 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+                  className="w-full h-10 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg hover:opacity-90 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
                 >
                   <PiPlay size={14} />
                   Continuar Partida
@@ -14373,7 +14376,7 @@ function GroupApp({
                   }}
                   className="w-full h-10 rounded-xl font-bold uppercase tracking-widest text-[9px] transition-all bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10 active:scale-95 cursor-pointer flex items-center justify-center gap-2"
                 >
-                  <span className="text-[#34d399] flex items-center justify-center">
+                  <span className="text-[#59b823] flex items-center justify-center">
                     <PiArrowClockwiseBold size={14} />
                   </span>
                   Nova Partida
@@ -15566,9 +15569,7 @@ function GroupApp({
                 <X size={14} />
               </button>
 
-              <div className="w-14 h-14 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shadow-lg text-[#34d399] flex items-center justify-center mx-auto mb-2 relative z-10">
-                <GiSoccerBall size={24} />
-              </div>
+
               <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 dark:text-white leading-none relative z-10">
                 {editingMatchId ? "Editar pelada" : "Criar pelada"}
               </h3>
@@ -15582,7 +15583,7 @@ function GroupApp({
               <div className="flex flex-col items-center gap-1.5">
                 <div 
                   onClick={() => fileInputRef.current?.click()}
-                  className="w-14 h-14 rounded-full bg-black/5 dark:bg-white/5 border border-dashed border-black/20 dark:border-white/20 flex items-center justify-center cursor-pointer overflow-hidden hover:border-[#34d399]/60 transition-all shadow-sm group relative"
+                  className="w-14 h-14 rounded-full bg-black/5 dark:bg-white/5 border border-solid border-black/20 dark:border-white/20 flex items-center justify-center cursor-pointer overflow-hidden hover:border-[#34d399]/60 transition-all shadow-sm group relative"
                 >
                   {newMatchImage ? (
                     <>
@@ -15623,7 +15624,7 @@ function GroupApp({
                   value={newMatchName}
                   onChange={(e) => setNewMatchName(e.target.value)}
                   placeholder="Nome da pelada"
-                  className="w-full h-10 px-3 rounded-xl outline-none bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white placeholder:text-white/30 focus:border-[#34d399] focus:bg-black/10 dark:bg-white/10 transition-all text-center text-xs"
+                  className="w-full h-10 px-3 rounded-xl outline-none bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white placeholder:text-zinc-500 focus:border-[#34d399] focus:bg-black/10 dark:bg-white/10 transition-all text-center text-xs"
                   autoFocus
                 />
               </div>
@@ -15674,7 +15675,7 @@ function GroupApp({
                 <button
                   onClick={handleScheduleMatch}
                   disabled={!newMatchName.trim()}
-                  className="w-full h-10 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-[#34d399]/10 transition-all active:scale-95 disabled:opacity-50 cursor-pointer flex items-center justify-center"
+                  className="w-full h-12 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white rounded-2xl shadow-lg font-black uppercase tracking-widest text-[10px] transition-all active:scale-95 disabled:opacity-50 hover:opacity-90 cursor-pointer flex items-center justify-center"
                 >
                   {editingMatchId ? "SALVAR" : "CRIAR"}
                 </button>
