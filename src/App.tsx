@@ -7346,7 +7346,7 @@ function GroupApp({
                             setTeamsTab("configuracao");
                             setShowGlobalSettings(false);
                           }}
-                          className="w-full flex items-center gap-4 p-4 hover:bg-black/10 dark:bg-white/10 rounded-xl transition-all group cursor-pointer"
+                          className="w-full flex items-center gap-4 p-4 hover:bg-black/10 dark:hover:bg-white/10 rounded-xl transition-all group cursor-pointer"
                         >
                           <div className="flex items-center gap-4 text-left w-full">
                             <img src="/painel%20de%20controle.png" referrerPolicy="no-referrer" className="w-5 h-5 object-contain group-hover:scale-110 transition-transform shrink-0" alt="Painel de controle" />
@@ -7439,7 +7439,7 @@ function GroupApp({
                           setShowSetupGuide(true);
                           setShowGlobalSettings(false);
                         }}
-                        className="w-full flex items-center justify-between p-4 hover:bg-black/10 dark:bg-white/10 rounded-xl transition-all group cursor-pointer"
+                        className="w-full flex items-center justify-between p-4 hover:bg-black/10 dark:hover:bg-white/10 rounded-xl transition-all group cursor-pointer"
                       >
                         <div className="flex items-center gap-4 text-left w-full">
                           <img src="/guia%20inicial.png" referrerPolicy="no-referrer" className="w-5 h-5 object-contain group-hover:scale-110 transition-transform shrink-0" alt="Guia Inicial" />
