@@ -7181,20 +7181,7 @@ function GroupApp({
                 >
                   {/* Header */}
                   <div className="px-6 pt-6 pb-4 border-b border-black/10 dark:border-white/10 flex items-center justify-between">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => setTheme("light")}
-                        className={`w-8 h-8 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center transition-all cursor-pointer ${theme === "light" ? "bg-white text-black" : "bg-black/5 dark:bg-white/5 text-black/70 dark:text-white/60 hover:text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10"}`}
-                      >
-                        <Sun size={14} />
-                      </button>
-                      <button
-                        onClick={() => setTheme("dark")}
-                        className={`w-8 h-8 rounded-full border border-black/10 dark:border-white/10 flex items-center justify-center transition-all cursor-pointer ${theme === "dark" ? "bg-white text-black" : "bg-black/5 dark:bg-white/5 text-black/70 dark:text-white/60 hover:text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10"}`}
-                      >
-                        <Moon size={14} />
-                      </button>
-                    </div>
+                    <div></div>
                     <button
                       onClick={() => setShowGlobalSettings(false)}
                       className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-black/70 dark:text-white/60 hover:text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10 active:scale-90 transition-all cursor-pointer"
@@ -8552,9 +8539,6 @@ function GroupApp({
                                   }}
                                   className="px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center gap-2"
                                 >
-                                  <span className="text-zinc-900 dark:text-white">
-                                    <CheckCircle2 size={16} />
-                                  </span>
                                   <span>TODOS</span>
                                 </button>
                               )}
@@ -12803,13 +12787,13 @@ function GroupApp({
                           match.scoreA >= match.config.goalLimit ||
                           match.scoreB >= match.config.goalLimit
                         }
-                        className="w-full h-9 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] rounded-xl font-black uppercase text-[10px] tracking-wider flex items-center justify-center px-4 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#34d399]/20 group font-roboto-flex cursor-pointer"
+                        className="w-full h-10 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white rounded-xl font-black uppercase text-[10px] tracking-widest flex items-center justify-center px-4 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:opacity-90 group cursor-pointer"
                       >
                         <div className="flex items-center gap-2">
-                          <span className="text-[#1e3d2f] group-hover:scale-110 transition-transform flex items-center">
-                            <IoIosFootball size={14} />
+                          <span className="text-zinc-900 dark:text-white group-hover:scale-110 transition-transform flex items-center">
+                            <IoIosFootball size={16} />
                           </span>
-                          <span className="tracking-widest">Registrar Gol</span>
+                          <span>REGISTRAR GOL</span>
                         </div>
                       </button>
                     )}
