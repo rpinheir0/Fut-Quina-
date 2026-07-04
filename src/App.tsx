@@ -7371,7 +7371,7 @@ function GroupApp({
                         className="w-full flex items-center justify-between p-4 hover:bg-red-500/10 rounded-xl transition-all group cursor-pointer"
                       >
                         <div className="flex items-center gap-4 text-left w-full">
-                          <img src="/fim%20da%20pelada.png" referrerPolicy="no-referrer" className="w-5 h-5 object-contain group-hover:scale-110 transition-transform shrink-0" alt="Fim da pelada" />
+                          <img src="/atualizar.png" referrerPolicy="no-referrer" className="w-5 h-5 object-contain group-hover:scale-110 transition-transform shrink-0" alt="Fim da pelada" />
                           <div className="flex flex-col">
                             <span className="text-[14px] font-bold text-zinc-900 dark:text-white tracking-wide">
                               Fim da pelada
@@ -7391,9 +7391,12 @@ function GroupApp({
                         className="w-full flex items-center justify-between p-4 hover:bg-black/10 dark:hover:bg-white/10 rounded-xl transition-all group cursor-pointer"
                       >
                         <div className="flex items-center gap-4 text-left w-full">
-                          <div className="w-5 h-5 flex items-center justify-center text-zinc-900 dark:text-white shrink-0 group-hover:scale-110 transition-transform">
-                            <Download size={20} />
-                          </div>
+                          <img
+                            src="/backup.png"
+                            referrerPolicy="no-referrer"
+                            className="w-5 h-5 object-contain group-hover:scale-110 transition-transform shrink-0"
+                            alt="Backup"
+                          />
                           <div className="flex flex-col">
                             <span className="text-[14px] font-bold text-zinc-900 dark:text-white tracking-wide">
                               Backup
@@ -7413,9 +7416,12 @@ function GroupApp({
                         className="w-full flex items-center justify-between p-4 hover:bg-black/10 dark:hover:bg-white/10 rounded-xl transition-all group cursor-pointer"
                       >
                         <div className="flex items-center gap-4 text-left w-full">
-                          <div className="w-5 h-5 flex items-center justify-center text-zinc-900 dark:text-white shrink-0 group-hover:scale-110 transition-transform">
-                            <Upload size={20} />
-                          </div>
+                          <img
+                            src="/nuvem.png"
+                            referrerPolicy="no-referrer"
+                            className="w-5 h-5 object-contain group-hover:scale-110 transition-transform shrink-0"
+                            alt="Restaurar Backup"
+                          />
                           <div className="flex flex-col">
                             <span className="text-[14px] font-bold text-zinc-900 dark:text-white tracking-wide">
                               Restaurar Backup
