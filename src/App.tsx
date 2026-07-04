@@ -7021,7 +7021,7 @@ function GroupApp({
                       size="md"
                       style={{ color: "#83A8FF" }}
                       titleColorClass="text-[#83A8FF]"
-                      subColorClass="text-zinc-900 dark:text-white"
+                      subColorClass="text-white"
                       align="start"
                     />
                   </motion.div>
@@ -7045,16 +7045,16 @@ function GroupApp({
           {/* Tabs for Teams */}
           {currentScreen === "teams" && (
             <div className="px-4 pb-3">
-              <div className="flex bg-black/5 dark:bg-white/5 backdrop-blur-sm p-1 rounded-xl mx-auto w-fit">
+              <div className="flex bg-white/10 backdrop-blur-sm p-1 rounded-xl mx-auto w-fit">
                 <button
                   onClick={() => navigateTeamsTab("configuracao")}
-                  className={`w-10 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "configuracao" ? "bg-white dark:bg-[#1E3D2F] text-zinc-900 dark:text-white shadow-sm" : "text-black/50 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white"}`}
+                  className={`w-10 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "configuracao" ? "bg-white text-zinc-900 shadow-sm" : "text-white/50 hover:text-white"}`}
                 >
                   <PiGearBold size={14} />
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("chegada")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "chegada" ? "bg-white dark:bg-[#1E3D2F] text-zinc-900 dark:text-white shadow-sm" : "text-black/50 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "chegada" ? "bg-white text-zinc-900 shadow-sm" : "text-white/50 hover:text-white font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7064,7 +7064,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("historico")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "historico" ? "bg-white dark:bg-[#1E3D2F] text-zinc-900 dark:text-white shadow-sm" : "text-black/50 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "historico" ? "bg-white text-zinc-900 shadow-sm" : "text-white/50 hover:text-white font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7074,7 +7074,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("proximos")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "proximos" ? "bg-white dark:bg-[#1E3D2F] text-zinc-900 dark:text-white shadow-sm" : "text-black/50 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "proximos" ? "bg-white text-zinc-900 shadow-sm" : "text-white/50 hover:text-white font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7089,10 +7089,10 @@ function GroupApp({
           {/* Tabs for Ranking */}
           {currentScreen === "ranking" && (
             <div className="px-4 pb-3">
-              <div className="flex bg-black/5 dark:bg-white/5 backdrop-blur-sm p-1 rounded-xl mx-auto w-fit">
+              <div className="flex bg-white/10 backdrop-blur-sm p-1 rounded-xl mx-auto w-fit">
                 <button
                   onClick={() => setRankingTab("geral")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "geral" ? "bg-white dark:bg-[#1E3D2F] text-zinc-900 dark:text-white shadow-sm" : "text-black/50 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "geral" ? "bg-white text-zinc-900 shadow-sm" : "text-white/50 hover:text-white font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7102,7 +7102,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => setRankingTab("artilharia")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "artilharia" ? "bg-white dark:bg-[#1E3D2F] text-zinc-900 dark:text-white shadow-sm" : "text-black/50 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "artilharia" ? "bg-white text-zinc-900 shadow-sm" : "text-white/50 hover:text-white font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7112,7 +7112,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => setRankingTab("assistencias")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "assistencias" ? "bg-white dark:bg-[#1E3D2F] text-zinc-900 dark:text-white shadow-sm" : "text-black/50 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "assistencias" ? "bg-white text-zinc-900 shadow-sm" : "text-white/50 hover:text-white font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
