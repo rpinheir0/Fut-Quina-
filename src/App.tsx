@@ -575,7 +575,7 @@ const FlipDigit = ({
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -25, opacity: 0 }}
           transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-          className={`${textSizes[size]} font-black text-white/90`}
+          className={`${textSizes[size]} font-black text-zinc-900 dark:text-white/90`}
         >
           {value}
         </motion.span>
@@ -602,7 +602,7 @@ const FlipClock = ({
 
   return (
     <div
-      className={`flex items-center ${size === "xs" ? "gap-1.5 p-1 px-3" : "gap-1 p-1.5"} rounded-xl border border-white/10 bg-black/80 backdrop-blur-md shadow-sm`}
+      className={`flex items-center ${size === "xs" ? "gap-1.5 p-1 px-3" : "gap-1 p-1.5"} rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-black/80 backdrop-blur-md shadow-sm`}
     >
       <div className={`flex ${size === "xs" ? "gap-1.5" : "gap-0.5"}`}>
         <FlipDigit
@@ -619,7 +619,7 @@ const FlipClock = ({
         />
       </div>
       <span
-        className={`${size === "xs" ? "text-sm" : size === "small" ? "text-lg" : "text-2xl"} font-black text-white/40 mx-0.5`}
+        className={`${size === "xs" ? "text-sm" : size === "small" ? "text-lg" : "text-2xl"} font-black text-black/40 dark:text-white/40 mx-0.5`}
       >
         :
       </span>
@@ -15176,14 +15176,14 @@ function GroupApp({
                 }}
                 className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
                   currentScreen === "players"
-                    ? "text-brand-primary bg-white/5 shadow-inner"
+                    ? "text-[#00ff00] bg-white/5 shadow-inner"
                     : "text-white/50 hover:text-white/80 hover:bg-white/5"
                 }`}
               >
                 {currentScreen === "players" && (
                   <motion.div
                     layoutId="nav-glow"
-                    className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full"
+                    className="absolute -top-4 w-12 h-4 bg-[#00ff00] opacity-30 blur-xl rounded-full"
                   />
                 )}
                 {currentScreen === "players" ? (
@@ -15219,18 +15219,18 @@ function GroupApp({
                 }}
                 className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
                   currentScreen === "teams"
-                    ? "text-brand-primary bg-white/5 shadow-inner"
+                    ? "text-[#00ff00] bg-white/5 shadow-inner"
                     : "text-white/50 hover:text-white/80 hover:bg-white/5"
                 }`}
               >
                 {currentScreen === "teams" && (
                   <motion.div
                     layoutId="nav-glow"
-                    className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full"
+                    className="absolute -top-4 w-12 h-4 bg-[#00ff00] opacity-30 blur-xl rounded-full"
                   />
                 )}
                 {currentScreen === "teams" ? (
-                  <div className="mb-1 transition-transform duration-300 -translate-y-0.5 text-brand-primary">
+                  <div className="mb-1 transition-transform duration-300 -translate-y-0.5 text-[#00ff00]">
                     <GiSoccerField size={26} />
                   </div>
                 ) : (
@@ -15259,14 +15259,14 @@ function GroupApp({
                 }}
                 className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
                   currentScreen === "ranking"
-                    ? "text-brand-primary bg-white/5 shadow-inner"
+                    ? "text-[#00ff00] bg-white/5 shadow-inner"
                     : "text-white/50 hover:text-white/80 hover:bg-white/5"
                 }`}
               >
                 {currentScreen === "ranking" && (
                   <motion.div
                     layoutId="nav-glow"
-                    className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full"
+                    className="absolute -top-4 w-12 h-4 bg-[#00ff00] opacity-30 blur-xl rounded-full"
                   />
                 )}
                 {currentScreen === "ranking" ? (
@@ -15300,18 +15300,18 @@ function GroupApp({
                 }}
                 className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
                   currentScreen === "finance"
-                    ? "text-brand-primary bg-white/5 shadow-inner"
+                    ? "text-[#00ff00] bg-white/5 shadow-inner"
                     : "text-white/50 hover:text-white/80 hover:bg-white/5"
                 }`}
               >
                 {currentScreen === "finance" && (
                   <motion.div
                     layoutId="nav-glow"
-                    className="absolute -top-4 w-12 h-4 bg-brand-primary opacity-30 blur-xl rounded-full"
+                    className="absolute -top-4 w-12 h-4 bg-[#00ff00] opacity-30 blur-xl rounded-full"
                   />
                 )}
                 {currentScreen === "finance" ? (
-                  <div className="mb-1 transition-transform duration-300 -translate-y-0.5 text-brand-primary">
+                  <div className="mb-1 transition-transform duration-300 -translate-y-0.5 text-[#00ff00]">
                     <IoIosWallet size={26} />
                   </div>
                 ) : (
