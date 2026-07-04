@@ -1135,7 +1135,7 @@ const TieBreakerModal = ({
                   </div>
                   <ChevronRight
                     size={18}
-                    className="ml-auto text-black/30 dark:text-white/30 group-hover:text-emerald-400 group-hover:translate-x-0.5 transition-all"
+                    className="ml-auto text-black/30 dark:text-white/30 group-hover:text-[#59b823] group-hover:translate-x-0.5 transition-all"
                   />
                 </button>
 
@@ -1199,7 +1199,7 @@ const TieBreakerModal = ({
                     })()}
                   </div>
                   <div className="flex flex-col overflow-hidden">
-                    <span className="font-bold uppercase tracking-widest text-xs text-zinc-900 dark:text-white group-hover:text-emerald-400 transition-colors truncate">
+                    <span className="font-bold uppercase tracking-widest text-xs text-zinc-900 dark:text-white group-hover:text-[#59b823] transition-colors truncate">
                       {teamA.name} primeiro
                     </span>
                     <div className="flex flex-wrap gap-x-1.5 mt-1">
@@ -1318,7 +1318,7 @@ const TieBreakerModal = ({
                         <div className="flex gap-2">
                           <button
                             onClick={() => onPenaltyToggle("A", idx)}
-                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? "bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/20 text-emerald-400 border border-emerald-500/30 shadow-sm" : "bg-black/5 dark:bg-white/5 text-emerald-400/20 hover:bg-black/10 dark:bg-white/10"}`}
+                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? "bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/20 text-[#59b823] border border-emerald-500/30 shadow-sm" : "bg-black/5 dark:bg-white/5 text-[#59b823]/20 hover:bg-black/10 dark:bg-white/10"}`}
                           >
                             <PiCheckCircleBold size={18} />
                           </button>
@@ -1358,7 +1358,7 @@ const TieBreakerModal = ({
                         <div className="flex gap-2">
                           <button
                             onClick={() => onPenaltyToggle("B", idx)}
-                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? "bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/20 text-emerald-400 border border-emerald-500/30 shadow-sm" : "bg-black/5 dark:bg-white/5 text-emerald-400/20 hover:bg-black/10 dark:bg-white/10"}`}
+                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? "bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/20 text-[#59b823] border border-emerald-500/30 shadow-sm" : "bg-black/5 dark:bg-white/5 text-[#59b823]/20 hover:bg-black/10 dark:bg-white/10"}`}
                           >
                             <PiCheckCircleBold size={18} />
                           </button>
@@ -1541,7 +1541,7 @@ const TieBreakerModal = ({
               {state.lottery.winnerId && !state.lottery.isSpinning && (
                 <div className="w-full space-y-6 text-center">
                   <div className="bg-black/5 dark:bg-white/5 p-6 rounded-[32px] border border-black/10 dark:border-white/10 animate-in fade-in zoom-in duration-500 backdrop-blur-sm">
-                    <div className="text-[10px] font-bold text-emerald-400 uppercase tracking-[0.2em] mb-4">
+                    <div className="text-[10px] font-bold text-[#59b823] uppercase tracking-[0.2em] mb-4">
                       Vencedor Sorteado
                     </div>
                     <div className="flex flex-col items-center gap-3">
@@ -6376,11 +6376,11 @@ function GroupApp({
                       </div>
                     ) : (
                       <div className="space-y-6 text-center py-4 bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/5 border border-emerald-500/10 rounded-xl">
-                        <div className="w-16 h-16 bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/20 text-emerald-400 rounded-full flex items-center justify-center mx-auto shadow-inner shadow-emerald-500/20">
+                        <div className="w-16 h-16 bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/20 text-[#59b823] rounded-full flex items-center justify-center mx-auto shadow-inner shadow-emerald-500/20">
                           <IoCheckmarkCircle size={32} />
                         </div>
                         <div>
-                          <p className="text-emerald-400 font-black uppercase tracking-widest text-[10px] mb-1">
+                          <p className="text-[#59b823] font-black uppercase tracking-widest text-[10px] mb-1">
                             Status Liberado
                           </p>
                           <p className="text-[10px] text-black/60 dark:text-white/50 uppercase tracking-widest font-bold">
@@ -6903,7 +6903,7 @@ function GroupApp({
             >
               <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-lg ${
                 toast.type === "success"
-                  ? "bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/20 text-emerald-400 border border-emerald-500/20"
+                  ? "bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/20 text-[#59b823] border border-emerald-500/20"
                   : toast.type === "warning"
                     ? "bg-amber-500/20 text-amber-400 border border-amber-500/20"
                     : "bg-black/5 dark:bg-white/5 text-black/80 dark:text-white/80 border border-black/10 dark:border-white/10"
@@ -7126,24 +7126,24 @@ function GroupApp({
 
           {/* Tabs for Finance */}
           {currentScreen === "finance" && !isPrintMode && (
-            <div className="px-6 pb-3">
-              <div className="flex gap-1.5 justify-center">
+            <div className="px-4 pb-3">
+              <div className="flex bg-white/10 backdrop-blur-sm p-1 rounded-xl mx-auto w-fit">
                 <button
                   onClick={() => setFinanceSubScreen("balanco")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${financeSubScreen === "balanco" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-black/5 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${financeSubScreen === "balanco" ? "bg-white text-zinc-900 shadow-sm" : "text-white/50 hover:text-white font-medium"}`}
                 >
                   <span
-                    className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors`}
+                    className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
                   >
                     Balanço
                   </span>
                 </button>
                 <button
                   onClick={() => setFinanceSubScreen("mensalidade")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${financeSubScreen === "mensalidade" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-black/5 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${financeSubScreen === "mensalidade" ? "bg-white text-zinc-900 shadow-sm" : "text-white/50 hover:text-white font-medium"}`}
                 >
                   <span
-                    className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors`}
+                    className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
                   >
                     Mensalidade
                   </span>
@@ -8665,7 +8665,7 @@ function GroupApp({
                         players.filter((p) => sessionPlayerIds.includes(p.id))
                           .length > 0 && (
                           <div className="bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/10 rounded-2xl p-4 flex items-center gap-4 border border-emerald-500/20 shadow-sm mb-4 backdrop-blur-md">
-                            <div className="text-emerald-400 flex items-center justify-center shrink-0">
+                            <div className="text-[#59b823] flex items-center justify-center shrink-0">
                               <IoMdDoneAll size={24} />
                             </div>
                             <div className="flex-1 flex flex-col">
@@ -8867,7 +8867,7 @@ function GroupApp({
                                   {p.name.toLowerCase()}
                                 </div>
                                 <div
-                                  className={`text-[8px] font-bold uppercase ${p.isAvailable ? "text-emerald-400" : "text-black/30 dark:text-white/30"}`}
+                                  className={`text-[8px] font-bold uppercase ${p.isAvailable ? "text-[#59b823]" : "text-black/30 dark:text-white/30"}`}
                                 >
                                   {p.isAvailable ? "CONFIRMADO" : "Aguardando"}
                                 </div>
@@ -8875,7 +8875,7 @@ function GroupApp({
                               {p.isAvailable && (
                                 <CheckCircle2
                                   size={16}
-                                  className="text-emerald-400"
+                                  className="text-[#59b823]"
                                 />
                               )}
                             </button>
@@ -11037,7 +11037,7 @@ function GroupApp({
                                                     : undefined,
                                                 }}
                                               >
-                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden ${isCurrent ? "bg-black/50 dark:bg-white/50 dark:bg-black/20" : "bg-black/10 dark:bg-white/10"}`}>
+                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden ${isCurrent ? "bg-black/20 dark:bg-white/50" : "bg-black/10 dark:bg-white/10"}`}>
                                                   {p.isGoalkeeper &&
                                                   orgProSettings.allowFixedGoalkeeper !==
                                                     false ? (
@@ -11481,9 +11481,9 @@ function GroupApp({
                         className={`flex gap-4 sm:gap-8 text-[10px] font-black uppercase tracking-widest text-blue-200/60 ${rankingTab === "artilharia" ? "flex-row-reverse" : ""}`}
                       >
                         <div
-                          className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== "assistencias" ? "text-emerald-400" : "opacity-0"}`}
+                          className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== "assistencias" ? "text-[#59b823]" : "opacity-0"}`}
                         >
-                          <span className="text-emerald-400"><IoFootballOutline size={14} /></span> Gols
+                          <span className="text-[#59b823]"><IoFootballOutline size={14} /></span> Gols
                         </div>
                         <div
                           className={`w-12 text-center flex items-center justify-center gap-1 ${rankingTab !== "artilharia" ? "text-blue-400" : "opacity-0"}`}
@@ -11551,7 +11551,7 @@ function GroupApp({
                             className={`flex gap-4 sm:gap-8 shrink-0 ${rankingTab === "artilharia" ? "flex-row-reverse" : ""}`}
                           >
                             <div
-                              className={`w-12 text-center text-sm font-black text-emerald-400 ${rankingTab === "assistencias" ? "opacity-0" : ""}`}
+                              className={`w-12 text-center text-sm font-black text-[#59b823] ${rankingTab === "assistencias" ? "opacity-0" : ""}`}
                             >
                               {player.goals}
                             </div>
