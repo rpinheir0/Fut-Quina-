@@ -11065,7 +11065,7 @@ function GroupApp({
                                                     />
                                                   ) : (
                                                     <span
-                                                      className={`flex items-center shrink-0 ${isCurrent ? "text-black/70 dark:text-white/60" : "text-black/50 dark:text-white/40"}`}
+                                                      className={`flex items-center shrink-0 ${isCurrent ? "text-black/70 dark:text-zinc-800" : "text-black/50 dark:text-white/40"}`}
                                                     >
                                                       <IoPersonOutline
                                                         size={12}
@@ -11075,7 +11075,7 @@ function GroupApp({
                                                 </div>
                                                 <div className="flex flex-col items-start gap-1 overflow-hidden">
                                                   <span
-                                                    className={`text-xs font-bold tracking-tight capitalize truncate leading-none ${isCurrent ? "text-zinc-900 dark:text-white" : "text-black/90 dark:text-white/90"}`}
+                                                    className={`text-xs font-bold tracking-tight capitalize truncate leading-none ${isCurrent ? "text-zinc-900 dark:text-zinc-800" : "text-black/90 dark:text-white/90"}`}
                                                   >
                                                     {p.name.toLowerCase()}
                                                   </span>
