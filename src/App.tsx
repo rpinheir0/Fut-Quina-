@@ -7559,7 +7559,7 @@ function GroupApp({
                                         <div className="absolute right-[-10%] top-[-10%] pointer-events-none rotate-12 scale-150 transition-transform duration-700"><GiSoccerField size={60} color="rgba(255,255,255,0.02)" /></div>
                                         <div className="flex justify-between items-center mb-1.5 relative z-10"><span className="text-black/50 dark:text-white/40 text-[9px] font-bold tracking-wide">STATUS DA PELADA</span></div>
                                         <div className="flex items-center gap-2.5 relative z-10">
-                                            <div className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center backdrop-blur-md border border-black/10 dark:border-white/10 text-[#34d399]"><GiWhistle size={16} /></div>
+                                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-zinc-700 dark:to-zinc-800 flex items-center justify-center backdrop-blur-md border border-black/5 dark:border-white/5 text-zinc-700 dark:text-white/80 shadow-sm"><GiWhistle size={16} /></div>
                                             <div>
                                                 <h4 className="text-zinc-900 dark:text-white font-bold text-xs leading-tight truncate max-w-[100px]">Confirmados</h4>
                                                 <p className="text-black/50 dark:text-white/40 text-[9px] mt-0.5">{totalAvailablePlayers} na lista</p>
@@ -7572,9 +7572,9 @@ function GroupApp({
                                     </div>
 
                                     <div className="flex items-center gap-1.5 relative z-10 w-full" onClick={(e) => e.stopPropagation()}>
-                                        <button onClick={(e) => { e.stopPropagation(); setMatchToDelete(match); }} className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 hover:bg-red-500/20 border border-black/10 dark:border-white/10 backdrop-blur-sm flex items-center justify-center text-black/70 dark:text-white/70 transition-colors cursor-pointer shadow-sm"><Trash2 size={14} /></button>
+                                        <button onClick={(e) => { e.stopPropagation(); setMatchToDelete(match); }} className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-zinc-700 dark:to-zinc-800 hover:from-red-200 hover:to-red-300 dark:hover:from-red-900/40 dark:hover:to-red-900/40 border border-black/5 dark:border-white/5 backdrop-blur-sm flex items-center justify-center text-zinc-700 dark:text-white/80 hover:text-red-600 dark:hover:text-red-400 transition-colors cursor-pointer shadow-sm"><Trash2 size={14} /></button>
                                         {scheduledMatches.length > 1 && (
-                                          <button onClick={(e) => { e.stopPropagation(); handleSwapMatches(); }} className="w-8 h-8 rounded-full bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 border border-black/10 dark:border-white/10 backdrop-blur-sm flex items-center justify-center text-black/70 dark:text-white/70 transition-colors cursor-pointer shadow-sm"><ArrowLeftRight size={14} /></button>
+                                          <button onClick={(e) => { e.stopPropagation(); handleSwapMatches(); }} className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-zinc-700 dark:to-zinc-800 hover:opacity-80 border border-black/5 dark:border-white/5 backdrop-blur-sm flex items-center justify-center text-zinc-700 dark:text-white/80 transition-colors cursor-pointer shadow-sm"><ArrowLeftRight size={14} /></button>
                                         )}
                                         <button onClick={(e) => {
                                             e.stopPropagation(); 
@@ -7585,7 +7585,7 @@ function GroupApp({
                                             const days = ["Domingo", "Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"];
                                             const date = new Date(match.date); setNewMatchDay(days[date.getDay()]); setShowScheduleModal(true);
                                           }}
-                                          className={`${shrinkEditButton ? "w-8 shrink-0" : "flex-1"} bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 border border-black/10 dark:border-white/10 backdrop-blur-sm rounded-full h-8 flex items-center justify-center text-zinc-900 dark:text-white text-[11px] font-bold gap-1 transition-all duration-300 shadow-sm overflow-hidden`}
+                                          className={`${shrinkEditButton ? "w-8 shrink-0" : "flex-1"} bg-gradient-to-br from-gray-200 to-gray-300 dark:from-zinc-700 dark:to-zinc-800 hover:opacity-80 border border-black/5 dark:border-white/5 backdrop-blur-sm rounded-full h-8 flex items-center justify-center text-zinc-700 dark:text-white/80 text-[11px] font-bold gap-1 transition-all duration-300 shadow-sm overflow-hidden`}
                                         >
                                             {shrinkEditButton ? <Pencil size={14} /> : "Editar"}
                                         </button>
@@ -10129,7 +10129,7 @@ function GroupApp({
                               <motion.div
                                 initial={{ opacity: 0, y: -10 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                className="p-5 bg-black border border-black/10 rounded-2xl flex items-start gap-4 shadow-xl mb-4 cursor-pointer hover:bg-black/90 transition-colors group"
+                                className="p-3 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-xl flex items-start gap-3 shadow-sm mb-4 cursor-pointer hover:bg-black/10 dark:hover:bg-white/10 transition-colors group"
                                 onClick={() => {
                                   setTeams((prev) =>
                                     prev.map((team) =>
@@ -10143,17 +10143,17 @@ function GroupApp({
                                   );
                                 }}
                               >
-                                <div className="w-10 h-10 rounded-xl bg-brand-primary/20 flex items-center justify-center shrink-0">
+                                <div className="w-8 h-8 rounded-lg bg-emerald-500/20 flex items-center justify-center shrink-0 mt-0.5">
                                   <Info
-                                    size={18}
-                                    className="text-brand-primary"
+                                    size={16}
+                                    className="text-emerald-500"
                                   />
                                 </div>
                                 <div className="flex flex-col">
-                                  <span className="text-[10px] font-black uppercase tracking-widest text-brand-primary mb-1">
+                                  <span className="text-[9px] font-black uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-0.5">
                                     Empate Resolvido Manualmente
                                   </span>
-                                  <p className="text-[10px] text-black/80 dark:text-white/80 font-bold uppercase leading-relaxed tracking-wider">
+                                  <p className="text-[10px] text-black/70 dark:text-white/70 font-bold uppercase leading-tight tracking-wider">
                                     Desmarque o time que deve{" "}
                                     <span className="text-zinc-900 dark:text-white">
                                       descer na fila
