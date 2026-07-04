@@ -7034,7 +7034,7 @@ function GroupApp({
               {!(currentScreen === "players" && !showAddPlayerSection) && (
                 <button 
                   onClick={() => setShowGlobalSettings(true)}
-                  className="text-zinc-900 dark:text-white hover:opacity-80 transition-opacity p-2 flex items-center justify-center cursor-pointer"
+                  className="text-white hover:opacity-80 transition-opacity p-2 flex items-center justify-center cursor-pointer"
                 >
                   <IoIosMenu size={28} />
                 </button>
@@ -7044,17 +7044,17 @@ function GroupApp({
 
           {/* Tabs for Teams */}
           {currentScreen === "teams" && (
-            <div className="px-6 pb-3">
-              <div className="flex gap-1.5 justify-center">
+            <div className="px-4 pb-3">
+              <div className="flex bg-black/5 dark:bg-white/5 backdrop-blur-sm p-1 rounded-xl mx-auto w-fit">
                 <button
                   onClick={() => navigateTeamsTab("configuracao")}
-                  className={`w-10 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "configuracao" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-black/5 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10"}`}
+                  className={`w-10 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "configuracao" ? "bg-white dark:bg-[#1E3D2F] text-zinc-900 dark:text-white shadow-sm" : "text-black/50 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white"}`}
                 >
-                  <PiGearBold size={16} />
+                  <PiGearBold size={14} />
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("chegada")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "chegada" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-black/5 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "chegada" ? "bg-white dark:bg-[#1E3D2F] text-zinc-900 dark:text-white shadow-sm" : "text-black/50 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7064,7 +7064,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("historico")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "historico" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-black/5 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "historico" ? "bg-white dark:bg-[#1E3D2F] text-zinc-900 dark:text-white shadow-sm" : "text-black/50 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7074,7 +7074,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => navigateTeamsTab("proximos")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "proximos" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-black/5 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${teamsTab === "proximos" ? "bg-white dark:bg-[#1E3D2F] text-zinc-900 dark:text-white shadow-sm" : "text-black/50 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7088,11 +7088,11 @@ function GroupApp({
 
           {/* Tabs for Ranking */}
           {currentScreen === "ranking" && (
-            <div className="px-6 pb-3">
-              <div className="flex gap-1.5 justify-center">
+            <div className="px-4 pb-3">
+              <div className="flex bg-black/5 dark:bg-white/5 backdrop-blur-sm p-1 rounded-xl mx-auto w-fit">
                 <button
                   onClick={() => setRankingTab("geral")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "geral" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-black/5 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "geral" ? "bg-white dark:bg-[#1E3D2F] text-zinc-900 dark:text-white shadow-sm" : "text-black/50 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7102,7 +7102,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => setRankingTab("artilharia")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "artilharia" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-black/5 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "artilharia" ? "bg-white dark:bg-[#1E3D2F] text-zinc-900 dark:text-white shadow-sm" : "text-black/50 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7112,7 +7112,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={() => setRankingTab("assistencias")}
-                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "assistencias" ? "bg-[#34d399] text-[#1E3D2F]" : "bg-black/5 dark:bg-white/5 text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10 font-medium"}`}
+                  className={`px-3 py-1.5 flex items-center justify-center rounded-lg transition-all ${rankingTab === "assistencias" ? "bg-white dark:bg-[#1E3D2F] text-zinc-900 dark:text-white shadow-sm" : "text-black/50 dark:text-white/50 hover:text-zinc-900 dark:hover:text-white font-medium"}`}
                 >
                   <span
                     className={`text-[9px] font-black uppercase tracking-wider text-center w-full transition-colors font-roboto-flex`}
@@ -7375,19 +7375,17 @@ function GroupApp({
                             <GiSoccerBall size={180} />
                           </div>
                         </div>
-
                         <div className="relative z-10 flex items-center">
                           <div className="flex items-center gap-4">
-                            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#111A13] flex items-center justify-center shrink-0 shadow-md">
-                              <Plus size={24} className="text-zinc-900 dark:text-white" />
+                            <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-zinc-500 bg-[#111A13] flex items-center justify-center shrink-0 shadow-md">
+                              <Plus size={24} className="text-white" />
                             </div>
-                            <h3 className="text-[17px] sm:text-lg font-black tracking-tight uppercase text-zinc-900 dark:text-white m-0 leading-none pb-0.5">
+                            <h3 className="text-[17px] sm:text-lg font-black tracking-tight uppercase text-white m-0 leading-none pb-0.5">
                               CRIE SUA PELADA
                             </h3>
                           </div>
                         </div>
                       </motion.div>
-
                       {/* Matches Section */}
                       <div className="space-y-4">
                         <motion.div 
@@ -7400,7 +7398,6 @@ function GroupApp({
                             Suas peladas
                           </h4>
                         </motion.div>
-
                         <div className="space-y-4">
                           {scheduledMatches.length === 0 && (
                             <div className="relative w-full max-w-sm mx-auto h-[350px]">
@@ -7416,11 +7413,6 @@ function GroupApp({
                                   <div className="w-20 h-2 bg-black/10 dark:bg-white/10 rounded-full mb-4" />
                                   <div className="w-32 h-6 bg-black/10 dark:bg-white/10 rounded-full mb-3" />
                                   <div className="w-24 h-3 bg-black/10 dark:bg-white/10 rounded-full" />
-                                </div>
-                                <div className="flex justify-center -space-x-1.5 mb-4 mt-6 w-full">
-                                  {Array.from({ length: 5 }).map((_, i) => (
-                                    <div key={i} className="w-8 h-8 rounded-full bg-black/10 dark:bg-white/10 border border-[#111625]" />
-                                  ))}
                                 </div>
                                 <div className="bg-black/5 dark:bg-white/5 rounded-xl p-2.5 border border-black/10 dark:border-white/10 mt-auto mb-2.5 h-[65px]" />
                                 <div className="flex gap-1.5 w-full">
@@ -7699,16 +7691,16 @@ function GroupApp({
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.2 }}
-                      className="space-y-6"
+                      className="space-y-4"
                     >
-                      <div className="space-y-6">
-                        <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl p-4 sm:p-6 rounded-[32px] border border-black/10 dark:border-white/10 space-y-4 sm:space-y-6 shadow-[0_0_15px_rgba(59,130,246,0.1)]">
+                      <div className="space-y-4">
+                        <div className="bg-black/5 dark:bg-white/5 backdrop-blur-xl p-3 sm:p-4 rounded-[16px] border border-black/10 dark:border-white/10 space-y-3 sm:space-y-4 shadow-[0_0_15px_rgba(59,130,246,0.1)]">
                           <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                             <div className="flex-1 flex gap-2 sm:gap-3">
                               <input
                                 type="text"
                                 placeholder="Nome do jogador..."
-                                className={`flex-1 px-4 sm:px-5 py-3 rounded-2xl border border-black/10 dark:border-white/10 outline-none transition-all bg-black/70 dark:bg-white/70 dark:bg-black/40 text-zinc-900 dark:text-white placeholder-blue-200/40 focus:ring-2 focus:ring-blue-500/50 text-[13px] sm:text-sm font-medium shadow-inner h-[48px]`}
+                                className={`flex-1 px-4 sm:px-5 py-2 rounded-xl border border-black/10 dark:border-white/10 outline-none transition-all bg-white dark:bg-black/40 text-zinc-900 dark:text-white placeholder-black/40 dark:placeholder-white/40 focus:ring-2 focus:ring-blue-500/50 text-[13px] sm:text-sm font-medium shadow-inner h-[40px]`}
                                 onKeyDown={(e) => {
                                   if (e.key === "Enter") {
                                     addPlayer(e.currentTarget.value);
@@ -7718,10 +7710,10 @@ function GroupApp({
                               />
                               <button
                                 onClick={handleImportContacts}
-                                className="w-[48px] h-[48px] bg-black/70 dark:bg-white/70 dark:bg-black/40 text-blue-400 rounded-2xl shadow-inner hover:bg-blue-500/10 transition-all active:scale-95 flex items-center justify-center border border-black/10 dark:border-white/10 shrink-0"
+                                className="w-[40px] h-[40px] bg-white dark:bg-black/40 text-blue-500 dark:text-blue-400 rounded-xl shadow-inner hover:bg-black/5 dark:hover:bg-blue-500/10 transition-all active:scale-95 flex items-center justify-center border border-black/10 dark:border-white/10 shrink-0"
                                 title="Importar dos Contatos"
                               >
-                                <Contact size={20} strokeWidth={1.5} />
+                                <Contact size={18} strokeWidth={1.5} />
                               </button>
                               <button
                                 onClick={() => {
@@ -7733,9 +7725,9 @@ function GroupApp({
                                     input.value = "";
                                   }
                                 }}
-                                className="w-[48px] h-[48px] bg-black/70 dark:bg-white/70 dark:bg-black/40 text-blue-400 rounded-2xl border border-black/10 dark:border-white/10 shadow-inner hover:bg-blue-500/10 transition-all active:scale-95 flex items-center justify-center shrink-0"
+                                className="w-[40px] h-[40px] bg-white dark:bg-black/40 text-blue-500 dark:text-blue-400 rounded-xl border border-black/10 dark:border-white/10 shadow-inner hover:bg-black/5 dark:hover:bg-blue-500/10 transition-all active:scale-95 flex items-center justify-center shrink-0"
                               >
-                                <Plus size={22} strokeWidth={1.5} />
+                                <Plus size={20} strokeWidth={1.5} />
                               </button>
                             </div>
                           </div>
@@ -7791,7 +7783,7 @@ function GroupApp({
                             </AnimatePresence>
                             <textarea
                               placeholder=" "
-                              className={`w-full h-28 sm:h-32 px-5 sm:px-6 py-5 sm:py-6 rounded-2xl border border-black/10 dark:border-white/10 outline-none transition-all text-sm font-medium resize-none bg-black/70 dark:bg-white/70 dark:bg-black/40 text-zinc-900 dark:text-white placeholder-blue-200/40 focus:ring-2 focus:ring-blue-500/50 peer shadow-inner`}
+                              className={`w-full h-20 sm:h-24 px-4 sm:px-5 py-3 sm:py-4 rounded-xl border border-black/10 dark:border-white/10 outline-none transition-all text-sm font-medium resize-none bg-white dark:bg-black/40 text-zinc-900 dark:text-white placeholder-black/40 dark:placeholder-white/40 focus:ring-2 focus:ring-blue-500/50 peer shadow-inner`}
                               onChange={(e) => {
                                 if (
                                   e.target.value.includes("\n") ||
@@ -7821,14 +7813,14 @@ function GroupApp({
                                   initial={{ opacity: 0 }}
                                   animate={{ opacity: 1 }}
                                   transition={{ duration: 0.4, delay: 1.2 }}
-                                  className="text-xs sm:text-sm text-blue-200/50 leading-tight shrink-0 pt-0.5"
+                                  className="text-xs sm:text-sm text-black/50 dark:text-white/40 leading-tight shrink-0 pt-0.5"
                                 >
                                   Cole aqui a lista do whatsapp.
                                 </motion.span>
                               </motion.div>
                             </div>
                             <div
-                              className={`absolute right-5 sm:right-6 bottom-4 sm:bottom-6 text-blue-400 cursor-pointer hover:text-blue-300 transition-colors flex items-center gap-1.5 sm:gap-2 bg-black/5 dark:bg-white/5 backdrop-blur-xl p-1.5 sm:p-2 pl-3 sm:pl-3 rounded-2xl border border-black/10 dark:border-white/10`}
+                              className={`absolute right-4 sm:right-5 bottom-3 sm:bottom-4 text-zinc-600 dark:text-zinc-300 cursor-pointer hover:text-zinc-900 dark:hover:text-white transition-colors flex items-center gap-1.5 sm:gap-2 bg-black/5 dark:bg-white/5 backdrop-blur-xl p-1.5 sm:p-2 pl-3 sm:pl-3 rounded-xl border border-black/10 dark:border-white/10`}
                               onClick={async () => {
                                 try {
                                   const text =
@@ -7856,7 +7848,7 @@ function GroupApp({
                                 className="sm:w-4 sm:h-4"
                                 strokeWidth={1.5}
                               />
-                              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-blue-200">
+                              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">
                                 CAIXA INTELIGENTE
                               </span>
                             </div>
