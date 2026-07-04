@@ -15482,12 +15482,9 @@ function GroupApp({
             exit={{ scale: 0.9, y: 20, opacity: 0 }}
             className="w-full max-w-[280px] p-6 rounded-[24px] bg-[#f1f5f9] dark:bg-[#0b0e17]/95 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white backdrop-blur-xl shadow-2xl relative flex flex-col items-center text-center space-y-4"
           >
-            <div className="w-14 h-14 rounded-full bg-red-500/10 flex items-center justify-center border border-red-500/20 shadow-sm relative overflow-hidden shrink-0">
-              <div className="absolute inset-0 bg-red-500/10 rounded-full blur-xl" />
-              <span className="text-red-500 relative z-10">
-                <Trash2 size={24} />
-              </span>
-            </div>
+            <span className="text-red-500 shrink-0">
+              <Trash2 size={32} />
+            </span>
             
             <div className="space-y-1">
               <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 dark:text-white leading-none">
