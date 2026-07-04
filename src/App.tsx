@@ -7323,7 +7323,7 @@ function GroupApp({
                       <h2 className="text-[12px] font-black uppercase tracking-widest text-zinc-900 dark:text-white">
                         GERENCIAMENTO
                       </h2>
-                      <p className="text-[9px] font-black uppercase tracking-widest text-blue-200/50">
+                      <p className="text-[9px] font-black uppercase tracking-widest text-black/40 dark:text-white/40">
                         JOGADORES
                       </p>
                     </div>
@@ -8100,7 +8100,7 @@ function GroupApp({
                       </div>
 
                       <div className="space-y-6 pb-24">
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-3 gap-2 sm:gap-4">
                           <div className="space-y-1">
                             <label className="text-[8px] font-black uppercase tracking-[0.15em] text-black/60 dark:text-white/50 block text-center mb-1.5">
                               Tempo (Minutos)
