@@ -602,7 +602,7 @@ const FlipClock = ({
 
   return (
     <div
-      className={`flex items-center ${size === "xs" ? "gap-1.5 p-1 px-3" : "gap-1 p-1.5"} rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-black/80 backdrop-blur-md shadow-sm`}
+      className={`flex items-center ${size === "xs" ? "gap-1.5 p-1 px-3" : "gap-1 p-1.5"} rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-gradient-to-b dark:from-zinc-800 dark:to-zinc-900 backdrop-blur-md shadow-sm`}
     >
       <div className={`flex ${size === "xs" ? "gap-1.5" : "gap-0.5"}`}>
         <FlipDigit
