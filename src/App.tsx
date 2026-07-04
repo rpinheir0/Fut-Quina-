@@ -575,7 +575,7 @@ const FlipDigit = ({
           animate={{ y: 0, opacity: 1 }}
           exit={{ y: -25, opacity: 0 }}
           transition={{ duration: 0.4, ease: [0.23, 1, 0.32, 1] }}
-          className={`${textSizes[size]} font-black text-black/90`}
+          className={`${textSizes[size]} font-black text-white/90`}
         >
           {value}
         </motion.span>
@@ -602,7 +602,7 @@ const FlipClock = ({
 
   return (
     <div
-      className={`flex items-center ${size === "xs" ? "gap-2.5 p-2 px-4" : "gap-1 p-2"} rounded-xl border border-black/5 bg-black/80 dark:bg-white/80 backdrop-blur-sm shadow-sm`}
+      className={`flex items-center ${size === "xs" ? "gap-1.5 p-1 px-3" : "gap-1 p-1.5"} rounded-xl border border-white/10 bg-black/80 backdrop-blur-md shadow-sm`}
     >
       <div className={`flex ${size === "xs" ? "gap-1.5" : "gap-0.5"}`}>
         <FlipDigit
@@ -619,7 +619,7 @@ const FlipClock = ({
         />
       </div>
       <span
-        className={`${size === "xs" ? "text-sm" : size === "small" ? "text-lg" : "text-2xl"} font-black text-black/60 mx-1`}
+        className={`${size === "xs" ? "text-sm" : size === "small" ? "text-lg" : "text-2xl"} font-black text-white/40 mx-0.5`}
       >
         :
       </span>
@@ -15160,7 +15160,7 @@ function GroupApp({
           <div
             className={`fixed bottom-0 left-0 right-0 z-[100] w-full ${isPrintMode ? "hidden" : ""}`}
           >
-            <nav className="w-full bg-[#e2e8f0] dark:bg-[#111111] border-t border-black/5 dark:border-white/5 pt-1 pb-3 sm:pb-4 px-2 sm:px-6 flex items-center justify-around">
+            <nav className="w-full bg-[#111111] border-t border-white/5 pt-1 pb-3 sm:pb-4 px-2 sm:px-6 flex items-center justify-around">
               <button
                 onClick={() => {
                   const screens: Screen[] = [
@@ -15176,8 +15176,8 @@ function GroupApp({
                 }}
                 className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
                   currentScreen === "players"
-                    ? "text-brand-primary bg-black/5 dark:bg-white/5 shadow-inner"
-                    : "text-black/60 dark:text-white/50 hover:text-black/80 dark:text-white/80 hover:bg-black/5 dark:bg-white/5"
+                    ? "text-brand-primary bg-white/5 shadow-inner"
+                    : "text-white/50 hover:text-white/80 hover:bg-white/5"
                 }`}
               >
                 {currentScreen === "players" && (
@@ -15219,8 +15219,8 @@ function GroupApp({
                 }}
                 className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
                   currentScreen === "teams"
-                    ? "text-brand-primary bg-black/5 dark:bg-white/5 shadow-inner"
-                    : "text-black/60 dark:text-white/50 hover:text-black/80 dark:text-white/80 hover:bg-black/5 dark:bg-white/5"
+                    ? "text-brand-primary bg-white/5 shadow-inner"
+                    : "text-white/50 hover:text-white/80 hover:bg-white/5"
                 }`}
               >
                 {currentScreen === "teams" && (
@@ -15259,8 +15259,8 @@ function GroupApp({
                 }}
                 className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
                   currentScreen === "ranking"
-                    ? "text-brand-primary bg-black/5 dark:bg-white/5 shadow-inner"
-                    : "text-black/60 dark:text-white/50 hover:text-black/80 dark:text-white/80 hover:bg-black/5 dark:bg-white/5"
+                    ? "text-brand-primary bg-white/5 shadow-inner"
+                    : "text-white/50 hover:text-white/80 hover:bg-white/5"
                 }`}
               >
                 {currentScreen === "ranking" && (
@@ -15300,8 +15300,8 @@ function GroupApp({
                 }}
                 className={`flex-1 flex flex-col items-center justify-center py-2 transition-all duration-300 rounded-none relative overflow-hidden ${
                   currentScreen === "finance"
-                    ? "text-brand-primary bg-black/5 dark:bg-white/5 shadow-inner"
-                    : "text-black/60 dark:text-white/50 hover:text-black/80 dark:text-white/80 hover:bg-black/5 dark:bg-white/5"
+                    ? "text-brand-primary bg-white/5 shadow-inner"
+                    : "text-white/50 hover:text-white/80 hover:bg-white/5"
                 }`}
               >
                 {currentScreen === "finance" && (
