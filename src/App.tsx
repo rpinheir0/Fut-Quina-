@@ -1786,7 +1786,7 @@ const PlayerManagementModalComponent = ({
                     e.currentTarget.blur();
                   }
                 }}
-                className="w-full bg-transparent text-xl font-black uppercase tracking-tight text-zinc-900 dark:text-white leading-none text-center outline-none border-b border-transparent focus:border-black/20 dark:border-white/20 transition-all placeholder:text-black/50 dark:text-white/40 py-1"
+                className="w-full bg-transparent text-xl font-black uppercase tracking-tight text-zinc-900 dark:text-white leading-none text-center outline-none transition-all placeholder:text-black/50 dark:text-white/40 py-1"
               />
               <div className="flex flex-wrap items-center justify-center gap-0.5 mt-1">
                 {[1, 2, 3, 4, 5].map((star) => (
