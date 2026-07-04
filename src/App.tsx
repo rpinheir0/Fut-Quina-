@@ -7752,7 +7752,7 @@ function GroupApp({
                                         </div>
                                     </div>
 
-                                    <div className="flex items-center gap-1.5 relative z-10 w-full" onClick={(e) => e.stopPropagation()}>
+                                    <div className="flex items-center gap-1.5 relative z-10 w-full mt-auto" onClick={(e) => e.stopPropagation()}>
                                         <button onClick={(e) => { e.stopPropagation(); setMatchToDelete(match); }} className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-zinc-700 dark:to-zinc-800 hover:from-red-200 hover:to-red-300 dark:hover:from-red-900/40 dark:hover:to-red-900/40 border border-black/5 dark:border-white/5 backdrop-blur-sm flex items-center justify-center text-zinc-700 dark:text-white/80 hover:text-red-600 dark:hover:text-red-400 transition-colors cursor-pointer shadow-sm"><Trash2 size={14} /></button>
                                         {scheduledMatches.length > 1 && (
                                           <button onClick={(e) => { e.stopPropagation(); handleSwapMatches(); }} className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-zinc-700 dark:to-zinc-800 hover:opacity-80 border border-black/5 dark:border-white/5 backdrop-blur-sm flex items-center justify-center text-zinc-700 dark:text-white/80 transition-colors cursor-pointer shadow-sm"><ArrowLeftRight size={14} /></button>
