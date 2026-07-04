@@ -15143,7 +15143,7 @@ function GroupApp({
                   mainRef.current.scrollTo({ top: 0, behavior: "smooth" });
                 }
               }}
-              className="fixed bottom-36 right-5 z-[110] w-14 h-14 bg-[#dce3ee] dark:bg-[#dce3ee]merald-500 text-zinc-900 dark:text-white rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-black/5 flex items-center justify-center cursor-pointer transition-colors hover:bg-[#dce3ee] dark:bg-[#dce3ee]merald-600 hover:shadow-[0_8px_30px_rgb(0,0,0,0.16)]"
+              className="fixed bottom-36 right-5 z-[110] w-14 h-14 bg-gradient-to-br from-blue-900 to-slate-900 text-white rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-black/5 flex items-center justify-center cursor-pointer transition-all hover:scale-105 hover:shadow-[0_8px_30px_rgb(0,0,0,0.16)]"
             >
               <motion.div
                 animate={{ y: [0, -4, 0] }}
