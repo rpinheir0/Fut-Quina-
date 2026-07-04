@@ -78,6 +78,8 @@ import {
   Crown,
   MousePointerClick,
   Calendar,
+  Download,
+  Upload,
 } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { FcHighPriority, FcRules, FcGrid, FcMoneyTransfer } from "react-icons/fc";
@@ -3505,6 +3507,148 @@ function GroupApp({
     setToast({ message: "Pelada encerrada e dados resetados!", type: "success" });
     setTimeout(() => setToast(null), 3000);
   };
+
+  const handleBackup = () => {
+    try {
+      const backupData: Record<string, string> = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith("futquina_")) {
+          const value = localStorage.getItem(key);
+          if (value !== null) {
+            backupData[key] = value;
+          }
+        }
+      }
+      
+      const backupObj = {
+        type: "futquina_backup",
+        version: "1.0",
+        timestamp: Date.now(),
+        data: backupData
+      };
+      
+      const jsonString = JSON.stringify(backupObj, null, 2);
+      const blob = new Blob([jsonString], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      
+      const dateStr = new Date().toISOString().slice(0, 10);
+      const fileName = `futquina_backup_${dateStr}.json`;
+      
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      
+      setToast({ message: "Backup gerado com sucesso!", type: "success" });
+      setTimeout(() => setToast(null), 3000);
+    } catch (err) {
+      console.error(err);
+      setToast({ message: "Erro ao gerar backup.", type: "warning" });
+      setTimeout(() => setToast(null), 3000);
+    }
+  };
+
+  const handleRestore = () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.accept = ".json";
+    input.onchange = (e) => {
+      const file = (e.target as HTMLInputElement).files?.[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        try {
+          const text = event.target?.result as string;
+          const backupObj = JSON.parse(text);
+
+          // Validate structure
+          if (
+            !backupObj ||
+            backupObj.type !== "futquina_backup" ||
+            !backupObj.data ||
+            typeof backupObj.data !== "object"
+          ) {
+            setToast({
+              message: "Arquivo de backup inválido ou corrompido!",
+              type: "warning"
+            });
+            setTimeout(() => setToast(null), 3000);
+            return;
+          }
+
+          // Validate the data keys
+          const dataKeys = Object.keys(backupObj.data);
+          if (dataKeys.length === 0) {
+            setToast({
+              message: "O backup está vazio!",
+              type: "warning"
+            });
+            setTimeout(() => setToast(null), 3000);
+            return;
+          }
+
+          const allKeysStartWithFutquina = dataKeys.every((key) =>
+            key.startsWith("futquina_")
+          );
+          if (!allKeysStartWithFutquina) {
+            setToast({
+              message: "O arquivo contém chaves inválidas!",
+              type: "warning"
+            });
+            setTimeout(() => setToast(null), 3000);
+            return;
+          }
+
+          // Before restoring, clear existing futquina_ items from localStorage
+          for (let i = localStorage.length - 1; i >= 0; i--) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith("futquina_")) {
+              localStorage.removeItem(key);
+            }
+          }
+
+          // Restore each key
+          for (const [key, value] of Object.entries(backupObj.data)) {
+            localStorage.setItem(key, value as string);
+          }
+
+          setToast({
+            message: "Backup restaurado! Recarregando dados...",
+            type: "success"
+          });
+          setTimeout(() => setToast(null), 3000);
+
+          // Reload the page after 1.5s so everything gets updated cleanly
+          setTimeout(() => {
+            window.location.reload();
+          }, 1500);
+
+        } catch (err) {
+          console.error(err);
+          setToast({
+            message: "Falha ao ler o arquivo de backup!",
+            type: "warning"
+          });
+          setTimeout(() => setToast(null), 3000);
+        }
+      };
+      reader.onerror = () => {
+        setToast({
+          message: "Erro ao ler o arquivo selecionado.",
+          type: "warning"
+        });
+        setTimeout(() => setToast(null), 3000);
+      };
+      reader.readAsText(file);
+    };
+    input.click();
+  };
+
   const [showIconPicker, setShowIconPicker] = useState<number | null>(null);
   const [selectedScorerId, setSelectedScorerId] = useState<string | null>(null);
   const [editingPlayerId, setEditingPlayerId] = useState<string | null>(null);
@@ -7238,6 +7382,50 @@ function GroupApp({
                           </div>
                         </div>
                       </button>
+
+                      <div
+                        onClick={() => {
+                          handleBackup();
+                          setShowGlobalSettings(false);
+                        }}
+                        className="w-full flex items-center justify-between p-4 hover:bg-black/10 dark:hover:bg-white/10 rounded-xl transition-all group cursor-pointer"
+                      >
+                        <div className="flex items-center gap-4 text-left w-full">
+                          <div className="w-5 h-5 flex items-center justify-center text-zinc-900 dark:text-white shrink-0 group-hover:scale-110 transition-transform">
+                            <Download size={20} />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-[14px] font-bold text-zinc-900 dark:text-white tracking-wide">
+                              Backup
+                            </span>
+                            <span className="text-[10px] text-black/50 dark:text-white/40 font-medium">
+                              Gerar arquivo de dados
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div
+                        onClick={() => {
+                          handleRestore();
+                          setShowGlobalSettings(false);
+                        }}
+                        className="w-full flex items-center justify-between p-4 hover:bg-black/10 dark:hover:bg-white/10 rounded-xl transition-all group cursor-pointer"
+                      >
+                        <div className="flex items-center gap-4 text-left w-full">
+                          <div className="w-5 h-5 flex items-center justify-center text-zinc-900 dark:text-white shrink-0 group-hover:scale-110 transition-transform">
+                            <Upload size={20} />
+                          </div>
+                          <div className="flex flex-col">
+                            <span className="text-[14px] font-bold text-zinc-900 dark:text-white tracking-wide">
+                              Restaurar Backup
+                            </span>
+                            <span className="text-[10px] text-black/50 dark:text-white/40 font-medium">
+                              Importar arquivo de dados
+                            </span>
+                          </div>
+                        </div>
+                      </div>
 
 
                       <button
