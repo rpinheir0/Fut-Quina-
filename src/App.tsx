@@ -15594,43 +15594,43 @@ function GroupApp({
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
               animate={{ scale: 1, y: 0 }}
-              className="w-full max-w-[280px] p-5 rounded-[20px] bg-[#f1f5f9] dark:bg-[#0b0e17]/95 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white backdrop-blur-xl shadow-2xl"
+              className="w-full max-w-sm p-6 sm:p-7 rounded-[24px] bg-[#f1f5f9] dark:bg-[#0b0e17]/95 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white backdrop-blur-xl shadow-2xl"
             >
-              <div className="flex flex-col items-center text-center space-y-3">
-                <div className="space-y-0.5">
-                  <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 dark:text-white">
+              <div className="flex flex-col items-center text-center space-y-4">
+                <div className="space-y-1">
+                  <h3 className="text-xl font-black uppercase tracking-tight text-zinc-900 dark:text-white">
                     Guia
                   </h3>
-                  <p className="text-[9px] font-medium leading-relaxed text-black/60 dark:text-white/50 max-w-[180px] mx-auto">
+                  <p className="text-[10px] font-medium leading-relaxed text-black/60 dark:text-white/50 max-w-[240px] mx-auto">
                     Siga estes passos simples:
                   </p>
                 </div>
 
-                <div className="w-full space-y-2.5 text-left py-1">
-                  <div className="flex gap-2 items-start">
-                    <div className="w-5 h-5 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+                <div className="w-full space-y-3.5 text-left py-2">
+                  <div className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] text-[11px] font-black flex items-center justify-center shrink-0 shadow-sm mt-0.5">
                       1
                     </div>
-                    <p className="text-[9px] font-medium text-black/70 dark:text-white/60 leading-tight">
-                      <span className="text-zinc-900 dark:text-white font-bold block mb-0.5">Crie sua Pelada</span>
+                    <p className="text-[10px] font-medium text-black/70 dark:text-white/60 leading-normal">
+                      <span className="text-zinc-900 dark:text-white font-bold block mb-0.5 text-[11px]">Crie sua Pelada</span>
                       Clique no banner verde para definir nome, data e local.
                     </p>
                   </div>
-                  <div className="flex gap-2 items-start">
-                    <div className="w-5 h-5 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+                  <div className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] text-[11px] font-black flex items-center justify-center shrink-0 shadow-sm mt-0.5">
                       2
                     </div>
-                    <p className="text-[9px] font-medium text-black/70 dark:text-white/60 leading-tight">
-                      <span className="text-zinc-900 dark:text-white font-bold block mb-0.5">Acesse o Gerenciamento</span>
+                    <p className="text-[10px] font-medium text-black/70 dark:text-white/60 leading-normal">
+                      <span className="text-zinc-900 dark:text-white font-bold block mb-0.5 text-[11px]">Acesse o Gerenciamento</span>
                       Toque na pelada criada na sua lista para adicionar jogadores.
                     </p>
                   </div>
-                  <div className="flex gap-2 items-start">
-                    <div className="w-5 h-5 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] text-[10px] font-black flex items-center justify-center shrink-0 shadow-sm mt-0.5">
+                  <div className="flex gap-3 items-start">
+                    <div className="w-6 h-6 rounded-full bg-[#34d399]/10 border border-[#34d399]/20 text-[#34d399] text-[11px] font-black flex items-center justify-center shrink-0 shadow-sm mt-0.5">
                       3
                     </div>
-                    <p className="text-[9px] font-medium text-black/70 dark:text-white/60 leading-tight">
-                      <span className="text-zinc-900 dark:text-white font-bold block mb-0.5">Organize as Partidas</span>
+                    <p className="text-[10px] font-medium text-black/70 dark:text-white/60 leading-normal">
+                      <span className="text-zinc-900 dark:text-white font-bold block mb-0.5 text-[11px]">Organize as Partidas</span>
                       Confirme presenças, registre gols e gerencie o financeiro.
                     </p>
                   </div>
@@ -15638,7 +15638,7 @@ function GroupApp({
 
                 <button
                   onClick={() => setShowSetupGuide(false)}
-                  className="w-full py-2.5 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] rounded-lg font-black uppercase tracking-widest text-[9px] shadow-lg shadow-[#34d399]/20 active:scale-95 transition-all text-center cursor-pointer mt-1"
+                  className="w-full py-3 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] rounded-xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-[#34d399]/20 active:scale-95 transition-all text-center cursor-pointer mt-1"
                 >
                   Entendi, vamos lá!
                 </button>
@@ -15876,8 +15876,13 @@ function GroupApp({
                 <X size={14} />
               </button>
 
-              <div className="w-14 h-14 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shadow-lg text-[#34d399] flex items-center justify-center mx-auto mb-2 relative z-10">
-                <IoIosSave size={24} />
+              <div className="flex items-center justify-center mx-auto mb-2 relative z-10">
+                <img
+                  src="/atualizar.png"
+                  referrerPolicy="no-referrer"
+                  className="w-10 h-10 object-contain"
+                  alt="Fim da pelada"
+                />
               </div>
               <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 dark:text-white leading-none relative z-10">
                 ENCERRAR PELADA
