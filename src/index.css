@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&family=Roboto+Flex:opsz,wght@8..144,100..1000&family=Silkscreen&family=VT323&family=Megrim&family=Julius+Sans+One&family=Staatliches&family=Readex+Pro:wght@400;500&display=swap");
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans: "Roboto", ui-sans-serif, system-ui, sans-serif;
@@ -279,7 +280,7 @@
   }
 
   body {
-    @apply bg-[#0b0e17] text-white antialiased;
+    @apply bg-white dark:bg-[#0b0e17] text-zinc-900 dark:text-white antialiased;
     font-size: 1rem;
   }
 
