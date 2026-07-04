@@ -667,7 +667,7 @@ const ColorPickerModal = ({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         onClick={onClose}
-        className="absolute inset-0 bg-black/90 dark:bg-white/90 dark:bg-black/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-black/85 dark:bg-[#060814]/92 backdrop-blur-sm"
       />
       <motion.div
         initial={{ opacity: 0, scale: 0.9, y: 20 }}
@@ -766,7 +766,7 @@ const AssistModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/90 dark:bg-white/90 dark:bg-black/60 backdrop-blur-md">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/85 dark:bg-[#060814]/92 backdrop-blur-md">
       <motion.div
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -906,7 +906,7 @@ const ScorerModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/70 dark:bg-white/70 dark:bg-black/40 backdrop-blur-sm">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/75 dark:bg-[#060814]/85 backdrop-blur-sm">
       <motion.div
         initial={{ scale: 0.9, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
@@ -1027,7 +1027,7 @@ const TieBreakerModal = ({
   const isLotteryOngoing = state.type === "lottery";
 
   return (
-    <div className="fixed inset-0 z-[2500] flex items-center justify-center p-4 bg-black/90 dark:bg-white/90 dark:bg-black/80 backdrop-blur-xl">
+    <div className="fixed inset-0 z-[2500] flex items-center justify-center p-4 bg-black/85 dark:bg-[#060814]/92 backdrop-blur-xl">
       <motion.div
         initial={{ scale: 0.95, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -1624,7 +1624,7 @@ const GoalCelebration = ({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/90 dark:bg-white/90 dark:bg-black/80 backdrop-blur-md overflow-hidden"
+      className="fixed inset-0 z-[2000] flex items-center justify-center bg-black/85 dark:bg-[#060814]/95 backdrop-blur-md overflow-hidden"
     >
       {/* Root Camera Shake/Zoom Container */}
       <motion.div
@@ -1638,7 +1638,7 @@ const GoalCelebration = ({
           initial={{ scale: 0, rotate: -10 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ type: "spring", damping: 12 }}
-          className="text-4xl sm:text-6xl font-black text-brand-primary uppercase tracking-tighter mb-6 z-10 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] italic"
+          className="text-4xl sm:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] uppercase tracking-normal py-2 px-4 mb-6 z-10 drop-shadow-[0_10px_10px_rgba(0,0,0,0.5)] italic"
         >
           GOL!
         </motion.div>
@@ -1648,10 +1648,10 @@ const GoalCelebration = ({
           initial={{ scale: 0.8, opacity: 0, y: 50 }}
           animate={{ scale: 1, opacity: 1, y: 0 }}
           transition={{ type: "spring", damping: 20, stiffness: 150 }}
-          className="z-20 bg-zinc-950 border-2 border-black/20 dark:border-white/20 rounded-2xl shadow-2xl overflow-hidden flex items-center p-2 pr-8 max-w-[90%] sm:max-w-md gap-4 min-h-[100px]"
+          className="z-20 bg-zinc-950 border-2 border-black/20 dark:border-white/20 rounded-2xl shadow-2xl overflow-hidden flex items-center p-4 pr-10 w-[95%] sm:w-[500px] max-w-lg gap-6 min-h-[110px]"
         >
           {/* Photo Section - Round Circle */}
-          <div className="w-20 h-20 sm:w-24 sm:h-24 bg-zinc-800 rounded-full border-2 border-brand-primary flex items-center justify-center relative shrink-0 overflow-hidden shadow-lg">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 bg-zinc-800 rounded-full border-2 border-[#59b823] flex items-center justify-center relative shrink-0 overflow-hidden shadow-lg">
             {scorerPhoto ? (
               <img
                 src={scorerPhoto}
@@ -1675,17 +1675,11 @@ const GoalCelebration = ({
 
           {/* Info Section */}
           <div className="flex flex-col justify-center items-start min-w-0">
-            <div className="text-brand-primary text-[8px] font-black uppercase tracking-[0.3em] mb-1">
+            <div className="text-[#59b823] text-[8px] font-black uppercase tracking-[0.3em] mb-1">
               Goleador
             </div>
-            <div className="text-xl sm:text-3xl font-black uppercase tracking-tighter text-zinc-900 dark:text-white mb-0.5 truncate w-full italic">
+            <div className="text-xl sm:text-3xl font-black uppercase tracking-tighter text-white mb-0.5 truncate w-full">
               {scorerName}
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-brand-primary" />
-              <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-500 truncate">
-                {teamName}
-              </div>
             </div>
           </div>
         </motion.div>
@@ -6459,7 +6453,7 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[2000] bg-black/90 dark:bg-white/90 dark:bg-black/80 backdrop-blur-sm flex flex-col items-center justify-center p-6"
+            className="fixed inset-0 z-[2000] bg-black/85 dark:bg-[#060814]/92 backdrop-blur-sm flex flex-col items-center justify-center p-6"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
@@ -6727,7 +6721,7 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 dark:bg-white/90 dark:bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/85 dark:bg-[#060814]/92 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
             onClick={() => setShowInsufficientPlayersModal(false)}
           >
             <motion.div
@@ -7168,7 +7162,7 @@ function GroupApp({
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                className="absolute top-full right-0 w-screen h-[calc(100vh-100%)] bg-black/90 dark:bg-white/90 dark:bg-black/60 backdrop-blur-sm z-[200] flex justify-end"
+                className="absolute top-full right-0 w-screen h-[calc(100vh-100%)] bg-black/85 dark:bg-[#060814]/92 backdrop-blur-sm z-[200] flex justify-end"
                 onClick={() => setShowGlobalSettings(false)}
               >
                 <motion.div
@@ -7915,7 +7909,7 @@ function GroupApp({
                                       <input
                                         autoFocus
                                         defaultValue={player.name}
-                                        className={`flex-1 bg-black/70 dark:bg-white/70 dark:bg-black/40 border-b border-blue-500 outline-none text-xs font-medium py-1 px-3 rounded-none text-zinc-900 dark:text-white min-w-0 placeholder-white/30`}
+                                        className={`flex-1 bg-black/75 dark:bg-[#060814]/85 border-b border-blue-500 outline-none text-xs font-medium py-1 px-3 rounded-none text-zinc-900 dark:text-white min-w-0 placeholder-white/30`}
                                         onClick={(e) => e.stopPropagation()}
                                         onKeyDown={(e) => {
                                           if (e.key === "Enter")
@@ -8942,7 +8936,7 @@ function GroupApp({
                           ) : (
                             <>
                               {lastMatchResult ? (
-                                <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto mb-2 space-y-4 bg-black/5 p-6 rounded-xl border border-black/10 shadow-sm backdrop-blur-sm">
+                                <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto mb-2 space-y-4 bg-black/5 dark:bg-white/5 p-6 rounded-xl border border-black/10 dark:border-white/10 shadow-sm backdrop-blur-sm">
                                   <p className="text-[10px] font-black text-black/60 dark:text-white/50 uppercase tracking-[0.2em]">
                                     Última Partida
                                   </p>
@@ -9007,7 +9001,7 @@ function GroupApp({
                                   </div>
 
                                   {/* Scorers display */}
-                                  <div className="w-full space-y-2 mt-2 pt-4 border-t border-black/10">
+                                  <div className="w-full space-y-2 mt-2 pt-4 border-t border-black/10 dark:border-white/10">
                                     {(lastMatchResult.events || []).map(
                                       (event, idx) => {
                                         const p = players.find(
@@ -9022,7 +9016,7 @@ function GroupApp({
                                         return (
                                           <div
                                             key={`last-game-event-${event.id || 'e'}-${idx}`}
-                                            className="flex items-center justify-between gap-2 p-1.5 rounded-lg border border-black/5"
+                                            className="flex items-center justify-between gap-2 p-1.5 rounded-lg border border-black/5 dark:border-white/5"
                                             style={{
                                               backgroundColor:
                                                 (event.team === "A"
@@ -9050,7 +9044,7 @@ function GroupApp({
                                             }}
                                           >
                                             <div className="flex items-center gap-1.5 overflow-hidden">
-                                              <div className="w-4 h-4 rounded-full bg-black/10 flex items-center justify-center shrink-0 border border-black/10">
+                                              <div className="w-4 h-4 rounded-full bg-black/10 dark:bg-white/10 flex items-center justify-center shrink-0 border border-black/10 dark:border-white/10">
                                                 {p.photo ? (
                                                   <img
                                                     src={p.photo}
@@ -9058,13 +9052,13 @@ function GroupApp({
                                                     referrerPolicy="no-referrer"
                                                   />
                                                 ) : (
-                                                  <span className="text-black flex items-center shrink-0">
+                                                  <span className="text-black dark:text-zinc-300 flex items-center shrink-0">
                                                     <IoPersonOutline size={8} />
                                                   </span>
                                                 )}
                                               </div>
                                               <div className="flex flex-col gap-0.5 min-w-0">
-                                                <span className="text-xs font-normal tracking-tight capitalize truncate text-black/90 leading-none">
+                                                <span className="text-xs font-normal tracking-tight capitalize truncate text-black/90 dark:text-white/90 leading-none">
                                                   {p.name.toLowerCase()}
                                                 </span>
                                                 <div className="flex gap-0.5">
@@ -9073,7 +9067,7 @@ function GroupApp({
                                                       <Star
                                                         key={`star-h-${p.id}-${star}`}
                                                         size={6}
-                                                        className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10"}`}
+                                                        className={`${(p.stars || 3) >= star ? "fill-yellow-400 text-yellow-400" : "text-black/10 dark:text-white/10"}`}
                                                       />
                                                     ),
                                                   )}
@@ -12106,7 +12100,7 @@ function GroupApp({
                               <h3 className="text-[10px] font-black uppercase tracking-widest text-zinc-900 dark:text-white mb-2 ml-1">
                                 Resumo Mensal ({selectedYear})
                               </h3>
-                              <div className="h-64 w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-4">
+                              <div className="h-64 w-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 rounded-2xl p-4 pointer-events-none select-none">
                                 <ResponsiveContainer width="100%" height="100%">
                                   <BarChart
                                     data={MONTHS.map((month) => {
@@ -12147,17 +12141,6 @@ function GroupApp({
                                       tickLine={false}
                                       tick={{ fontSize: 10, fill: "#888" }}
                                       tickFormatter={(val) => `R${val}`}
-                                    />
-                                    <Tooltip
-                                      contentStyle={{
-                                        backgroundColor: "#18181b",
-                                        border: "1px solid rgba(255,255,255,0.1)",
-                                        borderRadius: "8px",
-                                        fontSize: "12px",
-                                        color: "#fff",
-                                      }}
-                                      itemStyle={{ color: "#fff" }}
-                                      formatter={(value) => [`R$ ${value}`, undefined]}
                                     />
                                     <Legend wrapperStyle={{ fontSize: "10px" }} />
                                     <Bar
@@ -12489,7 +12472,7 @@ function GroupApp({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/70 dark:bg-white/70 dark:bg-black/40 backdrop-blur-sm z-[80] flex items-center justify-center p-6"
+              className="fixed inset-0 bg-black/75 dark:bg-[#060814]/85 backdrop-blur-sm z-[80] flex items-center justify-center p-6"
             >
               <motion.div
                 initial={{ scale: 0.9, y: 20 }}
@@ -13365,7 +13348,7 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 dark:bg-white/90 dark:bg-black/60 backdrop-blur-md z-[160] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/85 dark:bg-[#060814]/92 backdrop-blur-md z-[160] flex items-center justify-center p-4"
           >
             <motion.div
               initial={{ scale: 0.9, y: 30 }}
@@ -13441,9 +13424,9 @@ function GroupApp({
                             );
                             setShowAssistSelection(null);
                           }}
-                          className="w-full p-2.5 rounded-xl border border-black/10 dark:border-white/10 transition-all text-left group flex items-center gap-3 bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 shrink-0"
+                          className="w-full p-2.5 rounded-xl border border-black/10 dark:border-[#1e2540] transition-all text-left group flex items-center gap-3 bg-black/5 dark:bg-[#0f1324] hover:bg-black/10 dark:hover:bg-[#151a30] shrink-0"
                         >
-                          <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden border border-black/5 dark:border-white/5 bg-black/5 dark:bg-white/5 shrink-0 shadow-inner">
+                          <div className="w-8 h-8 rounded-lg flex items-center justify-center overflow-hidden border border-black/5 dark:border-zinc-700 bg-black/5 dark:bg-zinc-800 shrink-0 shadow-inner">
                             {player?.photo ? (
                               <img
                                 src={player.photo}
@@ -13453,21 +13436,21 @@ function GroupApp({
                               />
                             ) : (
                               <div className="w-full h-full flex items-center justify-center">
-                                <span className="text-black/20 dark:text-white/20">
+                                <span className="text-black/20 dark:text-zinc-300">
                                   <IoPersonOutline size={14} />
                                 </span>
                               </div>
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <div className="text-[7px] font-black text-black/30 dark:text-white/30 uppercase tracking-widest mb-0.5">
+                            <div className="text-[7px] font-black text-black/30 dark:text-zinc-400 uppercase tracking-widest mb-0.5">
                               Garçom
                             </div>
-                            <div className="text-[10px] font-black uppercase truncate text-black/80 dark:text-white/80 group-hover:text-zinc-900 dark:text-white">
+                            <div className="text-[10px] font-black uppercase truncate text-zinc-900 dark:text-white group-hover:text-black dark:group-hover:text-white">
                               {player?.name}
                             </div>
                           </div>
-                          <div className="w-6 h-6 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center text-black/50 dark:text-white/40 group-hover:text-zinc-900 dark:text-white transition-all shrink-0">
+                          <div className="w-6 h-6 rounded-full bg-black/5 dark:bg-zinc-800 border border-black/10 dark:border-zinc-700 flex items-center justify-center text-black/50 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-white transition-all shrink-0">
                             <PiPlusBold size={10} />
                           </div>
                         </motion.button>
@@ -13532,7 +13515,7 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 dark:bg-white/70 dark:bg-black/40 backdrop-blur-sm z-[70] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/75 dark:bg-[#060814]/85 backdrop-blur-sm z-[70] flex items-center justify-center p-4"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
@@ -14045,7 +14028,7 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 dark:bg-white/90 dark:bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-6"
+            className="fixed inset-0 bg-black/85 dark:bg-[#060814]/92 backdrop-blur-sm z-[100] flex items-center justify-center p-6"
             onClick={() => setShowConfigMenu(false)}
           >
             <motion.div
@@ -14104,7 +14087,7 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 dark:bg-white/90 dark:bg-black/80 backdrop-blur-sm z-[110] flex items-center justify-center p-6"
+            className="fixed inset-0 bg-black/85 dark:bg-[#060814]/92 backdrop-blur-sm z-[110] flex items-center justify-center p-6"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
@@ -14163,7 +14146,7 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 dark:bg-white/90 dark:bg-black/80 backdrop-blur-sm z-[100] flex items-center justify-center p-6"
+            className="fixed inset-0 bg-black/85 dark:bg-[#060814]/92 backdrop-blur-sm z-[100] flex items-center justify-center p-6"
             onClick={() => setShowIconPicker(null)}
           >
             <motion.div
@@ -14206,7 +14189,7 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 dark:bg-white/90 dark:bg-black/80 backdrop-blur-sm z-[70] flex items-center justify-center p-6"
+            className="fixed inset-0 bg-black/85 dark:bg-[#060814]/92 backdrop-blur-sm z-[70] flex items-center justify-center p-6"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
@@ -14250,7 +14233,7 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 dark:bg-white/90 dark:bg-black/80 backdrop-blur-sm z-[70] flex items-center justify-center p-6"
+            className="fixed inset-0 bg-black/85 dark:bg-[#060814]/92 backdrop-blur-sm z-[70] flex items-center justify-center p-6"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
@@ -14382,7 +14365,7 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 dark:bg-white/90 dark:bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-6"
+            className="fixed inset-0 bg-black/85 dark:bg-[#060814]/92 backdrop-blur-sm z-[60] flex items-center justify-center p-6"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
@@ -14436,7 +14419,7 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/70 dark:bg-white/70 dark:bg-black/40 backdrop-blur-sm z-[60] flex items-end justify-center"
+            className="fixed inset-0 bg-black/75 dark:bg-[#060814]/85 backdrop-blur-sm z-[60] flex items-end justify-center"
             onClick={() => {
               setShowEventModal(null);
               setSelectedScorerId(null);
@@ -14609,7 +14592,7 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 dark:bg-white/90 dark:bg-black/80 backdrop-blur-sm z-[150] flex items-center justify-center p-6"
+            className="fixed inset-0 bg-black/85 dark:bg-[#060814]/92 backdrop-blur-sm z-[150] flex items-center justify-center p-6"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
@@ -14699,7 +14682,7 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 dark:bg-white/90 dark:bg-black/80 backdrop-blur-sm z-[110] flex items-center justify-center p-6"
+            className="fixed inset-0 bg-black/85 dark:bg-[#060814]/92 backdrop-blur-sm z-[110] flex items-center justify-center p-6"
           >
             <motion.div
               initial={{ scale: 0.9, y: 20 }}
@@ -15327,7 +15310,7 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 dark:bg-white/90 dark:bg-black/60 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/85 dark:bg-[#060814]/92 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
             onClick={() => setShowAutoCompleteModal(false)}
           >
             <motion.div
@@ -15369,7 +15352,7 @@ function GroupApp({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/90 dark:bg-white/90 dark:bg-black/80 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
+            className="fixed inset-0 bg-black/85 dark:bg-[#060814]/92 backdrop-blur-sm z-[300] flex items-center justify-center p-4"
             onClick={() => setShowResetStatsConfirm(false)}
           >
             <motion.div
@@ -15475,7 +15458,7 @@ function GroupApp({
       </AnimatePresence>
 
       {matchToDelete && (
-        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/90 dark:bg-white/90 dark:bg-black/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 bg-black/85 dark:bg-[#060814]/92 backdrop-blur-sm">
           <motion.div
             initial={{ scale: 0.9, y: 20, opacity: 0 }}
             animate={{ scale: 1, y: 0, opacity: 1 }}
@@ -15569,7 +15552,7 @@ function GroupApp({
                   {newMatchImage ? (
                     <>
                       <img src={newMatchImage} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                      <div className="absolute inset-0 bg-black/70 dark:bg-white/70 dark:bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
+                      <div className="absolute inset-0 bg-black/75 dark:bg-[#060814]/85 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity">
                         <Camera size={14} className="text-zinc-900 dark:text-white" />
                       </div>
                     </>
