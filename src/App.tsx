@@ -11973,11 +11973,11 @@ function GroupApp({
                                   )}
                                 </div>
                                 <p
-                                  className={`text-lg sm:text-xl lg:text-2xl font-black ${
+                                  className={`text-lg sm:text-xl lg:text-2xl font-black w-fit ${
                                     isPrintMode
                                       ? "text-black"
                                       : netBalance >= 0
-                                        ? "text-[#34d399]"
+                                        ? "text-transparent bg-clip-text bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e]"
                                         : "text-red-400"
                                   }`}
                                 >
@@ -12086,8 +12086,8 @@ function GroupApp({
                                   ) : (
                                     <div className="flex flex-col">
                                       <p
-                                        className={`text-lg sm:text-xl font-black ${
-                                          isPrintMode ? "text-black" : "text-zinc-900 dark:text-white"
+                                        className={`text-lg sm:text-xl font-black w-fit ${
+                                          isPrintMode ? "text-black" : "text-transparent bg-clip-text bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e]"
                                         }`}
                                       >
                                         R$ {totalRevenue},00
