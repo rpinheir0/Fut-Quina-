@@ -11753,7 +11753,6 @@ function GroupApp({
                             className="flex items-center py-3 px-3 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 animate-pulse w-full mt-2"
                           >
                             <div className="w-8 text-sm font-black text-black/20 dark:text-white/20 text-center shrink-0">
-                              -
                             </div>
                             <div className="w-10 h-10 rounded-full bg-black/10 dark:bg-white/10 shrink-0 border border-black/10 dark:border-white/10 mr-4 shadow-sm ml-2">
                             </div>
