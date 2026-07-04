@@ -1036,14 +1036,14 @@ const TieBreakerModal = ({
         className="w-full max-w-md h-auto max-h-[90vh] flex flex-col bg-white dark:bg-[#0b1329]/95 rounded-[24px] overflow-hidden border border-black/10 dark:border-white/10 shadow-[0_20px_60px_rgba(0,0,0,0.8)] relative text-zinc-900 dark:text-white"
       >
         {/* Background Decorative Elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/5 rounded-full blur-3xl -mr-32 -mt-32 animate-pulse" />
+        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -mr-32 -mt-32 animate-pulse" />
         <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl -ml-32 -mb-32" />
 
         {/* Header Section */}
         <div className="pt-10 pb-4 px-6 relative z-10 shrink-0">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-3">
-              <div className="w-2 h-8 bg-[#dce3ee] dark:bg-[#dce3ee]merald-400 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.5)]" />
+              <div className="w-2 h-8 bg-emerald-400 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.5)]" />
               <span className="text-xs font-black text-zinc-900 dark:text-white uppercase tracking-[0.4em]">
                 Desempate
               </span>
@@ -1120,7 +1120,7 @@ const TieBreakerModal = ({
 
                 <button
                   onClick={() => onTypeSelect("penalties")}
-                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 hover:border-emerald-500/30 hover:bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/5 transition-all duration-300 transform active:scale-95 text-left shadow-md"
+                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all duration-300 transform active:scale-95 text-left shadow-md"
                 >
                   <div className="w-10 h-10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                     <img src="/penalti.png" referrerPolicy="no-referrer" className="w-10 h-10 object-contain" alt="" />
@@ -1187,7 +1187,7 @@ const TieBreakerModal = ({
               <div className="grid grid-cols-1 gap-3">
                 <button
                   onClick={() => onBothLeave("A")}
-                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 hover:border-emerald-500/30 hover:bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/5 transition-all duration-300 transform active:scale-95 text-left shadow-md"
+                  className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 hover:border-emerald-500/30 hover:bg-emerald-500/5 transition-all duration-300 transform active:scale-95 text-left shadow-md"
                 >
                   <div
                     className="w-12 h-12 rounded-xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform"
@@ -1318,7 +1318,7 @@ const TieBreakerModal = ({
                         <div className="flex gap-2">
                           <button
                             onClick={() => onPenaltyToggle("A", idx)}
-                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? "bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/20 text-[#59b823] border border-emerald-500/30 shadow-sm" : "bg-black/5 dark:bg-white/5 text-[#59b823]/20 hover:bg-black/10 dark:bg-white/10"}`}
+                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? "bg-emerald-500/20 text-[#59b823] border border-emerald-500/30 shadow-sm" : "bg-black/5 dark:bg-white/5 text-[#59b823]/20 hover:bg-black/10 dark:bg-white/10"}`}
                           >
                             <PiCheckCircleBold size={18} />
                           </button>
@@ -1358,7 +1358,7 @@ const TieBreakerModal = ({
                         <div className="flex gap-2">
                           <button
                             onClick={() => onPenaltyToggle("B", idx)}
-                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? "bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/20 text-[#59b823] border border-emerald-500/30 shadow-sm" : "bg-black/5 dark:bg-white/5 text-[#59b823]/20 hover:bg-black/10 dark:bg-white/10"}`}
+                            className={`flex-1 h-9 rounded-xl flex items-center justify-center transition-all duration-300 ${shot.success === true ? "bg-emerald-500/20 text-[#59b823] border border-emerald-500/30 shadow-sm" : "bg-black/5 dark:bg-white/5 text-[#59b823]/20 hover:bg-black/10 dark:bg-white/10"}`}
                           >
                             <PiCheckCircleBold size={18} />
                           </button>
@@ -6201,30 +6201,35 @@ function GroupApp({
               className="fixed bottom-12 left-0 right-0 z-[200] flex justify-center px-6 pointer-events-none"
             >
               <motion.div
-                className={`pointer-events-auto flex items-center gap-3 px-5 py-3 rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.3)] border backdrop-blur-xl transition-all ${
-                  toast.type === "success"
-                    ? "bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/90 border-emerald-400/50 text-zinc-900 dark:text-white"
-                    : toast.type === "warning"
-                      ? "bg-amber-500/90 border-amber-400/50 text-zinc-900 dark:text-white"
-                      : "bg-[#1E3D2F]/95 border-black/10 dark:border-white/10 text-zinc-900 dark:text-white"
-                }`}
+                className={`pointer-events-auto flex items-center gap-3 pl-1.5 pr-4 py-1.5 rounded-full shadow-[0_20px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_40px_rgba(0,0,0,0.4)] border border-black/10 dark:border-white/10 bg-white/95 dark:bg-[#121212]/95 backdrop-blur-xl transition-all group`}
               >
-                <div className="shrink-0">
-                  {toast.type === "success" && <PiCheckCircleBold size={18} />}
-                  {toast.type === "warning" && (
-                    <PiWarningCircleBold size={18} />
-                  )}
-                  {toast.type === "gray" && <PiGearBold size={18} />}
-                  {toast.type === "info" && <PiRocketBold size={18} />}
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm dark:shadow-lg ${
+                  toast.type === "success"
+                    ? "bg-emerald-500/20 text-[#59b823] border border-emerald-500/20"
+                    : toast.type === "warning"
+                      ? "bg-amber-100 dark:bg-amber-500/20 text-amber-500 dark:text-amber-400 border border-amber-500/20"
+                      : "bg-black/5 dark:bg-white/5 text-black/80 dark:text-white/80 border border-black/10 dark:border-white/10"
+                }`}>
+                  {toast.type === "success" && <PiCheckCircleBold size={16} />}
+                  {toast.type === "warning" && <PiWarningCircleBold size={16} />}
+                  {toast.type === "gray" && <PiGearBold size={16} />}
+                  {toast.type === "info" && <PiRocketBold size={16} />}
                 </div>
-                <span className="text-xs font-bold leading-tight max-w-[200px]">
-                  {toast.message}
-                </span>
+                <div className="flex flex-col pr-1">
+                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-900 dark:text-white leading-none mb-[1px]">
+                    Notificação
+                  </p>
+                  <span className="text-[11px] font-medium text-black/70 dark:text-white/60 leading-tight max-w-[200px]">
+                    {toast.message}
+                  </span>
+                </div>
                 <button
                   onClick={() => setToast(null)}
-                  className="ml-2 w-6 h-6 flex items-center justify-center bg-black/50 dark:bg-white/50 dark:bg-black/20 dark:bg-white/20 hover:bg-black/30 dark:hover:bg-white/30 rounded-full transition-colors shrink-0"
+                  className="ml-auto w-6 h-6 flex items-center justify-center bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 rounded-full transition-colors shrink-0"
                 >
-                  <PiXBold size={14} />
+                  <div className="opacity-40 group-hover:opacity-100 transition-opacity text-zinc-900 dark:text-white">
+                    <PiXBold size={10} />
+                  </div>
                 </button>
               </motion.div>
             </motion.div>
@@ -6260,7 +6265,7 @@ function GroupApp({
                       {p.name}
                     </span>
                     {p.isAvailable && (
-                      <span className="text-[8px] bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/20 text-emerald-300 px-2 py-0.5 rounded-full uppercase font-black tracking-widest ml-2">
+                      <span className="text-[8px] bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full uppercase font-black tracking-widest ml-2">
                         Confirmado
                       </span>
                     )}
@@ -6375,8 +6380,8 @@ function GroupApp({
                         </button>
                       </div>
                     ) : (
-                      <div className="space-y-6 text-center py-4 bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/5 border border-emerald-500/10 rounded-xl">
-                        <div className="w-16 h-16 bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/20 text-[#59b823] rounded-full flex items-center justify-center mx-auto shadow-inner shadow-emerald-500/20">
+                      <div className="space-y-6 text-center py-4 bg-emerald-500/5 border border-emerald-500/10 rounded-xl">
+                        <div className="w-16 h-16 bg-emerald-500/20 text-[#59b823] rounded-full flex items-center justify-center mx-auto shadow-inner shadow-emerald-500/20">
                           <IoCheckmarkCircle size={32} />
                         </div>
                         <div>
@@ -6417,7 +6422,7 @@ function GroupApp({
                                   );
                                 });
                             }}
-                            className="w-full bg-[#dce3ee] dark:bg-[#dce3ee]merald-500 text-zinc-900 dark:text-white font-black uppercase tracking-widest py-4 rounded-xl shadow-lg hover:opacity-90 active:scale-95 transition-all text-xs"
+                            className="w-full bg-emerald-500 text-zinc-900 dark:text-white font-black uppercase tracking-widest py-4 rounded-xl shadow-lg hover:opacity-90 active:scale-95 transition-all text-xs"
                           >
                             Confirmar Presença
                           </button>
@@ -6899,22 +6904,22 @@ function GroupApp({
             className="fixed bottom-24 left-0 right-0 z-[200] flex justify-center px-6 pointer-events-none"
           >
             <motion.div
-              className="pointer-events-auto flex items-center gap-4 pl-1.5 pr-5 py-1.5 rounded-full shadow-[0_20px_40px_rgba(0,0,0,0.4)] border border-black/10 dark:border-white/10 bg-[#121212]/95 backdrop-blur-xl transition-all group"
+              className="pointer-events-auto flex items-center gap-3 pl-1.5 pr-4 py-1.5 rounded-full shadow-[0_20px_40px_rgba(0,0,0,0.1)] dark:shadow-[0_20px_40px_rgba(0,0,0,0.4)] border border-black/10 dark:border-white/10 bg-white/95 dark:bg-[#121212]/95 backdrop-blur-xl transition-all group"
             >
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-lg ${
+              <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 shadow-sm dark:shadow-lg ${
                 toast.type === "success"
-                  ? "bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/20 text-[#59b823] border border-emerald-500/20"
+                  ? "bg-emerald-500/20 text-[#59b823] border border-emerald-500/20"
                   : toast.type === "warning"
-                    ? "bg-amber-500/20 text-amber-400 border border-amber-500/20"
+                    ? "bg-amber-100 dark:bg-amber-500/20 text-amber-500 dark:text-amber-400 border border-amber-500/20"
                     : "bg-black/5 dark:bg-white/5 text-black/80 dark:text-white/80 border border-black/10 dark:border-white/10"
               }`}>
-                {toast.type === "success" && <PiCheckCircleBold size={20} />}
-                {toast.type === "warning" && <PiWarningCircleBold size={20} />}
-                {toast.type === "gray" && <PiGearBold size={20} />}
-                {toast.type === "info" && <PiRocketBold size={20} />}
+                {toast.type === "success" && <PiCheckCircleBold size={16} />}
+                {toast.type === "warning" && <PiWarningCircleBold size={16} />}
+                {toast.type === "gray" && <PiGearBold size={16} />}
+                {toast.type === "info" && <PiRocketBold size={16} />}
               </div>
-              <div className="flex flex-col pr-2">
-                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-zinc-900 dark:text-white leading-none mb-0.5">
+              <div className="flex flex-col pr-1">
+                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-zinc-900 dark:text-white leading-none mb-[1px]">
                   Notificação
                 </p>
                 <p className="text-[11px] font-medium text-black/70 dark:text-white/60 leading-tight">
@@ -6923,10 +6928,10 @@ function GroupApp({
               </div>
               <button
                 onClick={() => setToast(null)}
-                className="ml-auto w-7 h-7 rounded-full flex items-center justify-center bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 transition-all active:scale-90"
+                className="ml-auto w-6 h-6 rounded-full flex items-center justify-center bg-black/5 dark:bg-white/5 hover:bg-black/10 dark:bg-white/10 transition-all active:scale-90"
               >
                 <div className="opacity-40 group-hover:opacity-100 transition-opacity text-zinc-900 dark:text-white">
-                  <PiXBold size={12} />
+                  <PiXBold size={10} />
                 </div>
               </button>
             </motion.div>
@@ -7490,7 +7495,7 @@ function GroupApp({
                                     transition={{ type: "spring", stiffness: 260, damping: 20 }}
                                     className={`group absolute inset-0 rounded-2xl flex flex-col cursor-pointer transition-all duration-300 p-4 bg-[#e2e8f0] dark:bg-[#111625]/90 border border-black/10 dark:border-white/10 backdrop-blur-xl overflow-hidden ${isTop ? 'shadow-[0_20px_40px_-15px_rgba(0,0,0,0.5)]' : 'shadow-md brightness-95'}`}
                                   >
-                                    <div className="absolute top-0 right-0 w-48 h-48 bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/10 rounded-full blur-[60px] pointer-events-none" />
+                                    <div className="absolute top-0 right-0 w-48 h-48 bg-emerald-500/10 rounded-full blur-[60px] pointer-events-none" />
                                     <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/10 rounded-full blur-[60px] pointer-events-none" />
 
                                     <div className="flex justify-between items-center mb-2.5 relative z-10 w-full">
@@ -8664,7 +8669,7 @@ function GroupApp({
                         match.config.playersPerTeam * 2 &&
                         players.filter((p) => sessionPlayerIds.includes(p.id))
                           .length > 0 && (
-                          <div className="bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/10 rounded-2xl p-4 flex items-center gap-4 border border-emerald-500/20 shadow-sm mb-4 backdrop-blur-md">
+                          <div className="bg-emerald-500/10 rounded-2xl p-4 flex items-center gap-4 border border-emerald-500/20 shadow-sm mb-4 backdrop-blur-md">
                             <div className="text-[#59b823] flex items-center justify-center shrink-0">
                               <IoMdDoneAll size={24} />
                             </div>
@@ -11132,7 +11137,7 @@ function GroupApp({
                           className={`group p-3 sm:p-4 rounded-none transition-all relative cursor-pointer flex flex-col border ${
                             match.teamAIndex === tIndex ||
                             match.teamBIndex === tIndex
-                              ? "bg-[#dce3ee] dark:bg-[#dce3ee]merald-900 border-[#53B986] shadow-[0_0_30px_rgba(83,185,134,0.2)]"
+                              ? "bg-emerald-900 border-[#53B986] shadow-[0_0_30px_rgba(83,185,134,0.2)]"
                               : "bg-gradient-to-br from-zinc-50 to-zinc-100 border-zinc-200 hover:border-zinc-400"
                           } ${flashingTeamIds.includes(team.id) ? "animate-flash" : ""}`}
                           onClick={() => {
@@ -15387,7 +15392,7 @@ function GroupApp({
               className="bg-brand-dark border border-emerald-500/30 rounded-lg p-6 max-w-sm w-full shadow-2xl shadow-emerald-500/20"
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="w-16 h-16 rounded-full bg-[#dce3ee] dark:bg-[#dce3ee]merald-500/20 text-emerald-500 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-full bg-emerald-500/20 text-emerald-500 flex items-center justify-center mx-auto mb-4">
                 <RotateCcw size={32} />
               </div>
               <h2 className="text-xl font-black text-center mb-2 uppercase tracking-tighter text-zinc-900 dark:text-white">
@@ -15407,7 +15412,7 @@ function GroupApp({
                 </button>
                 <button
                   onClick={resetAllStats}
-                  className="flex-1 py-3 bg-[#dce3ee] dark:bg-[#dce3ee]merald-500 text-[#1e3d2f] rounded-xl font-black uppercase tracking-widest text-xs hover:bg-[#dce3ee] dark:bg-[#dce3ee]merald-600 transition-colors"
+                  className="flex-1 py-3 bg-emerald-500 text-[#1e3d2f] rounded-xl font-black uppercase tracking-widest text-xs hover:bg-emerald-600 transition-colors"
                 >
                   Zerar Agora
                 </button>
