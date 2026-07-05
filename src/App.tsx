@@ -11647,19 +11647,10 @@ function GroupApp({
             {currentScreen === "ranking" && (
               <motion.div
                 key="ranking"
-                initial={isPrintMode ? { opacity: 1 } : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
                 className={`p-2 sm:p-4 space-y-6 pb-24 ${isPrintMode ? "bg-white min-h-screen p-0" : ""}`}
               >
                 {!isPrintMode ? (
-                  <motion.div
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.25, ease: "easeOut" }}
-                    className={`w-full overflow-hidden`}
-                  >
+                  <div className={`w-full overflow-hidden`}>
                     <div className="flex items-center justify-between pb-2 border-b border-dashed border-black/10 dark:border-white/10 mb-4 px-2">
                       <div className="flex items-center gap-1">
                         {/* Ranking print button removed */}
@@ -11772,7 +11763,7 @@ function GroupApp({
                         )
                       )}
                     </div>
-                  </motion.div>
+                  </div>
                 ) : (
                   <div
                     key="ranking-print"
