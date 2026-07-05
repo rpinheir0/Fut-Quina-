@@ -11654,7 +11654,12 @@ function GroupApp({
                 className={`p-2 sm:p-4 space-y-6 pb-24 ${isPrintMode ? "bg-white min-h-screen p-0" : ""}`}
               >
                 {!isPrintMode ? (
-                  <motion.div className={`w-full overflow-hidden`}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                    className={`w-full overflow-hidden`}
+                  >
                     <div className="flex items-center justify-between pb-2 border-b border-dashed border-black/10 dark:border-white/10 mb-4 px-2">
                       <div className="flex items-center gap-1">
                         {/* Ranking print button removed */}
@@ -11680,15 +11685,12 @@ function GroupApp({
                       {sortedRankingPlayers.map((player, index) => (
                         <motion.div
                           layout
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
                           transition={{
                             layout: {
                               type: "spring",
                               stiffness: 400,
                               damping: 30,
                             },
-                            opacity: { duration: 0.15 },
                           }}
                           key={player.id}
                           className="flex items-center py-3 px-3 transition-colors rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 hover:bg-black/10 dark:bg-white/10 shadow-sm"
