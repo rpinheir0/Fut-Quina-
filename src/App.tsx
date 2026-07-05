@@ -11685,12 +11685,12 @@ function GroupApp({
                           transition={{
                             layout: {
                               type: "spring",
-                              stiffness: 300,
-                              damping: 25,
+                              stiffness: 400,
+                              damping: 30,
                             },
-                            opacity: { duration: 0.2 },
+                            opacity: { duration: 0.15 },
                           }}
-                          key={`${player.id}-${index}`}
+                          key={player.id}
                           className="flex items-center py-3 px-3 transition-colors rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 hover:bg-black/10 dark:bg-white/10 shadow-sm"
                         >
                           <div className="w-8 text-sm font-black text-blue-400 text-center shrink-0">
