@@ -12011,7 +12011,7 @@ function GroupApp({
                                 <div className="flex justify-between items-center mb-1 relative z-10">
                                   <p
                                     className={`text-[9px] font-black uppercase tracking-widest ${
-                                      isPrintMode ? "text-zinc-600" : "text-[#34d399]/80"
+                                      isPrintMode ? "text-zinc-600" : "text-black/60 dark:text-white/50"
                                     }`}
                                   >
                                     Arrecadação
