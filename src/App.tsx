@@ -8077,7 +8077,7 @@ function GroupApp({
                                 <motion.div
                                   layout
                                   key={`player-list-dash-switch-${player.id}`}
-                                  className={`flex items-center justify-between p-2 px-3 rounded-2xl transition-all cursor-pointer hover:bg-black/10 dark:bg-white/10 active:bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 bg-black/5 dark:bg-white/5 backdrop-blur-md shadow-sm`}
+                                  className={`flex items-center justify-between p-2 px-3 rounded-2xl transition-all cursor-pointer hover:bg-black/10 dark:bg-white/10 active:bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 backdrop-blur-md shadow-sm`}
                                   onClick={() => {
                                     if (editingPlayerId !== player.id) {
                                       setPlayerManagementModal(player);
