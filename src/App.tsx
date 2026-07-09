@@ -8077,7 +8077,7 @@ function GroupApp({
                                 <motion.div
                                   layout
                                   key={`player-list-dash-switch-${player.id}`}
-                                  className={`flex items-center justify-between p-2 px-3 rounded-2xl transition-all cursor-pointer hover:bg-black/10 dark:bg-white/10 active:bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 bg-gradient-to-br from-zinc-100 to-zinc-200 dark:from-zinc-800 dark:to-zinc-900 backdrop-blur-md shadow-sm`}
+                                  className={`flex items-center justify-between p-2 px-3 rounded-2xl transition-all cursor-pointer hover:bg-black/10 dark:bg-white/10 active:bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 bg-white dark:bg-gradient-to-br dark:from-zinc-800 dark:to-zinc-900 backdrop-blur-md shadow-sm`}
                                   onClick={() => {
                                     if (editingPlayerId !== player.id) {
                                       setPlayerManagementModal(player);
@@ -8085,7 +8085,7 @@ function GroupApp({
                                   }}
                                 >
                                   <div className="flex items-center gap-3 flex-1 min-w-0">
-                                    <div className="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 bg-black/10 dark:bg-white/10 text-black/60 dark:text-white/50 border border-black/5 dark:border-white/5 overflow-hidden">
+                                    <div className="w-8 h-8 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 bg-white dark:bg-white/10 text-black/60 dark:text-white/50 border border-black/5 dark:border-white/5 overflow-hidden">
                                       {player.photo ? (
                                         <img
                                           src={player.photo}
