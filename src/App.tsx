@@ -6582,7 +6582,7 @@ function GroupApp({
       className={`h-[100dvh] ${isPrintMode ? "bg-white text-black" : "bg-white dark:bg-[#020510] text-zinc-900 dark:text-zinc-100"} font-sans overflow-hidden flex flex-col transition-colors duration-500 relative ${theme === "dark" ? "dark" : ""}`}
     >
       {/* Aurora Mesh Gradient Background Elements */}
-      {!isPrintMode && (
+      {!isPrintMode && theme === "dark" && (
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
           <div className="absolute top-[-10%] right-[-10%] w-[500px] h-[500px] rounded-full bg-[#1e3a8a]/20 blur-[100px]" />
           <div className="absolute bottom-[-20%] left-[-10%] w-[600px] h-[600px] rounded-full bg-[#0ea5e9]/10 blur-[120px]" />
