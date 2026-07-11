@@ -6647,10 +6647,6 @@ function GroupApp({
                   <X size={14} />
                 </button>
 
-                <div className="w-14 h-14 rounded-full bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 shadow-lg flex items-center justify-center mx-auto mb-2 relative z-10">
-                  <img src="/despesas%20detalhadas.png" referrerPolicy="no-referrer" className="w-8 h-8 object-contain" alt="Despesas" />
-                </div>
-
                 <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 dark:text-white leading-none relative z-10 mt-4">
                   Nova Despesa
                 </h3>
@@ -6716,7 +6712,7 @@ function GroupApp({
                       });
                       setTimeout(() => setToast(null), 3000);
                     }}
-                    className="w-full h-10 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-[#34d399]/10 transition-all active:scale-95 disabled:opacity-50 cursor-pointer flex items-center justify-center"
+                    className="w-full h-10 bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white font-black uppercase tracking-widest text-[10px] rounded-xl shadow-lg shadow-blue-800/20 hover:opacity-90 transition-all active:scale-95 disabled:opacity-50 cursor-pointer flex items-center justify-center"
                   >
                     Confirmar Despesa
                   </button>
@@ -8006,7 +8002,7 @@ function GroupApp({
                               </motion.div>
                             </div>
                             <div
-                              className={`absolute right-4 sm:right-5 bottom-3 sm:bottom-4 text-zinc-600 dark:text-zinc-300 cursor-pointer hover:text-zinc-900 dark:hover:text-white transition-colors flex items-center gap-1.5 sm:gap-2 bg-black/5 dark:bg-white/5 backdrop-blur-xl p-1.5 sm:p-2 pl-3 sm:pl-3 rounded-xl border border-black/10 dark:border-white/10`}
+                              className={`absolute right-4 sm:right-5 bottom-3 sm:bottom-4 cursor-pointer hover:opacity-95 transition-all flex items-center gap-1.5 sm:gap-2 bg-black/5 dark:bg-white/5 backdrop-blur-xl p-1.5 sm:p-2 pl-3 sm:pl-3 rounded-xl border border-black/10 dark:border-white/10`}
                               onClick={async () => {
                                 try {
                                   const text =
@@ -8031,10 +8027,10 @@ function GroupApp({
                             >
                               <ClipboardPaste
                                 size={14}
-                                className="sm:w-4 sm:h-4"
+                                className="sm:w-4 sm:h-4 text-blue-700 dark:text-blue-400"
                                 strokeWidth={1.5}
                               />
-                              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#59b823]">
+                              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 dark:from-blue-400 dark:via-blue-300 dark:to-indigo-400">
                                 Colar
                               </span>
                             </div>
@@ -11862,12 +11858,6 @@ function GroupApp({
 
                         {isPrintMode && (
                           <div className="pt-10 pb-6 text-center border-b border-zinc-300 mb-6 bg-[#dce3ee] flex flex-col items-center relative">
-                            <div className="mb-4">
-                              <FutQuinaLogo
-                                size="md"
-                                titleColorClass="text-[#484848]"
-                              />
-                            </div>
                             <h2 className="text-2xl font-black uppercase mb-1 text-black">
                               {isPrintPaymentsOnly
                                 ? "Planilha de Pagamentos"
@@ -12447,11 +12437,7 @@ function GroupApp({
                     )}
 
                     {isPrintMode && (
-                      <div className="p-3 bg-[#dce3ee] text-zinc-800 flex justify-between items-center">
-                        <FutQuinaLogo
-                          size="sm"
-                          titleColorClass="text-[#484848]"
-                        />
+                      <div className="p-3 bg-[#dce3ee] text-zinc-800 flex justify-end items-center">
                         <button
                           onClick={() => setIsPrintMode(false)}
                           className="p-1.5 bg-black/10 rounded-sm cursor-pointer"
@@ -15858,7 +15844,7 @@ function GroupApp({
               <p className="text-xs font-medium text-black/70 dark:text-white/70 text-center leading-normal">
                 {matchHistory.length > 0 ? (
                   <>
-                    Isso irá salvar as informações de <span className="text-[#34d399] font-bold">presença</span>, <span className="text-[#34d399] font-bold">confrontos</span> e <span className="text-[#34d399] font-bold">próximos</span>.
+                    Isso irá salvar as informações de <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900">presença</span>, <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900">confrontos</span> e <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900">próximos</span>.
                     <br />
                     Deseja continuar?
                   </>
@@ -15879,7 +15865,7 @@ function GroupApp({
                 <button
                   onClick={confirmEndPelada}
                   disabled={matchHistory.length === 0}
-                  className={`w-full h-10 rounded-2xl font-black uppercase tracking-widest text-[9px] bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white shadow-lg hover:opacity-90 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center`}
+                  className={`w-full h-10 rounded-xl font-black uppercase tracking-widest text-[9px] bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white shadow-lg shadow-blue-800/20 hover:opacity-90 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center`}
                 >
                   CONFIRMAR
                 </button>
