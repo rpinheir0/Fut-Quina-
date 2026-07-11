@@ -11188,12 +11188,12 @@ function GroupApp({
                                                     : undefined,
                                                 }}
                                               >
-                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden border ${isCurrent ? "border-blue-900/50 bg-blue-900/10 dark:border-blue-400/50 dark:bg-blue-950/20" : "border-zinc-600 dark:border-zinc-400 bg-black/10 dark:bg-white/10"}`}>
+                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden border ${isCurrent ? "border-zinc-800/85 bg-gradient-to-br from-zinc-900 via-zinc-950 to-black text-white shadow-inner" : "border-zinc-600 dark:border-zinc-400 bg-black/10 dark:bg-white/10"}`}>
                                                   {p.isGoalkeeper &&
                                                   orgProSettings.allowFixedGoalkeeper !==
                                                     false ? (
                                                     <div
-                                                      className={`flex items-center justify-center shrink-0 rounded-full w-4 h-4 text-[9px] font-black leading-none ${isCurrent ? "text-blue-900 dark:text-blue-300" : "text-black/50 dark:text-white/40"}`}
+                                                      className={`flex items-center justify-center shrink-0 rounded-full w-4 h-4 text-[9px] font-black leading-none ${isCurrent ? "text-white" : "text-black/50 dark:text-white/40"}`}
                                                     >
                                                       G
                                                     </div>
@@ -11205,7 +11205,7 @@ function GroupApp({
                                                     />
                                                   ) : (
                                                     <span
-                                                      className={`flex items-center shrink-0 ${isCurrent ? "text-black/70 dark:text-zinc-800" : "text-black/50 dark:text-white/40"}`}
+                                                      className={`flex items-center shrink-0 ${isCurrent ? "text-white/90" : "text-black/50 dark:text-white/40"}`}
                                                     >
                                                       <IoPersonOutline
                                                         size={12}
@@ -12835,7 +12835,7 @@ function GroupApp({
               initial={{ scale: 0.9, y: 30, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.9, y: 30, opacity: 0 }}
-              className="w-full max-w-[280px] rounded-[24px] overflow-hidden shadow-2xl bg-[#f1f5f9] dark:bg-[#0b0e17]/95 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white backdrop-blur-xl"
+              className="w-full max-w-[310px] rounded-[24px] overflow-hidden shadow-2xl bg-[#f1f5f9] dark:bg-[#0b0e17]/95 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white backdrop-blur-xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
@@ -13225,7 +13225,7 @@ function GroupApp({
               initial={{ scale: 0.9, y: 30, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.9, y: 30, opacity: 0 }}
-              className="w-full max-w-[280px] rounded-[24px] overflow-hidden shadow-2xl bg-[#f1f5f9] dark:bg-[#0b0e17]/95 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white backdrop-blur-xl"
+              className="w-full max-w-[310px] rounded-[24px] overflow-hidden shadow-2xl bg-[#f1f5f9] dark:bg-[#0b0e17]/95 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white backdrop-blur-xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
