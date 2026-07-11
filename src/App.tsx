@@ -8429,10 +8429,10 @@ function GroupApp({
                                     !prev.allowFixedGoalkeeper,
                                 }))
                               }
-                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 cursor-pointer ${orgProSettings.allowFixedGoalkeeper !== false ? "bg-[#59b823]" : "bg-black/10 dark:bg-white/10"}`}
+                              className={`w-12 h-6 rounded-full p-1 transition-all relative shrink-0 cursor-pointer ${orgProSettings.allowFixedGoalkeeper !== false ? "bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900" : "bg-black/10 dark:bg-white/10"}`}
                             >
                               <div
-                                className={`w-4 h-4 rounded-full transition-transform ${orgProSettings.allowFixedGoalkeeper !== false ? "translate-x-6 bg-[#1e3d2f]" : "translate-x-0 bg-white"} shadow-sm`}
+                                className={`w-4 h-4 rounded-full transition-transform ${orgProSettings.allowFixedGoalkeeper !== false ? "translate-x-6 bg-white" : "translate-x-0 bg-white"} shadow-sm`}
                               />
                             </button>
                           </div>
