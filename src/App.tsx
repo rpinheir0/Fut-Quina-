@@ -8406,7 +8406,7 @@ function GroupApp({
                           <div className="flex items-start justify-between">
                             <div className="flex flex-col">
                               <div className="flex items-center gap-1.5 h-6">
-                                <span className="flex items-center justify-center border border-[#59b823]/50 rounded-full w-5 h-5 text-[10px] font-black text-transparent bg-clip-text bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e]">
+                                <span className="flex items-center justify-center border border-blue-700/50 rounded-full w-5 h-5 text-[10px] font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900">
                                   G
                                 </span>
                                 <span className="text-[11px] font-black uppercase tracking-widest text-zinc-900 dark:text-white">
@@ -9631,7 +9631,7 @@ function GroupApp({
                                   >
                                     <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-transparent flex items-center justify-center shrink-0 overflow-hidden ml-3">
                                       {p.isGoalkeeper ? (
-                                        <div className="flex items-center justify-center rounded-full w-4 h-4 text-[9px] font-black leading-none text-black/70 dark:text-white/70">
+                                        <div className="flex items-center justify-center rounded-full w-4 h-4 text-[9px] font-black leading-none text-blue-900 dark:text-blue-400">
                                           G
                                         </div>
                                       ) : p.photo ? (
@@ -9921,7 +9921,7 @@ function GroupApp({
                                   >
                                     <div className="w-5 h-5 sm:w-4 sm:h-4 rounded-full bg-transparent flex items-center justify-center shrink-0 overflow-hidden mr-3">
                                       {p.isGoalkeeper ? (
-                                        <div className="flex items-center justify-center rounded-full w-4 h-4 text-[9px] font-black leading-none text-black/70 dark:text-white/70">
+                                        <div className="flex items-center justify-center rounded-full w-4 h-4 text-[9px] font-black leading-none text-blue-900 dark:text-blue-400">
                                           G
                                         </div>
                                       ) : p.photo ? (
@@ -11188,12 +11188,12 @@ function GroupApp({
                                                     : undefined,
                                                 }}
                                               >
-                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden border ${isCurrent ? "border-black bg-transparent" : "border-zinc-600 dark:border-zinc-400 bg-black/10 dark:bg-white/10"}`}>
+                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden border ${isCurrent ? "border-blue-900/50 bg-blue-900/10 dark:border-blue-400/50 dark:bg-blue-950/20" : "border-zinc-600 dark:border-zinc-400 bg-black/10 dark:bg-white/10"}`}>
                                                   {p.isGoalkeeper &&
                                                   orgProSettings.allowFixedGoalkeeper !==
                                                     false ? (
                                                     <div
-                                                      className={`flex items-center justify-center shrink-0 rounded-full w-4 h-4 text-[9px] font-black leading-none ${isCurrent ? "text-zinc-900 dark:text-white" : "text-black/50 dark:text-white/40"}`}
+                                                      className={`flex items-center justify-center shrink-0 rounded-full w-4 h-4 text-[9px] font-black leading-none ${isCurrent ? "text-blue-900 dark:text-blue-300" : "text-black/50 dark:text-white/40"}`}
                                                     >
                                                       G
                                                     </div>
@@ -13045,11 +13045,11 @@ function GroupApp({
 
                           setShowPlayerActionsModal(null);
                         }}
-                        className={`w-full h-9 mt-1.5 rounded-xl font-bold text-[10px] uppercase tracking-wider flex items-center justify-center px-4 transition-all active:scale-[0.98] shadow-sm group border cursor-pointer ${players.find((p) => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? "bg-sky-500/10 border-sky-500/20 text-sky-400 hover:bg-sky-500/20" : "bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10"}`}
+                        className="w-full h-9 mt-1.5 rounded-xl font-black text-[9px] uppercase tracking-widest bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white shadow-lg shadow-blue-800/20 hover:opacity-90 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
                       >
                         <div className="flex items-center gap-2">
                           <span
-                            className={`${players.find((p) => p.id === showPlayerActionsModal.playerId)?.isGoalkeeper ? "text-sky-400 border-sky-400/40" : "text-transparent bg-clip-text bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] border-[#59b823]/50"} flex items-center border rounded-full w-4 h-4 justify-center text-[9px] font-black leading-none`}
+                            className="flex items-center border border-white/50 rounded-full w-4 h-4 justify-center text-[9px] font-black leading-none text-white"
                           >
                             G
                           </span>
@@ -13078,9 +13078,11 @@ function GroupApp({
                         }}
                         className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
-                        <ArrowLeftRight
-                          size={14}
-                          className="text-black/70 dark:text-white/60 group-hover:text-zinc-900 dark:text-white transition-colors"
+                        <img
+                          src="/substituicao.png"
+                          referrerPolicy="no-referrer"
+                          className="w-4.5 h-4.5 object-contain group-hover:scale-110 transition-transform shrink-0"
+                          alt="Substituir"
                         />
                         Substituir
                       </button>
@@ -13105,9 +13107,11 @@ function GroupApp({
                         }}
                         className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
-                        <MoveRight
-                          size={14}
-                          className="text-black/70 dark:text-white/60 group-hover:text-zinc-900 dark:text-white transition-colors"
+                        <img
+                          src="/mover.png"
+                          referrerPolicy="no-referrer"
+                          className="w-4.5 h-4.5 object-contain group-hover:scale-110 transition-transform shrink-0"
+                          alt="Mover"
                         />
                         Mover
                       </button>
@@ -13169,11 +13173,13 @@ function GroupApp({
 
                           setShowPlayerActionsModal(null);
                         }}
-                        className="py-2.5 bg-red-500/5 border border-red-500/20 text-red-400 rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-red-500/10 active:scale-95 shadow-sm group cursor-pointer"
+                        className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
-                        <LogOut
-                          size={14}
-                          className="text-red-400 opacity-80 group-hover:opacity-100 transition-opacity"
+                        <img
+                          src="/ausente.png"
+                          referrerPolicy="no-referrer"
+                          className="w-4.5 h-4.5 object-contain group-hover:scale-110 transition-transform shrink-0"
+                          alt="Ausente"
                         />
                         Ausente
                       </button>
@@ -13308,10 +13314,10 @@ function GroupApp({
 
                               setShowQueuePlayerModal(null);
                             }}
-                            className={`col-span-2 py-2.5 rounded-xl font-bold text-[9px] uppercase tracking-wider flex items-center justify-center gap-2 transition-all active:scale-95 border group cursor-pointer ${players.find((p) => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? "bg-sky-500/10 border-sky-500/20 text-sky-400 hover:bg-sky-500/20" : "bg-black/5 dark:bg-white/5 border-black/10 dark:border-white/10 text-zinc-900 dark:text-white hover:bg-black/10 dark:bg-white/10"}`}
+                            className="col-span-2 py-2.5 rounded-xl font-black text-[9px] uppercase tracking-widest bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white shadow-lg shadow-blue-800/20 hover:opacity-90 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
                           >
                             <span
-                              className={`${players.find((p) => p.id === showQueuePlayerModal.playerId)?.isGoalkeeper ? "text-sky-400 border-sky-400/40" : "text-transparent bg-clip-text bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] border-[#59b823]/50"} flex items-center border rounded-full w-4 h-4 justify-center text-[9px] font-black leading-none`}
+                              className="flex items-center border border-white/50 rounded-full w-4 h-4 justify-center text-[9px] font-black leading-none text-white"
                             >
                               G
                             </span>
@@ -13334,9 +13340,11 @@ function GroupApp({
                         }}
                         className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
-                        <ArrowLeftRight
-                          size={14}
-                          className="text-black/70 dark:text-white/60 group-hover:text-zinc-900 dark:text-white transition-colors"
+                        <img
+                          src="/substituicao.png"
+                          referrerPolicy="no-referrer"
+                          className="w-4.5 h-4.5 object-contain group-hover:scale-110 transition-transform shrink-0"
+                          alt="Substituir"
                         />
                         Substituir
                       </button>
@@ -13357,9 +13365,11 @@ function GroupApp({
                         }}
                         className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
-                        <MoveRight
-                          size={14}
-                          className="text-black/70 dark:text-white/60 group-hover:text-zinc-900 dark:text-white transition-colors"
+                        <img
+                          src="/mover.png"
+                          referrerPolicy="no-referrer"
+                          className="w-4.5 h-4.5 object-contain group-hover:scale-110 transition-transform shrink-0"
+                          alt="Mover"
                         />
                         Mover
                       </button>
@@ -13393,11 +13403,13 @@ function GroupApp({
                             type: "info",
                           });
                         }}
-                        className="py-2.5 bg-red-500/5 border border-red-500/20 text-red-400 rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-red-500/10 active:scale-95 shadow-sm group cursor-pointer"
+                        className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
-                        <LogOut
-                          size={14}
-                          className="text-red-400 opacity-80 group-hover:opacity-100 transition-opacity"
+                        <img
+                          src="/ausente.png"
+                          referrerPolicy="no-referrer"
+                          className="w-4.5 h-4.5 object-contain group-hover:scale-110 transition-transform shrink-0"
+                          alt="Ausente"
                         />
                         Ausente
                       </button>
