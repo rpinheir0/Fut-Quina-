@@ -11192,7 +11192,7 @@ function GroupApp({
                                                     : undefined,
                                                 }}
                                               >
-                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden border border-zinc-600 dark:border-zinc-400 ${isCurrent ? "bg-transparent" : "bg-black/10 dark:bg-white/10"}`}>
+                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden border ${isCurrent ? "border-black bg-transparent" : "border-zinc-600 dark:border-zinc-400 bg-black/10 dark:bg-white/10"}`}>
                                                   {p.isGoalkeeper &&
                                                   orgProSettings.allowFixedGoalkeeper !==
                                                     false ? (
@@ -12437,7 +12437,7 @@ function GroupApp({
                           </div>
                           <button
                             onClick={addYear}
-                            className="w-6 h-6 rounded-lg bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-md shadow-[#34d399]/15"
+                            className="w-6 h-6 rounded-lg bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white flex items-center justify-center transition-all active:scale-90 cursor-pointer shadow-md shadow-blue-800/20"
                             title="Adicionar Novo Ano"
                           >
                             <Plus size={12} />
