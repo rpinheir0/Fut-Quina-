@@ -10123,7 +10123,7 @@ function GroupApp({
                                     });
                                   }
                                 }}
-                                className={`w-9 h-5 rounded-full p-0.5 transition-all duration-300 relative ${autoCompleteTeams ? "bg-[#34d399]" : "bg-zinc-300"}`}
+                                className={`w-9 h-5 rounded-full p-0.5 transition-all duration-300 relative ${autoCompleteTeams ? "bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900" : "bg-zinc-300"}`}
                                 title="Subir automaticamente"
                               >
                                 <div
