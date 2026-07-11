@@ -742,7 +742,7 @@ const ColorPickerModal = ({
 
         <button
           onClick={onClose}
-          className="w-full py-4 bg-brand-gradient text-black font-black uppercase tracking-widest text-xs rounded-xl shadow-xl active:scale-95 transition-all"
+          className="w-full py-4 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white font-black uppercase tracking-widest text-xs rounded-2xl shadow-lg hover:opacity-90 active:scale-95 transition-all"
         >
           CONFIRMAR
         </button>
@@ -15631,7 +15631,7 @@ function GroupApp({
 
                 <button
                   onClick={() => setShowSetupGuide(false)}
-                  className="w-full py-3 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] rounded-xl font-black uppercase tracking-widest text-[10px] shadow-lg shadow-[#34d399]/20 active:scale-95 transition-all text-center cursor-pointer mt-1"
+                  className="w-full py-3 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg hover:opacity-90 active:scale-95 transition-all text-center cursor-pointer mt-1"
                 >
                   Entendi, vamos lá!
                 </button>
@@ -15656,7 +15656,7 @@ function GroupApp({
             </span>
             
             <div className="space-y-1">
-              <h3 className="text-lg font-black uppercase tracking-tight text-zinc-900 dark:text-white leading-none">
+              <h3 className="text-lg font-normal uppercase tracking-tight text-zinc-900 dark:text-white leading-none">
                 EXCLUIR PELADA
               </h3>
               <p className="text-[10px] font-bold text-black/70 dark:text-white/60 leading-relaxed px-2 mt-2">
@@ -15907,7 +15907,7 @@ function GroupApp({
                 <button
                   onClick={confirmEndPelada}
                   disabled={matchHistory.length === 0}
-                  className={`w-full h-10 rounded-xl font-black uppercase tracking-widest text-[9px] bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] shadow-lg shadow-[#34d399]/10 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center`}
+                  className={`w-full h-10 rounded-2xl font-black uppercase tracking-widest text-[9px] bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white shadow-lg hover:opacity-90 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center`}
                 >
                   CONFIRMAR
                 </button>
