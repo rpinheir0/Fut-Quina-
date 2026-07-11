@@ -9451,7 +9451,7 @@ function GroupApp({
                                           match.scoreB >= match.config.goalLimit
                                         }
                                         onClick={finishMatch}
-                                        className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white shadow-md hover:opacity-90 disabled:opacity-20 disabled:cursor-not-allowed border border-black/5 dark:border-white/5"
+                                        className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all bg-gradient-to-r from-[#dc2626] via-[#ef4444] to-[#991b1b] text-white shadow-md hover:opacity-90 disabled:opacity-20 disabled:cursor-not-allowed border border-black/5 dark:border-white/5"
                                         title="Finalizar Partida"
                                       >
                                         <Square
@@ -9463,26 +9463,6 @@ function GroupApp({
                                     )}
                                   </AnimatePresence>
                                 </div>
-                                <button
-                                  disabled={
-                                    !match.isActive ||
-                                    !(
-                                      match.teamAIndex !== -1 &&
-                                      match.teamBIndex !== -1 &&
-                                      teams[match.teamAIndex]?.playerIds
-                                        ?.length ===
-                                        match.config.playersPerTeam &&
-                                      teams[match.teamBIndex]?.playerIds
-                                        ?.length === match.config.playersPerTeam
-                                    ) ||
-                                    match.scoreA >= match.config.goalLimit ||
-                                    match.scoreB >= match.config.goalLimit
-                                  }
-                                  onClick={finishMatch}
-                                  className="px-4 py-1.5 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white font-black uppercase tracking-widest text-[8px] sm:text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 disabled:opacity-20 disabled:cursor-not-allowed flex items-center justify-center"
-                                >
-                                  Encerrar
-                                </button>
                               </div>
                             </div>
 
@@ -10163,7 +10143,7 @@ function GroupApp({
                               </span>
                             </div>
                           </div>
-                          <div className="flex gap-1 bg-white rounded-[11px] border-0">
+                          <div className="flex gap-1 rounded-[11px] border-0" style={{ backgroundColor: "#dcdcdc" }}>
                             <button
                               onClick={() => {
                                 if (match.isActive && !match.hasEnded) return;
@@ -10195,7 +10175,7 @@ function GroupApp({
                                     match.config.playersPerTeam,
                                 ).length < 2
                               }
-                              className="px-3 h-9 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] rounded-xl transition-all active:scale-95 hover:opacity-90 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
+                              className="px-3.5 h-9 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] rounded-full transition-all active:scale-95 hover:opacity-90 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
                             >
                               <span className="text-black">
                                 <PiShuffleAngularBold size={16} />
@@ -10235,7 +10215,7 @@ function GroupApp({
                                     match.config.playersPerTeam
                                 )
                               }
-                              className="px-3 h-9 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] rounded-xl transition-all active:scale-95 hover:opacity-90 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
+                              className="px-3.5 h-9 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] rounded-full transition-all active:scale-95 hover:opacity-90 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
                             >
                               <span className="text-black">
                                 <IoFootballOutline size={16} />
