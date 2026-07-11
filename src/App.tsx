@@ -9405,7 +9405,7 @@ function GroupApp({
                                         };
                                       });
                                     }}
-                                    className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all shadow-md ${match.isPaused ? "bg-[#34d399] text-[#1E3D2F] hover:opacity-90" : "bg-black/10 dark:bg-white/10 text-black/60 dark:text-white/50 hover:bg-black/50 dark:hover:bg-white/50 dark:bg-black/20 dark:bg-white/20"} disabled:opacity-20 disabled:cursor-not-allowed border border-black/5 dark:border-white/5`}
+                                    className={`w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all shadow-md bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white hover:opacity-90 disabled:opacity-20 disabled:cursor-not-allowed border border-black/5 dark:border-white/5`}
                                   >
                                     {match.isPaused ? (
                                       <Play
@@ -9451,7 +9451,7 @@ function GroupApp({
                                           match.scoreB >= match.config.goalLimit
                                         }
                                         onClick={finishMatch}
-                                        className="p-3 rounded-full transition-all bg-red-500/10 text-red-400 hover:bg-red-500/20 disabled:opacity-20 disabled:cursor-not-allowed"
+                                        className="w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center rounded-full transition-all bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white shadow-md hover:opacity-90 disabled:opacity-20 disabled:cursor-not-allowed border border-black/5 dark:border-white/5"
                                         title="Finalizar Partida"
                                       >
                                         <Square
@@ -9479,7 +9479,7 @@ function GroupApp({
                                     match.scoreB >= match.config.goalLimit
                                   }
                                   onClick={finishMatch}
-                                  className="px-2 sm:px-4 py-1 rounded-full bg-red-500/20 text-red-400 text-[6px] sm:text-[8px] font-black uppercase tracking-widest hover:bg-red-500/30 transition-all disabled:opacity-20 disabled:cursor-not-allowed border border-red-500/20"
+                                  className="px-4 py-1.5 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white font-black uppercase tracking-widest text-[8px] sm:text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 disabled:opacity-20 disabled:cursor-not-allowed flex items-center justify-center"
                                 >
                                   Encerrar
                                 </button>
