@@ -6910,12 +6910,12 @@ function GroupApp({
                       setShowAddPlayerSection(true);
                     }
                   }}
-                  className="w-full h-10 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] rounded-xl font-black uppercase tracking-widest text-[9px] shadow-lg shadow-[#34d399]/20 transition-all active:scale-95 flex items-center justify-center gap-1.5"
+                  className="w-full h-10 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                 >
                   {scheduledMatches.length === 0 ? (
-                    <Plus size={12} />
+                    <Plus size={14} className="text-zinc-900 dark:text-white" />
                   ) : (
-                    <User size={12} />
+                    <User size={14} className="text-zinc-900 dark:text-white" />
                   )}
                   {scheduledMatches.length === 0
                     ? "Criar Pelada"
@@ -7723,28 +7723,15 @@ function GroupApp({
                                         <p className="text-black/70 dark:text-white/70 text-xs mt-0.5 font-medium tracking-wide">{weekday.split('-')[0]} as {match.time}</p>
                                     </div>
 
-                                    <div className="flex justify-center -space-x-1.5 mb-2.5 relative z-10 w-full px-4 overflow-hidden py-0.5">
-                                        {matchSpecificPlayers.slice(0, 5).map((player: any, pIdx: number) => (
-                                            <div key={`avatar-${pIdx}`} className="w-8 h-8 rounded-full border border-black/10 dark:border-white/10 bg-zinc-800 overflow-hidden shadow-md shrink-0">
-                                                {player.photo ? <img src={player.photo} className="w-full h-full object-cover"/> : <div className="w-full h-full flex items-center justify-center text-zinc-900 dark:text-white text-[9px] bg-gradient-to-br from-[#59b823] to-[#25660e] font-bold uppercase">{player.name[0]}</div>}
-                                            </div>
-                                        ))}
-                                        {matchSpecificPlayers.length > 5 && <div className="w-8 h-8 rounded-full border border-black/10 dark:border-white/10 bg-black/10 dark:bg-white/10 backdrop-blur-md flex items-center justify-center text-zinc-900 dark:text-white font-bold text-[10px] shadow-md shrink-0">+{matchSpecificPlayers.length - 5}</div>}
-                                    </div>
-
-                                    <div className="bg-black/5 dark:bg-white/5 rounded-xl p-2.5 backdrop-blur-md border border-black/10 dark:border-white/10 relative overflow-hidden mb-2.5">
+                                    <div className="bg-black/5 dark:bg-white/5 rounded-xl p-3 backdrop-blur-md border border-black/10 dark:border-white/10 relative overflow-hidden mb-2.5 flex justify-center items-center">
                                         <div className="absolute right-[-10%] top-[-10%] pointer-events-none rotate-12 scale-150 transition-transform duration-700"><GiSoccerField size={60} color="rgba(255,255,255,0.02)" /></div>
-                                        <div className="flex justify-between items-center mb-1.5 relative z-10"><span className="text-black/50 dark:text-white/40 text-[9px] font-bold tracking-wide">STATUS DA PELADA</span></div>
-                                        <div className="flex items-center gap-2.5 relative z-10">
-                                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-gray-200 to-gray-300 dark:from-zinc-700 dark:to-zinc-800 flex items-center justify-center backdrop-blur-md border border-black/5 dark:border-white/5 text-zinc-700 dark:text-white/80 shadow-sm"><GiWhistle size={16} /></div>
-                                            <div>
-                                                <h4 className="text-zinc-900 dark:text-white font-bold text-xs leading-tight truncate max-w-[100px]">Confirmados</h4>
-                                                <p className="text-black/50 dark:text-white/40 text-[9px] mt-0.5">{totalAvailablePlayers} na lista</p>
-                                            </div>
-                                            <div className="ml-auto text-zinc-900 dark:text-white text-base font-black tracking-tighter flex items-center">
-                                                
-                                                {totalAvailablePlayers}
-                                            </div>
+                                        <div className="flex justify-center -space-x-1.5 relative z-10 w-full px-4 overflow-hidden py-0.5">
+                                            {matchSpecificPlayers.slice(0, 5).map((player: any, pIdx: number) => (
+                                                <div key={`avatar-${pIdx}`} className="w-8 h-8 rounded-full border border-black/10 dark:border-white/10 bg-zinc-800 overflow-hidden shadow-md shrink-0">
+                                                    {player.photo ? <img src={player.photo} className="w-full h-full object-cover"/> : <div className="w-full h-full flex items-center justify-center text-zinc-900 dark:text-white text-[9px] bg-gradient-to-br from-[#59b823] to-[#25660e] font-bold uppercase">{player.name[0]}</div>}
+                                                </div>
+                                            ))}
+                                            {matchSpecificPlayers.length > 5 && <div className="w-8 h-8 rounded-full border border-black/10 dark:border-white/10 bg-black/10 dark:bg-white/10 backdrop-blur-md flex items-center justify-center text-zinc-900 dark:text-white font-bold text-[10px] shadow-md shrink-0">+{matchSpecificPlayers.length - 5}</div>}
                                         </div>
                                     </div>
 
@@ -10104,8 +10091,8 @@ function GroupApp({
                     <div className="space-y-6 pb-24 relative overflow-visible w-full">
                       {firstSetupDone && teams.length >= 2 && (
                         <div className="sticky top-0 z-40 bg-[#dcdcdc] backdrop-blur-md rounded-2xl p-1 mb-2 shadow-sm border border-black/5 flex justify-between items-center">
-                          <div className="flex gap-1 bg-white rounded-[11px]">
-                            <div className="flex items-center gap-1.5 ml-1 bg-white rounded-[11px] px-1 py-1">
+                          <div className="flex gap-1 bg-[#dcdcdc] rounded-[11px]">
+                            <div className="flex items-center gap-1.5 ml-1 bg-[#dcdcdc] rounded-[11px] px-1 py-1">
                               <button
                                 onClick={() => {
                                   const newState = !autoCompleteTeams;
