@@ -10235,12 +10235,12 @@ function GroupApp({
                                     match.config.playersPerTeam
                                 )
                               }
-                              className="px-3 py-2 rounded-xl transition-all active:scale-95 hover:bg-black/5 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
+                              className="px-3 h-9 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] rounded-xl transition-all active:scale-95 hover:opacity-90 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
                             >
-                              <span className="text-[#59b823]">
+                              <span className="text-white">
                                 <IoFootballOutline size={16} />
                               </span>
-                              <span className="text-[8px] font-black uppercase tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e]">
+                              <span className="text-[8px] font-black uppercase tracking-tight text-white">
                                 Iniciar
                               </span>
                             </button>
