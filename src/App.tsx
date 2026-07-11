@@ -11188,12 +11188,12 @@ function GroupApp({
                                                     : undefined,
                                                 }}
                                               >
-                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden border ${isCurrent ? "border-zinc-800/85 bg-gradient-to-br from-zinc-900 via-zinc-950 to-black text-white shadow-inner" : "border-zinc-600 dark:border-zinc-400 bg-black/10 dark:bg-white/10"}`}>
+                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden border ${isCurrent ? "border-zinc-300 dark:border-zinc-800/85 bg-white dark:bg-gradient-to-br dark:from-zinc-900 dark:via-zinc-950 dark:to-black text-zinc-900 dark:text-white shadow-inner" : "border-zinc-600 dark:border-zinc-400 bg-black/10 dark:bg-white/10"}`}>
                                                   {p.isGoalkeeper &&
                                                   orgProSettings.allowFixedGoalkeeper !==
                                                     false ? (
                                                     <div
-                                                      className={`flex items-center justify-center shrink-0 rounded-full w-4 h-4 text-[9px] font-black leading-none ${isCurrent ? "text-white" : "text-black/50 dark:text-white/40"}`}
+                                                      className={`flex items-center justify-center shrink-0 rounded-full w-4 h-4 text-[9px] font-black leading-none ${isCurrent ? "text-zinc-900 dark:text-white" : "text-black/50 dark:text-white/40"}`}
                                                     >
                                                       G
                                                     </div>
@@ -11202,10 +11202,10 @@ function GroupApp({
                                                       src={p.photo}
                                                       className="w-full h-full object-cover"
                                                       referrerPolicy="no-referrer"
-                                                    />
+                                                    ></img>
                                                   ) : (
                                                     <span
-                                                      className={`flex items-center shrink-0 ${isCurrent ? "text-white/90" : "text-black/50 dark:text-white/40"}`}
+                                                      className={`flex items-center shrink-0 ${isCurrent ? "text-zinc-900 dark:text-white/90" : "text-black/50 dark:text-white/40"}`}
                                                     >
                                                       <IoPersonOutline
                                                         size={12}
