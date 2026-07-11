@@ -10195,12 +10195,12 @@ function GroupApp({
                                     match.config.playersPerTeam,
                                 ).length < 2
                               }
-                              className="px-3 py-2 rounded-xl transition-all active:scale-95 hover:bg-black/5 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
+                              className="px-3 h-9 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] rounded-xl transition-all active:scale-95 hover:opacity-90 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
                             >
-                              <span className="text-zinc-800">
+                              <span className="text-black">
                                 <PiShuffleAngularBold size={16} />
                               </span>
-                              <span className="text-[8px] font-black uppercase tracking-tight text-zinc-800">
+                              <span className="text-[8px] font-black uppercase tracking-tight text-black">
                                 Sortear
                               </span>
                             </button>
@@ -10237,10 +10237,10 @@ function GroupApp({
                               }
                               className="px-3 h-9 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] rounded-xl transition-all active:scale-95 hover:opacity-90 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
                             >
-                              <span className="text-white">
+                              <span className="text-black">
                                 <IoFootballOutline size={16} />
                               </span>
-                              <span className="text-[8px] font-black uppercase tracking-tight text-white">
+                              <span className="text-[8px] font-black uppercase tracking-tight text-black">
                                 Iniciar
                               </span>
                             </button>
@@ -11220,7 +11220,7 @@ function GroupApp({
                                                     : undefined,
                                                 }}
                                               >
-                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden ${isCurrent ? "bg-black/20 dark:bg-white/50" : "bg-black/10 dark:bg-white/10"}`}>
+                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden border border-zinc-600 dark:border-zinc-400 ${isCurrent ? "bg-transparent" : "bg-black/10 dark:bg-white/10"}`}>
                                                   {p.isGoalkeeper &&
                                                   orgProSettings.allowFixedGoalkeeper !==
                                                     false ? (
