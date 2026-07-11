@@ -8034,8 +8034,8 @@ function GroupApp({
                                 className="sm:w-4 sm:h-4"
                                 strokeWidth={1.5}
                               />
-                              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest">
-                                CAIXA INTELIGENTE
+                              <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-[#59b823]">
+                                Colar
                               </span>
                             </div>
                           </div>
@@ -9045,7 +9045,7 @@ function GroupApp({
                               </div>
                               <div className="flex-1 text-left flex flex-col gap-0.5">
                                 <div
-                                  className={`text-xs font-normal tracking-tight capitalize leading-none ${p.isAvailable ? "text-zinc-900 dark:text-white" : "text-black/60 dark:text-white/50"}`}
+                                  className={`text-sm font-normal tracking-tight capitalize leading-none ${p.isAvailable ? "text-zinc-900 dark:text-white" : "text-black/60 dark:text-white/50"}`}
                                 >
                                   {p.name.toLowerCase()}
                                 </div>
@@ -9058,7 +9058,7 @@ function GroupApp({
                               {p.isAvailable && (
                                 <CheckCircle2
                                   size={16}
-                                  className="text-[#59b823]"
+                                  className="text-zinc-400 dark:text-[#59b823]"
                                 />
                               )}
                             </button>
