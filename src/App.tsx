@@ -8725,7 +8725,7 @@ function GroupApp({
                                       return [...prevTeams, ...newAddedTeams];
                                     });
                                   }}
-                                  className="px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center gap-2"
+                                  className="px-4 h-9 bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                                 >
                                   <span>TODOS</span>
                                 </button>
@@ -8831,7 +8831,7 @@ function GroupApp({
 
                                     setTeamsTab("proximos");
                                   }}
-                                  className="px-4 py-2 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center gap-2"
+                                  className="px-4 h-9 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] text-zinc-900 dark:text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                                 >
                                   <span className="text-zinc-900 dark:text-white">
                                     <CheckCircle2 size={16} />
