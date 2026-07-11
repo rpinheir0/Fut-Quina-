@@ -8330,7 +8330,7 @@ function GroupApp({
                                   <Shirt size={14} />
                                 </span>
                                 <span className="text-[11px] font-black uppercase tracking-widest text-zinc-900 dark:text-white">
-                                  Fixar cores
+                                  Fixar cores das camisas
                                 </span>
                               </div>
                               <p className="text-[10px] text-black/60 dark:text-white/50 font-bold mt-0.5">
@@ -8344,10 +8344,10 @@ function GroupApp({
                                   enabled: !prev.enabled,
                                 }))
                               }
-                              className={`w-12 h-6 rounded-full p-1 transition-colors relative shrink-0 cursor-pointer ${fixedColors.enabled ? "bg-[#59b823]" : "bg-black/10 dark:bg-white/10"}`}
+                              className={`w-12 h-6 rounded-full p-1 transition-all relative shrink-0 cursor-pointer ${fixedColors.enabled ? "bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900" : "bg-black/10 dark:bg-white/10"}`}
                             >
                               <div
-                                className={`w-4 h-4 rounded-full transition-transform ${fixedColors.enabled ? "translate-x-6 bg-[#1e3d2f]" : "translate-x-0 bg-white"} shadow-sm`}
+                                className={`w-4 h-4 rounded-full transition-transform ${fixedColors.enabled ? "translate-x-6 bg-white" : "translate-x-0 bg-white"} shadow-sm`}
                               />
                             </button>
                           </div>
@@ -8366,9 +8366,9 @@ function GroupApp({
                                         fixedColors.teamA || SHIRT_COLORS[8],
                                     })
                                   }
-                                  className="w-full h-10 rounded-xl flex items-center justify-between px-3 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 hover:bg-black/10 dark:bg-white/10 hover:border-black/20 dark:border-white/20 transition-all cursor-pointer"
+                                  className="w-full h-10 rounded-xl flex items-center justify-center bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 hover:bg-black/10 dark:bg-white/10 hover:border-black/20 dark:border-white/20 transition-all cursor-pointer"
                                 >
-                                  <div className="flex items-center gap-2">
+                                  <div className="flex items-center justify-center">
                                     {(() => {
                                       const color = fixedColors.teamA || SHIRT_COLORS[8];
                                       const idx = SHIRT_COLORS.indexOf(color);
@@ -8376,10 +8376,6 @@ function GroupApp({
                                       return <ShirtIcon size={24} className="brightness-110 drop-shadow-md inline-block" />;
                                     })()}
                                   </div>
-                                  <Palette
-                                    size={14}
-                                    className="text-[#59b823]"
-                                  />
                                 </button>
                               </div>
                               <div className="space-y-1">
@@ -8394,9 +8390,9 @@ function GroupApp({
                                         fixedColors.teamB || SHIRT_COLORS[7],
                                     })
                                   }
-                                  className="w-full h-10 rounded-xl flex items-center justify-between px-3 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 hover:bg-black/10 dark:bg-white/10 hover:border-black/20 dark:border-white/20 transition-all cursor-pointer"
+                                  className="w-full h-10 rounded-xl flex items-center justify-center bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 hover:bg-black/10 dark:bg-white/10 hover:border-black/20 dark:border-white/20 transition-all cursor-pointer"
                                 >
-                                  <div className="flex items-center gap-2">
+                                  <div className="flex items-center justify-center">
                                     {(() => {
                                       const color = fixedColors.teamB || SHIRT_COLORS[7];
                                       const idx = SHIRT_COLORS.indexOf(color);
@@ -8404,10 +8400,6 @@ function GroupApp({
                                       return <ShirtIcon size={24} className="brightness-110 drop-shadow-md inline-block" />;
                                     })()}
                                   </div>
-                                  <Palette
-                                    size={14}
-                                    className="text-[#59b823]"
-                                  />
                                 </button>
                               </div>
                             </div>
