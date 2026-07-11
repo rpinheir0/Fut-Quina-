@@ -12005,7 +12005,7 @@ function GroupApp({
                                           setIsEditingTotal(true);
                                         }
                                       }}
-                                      className="p-1.5 bg-[#34d399] text-[#1E3D2F] rounded-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer shadow-md shadow-[#34d399]/20"
+                                      className="p-1.5 bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white rounded-lg hover:opacity-90 active:scale-95 transition-all cursor-pointer shadow-md shadow-blue-800/20"
                                     >
                                       <Plus size={14} />
                                     </button>
@@ -12186,7 +12186,7 @@ function GroupApp({
                                       }
                                       setShowExpenseModal(true);
                                     }}
-                                    className="p-1.5 bg-[#34d399] text-[#1E3D2F] rounded-lg hover:opacity-90 active:scale-95 transition-all block cursor-pointer"
+                                    className="p-1.5 bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white rounded-lg hover:opacity-90 active:scale-95 transition-all block cursor-pointer shadow-md shadow-blue-800/20"
                                   >
                                     <Plus size={14} />
                                   </button>
