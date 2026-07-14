@@ -3525,7 +3525,7 @@ function GroupApp({
       const backupObj = {
         type: "futquina_backup",
         version: "1.0",
-        timestamp: Date.now(),
+      timestamp: Date.now(),
         data: backupData
       };
       
@@ -5947,6 +5947,8 @@ function GroupApp({
       winnerId: null,
       loserId: null,
       events: match.events,
+      teamAPlayerIds: teams[teamAIndex]?.players.map(p => p.id) || [],
+      teamBPlayerIds: teams[teamBIndex]?.players.map(p => p.id) || [],
       timestamp: Date.now(),
       tieBreakerWinnerId: null,
     };
@@ -7750,8 +7752,8 @@ function GroupApp({
                                         <p className="text-black/70 dark:text-white/70 text-xs mt-0.5 font-medium tracking-wide">{weekday.split('-')[0]} as {match.time}</p>
                                     </div>
 
-                                    <div className="bg-black/5 dark:bg-white/5 rounded-xl p-3 backdrop-blur-md border border-black/10 dark:border-white/10 relative overflow-hidden mb-2.5 flex justify-center items-center">
-                                        <div className="absolute right-[-10%] top-[-10%] pointer-events-none rotate-12 scale-150 transition-transform duration-700"><GiSoccerField size={60} color="rgba(255,255,255,0.02)" /></div>
+                                    <div className="relative mb-2.5 flex justify-center items-center py-2">
+                                        
                                         <div className="flex justify-center -space-x-1.5 relative z-10 w-full px-4 overflow-hidden py-0.5">
                                             {matchSpecificPlayers.slice(0, 5).map((player: any, pIdx: number) => (
                                                 <div key={`avatar-${pIdx}`} className="w-8 h-8 rounded-full border border-black/10 dark:border-white/10 bg-zinc-800 overflow-hidden shadow-md shrink-0">
@@ -15121,7 +15123,7 @@ function GroupApp({
                                   ...prev,
                                   [pid]: {
                                     type: "swap",
-                                    timestamp: Date.now(),
+      timestamp: Date.now(),
                                   },
                                 }));
                                 setReplacingPlayer(null);
