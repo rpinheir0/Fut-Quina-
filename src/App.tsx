@@ -10150,7 +10150,7 @@ function GroupApp({
                                     match.config.playersPerTeam,
                                 ).length < 2
                               }
-                              className="px-3.5 h-9 bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] rounded-full transition-all active:scale-95 hover:opacity-90 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
+                              className="px-3.5 h-9 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] rounded-full transition-all active:scale-95 hover:opacity-90 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
                             >
                               <span className="text-[#f4f2f2]">
                                 <PiShuffleAngularBold size={16} />
@@ -11175,7 +11175,7 @@ function GroupApp({
                                                     : undefined,
                                                 }}
                                               >
-                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden border ${isCurrent ? "border-black dark:border-black bg-black/5 dark:bg-white/5 text-zinc-900 dark:text-white shadow-inner" : "border-black dark:border-black bg-black/10 dark:bg-white/10"}`}>
+                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden border ${isCurrent ? "border-black/20 dark:border-white/20 bg-black/5 dark:bg-white/5 text-zinc-900 dark:text-white shadow-inner" : "border-black/20 dark:border-white/20 bg-black/10 dark:bg-white/10"}`}>
                                                   {p.isGoalkeeper &&
                                                   orgProSettings.allowFixedGoalkeeper !==
                                                     false ? (
