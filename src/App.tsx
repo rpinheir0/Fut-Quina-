@@ -10106,7 +10106,7 @@ function GroupApp({
                                     });
                                   }
                                 }}
-                                className={`w-9 h-5 rounded-full p-0.5 transition-all duration-300 relative ${autoCompleteTeams ? "bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900" : "bg-zinc-300"}`}
+                                className={`w-9 h-5 rounded-full p-0.5 transition-all duration-300 relative ${autoCompleteTeams ? "bg-gradient-to-r from-[#2563EB] to-[#1D4ED8]" : "bg-zinc-300"}`}
                                 title="Subir automaticamente"
                               >
                                 <div
@@ -11175,7 +11175,7 @@ function GroupApp({
                                                     : undefined,
                                                 }}
                                               >
-                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden border ${isCurrent ? "border-zinc-300 dark:border-zinc-800/85 bg-white dark:bg-gradient-to-br dark:from-zinc-900 dark:via-zinc-950 dark:to-black text-zinc-900 dark:text-white shadow-inner" : "border-zinc-600 dark:border-zinc-400 bg-black/10 dark:bg-white/10"}`}>
+                                                <div className={`w-6 h-6 sm:w-5 sm:h-5 rounded-full flex items-center justify-center shrink-0 overflow-hidden border ${isCurrent ? "border-black dark:border-black bg-black/5 dark:bg-white/5 text-zinc-900 dark:text-white shadow-inner" : "border-black dark:border-black bg-black/10 dark:bg-white/10"}`}>
                                                   {p.isGoalkeeper &&
                                                   orgProSettings.allowFixedGoalkeeper !==
                                                     false ? (
