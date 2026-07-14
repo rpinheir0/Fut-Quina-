@@ -296,6 +296,7 @@ interface Player {
   absences?: number;
   stars?: number;
   isGoalkeeper?: boolean;
+  matchesPlayed?: number;
 }
 
 interface Team {
@@ -1730,10 +1731,10 @@ const PlayerManagementModalComponent = ({
       <motion.div
         initial={{ scale: 0.9, opacity: 0, y: 20 }}
         animate={{ scale: 1, opacity: 1, y: 0 }}
-        className="w-full max-w-[280px] bg-[#f1f5f9] dark:bg-[#0b0e17]/95 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white backdrop-blur-xl rounded-[24px] relative overflow-hidden flex flex-col shadow-2xl"
+        className="w-full max-w-[280px] bg-white dark:bg-[#0b0e17]/95 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white backdrop-blur-xl rounded-[24px] relative overflow-hidden flex flex-col shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="bg-black/5 dark:bg-white/5 p-6 text-center relative overflow-hidden border-b border-black/5 dark:border-white/5 flex flex-col items-center">
+        <div className="bg-white dark:bg-white/[0.03] pt-8 pb-6 px-6 text-center relative overflow-hidden flex flex-col items-center">
           <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
           <div className="absolute bottom-0 left-0 w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
 
@@ -1745,7 +1746,7 @@ const PlayerManagementModalComponent = ({
           </button>
 
           <div className="relative group mt-2">
-            <div className="w-20 h-20 rounded-full overflow-hidden border border-black/10 dark:border-white/10 shadow-lg bg-black/5 dark:bg-white/5 flex items-center justify-center relative">
+            <div className="w-20 h-20 rounded-full overflow-hidden border border-black/10 dark:border-white/10 shadow-lg bg-[#ebebeb] dark:bg-white/5 flex items-center justify-center relative">
               {player.photo ? (
                 <img
                   src={player.photo}
@@ -1763,7 +1764,7 @@ const PlayerManagementModalComponent = ({
               )}
             </div>
 
-            <label className="absolute bottom-0 right-0 w-6 h-6 bg-[#34d399] hover:bg-[#34d399]/90 text-[#1e3d2f] rounded-full flex items-center justify-center cursor-pointer shadow-md transition-all active:scale-95">
+            <label className="absolute bottom-0 right-0 w-6 h-6 bg-white hover:bg-zinc-100 text-zinc-900 rounded-full flex items-center justify-center cursor-pointer shadow-md transition-all active:scale-95">
               <Camera size={11} />
               <input
                 type="file"
@@ -1808,9 +1809,9 @@ const PlayerManagementModalComponent = ({
           </div>
         </div>
 
-        <div className="p-4 space-y-4">
+        <div className="p-4 space-y-4 bg-white dark:bg-transparent">
           <div className="grid grid-cols-2 gap-2">
-            <div className="p-2.5 bg-black/5 dark:bg-white/5 rounded-xl border border-black/10 dark:border-white/10 flex flex-col items-center justify-center">
+            <div className="p-2.5 bg-white dark:bg-white/5 rounded-xl border border-black/10 dark:border-white/10 flex flex-col items-center justify-center">
               <div className="text-lg font-black text-zinc-900 dark:text-white leading-none mb-0.5">
                 {player.goals}
               </div>
@@ -1818,7 +1819,7 @@ const PlayerManagementModalComponent = ({
                 Gols
               </div>
             </div>
-            <div className="p-2.5 bg-black/5 dark:bg-white/5 rounded-xl border border-black/10 dark:border-white/10 flex flex-col items-center justify-center">
+            <div className="p-2.5 bg-white dark:bg-white/5 rounded-xl border border-black/10 dark:border-white/10 flex flex-col items-center justify-center">
               <div className="text-lg font-black text-zinc-900 dark:text-white leading-none mb-0.5">
                 {player.assists}
               </div>
@@ -5478,6 +5479,19 @@ function GroupApp({
     setLastMatchResult(result);
     setMatchHistory((prev) => [result, ...prev].slice(0, 10));
 
+    // Update matchesPlayed for all participants
+    setPlayers((prev) =>
+      prev.map((p) => {
+        if (
+          result.teamAPlayerIds.includes(p.id) ||
+          result.teamBPlayerIds.includes(p.id)
+        ) {
+          return { ...p, matchesPlayed: (p.matchesPlayed || 0) + 1 };
+        }
+        return p;
+      })
+    );
+
     setMatch((prev) => ({
       ...prev,
       isActive: false,
@@ -5939,6 +5953,19 @@ function GroupApp({
 
     setLastMatchResult(result);
     setMatchHistory((prev) => [result, ...prev].slice(0, 10));
+
+    // Update matchesPlayed for all participants
+    setPlayers((prev) =>
+      prev.map((p) => {
+        if (
+          result.teamAPlayerIds.includes(p.id) ||
+          result.teamBPlayerIds.includes(p.id)
+        ) {
+          return { ...p, matchesPlayed: (p.matchesPlayed || 0) + 1 };
+        }
+        return p;
+      })
+    );
 
     setMatch((prev) => ({
       ...prev,
@@ -6636,7 +6663,7 @@ function GroupApp({
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-black/5 dark:bg-white/5 p-6 text-center relative overflow-hidden border-b border-black/5 dark:border-white/5 flex flex-col items-center">
+              <div className="bg-white dark:bg-white/[0.03] pt-8 pb-6 px-6 text-center relative overflow-hidden flex flex-col items-center">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
                 <div className="absolute bottom-0 left-0 w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
 
@@ -6655,7 +6682,7 @@ function GroupApp({
                 </p>
               </div>
 
-              <div className="p-4 space-y-4">
+              <div className="p-4 space-y-4 bg-white dark:bg-transparent">
                 <div>
                   <label className="text-[8px] font-black uppercase tracking-[0.15em] text-black/60 dark:text-white/50 mb-1 block">
                     Nome da Despesa
@@ -6765,7 +6792,7 @@ function GroupApp({
                 >
                   {/* Card 1 */}
                   <div className="w-1/2 flex flex-col">
-                    <div className="bg-black/5 dark:bg-white/5 p-6 text-center relative overflow-hidden border-b border-black/5 dark:border-white/5">
+                    <div className="bg-black/[0.03] dark:bg-white/[0.03] pt-8 pb-6 px-6 text-center relative overflow-hidden">
                       <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
                       <div className="absolute bottom-0 left-0 w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
 
@@ -6806,7 +6833,7 @@ function GroupApp({
 
                   {/* Card 2 */}
                   <div className="w-1/2 flex flex-col">
-                    <div className="bg-black/5 dark:bg-white/5 p-6 text-center relative overflow-hidden border-b border-black/5 dark:border-white/5">
+                    <div className="bg-black/[0.03] dark:bg-white/[0.03] pt-8 pb-6 px-6 text-center relative overflow-hidden">
                       <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
                       <div className="absolute bottom-0 left-0 w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
 
@@ -12822,16 +12849,16 @@ function GroupApp({
               initial={{ scale: 0.9, y: 30, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.9, y: 30, opacity: 0 }}
-              className="w-full max-w-[310px] rounded-[24px] overflow-hidden shadow-2xl bg-[#f1f5f9] dark:bg-[#0b0e17]/95 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white backdrop-blur-xl"
+              className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] bg-white/95 dark:bg-[#0f111a]/95 border border-white/20 dark:border-white/10 text-zinc-900 dark:text-white backdrop-blur-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-black/5 dark:bg-white/5 p-6 text-center relative overflow-hidden border-b border-black/5 dark:border-white/5">
+              <div className="bg-white dark:bg-white/[0.03] pt-8 pb-6 px-6 text-center relative overflow-hidden flex flex-col items-center">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
                 <div className="absolute bottom-0 left-0 w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
 
-                <div className="w-14 h-14 mx-auto rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center overflow-hidden border border-black/10 dark:border-white/10 shadow-lg relative z-10 mb-3">
+                <div className="w-20 h-20 mx-auto rounded-full bg-white dark:bg-[#1a1d29] flex items-center justify-center overflow-hidden border-4 border-white dark:border-[#1a1d29] shadow-xl relative z-10 mb-4">
                   {players.find((p) => p.id === showPlayerActionsModal.playerId)
                     ?.photo ? (
                     <img
@@ -12870,10 +12897,32 @@ function GroupApp({
                 <p className="text-[8px] text-black/60 dark:text-white/50 font-black mt-1.5 uppercase tracking-[0.2em]">
                   AÇÕES DO JOGADOR
                 </p>
+
+                {/* Player Stats Chart */}
+                <div className="flex items-center justify-center gap-4 mt-5 relative z-10 mx-2">
+                  <div className="flex flex-col items-center justify-center w-[72px] h-[72px] rounded-full bg-white dark:bg-[#1a1d29] shadow-sm border border-black/5 dark:border-white/5">
+                    <span className="text-xl font-black text-zinc-900 dark:text-white leading-none">
+                      {players.find(p => p.id === showPlayerActionsModal.playerId)?.goals || 0}
+                    </span>
+                    <span className="text-[8px] uppercase tracking-wider font-bold text-black/50 dark:text-white/50 mt-1">Gols</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center w-[72px] h-[72px] rounded-full bg-white dark:bg-[#1a1d29] shadow-sm border border-black/5 dark:border-white/5">
+                    <span className="text-xl font-black text-blue-500 leading-none">
+                      {players.find(p => p.id === showPlayerActionsModal.playerId)?.assists || 0}
+                    </span>
+                    <span className="text-[8px] uppercase tracking-wider font-bold text-black/50 dark:text-white/50 mt-1">Assists</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center w-[72px] h-[72px] rounded-full bg-white dark:bg-[#1a1d29] shadow-sm border border-black/5 dark:border-white/5">
+                    <span className="text-xl font-black text-emerald-500 leading-none">
+                      {players.find(p => p.id === showPlayerActionsModal.playerId)?.matchesPlayed || 0}
+                    </span>
+                    <span className="text-[8px] uppercase tracking-wider font-bold text-black/50 dark:text-white/50 mt-1">Partidas</span>
+                  </div>
+                </div>
               </div>
 
               {/* Actions Section */}
-              <div className="p-3">
+              <div className="p-3 bg-white dark:bg-transparent">
                 <div className="space-y-1.5">
                   {/* Primary Success Actions (Goal) */}
                   {!swappingPlayerId &&
@@ -12907,7 +12956,7 @@ function GroupApp({
                           <span className="text-zinc-900 dark:text-white group-hover:scale-110 transition-transform flex items-center">
                             <IoIosFootball size={16} />
                           </span>
-                          <span>REGISTRAR GOL</span>
+                          <span>GOOL</span>
                         </div>
                       </button>
                     )}
@@ -13032,7 +13081,7 @@ function GroupApp({
 
                           setShowPlayerActionsModal(null);
                         }}
-                        className="w-full h-9 mt-1.5 rounded-xl font-black text-[9px] uppercase tracking-widest bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white shadow-lg shadow-blue-800/20 hover:opacity-90 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+                        className="w-full h-9 mt-1.5 rounded-xl font-black text-[9px] tracking-widest bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white shadow-lg shadow-blue-800/20 hover:opacity-90 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
                       >
                         <div className="flex items-center gap-2">
                           <span
@@ -13063,7 +13112,7 @@ function GroupApp({
                             type: "info",
                           });
                         }}
-                        className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
+                        className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-md font-bold text-[11px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
                         <img
                           src="/substituicao.png"
@@ -13092,7 +13141,7 @@ function GroupApp({
                             type: "info",
                           });
                         }}
-                        className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
+                        className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-md font-bold text-[11px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
                         <img
                           src="/mover.png"
@@ -13160,7 +13209,7 @@ function GroupApp({
 
                           setShowPlayerActionsModal(null);
                         }}
-                        className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
+                        className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-md font-bold text-[11px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
                         <img
                           src="/ausente.png"
@@ -13179,7 +13228,7 @@ function GroupApp({
                           setSwappingPlayerId(null);
                           setShowPlayerActionsModal(null);
                         }}
-                        className="py-2.5 bg-red-500/5 border border-red-500/20 text-red-400 rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-red-500/10 active:scale-95 shadow-sm cursor-pointer"
+                        className="py-2.5 bg-red-500/5 border border-red-500/20 text-red-400 rounded-md font-bold text-[11px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-red-500/10 active:scale-95 shadow-sm cursor-pointer"
                       >
                         <X size={14} className="text-red-400 opacity-80" />
                         Cancelar
@@ -13188,7 +13237,7 @@ function GroupApp({
 
                     <button
                       onClick={() => setShowPlayerActionsModal(null)}
-                      className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm cursor-pointer"
+                      className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-md font-bold text-[11px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm cursor-pointer"
                     >
                       <X size={14} className="text-black/70 dark:text-white/60" />
                       Fechar
@@ -13212,16 +13261,16 @@ function GroupApp({
               initial={{ scale: 0.9, y: 30, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.9, y: 30, opacity: 0 }}
-              className="w-full max-w-[310px] rounded-[24px] overflow-hidden shadow-2xl bg-[#f1f5f9] dark:bg-[#0b0e17]/95 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white backdrop-blur-xl"
+              className="w-full max-w-[320px] rounded-[32px] overflow-hidden shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] bg-white/95 dark:bg-[#0f111a]/95 border border-white/20 dark:border-white/10 text-zinc-900 dark:text-white backdrop-blur-2xl"
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-black/5 dark:bg-white/5 p-6 text-center relative overflow-hidden border-b border-black/5 dark:border-white/5">
+              <div className="bg-white dark:bg-white/[0.03] pt-8 pb-6 px-6 text-center relative overflow-hidden flex flex-col items-center">
                 {/* Decorative Elements */}
                 <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
                 <div className="absolute bottom-0 left-0 w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
 
-                <div className="w-14 h-14 mx-auto rounded-full bg-black/5 dark:bg-white/5 flex items-center justify-center overflow-hidden border border-black/10 dark:border-white/10 shadow-lg relative z-10 mb-3">
+                <div className="w-20 h-20 mx-auto rounded-full bg-white dark:bg-[#1a1d29] flex items-center justify-center overflow-hidden border-4 border-white dark:border-[#1a1d29] shadow-xl relative z-10 mb-4">
                   {players.find((p) => p.id === showQueuePlayerModal.playerId)
                     ?.photo ? (
                     <img
@@ -13250,9 +13299,31 @@ function GroupApp({
                 <p className="text-[8px] text-black/60 dark:text-white/50 font-black mt-1.5 uppercase tracking-[0.2em]">
                   AÇÕES DO JOGADOR
                 </p>
+
+                {/* Player Stats Chart */}
+                <div className="flex items-center justify-center gap-4 mt-5 relative z-10 mx-2">
+                  <div className="flex flex-col items-center justify-center w-[72px] h-[72px] rounded-full bg-white dark:bg-[#1a1d29] shadow-sm border border-black/5 dark:border-white/5">
+                    <span className="text-xl font-black text-zinc-900 dark:text-white leading-none">
+                      {players.find(p => p.id === showQueuePlayerModal.playerId)?.goals || 0}
+                    </span>
+                    <span className="text-[8px] uppercase tracking-wider font-bold text-black/50 dark:text-white/50 mt-1">Gols</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center w-[72px] h-[72px] rounded-full bg-white dark:bg-[#1a1d29] shadow-sm border border-black/5 dark:border-white/5">
+                    <span className="text-xl font-black text-blue-500 leading-none">
+                      {players.find(p => p.id === showQueuePlayerModal.playerId)?.assists || 0}
+                    </span>
+                    <span className="text-[8px] uppercase tracking-wider font-bold text-black/50 dark:text-white/50 mt-1">Assists</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center w-[72px] h-[72px] rounded-full bg-white dark:bg-[#1a1d29] shadow-sm border border-black/5 dark:border-white/5">
+                    <span className="text-xl font-black text-emerald-500 leading-none">
+                      {players.find(p => p.id === showQueuePlayerModal.playerId)?.matchesPlayed || 0}
+                    </span>
+                    <span className="text-[8px] uppercase tracking-wider font-bold text-black/50 dark:text-white/50 mt-1">Partidas</span>
+                  </div>
+                </div>
               </div>
 
-              <div className="p-4">
+              <div className="p-4 bg-white dark:bg-transparent">
                 <div className="space-y-2.5">
                   {!showQueuePlayerModal.showMoveOptions ? (
                     <div className="grid grid-cols-2 gap-1.5">
@@ -13301,7 +13372,7 @@ function GroupApp({
 
                               setShowQueuePlayerModal(null);
                             }}
-                            className="col-span-2 py-2.5 rounded-xl font-black text-[9px] uppercase tracking-widest bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white shadow-lg shadow-blue-800/20 hover:opacity-90 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
+                            className="col-span-2 py-2.5 rounded-xl font-black text-[9px] tracking-widest bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white shadow-lg shadow-blue-800/20 hover:opacity-90 transition-all active:scale-95 cursor-pointer flex items-center justify-center gap-2"
                           >
                             <span
                               className="flex items-center border border-white/50 rounded-full w-4 h-4 justify-center text-[9px] font-black leading-none text-white"
@@ -13325,7 +13396,7 @@ function GroupApp({
                             type: "info",
                           });
                         }}
-                        className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
+                        className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-md font-bold text-[11px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
                         <img
                           src="/substituicao.png"
@@ -13350,7 +13421,7 @@ function GroupApp({
                             type: "info",
                           });
                         }}
-                        className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
+                        className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-md font-bold text-[11px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
                         <img
                           src="/mover.png"
@@ -13390,7 +13461,7 @@ function GroupApp({
                             type: "info",
                           });
                         }}
-                        className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
+                        className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-md font-bold text-[11px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm group cursor-pointer"
                       >
                         <img
                           src="/ausente.png"
@@ -13403,7 +13474,7 @@ function GroupApp({
 
                       <button
                         onClick={() => setShowQueuePlayerModal(null)}
-                        className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-xl font-bold uppercase text-[9px] tracking-wider flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm cursor-pointer"
+                        className="py-2.5 bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10 text-zinc-900 dark:text-white rounded-md font-bold text-[11px] flex flex-col items-center justify-center gap-1 transition-all hover:bg-black/10 dark:bg-white/10 active:scale-95 shadow-sm cursor-pointer"
                       >
                         <X size={14} className="text-black/70 dark:text-white/60" />
                         Fechar
@@ -14439,7 +14510,7 @@ function GroupApp({
               onClick={(e) => e.stopPropagation()}
             >
               {/* Header */}
-              <div className="bg-black/5 dark:bg-white/5 p-6 text-center relative overflow-hidden border-b border-black/5 dark:border-white/5 flex flex-col items-center">
+              <div className="bg-white dark:bg-white/[0.03] pt-8 pb-6 px-6 text-center relative overflow-hidden flex flex-col items-center">
                 <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
                 <div className="absolute bottom-0 left-0 w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
 
@@ -15658,7 +15729,7 @@ function GroupApp({
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="bg-black/5 dark:bg-white/5 p-6 text-center relative overflow-hidden border-b border-black/5 dark:border-white/5 flex flex-col items-center">
+            <div className="bg-white dark:bg-white/[0.03] pt-8 pb-6 px-6 text-center relative overflow-hidden flex flex-col items-center">
               <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
               <div className="absolute bottom-0 left-0 w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
 
@@ -15685,7 +15756,7 @@ function GroupApp({
               </p>
             </div>
 
-            <div className="p-4 space-y-4">
+            <div className="p-4 space-y-4 bg-white dark:bg-transparent">
               {/* Image Upload Area */}
               <div className="flex flex-col items-center gap-1.5">
                 <div 
@@ -15815,7 +15886,7 @@ function GroupApp({
             onClick={(e) => e.stopPropagation()}
           >
             {/* Header */}
-            <div className="bg-black/5 dark:bg-white/5 p-6 text-center relative overflow-hidden border-b border-black/5 dark:border-white/5 flex flex-col items-center">
+            <div className="bg-white dark:bg-white/[0.03] pt-8 pb-6 px-6 text-center relative overflow-hidden flex flex-col items-center">
               <div className="absolute top-0 right-0 w-24 h-24 bg-[#34d399]/5 rounded-full -mr-8 -mt-8 blur-xl" />
               <div className="absolute bottom-0 left-0 w-16 h-16 bg-black/5 dark:bg-white/5 rounded-full -ml-8 -mb-8 blur-lg" />
 
@@ -15839,7 +15910,7 @@ function GroupApp({
               </h3>
             </div>
 
-            <div className="p-4 space-y-4">
+            <div className="p-4 space-y-4 bg-white dark:bg-transparent">
               <p className="text-xs font-medium text-black/70 dark:text-white/70 text-center leading-normal">
                 {matchHistory.length > 0 ? (
                   <>
