@@ -8327,7 +8327,7 @@ function GroupApp({
                                   enabled: !prev.enabled,
                                 }))
                               }
-                              className={`w-12 h-6 rounded-full p-1 transition-all relative shrink-0 cursor-pointer ${fixedColors.enabled ? "bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900" : "bg-black/10 dark:bg-white/10"}`}
+                              className={`w-12 h-6 rounded-full p-1 transition-all relative shrink-0 cursor-pointer ${fixedColors.enabled ? "bg-gradient-to-r from-[#2563EB] to-[#1D4ED8]" : "bg-black/10 dark:bg-white/10"}`}
                             >
                               <div
                                 className={`w-4 h-4 rounded-full transition-transform ${fixedColors.enabled ? "translate-x-6 bg-white" : "translate-x-0 bg-white"} shadow-sm`}
@@ -8412,7 +8412,7 @@ function GroupApp({
                                     !prev.allowFixedGoalkeeper,
                                 }))
                               }
-                              className={`w-12 h-6 rounded-full p-1 transition-all relative shrink-0 cursor-pointer ${orgProSettings.allowFixedGoalkeeper !== false ? "bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900" : "bg-black/10 dark:bg-white/10"}`}
+                              className={`w-12 h-6 rounded-full p-1 transition-all relative shrink-0 cursor-pointer ${orgProSettings.allowFixedGoalkeeper !== false ? "bg-gradient-to-r from-[#2563EB] to-[#1D4ED8]" : "bg-black/10 dark:bg-white/10"}`}
                             >
                               <div
                                 className={`w-4 h-4 rounded-full transition-transform ${orgProSettings.allowFixedGoalkeeper !== false ? "translate-x-6 bg-white" : "translate-x-0 bg-white"} shadow-sm`}
@@ -8700,7 +8700,7 @@ function GroupApp({
                                       return [...prevTeams, ...newAddedTeams];
                                     });
                                   }}
-                                  className="px-4 h-9 bg-gradient-to-r from-blue-700 via-blue-800 to-indigo-900 text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
+                                  className="px-4 h-9 bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] text-white font-black uppercase tracking-widest text-[10px] rounded-2xl shadow-lg hover:opacity-90 transition-all active:scale-95 flex items-center justify-center gap-2"
                                 >
                                   <span>TODOS</span>
                                 </button>
@@ -10150,12 +10150,12 @@ function GroupApp({
                                     match.config.playersPerTeam,
                                 ).length < 2
                               }
-                              className="px-3.5 h-9 bg-gradient-to-r from-[#59b823] via-[#75c628] to-[#25660e] rounded-full transition-all active:scale-95 hover:opacity-90 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
+                              className="px-3.5 h-9 bg-gradient-to-r from-[#2563EB] to-[#1D4ED8] rounded-full transition-all active:scale-95 hover:opacity-90 flex items-center gap-1.5 disabled:opacity-30 disabled:cursor-not-allowed"
                             >
-                              <span className="text-black">
+                              <span className="text-[#f4f2f2]">
                                 <PiShuffleAngularBold size={16} />
                               </span>
-                              <span className="text-[8px] font-black uppercase tracking-tight text-black">
+                              <span className="text-[8px] font-black uppercase tracking-tight text-[#ffffff]">
                                 Sortear
                               </span>
                             </button>
